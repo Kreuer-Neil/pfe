@@ -3,6 +3,7 @@
 Un outil pour coordonner des projets locaux ou communautaires, avec des fonctionnalités de collaboration et de suivi des progrès.
 
 1. Contexte et Objectif
+
 L'application vise à faciliter la coordination et la gestion de projets locaux ou communautaires. Elle permettra aux utilisateurs de créer, suivre et collaborer sur des projets, tout en favorisant l'engagement communautaire.
 
 L’objectif serait d’aider les habitants d’un même immeuble, les habitants d’une commune, les groupes avec un point commun d’une ville, ou peut-être d’autres encore, de proposer des projets et d’y faire participer les autres, pour le bien commun. Ce serait par exemple rajouter des fleurs dans un parc, organiser un potager commun dans un immeuble d’appartements, organiser une surveillance de quartier, organiser un petit barbecue avec les voisins, etc.
