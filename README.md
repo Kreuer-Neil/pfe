@@ -1,16 +1,19 @@
 # Neil Kreuer - PFE 2025-2026
-# Projets communautaires collaboratifs (et donc gestion de ceux-ci)
+
+## Projets communautaires collaboratifs (et donc gestion de ceux-ci)
 Un outil pour coordonner des projets locaux ou communautaires, avec des fonctionnalités de collaboration et de suivi des progrès.
 
 1. **Contexte et Objectif**
 
 L'application vise à faciliter la coordination et la gestion de projets locaux ou communautaires. Elle permettra aux utilisateurs de créer, suivre et collaborer sur des projets, tout en favorisant l'engagement communautaire.
 
-L’objectif serait d’aider les habitants d’un même immeuble, les habitants d’une commune, les groupes avec un point commun d’une ville, ou peut-être d’autres encore, de proposer des projets et d’y faire participer les autres, pour le bien commun. Ce serait par exemple rajouter des fleurs dans un parc, organiser un potager commun dans un immeuble d’appartements, organiser une surveillance de quartier, organiser un petit barbecue avec les voisins, etc.
+L’objectif serait d’aider les habitants d’un même immeuble, d’une commune, les groupes avec un point commun d’une ville, ou peut-être d’autres encore, de proposer des projets et d’y faire participer les autres, pour le bien commun. Ce serait par exemple rajouter des fleurs dans un parc, organiser un potager commun dans un immeuble d’appartements, organiser une surveillance de quartier, organiser un petit barbecue avec les voisins, etc.
 
 Afin d’éviter tout problème d’abus ou d’utilisation de l’application à des fins de vandalisme, voir criminelles, certaines fonctionnalités seront réservées aux personnes abonnées, et une modération sera mise en place.
 
+
 2. **Fonctionnalités Principales**
+    (listées dans le fichier [Figma](https://www.figma.com/design/FKS2nRA0CgPv6EcUjuYYSG/PFE-%22Come-Unite%22?node-id=0-1&t=YRbJmTLryWjCQc7z-1))
     1. **Inscription et Authentification**
         * **Création de compte :** Les utilisateurs peuvent s'inscrire avec une adresse e-mail et un mot de passe.
         * **Abonnement à la gestion de projets :** Seules les personnes habilitées ou ayant payé pourront créer un projet (afin de modérer facilement ces projets), ce qui signifie qu’elles auront un rôle.
