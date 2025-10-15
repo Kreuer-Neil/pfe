@@ -13,7 +13,7 @@ Afin d’éviter tout problème d’abus ou d’utilisation de l’application �
 
 
 2. **Fonctionnalités Principales**
-    (listées dans le fichier [Figma](https://www.figma.com/design/FKS2nRA0CgPv6EcUjuYYSG/PFE-%22Come-Unite%22?node-id=0-1&t=YRbJmTLryWjCQc7z-1))
+    (également listées dans le [fichier Figma](https://www.figma.com/design/FKS2nRA0CgPv6EcUjuYYSG/PFE-%22Come-Unite%22?node-id=0-1&t=YRbJmTLryWjCQc7z-1))
     1. **Inscription et Authentification**
         * **Création de compte :** Les utilisateurs peuvent s'inscrire avec une adresse e-mail et un mot de passe.
         * **Abonnement à la gestion de projets :** Seules les personnes habilitées ou ayant payé pourront créer un projet (afin de modérer facilement ces projets), ce qui signifie qu’elles auront un rôle.
