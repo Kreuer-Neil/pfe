@@ -34,17 +34,6 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('project_user', function (Blueprint $table) {
-            $table->id();
-
-            $table->foreignId('project_id')->unsigned();
-            $table->foreignId('user_id')->unsigned(); // ALWAYS add owner id there w/role owner
-
-            $table->foreignId('role_id')->unsigned()->nullable(); // See how to make it work
-
-            $table->softDeletes();
-            $table->timestamps();
-        });
     }
 
     /**
