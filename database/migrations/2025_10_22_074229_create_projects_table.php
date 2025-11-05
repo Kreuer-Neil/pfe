@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('name');
             // Turn project icon to ForeignID with use of in-app icons or images, user's choice.
             // See for project banner too (if added).
-            $table->string('icon'); // Save user project icons using external services?
+            $table->string('icon')->nullable(); // Save user project icons using external services?
             $table->text('description');
             $table->text('status');
             $table->boolean('is_private');

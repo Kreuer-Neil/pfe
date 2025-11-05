@@ -1,6 +1,6 @@
-import { NavFooter } from '@/components/nav-footer';
-import { NavMain } from '@/components/nav-main';
-import { NavUser } from '@/components/nav-user';
+import {NavFooter} from '@/components/nav-footer';
+import {NavMain} from '@/components/nav-main';
+import {NavUser} from '@/components/nav-user';
 import {
     Sidebar,
     SidebarContent,
@@ -10,10 +10,10 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
-import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+import {dashboard} from '@/routes';
+import {type NavItem, type SharedData} from '@/types';
+import {Link, usePage} from '@inertiajs/react';
+import {BookOpen, Folder, LayoutGrid} from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -22,7 +22,23 @@ const mainNavItems: NavItem[] = [
         href: dashboard(),
         icon: LayoutGrid,
     },
+    {
+        title: 'Projects',
+        href: '/projects',
+        icon: BookOpen,
+    }
 ];
+
+// TODO access Auth::user()->projects to insert here
+// https://ui.shadcn.com/docs/components/sidebar#sidebargroup
+/*const projectNavItems: NavItem[] = auth.user.projects.map((project) => (
+    projectNavItems.push({
+        title: project.name,
+        href: 'projects/'+project.id,
+        icon: project.icon,
+    })
+));*/
+
 
 const footerNavItems: NavItem[] = [
     {
@@ -38,6 +54,8 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { auth } = usePage<SharedData>().props;
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -45,7 +63,7 @@ export function AppSidebar() {
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
                             <Link href={dashboard()} prefetch>
-                                <AppLogo />
+                                <AppLogo/>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -53,12 +71,12 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={mainNavItems}/>
             </SidebarContent>
 
             <SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto" />
-                <NavUser />
+                <NavFooter items={footerNavItems} className="mt-auto"/>
+                <NavUser/>
             </SidebarFooter>
         </Sidebar>
     );
