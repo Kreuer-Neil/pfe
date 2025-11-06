@@ -18,7 +18,14 @@ const links = {
 export default function DesignDashboard() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Dashboard"/>
+            <Head title="Dashboard">
+                {/*TODO add globally*/}
+                <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                <link rel="preconnect" href="https://fonts.gstatic.com" /*crossOrigin*//>
+                <link
+                    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+                    rel="stylesheet"/>
+            </Head>
             {/*<div className={"w-full p-4 grid grid-flow-row-dense row-auto md:grid-cols-3 lg:grid-cols-4 gap-3"}>*/}
             <div className="@container w-full max-w-7xl p-4">
                 <div className={"grid @3xl:grid-flow-col gap-4 @3xl:grid-cols-[auto_20rem]"}>
