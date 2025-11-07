@@ -2,7 +2,7 @@ import AppLayout from "@/layouts/app-layout";
 import {Head} from "@inertiajs/react";
 import type {BreadcrumbItem} from "@/types";
 import {dashboard} from "@/routes";
-import {ChevronDown, ChevronUp, ListCollapseIcon} from "lucide-react";
+import {ChevronDown, ChevronUp} from "lucide-react";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -73,7 +73,7 @@ export default function DesignDashboard() {
                     </aside>
 
 
-                    <div className={"flex flex-col items-center lg:flex-wrap lg:columns-2 gap-3"}>
+                    <div className={"flex flex-col items-center lg:flex-wrap gap-3"}>
 
                         <section className={"widget h-fit"}>
                             <h2 className={"widget-head"}>My next tasks</h2>
