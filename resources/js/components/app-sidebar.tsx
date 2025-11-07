@@ -4,16 +4,16 @@ import {NavUser} from '@/components/nav-user';
 import {
     Sidebar,
     SidebarContent,
-    SidebarFooter,
+    SidebarFooter, SidebarGroupContent, SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import {dashboard} from '@/routes';
-import {type NavItem, type SharedData} from '@/types';
+import {IProject, type NavItem, type SharedData} from '@/types';
 import {Link, usePage} from '@inertiajs/react';
-import {BookOpen, Folder, LayoutGrid} from 'lucide-react';
+import {BookmarkIcon, BookOpen, Folder, LayoutGrid} from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -28,16 +28,19 @@ const mainNavItems: NavItem[] = [
         icon: BookOpen,
     }
 ];
+const { auth } = usePage<SharedData>().props;
 
 // TODO access Auth::user()->projects to insert here
 // https://ui.shadcn.com/docs/components/sidebar#sidebargroup
-/*const projectNavItems: NavItem[] = auth.user.projects.map((project) => (
-    projectNavItems.push({
-        title: project.name,
-        href: 'projects/'+project.id,
-        icon: project.icon,
-    })
-));*/
+// let projectNavItems:NavItem[] = [];
+//
+// for (const project of auth.user.projects) {
+//     projectNavItems.push({
+//         title: project.name,
+//         href: 'projects/' + project.id,
+//         icon: BookmarkIcon,
+//     });
+// }
 
 
 const footerNavItems: NavItem[] = [
@@ -74,6 +77,9 @@ export function AppSidebar() {
                 <NavMain items={mainNavItems}/>
             </SidebarContent>
 
+            <SidebarGroupContent>
+                <SidebarGroupLabel>My projects</SidebarGroupLabel>
+            </SidebarGroupContent>
             <SidebarFooter>
                 <NavFooter items={footerNavItems} className="mt-auto"/>
                 <NavUser/>
