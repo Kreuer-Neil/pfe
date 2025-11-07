@@ -11,9 +11,9 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import {dashboard} from '@/routes';
-import {IProject, type NavItem, type SharedData} from '@/types';
+import {type NavItem, type SharedData} from '@/types';
 import {Link, usePage} from '@inertiajs/react';
-import {BookmarkIcon, BookOpen, Folder, LayoutGrid} from 'lucide-react';
+import {BookOpen, Folder, LayoutGrid} from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -28,7 +28,7 @@ const mainNavItems: NavItem[] = [
         icon: BookOpen,
     }
 ];
-const { auth } = usePage<SharedData>().props;
+// const { auth } = usePage<SharedData>().props;
 
 // TODO access Auth::user()->projects to insert here
 // https://ui.shadcn.com/docs/components/sidebar#sidebargroup
