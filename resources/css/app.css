@@ -198,7 +198,15 @@
     }
 
     .widget-item {
-        @apply bg-background rounded-lg p-1 px-2 flex flex-col gap-1 animate-accordion-down hover:-translate-y-0.5 hover:bg-gray-50;
+        @apply bg-background rounded-lg p-2 flex flex-col gap-1 animate-accordion-down hover:-translate-y-0.5 hover:bg-gray-50;
+    }
+
+    .widget-item-icons-container {
+        @apply -order-1 flex justify-end gap-1 -mb-7;
+    }
+
+    .widget-item-icon {
+        @apply size-8 bg-tertiary rounded-sm p-1;
     }
 
     .widget-openlink {
