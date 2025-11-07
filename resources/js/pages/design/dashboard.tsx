@@ -2,6 +2,7 @@ import AppLayout from "@/layouts/app-layout";
 import {Head} from "@inertiajs/react";
 import type {BreadcrumbItem} from "@/types";
 import {dashboard} from "@/routes";
+import {ChevronDown, ChevronUp, ListCollapseIcon} from "lucide-react";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -32,10 +33,12 @@ export default function DesignDashboard() {
 
                     <aside className={"widget sticky justify-self-center @3xl:order-1"}>
                         <h2 className={"peer"}>
-                            <label htmlFor="notifications-close" className={"widget-head bg-notifications relative"
+                            <label htmlFor="notifications-close" className={"widget-head bg-notifications relative cursor-pointer"
                                 /*+ "has-checked:rounded-b-xl"*/}>
 
-                            Notifications <input id={"notifications-close"} type={"checkbox"} /*defaultChecked={true}*/ className={"@3xl:hidden absolute right-2 size-8"}/>
+                            Notifications <input id={"notifications-close"} type={"checkbox"} /*defaultChecked={true}*/ className={"hidden peer"}/>
+                                <ChevronUp className={"peer-checked:hidden @3xl:hidden absolute right-2 size-8"} />
+                                <ChevronDown className={"peer-not-checked:hidden @3xl:hidden absolute right-2 size-8"} />
                             </label>
                         </h2>
                         <ul className={"widget-container @max-3xl:peer-has-checked:hidden"}>
