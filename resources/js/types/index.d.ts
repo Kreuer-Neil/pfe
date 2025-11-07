@@ -41,3 +41,12 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+// Custom types
+export interface IProject {
+    id: bigint;
+    name: string;
+    icon: string;
+    description: string;
+    isPrivate: boolean;
+}
