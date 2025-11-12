@@ -11,20 +11,20 @@ import {usePage} from "@inertiajs/react";
 ];*/
 
 interface IProject {
+    id: bigint;
     name: string;
 }
 
 export default function ProjectTable() {
 
     const {projects} = usePage<{ projects: IProject[] }>().props;
-    console.log(projects)
     return (
         <AppLayout>
 
             <div>
                 <ul>
                     {projects.map((project) => (
-                            <li>
+                            <li key={project.id}>
                                 {project.name}
                             </li>
                         )

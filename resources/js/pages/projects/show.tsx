@@ -5,10 +5,11 @@ import {Head, usePage} from "@inertiajs/react";
 
 export default function ProjectShow() {
     const {project} = usePage<{ project: IProject }>().props;
+    const {route} = usePage<{ route: string }>().props;
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: project.name,
-            href: 'projects/' + project.id,
+            href: route,
         },
     ];
 

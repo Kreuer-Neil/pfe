@@ -20,6 +20,7 @@ export function NavUser() {
     const { auth } = usePage<SharedData>().props;
     const { state } = useSidebar();
     const isMobile = useIsMobile();
+    // TODO Add lang over settings
 
     return (
         <SidebarMenu>

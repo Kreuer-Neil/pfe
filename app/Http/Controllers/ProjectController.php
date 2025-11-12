@@ -17,6 +17,7 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        return Inertia::render('projects/show', ['project'=> $project]);
+        $route = route('projects.show', $project->id);
+        return Inertia::render('projects/show', ['project'=> $project, 'route' => $route]);
     }
 }
