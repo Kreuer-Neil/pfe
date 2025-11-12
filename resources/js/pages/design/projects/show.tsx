@@ -1,7 +1,7 @@
 import type {BreadcrumbItem, ITaskItem} from "@/types";
 import AppLayout from "@/layouts/app-layout";
 import {Head} from "@inertiajs/react";
-import {CalendarCheck, PersonStanding, Timer, UsersRound} from "lucide-react";
+import {Calendar, CalendarCheck, PersonStanding, Plus, Timer, UsersRound} from "lucide-react";
 import TaskItem from "@/components/tasks/items/task-item";
 
 const tasks: ITaskItem[] = [
@@ -44,7 +44,9 @@ function ProjectTasks() {
     let i = 0;
     return tasks.map(task =>
         <li key={i++}>
-            <TaskItem title={task.title} description={task.description} time={task.time} href={task.href} participations={task.participations} minParticipations={task.minParticipations} participating={task.participating} />
+            <TaskItem title={task.title} description={task.description} time={task.time} href={task.href}
+                      participations={task.participations} minParticipations={task.minParticipations}
+                      participating={task.participating}/>
         </li>
     );
 }
@@ -60,7 +62,13 @@ export default function ProjectShow() {
 
                     <h1 className={"text-4xl mb-1"}>Building 22b garden</h1>
                     <p>
-                        Everything is in the title. A little vegetable garden we share in the building 22b. Stella and myself (Bob) are the creators of this project, and anyone from this building can join! We mostly share what we produce when we want to add a little something non-industrial to our food. We also make a vegetarian barbecue every summer with the gathered surplus! It's not a real barbecue, since we don't cook any meat, but it's been our celebratory coutume for two years now. Just understand that you will have to work with us and respect some rules if you wanna be part of this project.
+                        Everything is in the title. A little vegetable garden we share in the building 22b. Stella and
+                        myself (Bob) are the creators of this project, and anyone from this building can join! We mostly
+                        share what we produce when we want to add a little something non-industrial to our food. We also
+                        make a vegetarian barbecue every summer with the gathered surplus! It's not a real barbecue,
+                        since we don't cook any meat, but it's been our celebratory coutume for two years now. Just
+                        understand that you will have to work with us and respect some rules if you wanna be part of
+                        this project.
                     </p>
 
                     <article className={"flex flex-col gap-0.5"}>
@@ -83,12 +91,17 @@ export default function ProjectShow() {
                 <section className={"widget h-fit"}>
                     <h2 className={"widget-head"}>This project's next tasks</h2>
                     <ul className={"widget-container"}>
-                        <ProjectTasks />
+                        <ProjectTasks/>
                     </ul>
-                    <div className={"widget-openlink-container"}>
-                        <a href={links.agenda}
-                           className={"widget-openlink"}>Show project's agenda</a>
-                    </div>
+                    <a href={links.agenda}
+                       className={"widget-openlink"}>
+                        <Calendar/>
+                        Show project's agenda</a>
+                    <a href="#"
+                       className={"widget-openlink"}>
+                        <Plus/>
+                        Add task
+                    </a>
                 </section>
 
 

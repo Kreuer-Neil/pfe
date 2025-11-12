@@ -25,6 +25,7 @@ export default function TaskItem({
 }: ITaskItem) {
     return (
         <article className={"widget-item + className"}>
+            {/* TODO add open on click and not drag, see bsky duckduckgo etc. */}
             <h3 className={"widget-item-title"}>{title}</h3>
             <p>{description}</p>
             <div className={"taskinfo mt-1 flex justify-between items-center"}>

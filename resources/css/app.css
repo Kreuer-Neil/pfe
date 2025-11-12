@@ -186,15 +186,20 @@
         @apply bg-background text-foreground;
     }
 
+
+    /* Generic page style */
+    .main-page {
+        @apply @container w-full max-w-7xl p-4 flex flex-col items-center gap-8;
+    }
+
+    /* Generic MISC style */
     .postinfo {
         @apply text-gray-400 text-xs self-end pr-2;
     }
 
+    /* Generic Widgets style */
     .widget {
-        /*@apply rounded-xl bg-card text-card-foreground max-w-3xl w-full flex gap-0 flex-col;*/
         @apply rounded-xl bg-card text-card-foreground max-w-lg w-full flex flex-col h-fit pb-4;
-
-
     }
 
     .widget-head {
@@ -206,7 +211,7 @@
     }
 
     .widget-item {
-        @apply bg-background rounded-lg p-2 flex flex-col gap-1 animate-accordion-down hover:-translate-y-0.5 hover:bg-gray-50;
+        @apply bg-background rounded-lg p-2 py-1 flex flex-col gap-1 animate-accordion-down hover:-translate-y-0.5 hover:bg-gray-50;
     }
 
     .widget-item-title {
@@ -222,10 +227,6 @@
     }
 
     .widget-openlink {
-        @apply w-full hover:bg-card-link text-card-link-foreground p-1 rounded-lg flex justify-center;
-    }
-
-    .widget-openlink-container {
-        @apply flex pt-2 px-6;
+        @apply hover:bg-card-link text-card-link-foreground p-1 mt-2 mx-6 rounded-lg flex justify-center gap-1;
     }
 }
