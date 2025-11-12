@@ -1,7 +1,7 @@
 import type {BreadcrumbItem, ITaskItem} from "@/types";
 import AppLayout from "@/layouts/app-layout";
 import {Head} from "@inertiajs/react";
-import {Calendar, CalendarCheck, PersonStanding, Plus, Timer, UsersRound} from "lucide-react";
+import {Calendar, Plus} from "lucide-react";
 import TaskItem from "@/components/tasks/items/task-item";
 
 const tasks: ITaskItem[] = [
@@ -77,7 +77,7 @@ export default function ProjectShow() {
                             Everything going well for our vegetable garden!
                             The plants are growing back since it's spring again, birds can't attack them anymore thanks
                             to
-                            the net we set up, and the rain keeps the soil moisty enought for them to grow up!
+                            the net we set up, and the rain keeps the soil moisty enough for them to grow up!
                             We'll have tomatoes and lemons in no time!
                             Keep the good work and regularity and the vegetarian summer barbecue will be great this
                             year!

@@ -1,5 +1,4 @@
-import {CalendarCheck, Timer, UsersRound} from "lucide-react";
-import {Slot} from "@radix-ui/react-slot";
+import {CalendarCheck, Timer} from "lucide-react";
 import TaskIconParticipation from "@/components/tasks/items/task-icon-participation";
 import {ITaskItem} from "@/types";
 
@@ -24,7 +23,7 @@ export default function TaskItem({
     className,
 }: ITaskItem) {
     return (
-        <article className={"widget-item + className"}>
+        <article className={"widget-item + className " + (className??'') }>
             {/* TODO add open on click and not drag, see bsky duckduckgo etc. */}
             <h3 className={"widget-item-title"}>{title}</h3>
             <p>{description}</p>
