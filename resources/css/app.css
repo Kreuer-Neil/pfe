@@ -206,11 +206,11 @@
     }
 
     .widget-item-icon {
-        @apply size-8 bg-tertiary rounded-sm p-1;
+        @apply h-8 min-w-8 bg-tertiary rounded-sm p-1.5 flex flex-row gap-1 items-center;
     }
 
     .widget-openlink {
-        @apply w-full hover:bg-card-link text-card-link-foreground p-1 rounded-lg flex justify-center ;
+        @apply w-full hover:bg-card-link text-card-link-foreground p-1 rounded-lg flex justify-center;
     }
 
     .widget-openlink-container {
