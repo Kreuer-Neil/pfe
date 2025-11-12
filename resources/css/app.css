@@ -68,6 +68,7 @@
 
 
     --color-notifications: var(--notifications);
+    --color-warning: var(--warning);
 }
 
 :root {
@@ -126,6 +127,7 @@
     --sidebar-ring: oklch(0.87 0 0);
 
     --notifications: var(--atomic-tangerine);
+    --warning: var(--atomic-tangerine);
 }
 
 .dark {
@@ -184,13 +186,19 @@
         @apply bg-background text-foreground;
     }
 
+    .postinfo {
+        @apply text-gray-400 text-xs self-end pr-2;
+    }
+
     .widget {
         /*@apply rounded-xl bg-card text-card-foreground max-w-3xl w-full flex gap-0 flex-col;*/
         @apply rounded-xl bg-card text-card-foreground max-w-lg w-full flex flex-col h-fit pb-4;
+
+
     }
 
     .widget-head {
-        @apply rounded-t-xl bg-tertiary text-tertiary-foreground w-full flex justify-center p-2 text-2xl font-bold;
+        @apply rounded-t-xl bg-tertiary text-tertiary-foreground w-full flex justify-center p-3 text-3xl font-medium;
     }
 
     .widget-container {
@@ -199,6 +207,10 @@
 
     .widget-item {
         @apply bg-background rounded-lg p-2 flex flex-col gap-1 animate-accordion-down hover:-translate-y-0.5 hover:bg-gray-50;
+    }
+
+    .widget-item-title {
+        @apply text-center self-center text-xl font-medium;
     }
 
     .widget-item-icons-container {

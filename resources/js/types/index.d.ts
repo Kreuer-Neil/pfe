@@ -50,3 +50,14 @@ export interface IProject {
     description: string;
     isPrivate: boolean;
 }
+
+export interface ITaskItem {
+    title:string,
+    description:string,
+    time:string,
+    href:string,
+    participations:bigint,
+    minParticipations:bigint,
+    participating:boolean,
+    className?:string,
+}

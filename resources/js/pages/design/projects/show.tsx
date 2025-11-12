@@ -1,7 +1,29 @@
-import type {BreadcrumbItem} from "@/types";
+import type {BreadcrumbItem, ITaskItem} from "@/types";
 import AppLayout from "@/layouts/app-layout";
 import {Head} from "@inertiajs/react";
 import {CalendarCheck, PersonStanding, Timer, UsersRound} from "lucide-react";
+import TaskItem from "@/components/tasks/items/task-item";
+
+const tasks: ITaskItem[] = [
+    {
+        title: "Water the plants in our vegetables garden",
+        description: "The plants in our appartment’s shared garden need constant watering and care, especially if it didn’t rain.",
+        time: "Monday 16/07, 13:00 - 19:00",
+        href: "",
+        participations: 0n,
+        minParticipations: 1n,
+        participating: false,
+    },
+    {
+        title: "Start compost",
+        description: "We're out of compost, and the bin is full, so it would be great if someone prepared some new one! Don't forget: Just put the bio garbage inside the bin and press the red button! Not the black one!",
+        time: "Monday 16/07 - Friday 21/07",
+        href: "",
+        participations: 8n,
+        minParticipations: 7n,
+        participating: true,
+    }
+];
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -18,9 +40,16 @@ const links = {
     agenda: "design/projects/project/agenda",
 }
 
+function ProjectTasks() {
+    let i = 0;
+    return tasks.map(task =>
+        <li key={i++}>
+            <TaskItem title={task.title} description={task.description} time={task.time} href={task.href} participations={task.participations} minParticipations={task.minParticipations} participating={task.participating} />
+        </li>
+    );
+}
+
 export default function ProjectShow() {
-
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={breadcrumbs[0].title}/>
@@ -31,22 +60,11 @@ export default function ProjectShow() {
 
                     <h1 className={"text-4xl mb-1"}>Building 22b garden</h1>
                     <p>
-                        Everything is in the title. A little vegetable garden we share in the building 22b.
-                        Stella and myself (Bob) are the creators of this project, and anyone from this building can
-                        join!
-                        We mostly share what we produce when we want to add a little something non-industrial to our
-                        food.
-                        We also make a vegetarian barbecue every summer with the gathered surplus!
-                        It's not a real barbecue, since we don't cook any meat, but it's been our celebratory coutume
-                        for
-                        two years now.
-                        Just understand that you will have to work with us and respect some rules if you wanna be part
-                        of
-                        this project.
+                        Everything is in the title. A little vegetable garden we share in the building 22b. Stella and myself (Bob) are the creators of this project, and anyone from this building can join! We mostly share what we produce when we want to add a little something non-industrial to our food. We also make a vegetarian barbecue every summer with the gathered surplus! It's not a real barbecue, since we don't cook any meat, but it's been our celebratory coutume for two years now. Just understand that you will have to work with us and respect some rules if you wanna be part of this project.
                     </p>
 
-                    <article className={"flex flex-col gap-1"}>
-                        <h2 className={"pl-1 text-xl"}>Current status</h2>
+                    <article className={"flex flex-col gap-0.5"}>
+                        <h2 className={"text-2xl font-medium"}>Current status</h2>
                         <p>
                             Everything going well for our vegetable garden!
                             The plants are growing back since it's spring again, birds can't attack them anymore thanks
@@ -56,7 +74,7 @@ export default function ProjectShow() {
                             Keep the good work and regularity and the vegetarian summer barbecue will be great this
                             year!
                         </p>
-                        <small className={"text-gray-400 text-xs self-end pr-2"}>Posted the&nbsp;
+                        <small className={"postinfo"}>Posted on&nbsp;
                             <time>Monday 16/07, 15:37</time>
                         </small>
                     </article>
@@ -65,62 +83,16 @@ export default function ProjectShow() {
                 <section className={"widget h-fit"}>
                     <h2 className={"widget-head"}>This project's next tasks</h2>
                     <ul className={"widget-container"}>
-
-                        <li>
-                            <a href="#" className={"cursor-default"}>
-                                <article className={"widget-item"}>
-                                    <h3 className={"text-center self-center text-xl font-bold"}>Water the plants in our
-                                        vegetable garden</h3>
-                                    <p>The plants in our appartment’s shared garden need constant watering and
-                                        care, especially if it didn’t rain.</p>
-                                    <div className={"taskinfo mt-1 flex justify-between items-center"}>
-                                        <time className={"pl-1 flex gap-1"}>
-                                            <Timer/> Monday 16/07, 13:00 - 19:00
-                                        </time>
-                                        <div className={"flex gap-1"}>
-                                            <p className={"widget-item-icon bg-[var(--atomic-tangerine)]"}>0/1</p>
-                                            <PersonStanding
-                                                // title={"You are not participating"}
-                                                className={"widget-item-icon bg-[var(--atomic-tangerine)]"}/>
-                                        </div>
-                                    </div>
-                                </article>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#" className={"cursor-default"}>
-                                <article className={"widget-item"}>
-                                    <h3 className={"text-center self-center text-xl font-bold"}>Start compost</h3>
-                                    <p>We're out of compost, and the bin is full, so it would be great if
-                                        someone
-                                        prepared some new one! Don't forget: Just put the bio garbage inside the
-                                        bin
-                                        and press the red button! Not the black one!</p>
-                                    <div className={"taskinfo mt-1 flex justify-between items-center"}>
-                                        <time className={"pl-1 flex gap-1"}><Timer/><span className={"mt-1 text-sm"}>Monday 16/07 -
-                                            Friday 21/07</span>
-                                        </time>
-                                        <div className={"flex gap-1"}>
-                                            <p className={"widget-item-icon"}><UsersRound className={"size-5"} /> 8/7</p>
-                                            <CalendarCheck
-                                                // title={"You are participating"}
-                                                className={"widget-item-icon"}/>
-                                        </div>
-                                    </div>
-                                </article>
-                            </a>
-                        </li>
-
+                        <ProjectTasks />
                     </ul>
                     <div className={"widget-openlink-container"}>
                         <a href={links.agenda}
                            className={"widget-openlink"}>Show project's agenda</a>
                     </div>
                 </section>
+
+
             </div>
-
-
         </AppLayout>
     );
 }

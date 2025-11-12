@@ -145,10 +145,11 @@ export function AppSidebar() {
             </SidebarContent>
 
 
-            {<SidebarFooter>
-                <NavFooter items={footerNavItems} className="mt-auto"/>
+            <SidebarFooter>
+                {/* TODO remove later if no use
+                <NavFooter items={footerNavItems} className="mt-auto"/>*/}
                 <NavUser/>
-            </SidebarFooter>}
+            </SidebarFooter>
         </Sidebar>
     );
 }

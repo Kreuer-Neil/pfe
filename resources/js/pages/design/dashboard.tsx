@@ -1,8 +1,9 @@
 import AppLayout from "@/layouts/app-layout";
 import {Head} from "@inertiajs/react";
-import type {BreadcrumbItem} from "@/types";
+import type {BreadcrumbItem, ITaskItem} from "@/types";
 import {dashboard} from "@/routes";
 import {ChevronDown, ChevronUp} from "lucide-react";
+import TaskItem from "@/components/tasks/items/task-item";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -10,6 +11,36 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: dashboard().url,
     },
 ];
+
+const tasks: ITaskItem[] = [
+    {
+        title: "Water the plants in our vegetables garden",
+        description: "The plants in our appartment’s shared garden need constant watering and care, especially if it didn’t rain.",
+        time: "Monday 16/07, 13:00 - 19:00",
+        href: "",
+        participations: 0n,
+        minParticipations: 1n,
+        participating: false,
+    },
+    {
+        title: "Start compost",
+        description: "We're out of compost, and the bin is full, so it would be great if someone prepared some new one! Don't forget: Just put the bio garbage inside the bin and press the red button! Not the black one!",
+        time: "Monday 16/07 - Friday 21/07",
+        href: "",
+        participations: 8n,
+        minParticipations: 7n,
+        participating: true,
+    }
+];
+
+function Tasks() {
+    let i = 0;
+    return tasks.map(task =>
+        <li key={i++}>
+            <TaskItem title={task.title} description={task.description} time={task.time} href={task.href} participations={task.participations} minParticipations={task.minParticipations} participating={task.participating} />
+        </li>
+    );
+}
 
 const links = {
     agenda: "/design/agenda",
@@ -27,12 +58,15 @@ export default function DesignDashboard() {
 
                     <aside className={"widget sticky justify-self-center @3xl:order-1"}>
                         <h2 className={"peer"}>
-                            <label htmlFor="notifications-close" className={"widget-head bg-notifications relative cursor-pointer"
-                                /*+ "has-checked:rounded-b-xl"*/}>
+                            <label htmlFor="notifications-close"
+                                   className={"widget-head bg-notifications relative cursor-pointer"
+                                       /*+ "has-checked:rounded-b-xl"*/}>
 
-                            Notifications <input id={"notifications-close"} type={"checkbox"} /*defaultChecked={true}*/ className={"hidden peer"}/>
-                                <ChevronUp className={"peer-checked:hidden @3xl:hidden absolute right-2 size-8"} />
-                                <ChevronDown className={"peer-not-checked:hidden @3xl:hidden absolute right-2 size-8"} />
+                                Notifications <input id={"notifications-close"}
+                                                     type={"checkbox"} /*defaultChecked={true}*/
+                                                     className={"hidden peer"}/>
+                                <ChevronUp className={"peer-checked:hidden @3xl:hidden absolute right-2 size-8"}/>
+                                <ChevronDown className={"peer-not-checked:hidden @3xl:hidden absolute right-2 size-8"}/>
                             </label>
                         </h2>
                         <ul className={"widget-container @max-3xl:peer-has-checked:hidden"}>
@@ -54,7 +88,9 @@ export default function DesignDashboard() {
                                     <article className={"widget-item"}>
                                         <h3 className={"self-center text-xl font-bold"}>News from project <span
                                             className={"font-bold px-0.5"}>Project</span>!</h3>
-                                        <button title={"Remove this notification"} className={"button-destroy"}></button> {/* bgimg destroy icon (trash) + title text on hover + bgcol on hover */}
+                                        <button title={"Remove this notification"}
+                                                className={"button-destroy"}></button>
+                                        {/* bgimg destroy icon (trash) + title text on hover + bgcol on hover */}
                                         <p><span className={"font-bold px-0.5"}>Project</span> updated their status!
                                             "Project now counts 12 members, and we can see the parc growing back!
                                             Flowers are blooming, even with this heat, and the grass is green again! …"
@@ -78,40 +114,7 @@ export default function DesignDashboard() {
                         <section className={"widget h-fit"}>
                             <h2 className={"widget-head"}>My next tasks</h2>
                             <ul className={"widget-container"}>
-
-                                <li>
-                                    <a href="#" className={"cursor-default"}>
-                                        <article className={"widget-item"}>
-                                            <h3 className={"self-center text-xl font-bold"}>Water the plants</h3>
-                                            <p>The plants in our appartment’s shared garden need constant watering and
-                                                care,
-                                                especially
-                                                if it didn’t rain.</p>
-                                            <time className={"text-gray-400 text-xs self-end pr-2"}>Monday 16/07, 13:00
-                                                -
-                                                19:00
-                                            </time>
-                                        </article>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="#" className={"cursor-default"}>
-                                        <article className={"widget-item"}>
-                                            <h3 className={"self-center text-xl font-bold"}>Start compost</h3>
-                                            <p>We're out of compost, and the bin is full, so it would be great if
-                                                someone
-                                                prepared some new one! Don't forget: Just put the bio garbage inside the
-                                                bin
-                                                and press the red button! Not the black one!</p>
-                                            <time className={"text-gray-400 text-xs self-end pr-2"}>Monday 16/07 -
-                                                Friday
-                                                21/07
-                                            </time>
-                                        </article>
-                                    </a>
-                                </li>
-
+                                <Tasks />
                             </ul>
                             <div className={"widget-openlink-container"}>
                                 <a href={links.agenda}
@@ -124,5 +127,5 @@ export default function DesignDashboard() {
 
             </div>
         </AppLayout>
-    );
+);
 }
