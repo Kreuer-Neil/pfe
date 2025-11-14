@@ -1,7 +1,7 @@
 import type {BreadcrumbItem, ITaskItem} from "@/types";
 import AppLayout from "@/layouts/app-layout";
 import {Head} from "@inertiajs/react";
-import {Calendar, Plus} from "lucide-react";
+import {Calendar, EllipsisVertical, Plus} from "lucide-react";
 import TaskItem from "@/components/tasks/items/task-item";
 
 const tasks: ITaskItem[] = [
@@ -56,11 +56,11 @@ export default function ProjectShow() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={breadcrumbs[0].title}/>
 
-            <div className={"@container w-full max-w-7xl p-4 flex flex-col items-center gap-8"}>
+            <div className="main-page">
 
-                <div className="max-w-3xl flex flex-col gap-3">
+                <div className="main-page-container">
 
-                    <h1 className={"text-4xl mb-1"}>Building 22b garden</h1>
+                    <h1 className="text-4xl mb-1">Building 22b garden</h1>
                     <p>
                         Everything is in the title. A little vegetable garden we share in the building 22b. Stella and
                         myself (Bob) are the creators of this project, and anyone from this building can join! We mostly
@@ -71,8 +71,8 @@ export default function ProjectShow() {
                         this project.
                     </p>
 
-                    <article className={"flex flex-col gap-0.5"}>
-                        <h2 className={"text-2xl font-medium"}>Current status</h2>
+                    <article className="flex flex-col gap-0.5">
+                        <h2 className="text-2xl font-medium">Current status</h2>
                         <p>
                             Everything going well for our vegetable garden!
                             The plants are growing back since it's spring again, birds can't attack them anymore thanks
@@ -82,26 +82,36 @@ export default function ProjectShow() {
                             Keep the good work and regularity and the vegetarian summer barbecue will be great this
                             year!
                         </p>
-                        <small className={"postinfo"}>Posted on&nbsp;
+                        <small className="postinfo">Posted on&nbsp;
                             <time>Monday 16/07, 15:37</time>
                         </small>
                     </article>
                 </div>
 
-                <section className={"widget h-fit"}>
-                    <h2 className={"widget-head"}>This project's next tasks</h2>
-                    <ul className={"widget-container"}>
+                <section className="widget h-fit">
+                    <h2 className="widget-head">This project's next tasks</h2>
+                    <ul className="widget-container">
                         <ProjectTasks/>
                     </ul>
                     <a href={links.agenda}
-                       className={"widget-openlink"}>
+                       className="widget-openlink">
                         <Calendar/>
                         Show project's agenda</a>
                     <a href="#"
-                       className={"widget-openlink"}>
+                       className="widget-openlink">
                         <Plus/>
                         Add task
                     </a>
+                </section>
+
+                <section className="main-page-container">
+                    <h2 className="text-2xl font-medium">Resources</h2>
+
+                    <div className="w-full p-1 bg-secondary grid gap-2 items-center content-between grid-flow-col">
+                        <img src="/" alt="img" className="size-12 rounded-2xl bg-tertiary"/>
+                        <p>The thingy you don't care about but you actually need it very much. Approved by 90% of the project members.</p>
+                        <EllipsisVertical />
+                    </div>
                 </section>
 
 

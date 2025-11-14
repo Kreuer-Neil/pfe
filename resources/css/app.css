@@ -191,6 +191,9 @@
     .main-page {
         @apply @container w-full max-w-7xl p-4 flex flex-col items-center gap-8;
     }
+    .main-page-container {
+        @apply max-w-3xl w-full flex flex-col gap-3;
+    }
 
     /* Generic MISC style */
     .postinfo {
