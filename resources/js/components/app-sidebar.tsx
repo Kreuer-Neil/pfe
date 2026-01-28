@@ -13,7 +13,7 @@ import {
 import {dashboard} from '@/routes';
 import {type NavItem, type SharedData} from '@/types';
 import {Link, usePage} from '@inertiajs/react';
-import {BookOpen, Folder, LayoutGrid} from 'lucide-react';
+import {BookOpen, Folder, LayoutGrid, SettingsIcon} from 'lucide-react';
 import AppLogo from './app-logo';
 import {Collapsible, CollapsibleContent, CollapsibleTrigger} from "@/components/ui/collapsible";
 
@@ -45,7 +45,7 @@ const mainNavItems: NavItem[] = [
 
 
 const footerNavItems: NavItem[] = [
-    {
+    /*{
         title: 'Repository',
         href: 'https://github.com/laravel/react-starter-kit',
         icon: Folder,
@@ -54,7 +54,12 @@ const footerNavItems: NavItem[] = [
         title: 'Documentation',
         href: 'https://laravel.com/docs/starter-kits#react',
         icon: BookOpen,
-    },
+    },*/
+    {
+        title: 'Settings',
+        href: "/settings/profile",
+        icon: SettingsIcon
+    }
 ];
 
 export function AppSidebar() {
@@ -87,8 +92,8 @@ export function AppSidebar() {
                                 asChild
                                 isActive={false}
                             >
-                                <Link href={"/projects"} prefetch>
-                                    <BookOpen/>
+                                <Link href={"/dashboard"} prefetch>
+                                    <LayoutGrid/>
                                     <span>Dashboard</span>
                                 </Link>
                             </SidebarMenuButton>
@@ -98,7 +103,7 @@ export function AppSidebar() {
                                 asChild
                                 isActive={false}
                             >
-                                <Link href={"/dashboard"} prefetch>
+                                <Link href={"/projects"} prefetch>
                                     <BookOpen/>
                                     <span>My projects</span>
                                 </Link>
@@ -146,8 +151,7 @@ export function AppSidebar() {
 
 
             <SidebarFooter>
-                {/* TODO remove later if no use
-                <NavFooter items={footerNavItems} className="mt-auto"/>*/}
+                {/*<NavFooter items={footerNavItems} className="mt-auto"/>*/}
                 <NavUser/>
             </SidebarFooter>
         </Sidebar>

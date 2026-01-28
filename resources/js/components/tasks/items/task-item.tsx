@@ -23,7 +23,7 @@ export default function TaskItem({
     className,
 }: ITaskItem) {
     return (
-        <article className={"widget-item + className " + (className??'') }>
+        <article className={"widget-item " + (className??'') }>
             {/* TODO add open on click and not drag, see bsky duckduckgo etc. */}
             <h3 className={"widget-item-title"}>{title}</h3>
             <p>{description}</p>
