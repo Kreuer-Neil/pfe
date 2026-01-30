@@ -21,7 +21,8 @@ class ProjectFactory extends Factory
             'lang' => $this->faker->randomElement(Languages::cases()),
             // + radius for coordinates?
             'coordinates' => "[{$this->faker->latitude(49.30, 51.30)}, {$this->faker->longitude(2.30, 6.30)}]",
-            'slug' => $this->faker->slug(6)->unique(),
+            // Must be unique
+            'slug' => $this->faker->slug(6),
 
             'is_private' => $this->faker->boolean,
         ];
