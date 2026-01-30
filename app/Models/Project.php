@@ -14,11 +14,11 @@ class Project extends Model
     use SoftDeletes;
 
     //TODO: Slug
-    protected $fillable = ['name','icon','description','status','slug','is_private'];
+    protected $fillable = ['name', 'icon', 'description', 'status', 'slug', 'lang', 'coordinates', 'is_private'];
 
     public function members(): BelongsToMany
     {
-        return $this->belongsToMany(User::class,Member::class)->withPivot('role'); // attach roles
+        return $this->belongsToMany(User::class, Member::class)->withPivot('role'); // attach roles
     }
 
     public function tasks(): HasMany

@@ -9,7 +9,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        syncLangFiles(['nav','dashboard', 'project']);
+        syncLangFiles(['nav','dashboard', 'project', 'misc']);
         return Inertia::render('dashboard');
     }
 }

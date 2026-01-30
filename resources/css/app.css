@@ -69,12 +69,14 @@
 
     --color-notifications: var(--notifications);
     --color-warning: var(--warning);
+    --color-warning-light: var(--warning-light);
 }
 
 :root {
     --gunmetal: oklch(0.317 0.0314 219.19);
     /* --cerulean: oklch(0.545 0.0667 221.94); */
     --pine-green: oklch(0.518 0.0912 184.82);
+    --pine-green-transparent: oklch(0.518 0.0912 184.82 /0.5);
     --verdigris: oklch(0.693 0.0609 184.85);
     --cambrige-blue: oklch(0.7769 0.0566 149.03);
     --tea-green: oklch(0.8861 0.043 132.23);
@@ -129,6 +131,7 @@
 
     --notifications: var(--atomic-tangerine);
     --warning: var(--atomic-tangerine);
+    --warning-light: var(--pine-green-transparent);
 }
 
 .dark {
@@ -192,14 +195,15 @@
     .main-page {
         @apply @container w-full max-w-7xl p-4 flex flex-col items-center gap-8;
     }
+
     .main-page-container {
         @apply max-w-3xl w-full flex flex-col gap-3;
     }
 
     /* Generic section + items style */
-    .empty-warning {
-        @apply radius-lg bg-warning-light;
-    }
+    /*.empty-warning {
+        @apply bg-warning-light w-full my-2 min-md:mx-2 p-2 rounded-lg;
+    }*/
 
     /* Generic MISC style */
     .postinfo {

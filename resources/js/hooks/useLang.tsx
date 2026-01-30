@@ -1,3 +1,4 @@
+/// Credits go to https://github.com/eramitgupta/laravel-lang-sync-inertia
 import { usePage } from '@inertiajs/react'
 
 type Replaces = Record<string, string | number>

@@ -17,7 +17,8 @@ function ProjectItems({projects}: { projects: IProject[] }): ReactNode {
                             </div>
                             {/*TODO fix route and put slug instead of ID later*/}
                             <Link className={"cta-button"}
-                                href={"projects/" + project.id}>{__("project.see_project")}</Link>
+                                  href={"projects/" + project.id}>{__("project.show_project")}
+                            </Link>
                         </article>
                     })
                 }
@@ -30,7 +31,7 @@ function ProjectItems({projects}: { projects: IProject[] }): ReactNode {
             <p>{__("project.no_projects_joined")}</p>
             {/*TODO fix route*/}
             <Link className={"cta-button"}
-                href={"projects/search"}>{__("project.search_project")}</Link>
+                  href={"projects/search"}>{__("project.search_project")}</Link>
         </div>
     );
 }
@@ -42,6 +43,10 @@ export default function MyProjects({projects}: { projects: IProject[] }): ReactN
             <h2 className={"section__title"}>
                 {__('nav.my_projects')}
             </h2>
+            <div>
+                {/*Filters etc. for current project*/}
+                <button>{__("misc.filter")}</button>
+            </div>
             <ProjectItems projects={projects}/>
         </section>
     );
