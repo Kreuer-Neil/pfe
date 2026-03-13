@@ -70,6 +70,8 @@
     --color-notifications: var(--notifications);
     --color-warning: var(--warning);
     --color-warning-light: var(--warning-light);
+
+    --number-navbar-height: 3.5rem;
 }
 
 :root {
@@ -83,6 +85,7 @@
     --atomic-tangerine: oklch(0.7875 0.1 46.85);
 
     --foreground-main: oklch(0.145 0 0);
+    --foreground-light: oklch(0.145 0 0);
 
     --background: oklch(1 0 0);
     --foreground: var(--foreground-main);
@@ -94,12 +97,12 @@
 
     --popover: oklch(1 0 0);
     --popover-foreground: var(--foreground-main);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --tertiary: oklch(0.825 0.0369 179.03);
-    --tertiary-foreground: oklch(0.205 0 0);
+    --primary: var(--tea-green);
+    --primary-foreground: var(--foreground-main);
+    --secondary: var(--cambrige-blue);
+    --secondary-foreground: var(--foreground-main);
+    --tertiary: var(--pine-green);
+    --tertiary-foreground: var(--foreground-light);
 
     --muted: oklch(0.97 0 0);
     --muted-foreground: oklch(0.556 0 0);
@@ -190,8 +193,106 @@
         @apply bg-background text-foreground;
     }
 
+    /** Generic style shared between frontpage and app **/
+    .btn, .btn-alt {
+        @apply flex justify-center p-2 px-4 rounded-lg bg-secondary text-secondary-foreground max-w-xs mx-auto font-semibold text-[1.125rem];
+    }
 
-    /* Generic page style */
+    .btn-alt {
+        @apply bg-tertiary text-shadow-tertiary-foreground;
+    }
+
+    /** Frontpage specific style **/
+    .frontpage {
+        main > * {
+            @apply max-w-2xl w-full mb-12 mx-auto px-3;
+            >*:nth-child(n+1) {
+                @apply mb-3;
+            }
+
+            &:nth-child(2) {
+                @apply mt-12;
+            }
+        }
+
+        & > nav {
+            @apply sticky top-0 bg-sidebar text-sidebar-foreground w-screen z-10 flex;
+
+            img {
+                @apply h-14 border-r-2 border-tertiary overflow-hidden;
+            }
+
+            ul {
+                @apply flex grow invisible h-0 md:visible md:h-auto;
+            }
+
+            li {
+                @apply grow;
+
+                a {
+                    @apply px-3 min-h-14 flex items-center justify-center hover:bg-secondary text-xl;
+
+                    &.active {
+                        @apply bg-secondary;
+                    }
+                }
+            }
+        }
+
+        footer {
+            @apply p-3 py-6 bg-tertiary text-tertiary-foreground;
+
+            nav {
+                h2 {
+                    @apply sr-only;
+                }
+            }
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            @apply font-semibold text-center;
+        }
+
+        h1, h2 {
+            @apply text-3xl mb-6;
+        }
+
+        h3 {
+            @apply text-2xl mb-3;
+        }
+    }
+
+    section.home-features {
+        @apply max-w-5xl p-0;
+    }
+
+    .home-features__item {
+        @apply gap-3 p-3 py-12 md:grid md:grid-flow-col md:grid-cols-5 md:gap-6 md:p-6 content-center;
+
+        div {
+            @apply col-span-3 mb-3;
+        }
+
+        img {
+            @apply col-span-2 m-auto aspect-video w-full max-w-sm bg-gray-200 rounded-xl;
+        }
+
+    }
+
+    .home-features__item:nth-child(2n) img {
+        @apply md:-order-1;
+    }
+
+    article.bottom-section, section.bottom-section {
+        @apply w-screen max-w-screen m-0 p-3 py-6 bg-tertiary text-tertiary-foreground;
+
+        & > * {
+            @apply max-w-3xl mx-auto;
+        }
+    }
+
+
+    /** Generic app style **/
     .main-page {
         @apply @container w-full max-w-7xl p-4 flex flex-col items-center gap-8;
     }
@@ -204,7 +305,6 @@
     /*.empty-warning {
         @apply bg-warning-light w-full my-2 min-md:mx-2 p-2 rounded-lg;
     }*/
-
     /* Generic MISC style */
     .postinfo {
         @apply text-gray-400 text-xs self-end pr-2;

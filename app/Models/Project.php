@@ -13,7 +13,7 @@ class Project extends Model
     use HasFactory;
     use SoftDeletes;
 
-    //TODO: Slug
+    //TODO: Slug as project identifier
     protected $fillable = ['name', 'icon', 'description', 'status', 'slug', 'lang', 'coordinates', 'is_private'];
 
     public function members(): BelongsToMany
