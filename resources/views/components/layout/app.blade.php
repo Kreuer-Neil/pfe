@@ -46,8 +46,8 @@
     @vite('resources/css/app.css')
 </head>
 <body class="font-sans antialiased frontpage">
-<x-navbar/>
+<x-navbar {{-- :$navbarItems --}}/>
 {{ $slot }}
-<x-footer/>
+<x-footer {{-- :$footerItems --}}/>
 </body>
 </html>

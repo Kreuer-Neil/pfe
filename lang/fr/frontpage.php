@@ -3,7 +3,7 @@ return [
     'nav' => [
         'title' => 'Navigation principale',
         'index' => 'Accueil',
-        'policy' => 'Politique de confidentialité',
+        'policy' => 'Politique de<br>confidentialité',
         'contact' => 'Nous contacter',
         'register' => 'S’enregistrer',
         'app' => 'Ouvrir l’application',
@@ -11,7 +11,7 @@ return [
     //
     'home' => [
         'header' => [
-            'title' => 'Qu’est-ce que ComeUnite ?',
+            'title' => 'ComeUnite, l’application idéale pour gérer vos projets communautaires&nbsp;!',
             'text1' => 'ComeUnite est une application permettant de facilement créer et gérer des projets communautaires, mais également rejoindre et participer aux projets des autres. C’est un outil pour aider les gens à s’organiser, travailler, communiquer, afin d’améliorer le monde ensemble&nbsp;!',
             'text2' => 'Les projets sont créés par des personnes souhaitant partager leurs idées, et trouver d’autres engagés pour s’entraider. Vous souhaitez faire un potager partagé dans votre immeuble ? Créer un groupe pour s’occuper des animaux et arroser plantes quand un voisin n’est pas là ? Ou vous associer avec d’autres personnes à travers le village pour nourrir et loger les oiseaux migrateurs ? C’est exactement pour ça que les projets de cette application existent&nbsp;!',
             'cta' => 'Rejoignez-nous&nbsp;!',
@@ -27,6 +27,10 @@ return [
             'sharing' => [
                 'title' => 'Partage facile',
                 'text' => 'Vous n’aurez également plus le problème de devoir partager des documents à tout le monde tout le temps : L’onglet ressources des projets permet de déposer des documents, images, et fichiers en tout genre, disponibles pour tous les membres du projet, ou uniquement ceux de confiance&nbsp;!',
+            ],
+            'mobile' => [
+                'title' => 'Application mobile',
+                'text' => 'Pas envie d’accéder à l’app uniquement par navigateur&nbsp? Ne vous inquiétez pas&nbsp! Come Unite sera bientôt disponible en application mobile rien que pour votre confort&nbsp!',
             ],
         ],
         //

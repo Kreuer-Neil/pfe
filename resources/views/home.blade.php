@@ -2,10 +2,12 @@
     <main>
         <h1 class="sr-only">ComeUnite - {!! __('frontpage.home.title') !!}</h1>
 
-        <article class="home-header">
+        <article class="large-section min-h-[80vh]">
             <h2>{!! __('frontpage.home.header.title') !!}</h2>
-            <p>{!! __('frontpage.home.header.text1') !!}</p>
-            <p>{!! __('frontpage.home.header.text2') !!}</p>
+            <div class="flex flex-col gap-3">
+                <p>{!! __('frontpage.home.header.text1') !!}</p>
+                <p>{!! __('frontpage.home.header.text2') !!}</p>
+            </div>
             <a class="btn" href="{{ route('register') }}">{!! __('frontpage.home.header.cta') !!}</a>
         </article>
 
@@ -14,9 +16,10 @@
 
             <x-frontpage.feature name="organisation"/>
             <x-frontpage.feature name="sharing"/>
+            <x-frontpage.feature name="mobile"/>
         </section>
 
-        <section class="bottom-section">
+        <section class="bottom-section large-section">
             <h2>{!! __('frontpage.home.bottom.title') !!}</h2>
             <p>{!! __('frontpage.home.bottom.text') !!}</p>
             <a href="" class="btn">{!! __('frontpage.home.bottom.cta') !!}</a>

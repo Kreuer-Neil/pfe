@@ -85,13 +85,15 @@
     --atomic-tangerine: oklch(0.7875 0.1 46.85);
 
     --foreground-main: oklch(0.145 0 0);
-    --foreground-light: oklch(0.145 0 0);
+    --foreground-light: oklch(0.981 0 0);
 
     --background: oklch(1 0 0);
     --foreground: var(--foreground-main);
     /*--card: oklch(1 0 0);*/
+
     --card: oklch(0.9612 0 0);
     --card-foreground: var(--foreground-main);
+
     --card-link: var(--tea-green);
     --card-link-foreground: var(--pine-green);
 
@@ -195,7 +197,7 @@
 
     /** Generic style shared between frontpage and app **/
     .btn, .btn-alt {
-        @apply flex justify-center p-2 px-4 rounded-lg bg-secondary text-secondary-foreground max-w-xs mx-auto font-semibold text-[1.125rem];
+        @apply flex justify-center p-2 px-4 rounded-lg bg-secondary text-secondary-foreground max-w-xs w-full mx-auto font-semibold text-[1.125rem];
     }
 
     .btn-alt {
@@ -206,7 +208,8 @@
     .frontpage {
         main > * {
             @apply max-w-2xl w-full mb-12 mx-auto px-3;
-            >*:nth-child(n+1) {
+
+            > *:nth-child(n+1) {
                 @apply mb-3;
             }
 
@@ -222,15 +225,19 @@
                 @apply h-14 border-r-2 border-tertiary overflow-hidden;
             }
 
+            div {
+                @apply grow absolute -left-[150vw] md:left-0 md:static;
+            }
+
             ul {
-                @apply flex grow invisible h-0 md:visible md:h-auto;
+                @apply flex flex-col md:flex-row;
             }
 
             li {
-                @apply grow;
+                @apply md:grow;
 
                 a {
-                    @apply px-3 min-h-14 flex items-center justify-center hover:bg-secondary text-xl;
+                    @apply px-3 min-h-14 flex items-center justify-center hover:bg-secondary focus:bg-secondary text-xl;
 
                     &.active {
                         @apply bg-secondary;
@@ -240,11 +247,23 @@
         }
 
         footer {
-            @apply p-3 py-6 bg-tertiary text-tertiary-foreground;
+            @apply p-3 sm:p-6 py-6 bg-tertiary text-tertiary-foreground;
+
+            h2 {
+                @apply sr-only;
+            }
+
+            h3 {
+                @apply text-left;
+            }
+
+            div {
+                @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-6 md:gap-x-6 mb-6;
+            }
 
             nav {
-                h2 {
-                    @apply sr-only;
+                ul > * {
+                    @apply mb-3;
                 }
             }
         }
@@ -260,35 +279,40 @@
         h3 {
             @apply text-2xl mb-3;
         }
-    }
 
-    section.home-features {
-        @apply max-w-5xl p-0;
-    }
-
-    .home-features__item {
-        @apply gap-3 p-3 py-12 md:grid md:grid-flow-col md:grid-cols-5 md:gap-6 md:p-6 content-center;
-
-        div {
-            @apply col-span-3 mb-3;
+        .home-features {
+            @apply max-w-5xl p-0;
         }
 
-        img {
-            @apply col-span-2 m-auto aspect-video w-full max-w-sm bg-gray-200 rounded-xl;
+        .home-features__item {
+            @apply gap-3 p-3 py-12 md:grid md:grid-flow-col md:grid-cols-5 md:gap-6 md:px-6 content-center;
+
+            div {
+                @apply col-span-3 mb-3;
+            }
+
+            img {
+                @apply col-span-2 m-auto aspect-video w-full max-w-sm bg-gray-200 rounded-xl;
+            }
+
         }
 
-    }
-
-    .home-features__item:nth-child(2n) img {
-        @apply md:-order-1;
-    }
-
-    article.bottom-section, section.bottom-section {
-        @apply w-screen max-w-screen m-0 p-3 py-6 bg-tertiary text-tertiary-foreground;
-
-        & > * {
-            @apply max-w-3xl mx-auto;
+        .home-features__item:nth-child(2n) img {
+            @apply md:-order-1;
         }
+
+        .large-section {
+            @apply flex flex-col justify-center gap-12;
+        }
+
+        article.bottom-section, section.bottom-section {
+            @apply w-screen max-w-screen m-0 p-3 py-6 sm:py-12 bg-tertiary text-tertiary-foreground border-b-2 border-b-primary;
+
+            & > p {
+                @apply max-w-3xl mx-auto;
+            }
+        }
+
     }
 
 
