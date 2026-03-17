@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
-import {dashboard} from '@/routes';
+import {dashboard, projects as projectsIndex} from '@/routes';
 import {type BreadcrumbItem, IProject} from '@/types';
 import {Head} from '@inertiajs/react';
 import {useLang} from "@/hooks/useLang";
@@ -9,6 +9,10 @@ const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Dashboard',
         href: dashboard().url,
+    },
+    {
+        title: 'Projects',
+        href: projectsIndex().url,
     },
 ];
 const projects: IProject[] = [];

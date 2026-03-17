@@ -7,7 +7,7 @@ return [
         'contact' => 'Contact us',
         'register' => 'Register',
         'login' => 'Login',
-        'app' => 'Ouvrir l’application',
+        'app' => 'Open the app',
     ],
     //
     'home' => [

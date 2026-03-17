@@ -15,7 +15,7 @@ interface IProject {
     name: string;
 }
 
-export default function ProjectTable() {
+export default function ProjectIndex() {
 
     const {projects} = usePage<{ projects: IProject[] }>().props;
     return (

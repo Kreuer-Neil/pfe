@@ -9,10 +9,10 @@ use Inertia\Inertia;
 class ProjectController extends Controller
 {
 
-    public function table()
+    public function index()
     {
         $projects = Project::all();
-        return Inertia::render('projects/table', ['projects' => $projects]);
+        return Inertia::render('projects/index', ['projects' => $projects]);
     }
 
     public function show(Project $project)

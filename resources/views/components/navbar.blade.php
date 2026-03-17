@@ -23,9 +23,14 @@
                 </li>
             @endforeach
             <li>
+                @if(auth()->check())
+                    <a href="{{ route('dashboard') }}" title="{{ __('nav.alt',['name' => __('nav.dashboard')]) }}"
+                       class="nav-register">{!! __("frontpage.nav.app") !!}</a>
+                @else
                 @php($loginPageName = __("frontpage.nav.login"))
                 <a href="{{ route('login') }}" title="{{ __('nav.alt',['name' => $loginPageName]) }}"
                    class="nav-register">{!! $loginPageName !!}</a>
+                @endif
             </li>
         </ul>
     </div>
