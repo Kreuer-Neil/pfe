@@ -6,6 +6,7 @@ return [
         'policy' => 'Politique de<br>confidentialité',
         'contact' => 'Nous contacter',
         'register' => 'S’enregistrer',
+        'login' => 'Se connecter',
         'app' => 'Ouvrir l’application',
     ],
     //

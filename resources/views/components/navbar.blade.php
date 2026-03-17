@@ -1,7 +1,7 @@
 {{--@props(['navbarItems'])--}}
 @php($navbarItems = [
         'index',
-        'policy', // Or support, TODO see what tu put here
+        'policy', // Or support, TODO see what to put here
         'contact',
     ])
 
@@ -23,9 +23,9 @@
                 </li>
             @endforeach
             <li>
-                @php($registerPageName = __("frontpage.nav.register"))
-                <a href="{{ route('login') }}" title="{{ __('nav.alt',['name' => $registerPageName]) }}"
-                   class="nav-register">{!! $registerPageName !!}</a>
+                @php($loginPageName = __("frontpage.nav.login"))
+                <a href="{{ route('login') }}" title="{{ __('nav.alt',['name' => $loginPageName]) }}"
+                   class="nav-register">{!! $loginPageName !!}</a>
             </li>
         </ul>
     </div>

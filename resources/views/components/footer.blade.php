@@ -35,10 +35,13 @@
                 <h3>{!! 'Langage' /*__('general.langage.title')*/ !!}</h3>
                 <ul>
                     <li>
-                        <a href="">French</a>
+                        <a href="">Français</a>
                     </li>
                     <li>
                         <a href="">English</a>
+                    </li>
+                    <li>
+                        <a href="">Deutsch</a>
                     </li>
                 </ul>
             </nav>
@@ -61,6 +64,6 @@
             </nav>
         </div>
     </section>
-    <small>©Come Unite 2026</small>
+    <small>©ComeUnite 2026</small>
     {{-- TODO add copyrights later --}}
 </footer>

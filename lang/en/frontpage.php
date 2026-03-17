@@ -6,6 +6,8 @@ return [
         'policy' => 'Policy',
         'contact' => 'Contact us',
         'register' => 'Register',
+        'login' => 'Login',
+        'app' => 'Ouvrir l’application',
     ],
     //
     'home' => [
@@ -21,16 +23,17 @@ return [
             'organisation' => [
                 'title' => 'Organisation',
                 'text' => 'It\'s the end of the times where you can\'t remember who promised to take care of which task, cancelled, but finally decided to take care of it anyway! You can assign yourself to a task, cancel your participation if you have am impediment (but don\'t think anyone will congratulate you for that), and everyone will see a real-time update of who\'s assigned to what.',
-                'img-alt' => 'A screenshot from the app.'
+                'img-alt' => 'A screenshot from the app.',
             ],
             'sharing' => [
                 'title' => 'Easy sharing',
                 'text' => 'You won\'t need to worry about sharing documents either: The "resources" tab of your project allows you to store documents, images, and several types of files, available for every member of the project, or just the trusted ones!',
-                'img-alt' => 'A screenshot from the app.'
+                'img-alt' => 'A screenshot from the app.',
             ],
             'mobile' => [
                 'title' => 'Mobile app',
                 'text' => 'You don\'t want to have to open your browser to use the app? No worries! The ComeUnite mobile app is on the way, only for your comfort!',
+                'img-alt' => 'A screenshot from the app.',
             ],
         ],
         //
@@ -56,6 +59,6 @@ return [
             'support-title' => 'Support',
             'faq' => 'App FAQs',
             'support' => 'Contact support',
-        ]
-    ]
+        ],
+    ],
 ];
