@@ -71,7 +71,10 @@
     --color-warning: var(--warning);
     --color-warning-light: var(--warning-light);
 
+    /* Numbers */
     --number-navbar-height: 3.5rem;
+    --number-text-max-width: 45rem;
+    --number-container-max-width: 54rem;
 }
 
 :root {

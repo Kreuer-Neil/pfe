@@ -2,11 +2,45 @@
 
 namespace App\Models;
 
+use Exception;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
 {
-    protected $fillable = ['name', 'description','project_id','starting_at','ending_at'];
+    use HasFactory;
+
+    protected $fillable = ['name', 'description', 'project_id', 'starting_at', 'ending_at'];
     use SoftDeletes;
+
+
+    public function participations(): HasMany
+    {
+        return $this->hasMany(Participation::class, 'task_id');
+    }
+
+    public function participatingUsers(): BelongsToMany
+    {
+        // TODO attach profiles to participatingUsers (to get profile infos for task participant)
+        return $this->belongsToMany(User::class, Participation::class);
+    }
+
+    public function participate(User $user): bool
+    {
+        if (Participation::where('user_id', $user->id)->where('task_id', $this->id)->exists()) {
+            return false;
+        }
+        try {
+            Participation::create([
+                'user_id' => $user->id,
+                'task_id' => $this->id,
+            ]);
+        } catch (Exception) {
+            return false;
+        }
+        return true;
+    }
 }

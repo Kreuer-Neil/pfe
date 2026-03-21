@@ -11,6 +11,7 @@ test('landing pages can be accessed and contain translated strings', function ()
 
         $requestHomepage = $this->get(route('frontpage.index'));
         $requestPolicyPage = $this->get(route('frontpage.policy'));
+        // TODO add all pages here
 
         $requestHomepage->assertStatus(200);
         $requestHomepage->assertSee(__('frontpage.home.header.title'));

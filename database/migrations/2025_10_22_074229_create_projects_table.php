@@ -14,16 +14,16 @@ return new class extends Migration {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('user_id')->unsigned(); // Owner
+            $table->foreignId('owner_id')->unsigned()->constrained('users', 'id');
             $table->string('name');
             // Turn project icon to ForeignID with use of in-app icons or images, user's choice.
             // See for project banner too (if added).
             $table->string('icon')->default('test_logo.svg'); // Save user project icons using external services?
             $table->text('description');
             $table->text('status')->nullable();
+            $table->string('slug',/*6*/)->unique();
             $table->enum('lang', Languages::cases()); // Project languages. Default: User lang
             $table->string('coordinates');
-            $table->string('slug',/*6*/)->unique();
             $table->boolean('is_private')->default(false);
 
             // + hasMany_members

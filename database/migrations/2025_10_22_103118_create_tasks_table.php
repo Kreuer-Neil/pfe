@@ -13,15 +13,25 @@ return new class extends Migration {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
 
-            $table->string('name');
+            // Task poster ID?
+            // Use user ID instead of member ID for things not directly admin-related like tasks
+            $table->foreignId('user_id')->unsigned()->nullable()->constrained()->nullOnDelete();
+
+            $table->string('title');
             $table->text('description');
 
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
             // Repeatable task setting model deletition in cascade will mainly be managed by jobs or the delete setting, since some users would like to keep X future tasks (for the rest of the month, or ancient ones)
-//            $table->foreignId('repeatable_task_setting_id')->nullable()->constrained()->cascadeOnDelete();
+            // $table->foreignId('repeatable_task_setting_id')->nullable()->constrained()->cascadeOnDelete();
 
-            $table->dateTime('starting_at');
-            $table->dateTime('ending_at');
+            // Recommended number of users participating
+            $table->integer('recommended_count');
+
+            // When the task is due
+            $table->dateTime('due_at');
+
+            // If task has an action timespan (ex. only during one weekend)
+            $table->dateTime('starting_at')->nullable();
 
             $table->softDeletes();
             $table->timestamps();
