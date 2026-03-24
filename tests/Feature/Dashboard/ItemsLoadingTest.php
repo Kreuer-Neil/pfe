@@ -32,7 +32,7 @@ beforeEach(function () {
         }
     }
 
-// Make our user participate to tasks
+    // Make our user participate to tasks
     foreach (($this->userTasks = Task::all()->where('due_at', '>', now())->random(3)) as $userTask) {
         $userTask->participate($this->user);
     }
