@@ -1,4 +1,4 @@
-import type {BreadcrumbItem} from "@/types";
+import type {BreadcrumbItem, IProject} from "@/types";
 import {dashboard} from "@/routes";
 import AppLayout from "@/layouts/app-layout";
 import {usePage} from "@inertiajs/react";
@@ -9,11 +9,6 @@ import {usePage} from "@inertiajs/react";
         href: showProject().url,
     },
 ];*/
-
-interface IProject {
-    id: bigint;
-    name: string;
-}
 
 export default function ProjectIndex() {
 
