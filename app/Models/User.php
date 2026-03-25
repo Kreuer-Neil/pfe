@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class User extends Authenticatable
@@ -24,6 +25,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+
+        'nickname',
+        'show_name',
+        'bio',
     ];
 
     /**
@@ -53,13 +58,27 @@ class User extends Authenticatable
     }
 
     /**
-     * Get a user's list of projects.
+     * Get a user's profile informations
      */
-    public function projects(): BelongsToMany
+    public function profile(): User
     {
-        return $this
-            ->belongsToMany(Project::class, Member::class)->withPivot('role');
+        return $this->select([
+            'id',
+            'nickname',
+            'image',
+            'bio',
+        ]);
     }
+    // TODO fix later
+
+//    /**
+//     * Get a user's list of projects.
+//     */
+//    public function projects(): BelongsToMany
+//    {
+//        return $this
+//            ->belongsToMany(Project::class, Member::class)->withPivot('role');
+//    }
 
     /**
      * Get the list of a user's tasks participation.
@@ -77,6 +96,6 @@ class User extends Authenticatable
     {
         return $this
             ->tasks()
-            ->where('due_at', '=<', Carbon::now());
+            ->where('due_at', '<=', Carbon::now());
     }
 }

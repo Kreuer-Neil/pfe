@@ -5,6 +5,7 @@ namespace App\Models;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,6 +17,14 @@ class Task extends Model
     protected $fillable = ['title', 'description', 'project_id', 'starting_at', 'due_at', 'min_participations'];
     use SoftDeletes;
 
+
+    /**
+     * Returns the task owner
+     */
+    public function owner():BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
     public function participations(): HasMany
     {
@@ -42,5 +51,10 @@ class Task extends Model
             return false;
         }
         return true;
+    }
+
+    public function isParticipating(?User $user = null): bool
+    {
+        return $this->where('user_id', ($user ?? auth()->user)->id)->exists();
     }
 }

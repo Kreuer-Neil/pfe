@@ -36,8 +36,13 @@ function ProjectItems({projects}: { projects: IProject[] }): ReactNode {
     );
 }
 
-export default function MyProjects({projects}: { projects: IProject[] }): ReactNode {
+export default function MyProjects({projects}: { projects: IProject[] | null }): ReactNode {
     const {__} = useLang()
+    if (!projects)
+        // TODO translate no project text
+        return (
+            <p>No projects</p>
+        );
     return (
         <section className={"section"}>
             <h2 className={"section__title"}>

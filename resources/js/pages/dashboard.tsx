@@ -1,11 +1,10 @@
 import AppLayout from '@/layouts/app-layout';
 import {dashboard, projects as projectsIndex} from '@/routes';
-import {type BreadcrumbItem, IProject, ITask} from '@/types';
-import {Head} from '@inertiajs/react';
+import {type BreadcrumbItem, IProject, ITask, IUser, SharedData} from '@/types';
+import {Head, usePage} from '@inertiajs/react';
 import {useLang} from "@/hooks/useLang";
 import MyProjects from "@/components/sections/myProjects";
-import auth from "@/actions/App/Http/Controllers/Auth";
-import TaskContainer from "@/components/tasks/task-container";
+import TaskDisplay from "@/components/tasks/task-display";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -17,31 +16,31 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: projectsIndex().url,
     },
 ];
-const projects: IProject[] = [];
-const userTasks: ITask[] = [
-    {
-        id: "",
-        title: "",
-        description: "",
-        project_id: "",
-        min_participations: 9n,
-        starting_at: new Date('20/03/2026'),
-        due_at: new Date('20/03/2026'),
-        created_at: new Date('20/03/2026'),
-        updated_at: new Date('20/03/2026'),
-    }
-];
 
+
+type PageProps = {
+    userProjects: IProject[],
+    upcomingTasks: ITask[],
+};
 export default function Dashboard() {
+    const {userProjects, upcomingTasks} = usePage<PageProps>().props;
+    const {auth} = usePage<SharedData>().props;
+    const currentUser = auth.user;
     const {__} = useLang();
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard"/>
+            {/* TODO if first connection, use simple welcome text? */}
+            <p>{__('dashboard.welcome_back', currentUser.nickname ?? `${currentUser.firstName} ${currentUser.lastName}`)}</p>
+
+            <section className="bg-red-50">
+                <h2>{__('dashboard.notifications')}</h2>
+            </section>
 
             {/*Tasks section*/}
-            <TaskContainer level={2} tasks={userTasks}/>
+            <TaskDisplay level={2} tasks={upcomingTasks}/>
 
-            <MyProjects projects={projects}/>
+            <MyProjects projects={userProjects}/>
 
 
             {/*<div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4 ">

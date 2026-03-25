@@ -5,5 +5,4 @@ return [
     'search_project' => 'Rechercher un projet',
     'show_project' => 'Afficher ce projet',
 
-    'posted_by' => 'posté par',
 ];

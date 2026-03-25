@@ -2,7 +2,7 @@ import type {BreadcrumbItem, ITaskItem} from "@/types";
 import AppLayout from "@/layouts/app-layout";
 import {Head} from "@inertiajs/react";
 import {Calendar, EllipsisVertical, Plus} from "lucide-react";
-import TaskItem from "@/components/tasks/items/task-item";
+import TaskItem from "@/components/tasks/task-item";
 
 const tasks: ITaskItem[] = [
     {

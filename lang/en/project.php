@@ -5,5 +5,4 @@ return [
     'search_project' => 'Search a project',
     'show_project' => 'Show this project',
 
-    'posted_by' => 'posted by',
 ];

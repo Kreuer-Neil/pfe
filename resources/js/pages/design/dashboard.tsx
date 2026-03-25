@@ -3,7 +3,7 @@ import {Head} from "@inertiajs/react";
 import type {BreadcrumbItem, ITaskItem} from "@/types";
 import {dashboard} from "@/routes";
 import {ChevronDown, ChevronUp} from "lucide-react";
-import TaskItem from "@/components/tasks/items/task-item";
+import TaskItem from "@/components/tasks/task-item";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
