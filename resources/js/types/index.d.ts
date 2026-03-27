@@ -89,10 +89,10 @@ export interface ITask {
     // if self is participating
     self_participating: boolean,
     participating_users: IProfile[],
-    starting_at: Date,
-    due_at: Date,
-    created_at: Date,
-    updated_at: Date,
+    starting_at: ?string,
+    due_at: string,
+    created_at: string,
+    updated_at: string,
 
     [key: string]: unknown; // This allows for additional properties...
 }

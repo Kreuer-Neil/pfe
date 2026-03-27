@@ -13,9 +13,14 @@
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
     'Noto Color Emoji';
 
-    --radius-lg: var(--radius);
-    --radius-md: calc(var(--radius) - 2px);
-    --radius-sm: calc(var(--radius) - 4px);
+    --radius-xl: calc(var(--radius) * 6);
+    --radius-lg: calc(var(--radius) * 4);
+    --radius-md: calc(var(--radius) * 3);
+    --radius-sm: calc(var(--radius) * 2);
+    --radius-xs: var(--radius);
+
+    --color-danger: var(--danger);
+    --color-danger-md: var(--danger-md);
 
     --color-background: var(--background);
     --color-foreground: var(--foreground);
@@ -23,8 +28,9 @@
     --color-card: var(--card);
     --color-card-foreground: var(--card-foreground);
 
-    --color-card-link: var(--card-link);
-    --color-card-link-foreground: var(--card-link-foreground);
+    --color-button: var(--button);
+    --color-button-foreground: var(--button-foreground);
+    --color-link: var(--link);
 
     --color-popover: var(--popover);
     --color-popover-foreground: var(--popover-foreground);
@@ -87,6 +93,10 @@
     --tea-green: oklch(0.8861 0.043 132.23);
     --atomic-tangerine: oklch(0.7875 0.1 46.85);
 
+    --danger: oklch(0.6782 0.184 29.32);
+    --danger-foreground: var(--foreground-light);
+    --danger-md: oklch(0.5872 0.175 26.11);
+
     --foreground-main: oklch(0.145 0 0);
     --foreground-light: oklch(0.981 0 0);
 
@@ -97,8 +107,9 @@
     --card: oklch(0.9612 0 0);
     --card-foreground: var(--foreground-main);
 
-    --card-link: var(--tea-green);
-    --card-link-foreground: var(--pine-green);
+    --button: var(--tea-green);
+    --button-foreground: var(--foreground-main);
+    --link: var(--pine-green);
 
     --popover: oklch(1 0 0);
     --popover-foreground: var(--foreground-main);
@@ -123,7 +134,7 @@
     --chart-3: oklch(0.398 0.07 227.392);
     --chart-4: oklch(0.828 0.189 84.429);
     --chart-5: oklch(0.769 0.188 70.08);
-    --radius: 0.625rem;
+    --radius: 0.25rem;
 
     /*--sidebar: oklch(0.985 0 0);*/
     --sidebar: var(--tea-green);
@@ -335,6 +346,10 @@
         @apply @container w-full max-w-7xl p-4 flex flex-col items-center gap-8;
     }
 
+    .section-title {
+        @apply font-medium text-[2rem];
+    }
+
     .main-page-container {
         @apply max-w-3xl w-full flex flex-col gap-3;
     }
@@ -348,36 +363,10 @@
         @apply text-gray-400 text-xs self-end pr-2;
     }
 
+    .button-text {
+        @apply flex gap-2 py-1.5 justify-center items-center w-full max-w-3xl rounded-xs;
+    }
+
     /* Generic Widgets style */
-    .widget {
-        @apply rounded-xl bg-card text-card-foreground max-w-lg w-full flex flex-col h-fit pb-4;
-    }
 
-    .widget-head {
-        @apply rounded-t-xl bg-tertiary text-tertiary-foreground w-full flex justify-center p-3 text-3xl font-medium;
-    }
-
-    .widget-container {
-        @apply flex flex-col gap-3 p-3;
-    }
-
-    .widget-item {
-        @apply bg-background rounded-lg p-2 py-1 flex flex-col gap-1 animate-accordion-down hover:-translate-y-0.5 hover:bg-gray-50;
-    }
-
-    .widget-item-title {
-        @apply text-center self-center text-xl font-medium;
-    }
-
-    .widget-item-icons-container {
-        @apply -order-1 flex justify-end gap-1 -mb-7;
-    }
-
-    .widget-item-icon {
-        @apply h-8 min-w-8 bg-tertiary rounded-sm p-1.5 flex flex-row gap-1 items-center;
-    }
-
-    .widget-openlink {
-        @apply hover:bg-card-link text-card-link-foreground p-1 mt-2 mx-6 rounded-lg flex justify-center gap-1;
-    }
 }

@@ -31,6 +31,8 @@ function TaskIconParticipation({participations, min, className}: {
 
 // TODO find where to put the link
 export default function TaskItem({task, className = ''}: { task: ITask, className?: string }) {
+    const {__} = useLang();
+    console.log(task)
     return (
         <article className={"widget-item " + (className ?? '')}>
             {/* TODO add open on click and not drag, see bsky duckduckgo etc. */}
@@ -39,13 +41,14 @@ export default function TaskItem({task, className = ''}: { task: ITask, classNam
             <p>{task.description}</p>
             <div className={"taskinfo mt-1 flex justify-between items-center"}>
                 <time className={"pl-1 flex gap-1"}><Timer/><span
-                    className={"mt-1 text-sm"}>{task.due_at.toDateString()}</span></time>
+                    className={"mt-1 text-sm"}>{__('project.task.due_at', task.due_at.toString()/*.toDateString()*/)}</span></time>
                 {/* TODO fix date string (or translate on a different property in the controller) */}
                 <div className={"flex gap-1"}>
                     { /* TODO add PFPs of participating people */}
 
                     <ParticipatingIcon participating={task.self_participating}/>
-                    <TaskIconParticipation participations={task.participating_users.length} min={task.min_participations}/>
+                    <TaskIconParticipation participations={task.participating_users.length}
+                                           min={task.min_participations}/>
                 </div>
             </div>
             <PostedBy owner={task.owner}/>

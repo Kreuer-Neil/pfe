@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 
             // TODO See how to make it work
-            $table->enum('role_id', ProjectRoles::cases())->nullable();
+            $table->enum('role', ProjectRoles::cases())->nullable()->default(ProjectRoles::MEMBER->value);
 
             $table->softDeletes();
             $table->timestamps();

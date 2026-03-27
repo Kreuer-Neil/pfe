@@ -12,4 +12,7 @@ enum ProjectRoles: string
 
     // Can't touch the settings but can add tasks
     case TASK_MANAGER = 'task_manager';
+
+    // Can only do basic interactions
+    case MEMBER = 'member';
 }

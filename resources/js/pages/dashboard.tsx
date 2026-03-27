@@ -20,13 +20,14 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 type PageProps = {
     userProjects: IProject[],
-    upcomingTasks: ITask[],
+    tasks: ITask[],
 };
 export default function Dashboard() {
-    const {userProjects, upcomingTasks} = usePage<PageProps>().props;
+    const {userProjects, tasks} = usePage<PageProps>().props;
     const {auth} = usePage<SharedData>().props;
     const currentUser = auth.user;
     const {__} = useLang();
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard"/>
@@ -38,7 +39,7 @@ export default function Dashboard() {
             </section>
 
             {/*Tasks section*/}
-            <TaskDisplay level={2} tasks={upcomingTasks}/>
+            <TaskDisplay level={2} tasks={tasks}/>
 
             <MyProjects projects={userProjects}/>
 

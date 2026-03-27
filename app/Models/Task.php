@@ -21,7 +21,7 @@ class Task extends Model
     /**
      * Returns the task owner
      */
-    public function owner():BelongsTo
+    public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -53,8 +53,8 @@ class Task extends Model
         return true;
     }
 
-    public function isParticipating(?User $user = null): bool
+    public function isParticipating(User $user): bool
     {
-        return $this->where('user_id', ($user ?? auth()->user)->id)->exists();
+        return $this->where('user_id', $user->id)->exists();
     }
 }

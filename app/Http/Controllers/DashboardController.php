@@ -16,11 +16,11 @@ class DashboardController extends Controller
 
         $userProjects = $currentUser->projects;
 
-        $tasks = [Task::class];
+        $tasks = [];
         foreach ($currentUser->upcomingTasks as $upcomingTask) {
             $formatedUpcomingTask = new FormatedTask(
                 id: $upcomingTask->id,
-                owner: $upcomingTask->owner,
+                owner: $upcomingTask->owner()->first(),
                 title: $upcomingTask->title,
                 description: $upcomingTask->description,
                 project_id: $upcomingTask->project_id,
@@ -28,7 +28,7 @@ class DashboardController extends Controller
                 participating_users: $upcomingTask->participatingUsers()
                     ->select(['id', 'nickname', 'image', 'bio',]),
                 // if self is participating
-                is_self_participating: $upcomingTask->isParticipating(),
+                is_self_participating: $upcomingTask->isParticipating($currentUser),
                 starting_at: $upcomingTask->starting_at,
                 due_at: $upcomingTask->due_at,
                 created_at: $upcomingTask->created_at,

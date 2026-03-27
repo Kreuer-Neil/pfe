@@ -20,7 +20,7 @@ class TaskFactory extends Factory
             // TODO fix
 //            'project_id' => ($project = Project::all()->random())->id,
 //            'user_id' => $project->members()->get()->random()->id,
-            'recommended_count' => random_int(2, 12),
+            'min_participations' => random_int(2, 12),
             'due_at' => $this->faker->dateTimeBetween('-1 days', '1 year'),
         ];
     }

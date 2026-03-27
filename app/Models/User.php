@@ -22,7 +22,8 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
 
@@ -96,6 +97,6 @@ class User extends Authenticatable
     {
         return $this
             ->tasks()
-            ->where('due_at', '<=', Carbon::now());
+            ->where('due_at', '>=', Carbon::now());
     }
 }

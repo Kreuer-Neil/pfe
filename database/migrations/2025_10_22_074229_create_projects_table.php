@@ -19,12 +19,13 @@ return new class extends Migration {
             // Turn project icon to ForeignID with use of in-app icons or images, user's choice.
             // See for project banner too (if added).
             $table->string('icon')->default('test_logo.svg'); // Save user project icons using external services?
-            $table->text('description');
-            $table->text('status')->nullable();
-            $table->string('slug',/*6*/)->unique();
+            $table->text('description')->nullable();
+            // Status is a list of posts related to the project
+            // $table->text('status')->nullable();
+            $table->string('slug',/*24*/)->unique();
             $table->enum('lang', Languages::cases()); // Project languages. Default: User lang
-            $table->string('coordinates');
-            $table->boolean('is_private')->default(false);
+            $table->string('coordinates')->nullable();
+            $table->boolean('is_private')->default(true);
 
             // + hasMany_members
             // + hasMany_tags

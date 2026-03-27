@@ -7,14 +7,15 @@ use App\Models\User;
 class FormatedTask
 {
     public string $id;
-    public User $owner;
+    public ?User $owner;
     public string $title;
     public string $description;
     public string $project_id;
     public string $min_participations;
-    public string $participating_users;
-    public string $is_self_participating;
-    public string $starting_at;
+    public $participating_users;
+    public bool $is_self_participating;
+    // TODO swich to datetime
+    public ?string $starting_at;
     public string $due_at;
     public string $created_at;
     public string $updated_at;
