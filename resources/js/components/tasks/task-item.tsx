@@ -41,7 +41,8 @@ export default function TaskItem({task, className = ''}: { task: ITask, classNam
             <p>{task.description}</p>
             <div className={"taskinfo mt-1 flex justify-between items-center"}>
                 <time className={"pl-1 flex gap-1"}><Timer/><span
-                    className={"mt-1 text-sm"}>{__('project.task.due_at', task.due_at.toString()/*.toDateString()*/)}</span></time>
+                    className={"mt-1 text-sm"}>{__('project.task.due_at', task.due_at.toString()/*.toDateString()*/)}</span>
+                </time>
                 {/* TODO fix date string (or translate on a different property in the controller) */}
                 <div className={"flex gap-1"}>
                     { /* TODO add PFPs of participating people */}
@@ -51,7 +52,11 @@ export default function TaskItem({task, className = ''}: { task: ITask, classNam
                                            min={task.min_participations}/>
                 </div>
             </div>
-            <PostedBy owner={task.owner}/>
+            {
+                task.owner
+                    ? <PostedBy owner={task.owner}/>
+                    : ''
+            }
         </article>
     );
 }
