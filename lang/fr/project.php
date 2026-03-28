@@ -5,4 +5,7 @@ return [
     'search_project' => 'Rechercher un projet',
     'show_project' => 'Afficher ce projet',
 
+
+    'task' => [
+    ]
 ];

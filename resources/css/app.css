@@ -97,6 +97,8 @@
     --danger-foreground: var(--foreground-light);
     --danger-md: oklch(0.5872 0.175 26.11);
 
+    --black-shadow: oklch(0 0 0 / 0.25);
+
     --foreground-main: oklch(0.145 0 0);
     --foreground-light: oklch(0.981 0 0);
 
@@ -350,8 +352,20 @@
         @apply font-medium text-[2rem];
     }
 
+    .item-title {
+        @apply font-medium text-2xl self-center;
+    }
+
     .main-page-container {
         @apply max-w-3xl w-full flex flex-col gap-3;
+    }
+
+    .item-md {
+        @apply flex flex-col gap-3 p-3 py-4;
+    }
+
+    .task-item {
+        @apply bg-background text-foreground rounded-sm drop-shadow-sm;
     }
 
     /* Generic section + items style */
@@ -364,7 +378,7 @@
     }
 
     .button-text {
-        @apply flex gap-2 py-1.5 justify-center items-center w-full max-w-3xl rounded-xs;
+        @apply flex gap-2 py-1.5 justify-center items-center w-full max-w-3xl rounded-xs cursor-pointer;
     }
 
     /* Generic Widgets style */

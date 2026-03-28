@@ -23,7 +23,7 @@ export default ({
     let style: string;
     switch (type) {
         case 'default':
-            style = 'text-secondary hover:bg-primary';
+            style = 'text-link hover:bg-primary';
             break;
         case 'destroy':
             style = 'text-danger-md hover:text-danger-foreground hover:bg-danger';

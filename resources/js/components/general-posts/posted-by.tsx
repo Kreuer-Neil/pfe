@@ -9,7 +9,7 @@ export default function PostedBy({owner, className = ''}: { owner: IProfile | nu
     return (
         <p className={cn('posted-by', className)}>
             {__('user.posted_by') + ' '}
-            <a href={owner.id} className={"underline text-blue-500"}>{owner.nickname}</a>
+            <a href={owner.id} className={"text-link"}>{owner.nickname}</a>
         </p>
     );
 }

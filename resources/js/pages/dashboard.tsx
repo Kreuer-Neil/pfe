@@ -28,11 +28,15 @@ export default function Dashboard() {
     const currentUser = auth.user;
     const {__} = useLang();
 
+    currentUser.nickname = currentUser.nickname ?? `${currentUser.firstName} ${currentUser.lastName}`;
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard"/>
+            <div className="@container px-3">
+
             {/* TODO if first connection, use simple welcome text? */}
-            <p>{__('dashboard.welcome_back', currentUser.nickname ?? `${currentUser.firstName} ${currentUser.lastName}`)}</p>
+            <p>{__('dashboard.welcome_back', currentUser.nickname)}</p>
 
             <section className="bg-red-50">
                 <h2>{__('dashboard.notifications')}</h2>
@@ -49,6 +53,7 @@ export default function Dashboard() {
                     {__('dashboard.notifications')}
                 </div>
             </div>*/}
+            </div>
         </AppLayout>
     );
 }

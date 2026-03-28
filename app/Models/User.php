@@ -91,12 +91,29 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the user's projects
+     */
+    public function projects():BelongsToMany
+    {
+        return $this->belongsToMany(Project::class, Member::class);
+    }
+
+    /**
+     * Ensures that if user has no nickname, returns the user's name
+     */
+    public function nickname():string
+    {
+        return $this->nickname ?? "$this->first_name $this->last_name";
+    }
+
+    /**
      * Get a user's upcoming tasks.
      */
     public function upcomingTasks(): BelongsToMany
     {
         return $this
             ->tasks()
-            ->where('due_at', '>=', Carbon::now());
+            ->where('due_at', '>=', Carbon::now())
+            ->orderBy('due_at', 'desc');
     }
 }

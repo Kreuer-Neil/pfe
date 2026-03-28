@@ -18,7 +18,8 @@ class DashboardController extends Controller
 
         $tasks = [];
         // TODO turn into generic function (model method) to do that
-        foreach ($currentUser->upcomingTasks as $upcomingTask) {
+        // TODO do the same with users & profiles
+        foreach ($currentUser->upcomingTasks->take(3) as $upcomingTask) {
             $formatedUpcomingTask = new FormatedTask(
                 id: $upcomingTask->id,
                 owner: $upcomingTask->owner()->first(),

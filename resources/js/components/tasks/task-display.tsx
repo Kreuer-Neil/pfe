@@ -17,7 +17,6 @@ interface TaskDisplayProps {
 }
 
 function RenderTasks(tasks: ITask[]): ReactNode[] {
-    const {__} = useLang();
     let items: ReactNode[] = tasks.map((task: ITask, i: number) => {
         return <TaskItem task={task} key={i}/>;
     });
@@ -42,7 +41,7 @@ export default function TaskDisplay(
     const {__} = useLang();
     return <section className={cn('w-full max-w-4xl rounded-lg bg-card overflow-clip', className)}>
         <h2 className={'flex justify-center p-2 py-3 bg-primary text-primary-foreground section-title'}>{title}</h2>
-        <div className={'p-5 px-6 flex flex-col gap-6'}>
+        <div className={'p-5 px-3 @xl:px-6 flex flex-col gap-6'}>
             {
                 tasks
                     // Task items

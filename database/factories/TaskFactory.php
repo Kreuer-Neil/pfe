@@ -15,7 +15,7 @@ class TaskFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->text(20),
+            'title' => $this->faker->company(),
             'description' => $this->faker->text(),
             // TODO fix
 //            'project_id' => ($project = Project::all()->random())->id,
