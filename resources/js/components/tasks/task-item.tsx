@@ -42,6 +42,7 @@ export default function TaskItem({task, className = ''}: { task: ITask, classNam
             {/* TODO add open on click and not drag, see bsky duckduckgo etc. */}
             <h3 className={"item-title"}>{task.title}</h3>
 
+            {/* TODO limit desc max length when mobile */}
             <p>{task.description}</p>
             <div className={"taskinfo mt-1 flex justify-between items-center"}>
                 {/* TODO change date format with lang */}

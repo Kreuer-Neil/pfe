@@ -22,6 +22,8 @@ return new class extends Migration
             // TODO See how to make it work
             $table->enum('role', ProjectRoles::cases())->nullable()->default(ProjectRoles::MEMBER->value);
 
+            $table->boolean('expulsed')->default(false);
+
             $table->softDeletes();
             $table->timestamps();
         });

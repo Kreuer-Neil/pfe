@@ -9,7 +9,7 @@ import {LucideCalendarDays, LucideChevronDown} from "lucide-react";
 
 interface TaskDisplayProps {
     tasks: ITask[] | null,
-    title?: string,
+    title?: string | null,
     level?: number,
     className?: string,
     actionText?: string,
@@ -17,6 +17,7 @@ interface TaskDisplayProps {
 }
 
 function RenderTasks(tasks: ITask[]): ReactNode[] {
+    const {__} = useLang();
     let items: ReactNode[] = tasks.map((task: ITask, i: number) => {
         return <TaskItem task={task} key={i}/>;
     });
@@ -25,23 +26,23 @@ function RenderTasks(tasks: ITask[]): ReactNode[] {
 
     // TODO Adds the "See more" button to load more items
     // items.push(<SeeMoreButton />);
-    items.push(<TextButton icon={LucideChevronDown} textContent={'pagination.show_more'}/>);
+    items.push(<TextButton icon={LucideChevronDown} textContent={__('pagination.show_more')}/>);
     return items;
 }
 
 export default function TaskDisplay(
     {
         tasks,
-        title = 'upcoming tasks',
+        title = null,
         level = 2,
         className = '',
         actionText,
         action = null
     }: TaskDisplayProps,): ReactNode {
     const {__} = useLang();
-    return <section className={cn('w-full max-w-4xl rounded-lg bg-card overflow-clip', className)}>
-        <h2 className={'flex justify-center p-2 py-3 bg-primary text-primary-foreground section-title'}>{title}</h2>
-        <div className={'p-5 px-3 @xl:px-6 flex flex-col gap-6'}>
+    return <section className={cn('items-container', className)}>
+        <h2 className={'flex justify-center p-6 py-3 bg-primary text-primary-foreground section-title'}>{title ?? __('project.task.title.upcoming')}</h2>
+        <div className={'p-2 @xl:p-5 px-3 @xl:px-6 flex flex-col gap-4 @xl:gap-6 items-center'}>
             {
                 tasks
                     // Task items
@@ -50,8 +51,8 @@ export default function TaskDisplay(
                     : <p>{__('project.task.empty_message')}</p>
             }
         </div>
-        <div>
-            <TextButton textContent={actionText ?? __('project')} icon={LucideCalendarDays}/>
+        <div className="flex flex-col gap-3 p-3 pt-2 @xl:px-6 items-center">
+            <TextButton textContent={actionText ?? __('project.task.show_agenda')} icon={LucideCalendarDays}/>
         </div>
     </section>
 }

@@ -7,5 +7,9 @@ return [
 
 
     'task' => [
+        'show_agenda' => 'Voir l’agenda complet',
+        'title' => [
+            'upcoming' => 'Tâches à venir'
+        ]
     ]
 ];

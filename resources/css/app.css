@@ -78,9 +78,9 @@
     --color-warning-light: var(--warning-light);
 
     /* Numbers */
-    --number-navbar-height: 3.5rem;
-    --number-text-max-width: 45rem;
-    --number-container-max-width: 54rem;
+    --number-navbar-h: 3.5rem;
+    --number-text-max-w: 45rem;
+    --number-container-max-w: 54rem;
 }
 
 :root {
@@ -213,7 +213,7 @@
 
     /** Generic style shared between frontpage and app **/
     .btn, .btn-alt {
-        @apply flex justify-center p-2 px-4 rounded-lg bg-secondary text-secondary-foreground max-w-xs w-full mx-auto font-semibold text-[1.125rem];
+        @apply flex justify-center p-2 px-4 rounded-sm bg-secondary text-secondary-foreground max-w-xs w-full mx-auto font-semibold text-[1.125rem];
     }
 
     .btn-alt {
@@ -356,8 +356,12 @@
         @apply font-medium text-2xl self-center;
     }
 
-    .main-page-container {
-        @apply max-w-3xl w-full flex flex-col gap-3;
+    .items-container {
+        @apply w-full max-w-3xl rounded-lg bg-card overflow-clip;
+    }
+
+    .main-container {
+        @apply max-w-[var(--number-container-max-width)] w-full;
     }
 
     .item-md {
@@ -365,7 +369,7 @@
     }
 
     .task-item {
-        @apply bg-background text-foreground rounded-sm drop-shadow-sm;
+        @apply bg-background text-foreground rounded-sm drop-shadow-sm max-w-[var(--text-max-w)];
     }
 
     /* Generic section + items style */
@@ -373,12 +377,15 @@
         @apply bg-warning-light w-full my-2 min-md:mx-2 p-2 rounded-lg;
     }*/
     /* Generic MISC style */
+    .posted-by {
+        @apply text-gray-500 text-xs self-end pr-2;
+    }
     .postinfo {
         @apply text-gray-400 text-xs self-end pr-2;
     }
 
     .button-text {
-        @apply flex gap-2 py-1.5 justify-center items-center w-full max-w-3xl rounded-xs cursor-pointer;
+        @apply flex gap-2 py-1.5 justify-center items-center w-full max-w-md rounded-sm cursor-pointer;
     }
 
     /* Generic Widgets style */
