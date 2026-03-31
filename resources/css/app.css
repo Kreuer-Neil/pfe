@@ -123,7 +123,7 @@
     --tertiary-foreground: var(--foreground-light);
 
     --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
+    --muted-foreground: oklch(0.5472 0.022 262.93);
     --accent: oklch(0.97 0 0);
     --accent-foreground: oklch(0.205 0 0);
     --destructive: oklch(0.577 0.245 27.325);
@@ -370,6 +370,16 @@
 
     .task-item {
         @apply bg-background text-foreground rounded-sm drop-shadow-sm max-w-[var(--text-max-w)];
+    }
+
+    .month-divider {
+        @apply flex items-center gap-2 py-0.5 text-muted-foreground text-xs -mx-1;
+        &:before, &:after {
+            flex-grow: 1;
+            content: '';
+            height: 0.0625rem;
+            background: var(--color-muted-foreground);
+        }
     }
 
     /* Generic section + items style */

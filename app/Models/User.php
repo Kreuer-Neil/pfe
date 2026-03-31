@@ -114,6 +114,6 @@ class User extends Authenticatable
         return $this
             ->tasks()
             ->where('due_at', '>=', Carbon::now())
-            ->orderBy('due_at', 'desc');
+            ->orderBy('due_at', 'asc');
     }
 }

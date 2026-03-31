@@ -90,9 +90,16 @@ export interface ITask {
     self_participating: boolean,
     participating_users: IProfile[],
     starting_at: ?string,
-    due_at: string,
-    created_at: string,
-    updated_at: string,
+    due_at: string ,
+    // created_at: string,
+    // updated_at: string,
+    notes: INote[]|null,
 
     [key: string]: unknown; // This allows for additional properties...
+}
+
+export interface INote {
+    id: string,
+    owner: IProfile,
+    content: string
 }
