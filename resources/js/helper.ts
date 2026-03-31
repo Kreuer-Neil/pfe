@@ -22,21 +22,11 @@ export function laravelDateToJsDate(date: string): Date {
     ));
 }
 
-interface ITranslationData {
-    model: 'today' | 'day' | 'year',
-    // props: ITranslationProps,
-}
-
-interface ITranslationProps {
-    dayOfWeek?: number,
-    day?: number,
-    dayType?: 'singular' | 'plural',
-    month?: number,
-    year?: number,
-    time: string,
-}
-
 // TODO translate php-side and add prop with translated string to items instead ?
+
+/**
+ * Returns a translated string for the given date.
+ */
 export function upcomingDateToString(date: Date): string {
     const path = 'date.';
     const fullPath = path + 'translatable_date.';

@@ -26,17 +26,16 @@ function RenderTasks(tasks: ITask[]): ReactNode[] {
         const precedentMonthCondition: boolean = i + 1 < length
             && tasks[i - 1]
             && (month > laravelDateToJsDate(tasks[i - 1].due_at).getMonth());
-        return (<li className="flex flex-col gap-4 @xl:gap-6">
-            {precedentMonthCondition? <span className="month-divider">{__('date.month.' + month)}</span>:''}
-            <TaskItem task={task}/>
-        </li>);
+        return (
+            <li className="flex flex-col gap-4 @xl:gap-6" key={task.id.toString()}>
+                {precedentMonthCondition ? <span className="month-divider">{__('date.month.' + month)}</span> : ''}
+                <TaskItem task={task}/>
+            </li>
+        );
     });
 
-    // TODO add separator between months
-
-    // TODO Adds the "See more" button to load more items
-    // items.push(<SeeMoreButton />);
-    items.push(<TextButton icon={LucideChevronDown} textContent={__('pagination.show_more')}/>);
+    // TODO Adds the "See more" button function to load more items
+    items.push(<TextButton icon={LucideChevronDown} textContent={__('pagination.show_more')} key={0}/>);
     return items;
 }
 
@@ -52,7 +51,7 @@ export default function TaskDisplay(
     const {__} = useLang();
     return <section className={cn('items-container', className)}>
         <h2 className={'flex justify-center p-6 py-3 bg-primary text-primary-foreground section-title'}>{title ?? __('project.task.title.upcoming')}</h2>
-        <ul className={'p-2 @xl:p-5 px-3 @xl:px-6 flex flex-col gap-4 @xl:gap-6 items-center'}>
+        <ol className={'p-2 @xl:p-5 px-3 @xl:px-6 flex flex-col gap-4 @xl:gap-6 items-center'}>
             {
                 tasks
                     // Task items
@@ -60,7 +59,7 @@ export default function TaskDisplay(
                     ? RenderTasks(tasks)
                     : <li><p>{__('project.task.empty_message')}</p></li>
             }
-        </ul>
+        </ol>
         <div className="flex flex-col gap-3 p-3 pt-2 @xl:px-6 items-center">
             <TextButton textContent={actionText ?? __('project.task.show_agenda')} icon={LucideCalendarDays}/>
         </div>
