@@ -27,7 +27,7 @@ export default function Dashboard() {
     const {userProjects, tasks} = usePage<PageProps>().props;
     const {auth} = usePage<SharedData>().props;
     const currentUser = auth.user;
-    const {__} = useLang();
+    const {__, trans} = useLang();
 
     currentUser.nickname = currentUser.nickname ?? `${currentUser.firstName} ${currentUser.lastName}`;
 
@@ -36,7 +36,7 @@ export default function Dashboard() {
             <Head title="Dashboard"/>
             <PageFlowContainer>
                 {/* TODO if first connection, use simple welcome text? */}
-                <p>{__('dashboard.welcome_back', currentUser.nickname)}</p>
+                <p>{trans('dashboard.welcome_back', {name: currentUser.nickname})}</p>
 
                 <section className="bg-red-50">
                     <h2>{__('dashboard.notifications')}</h2>

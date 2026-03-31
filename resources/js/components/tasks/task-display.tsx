@@ -5,6 +5,7 @@ import {ReactNode} from "react";
 import {cn} from "@/lib/utils";
 import TextButton from "@/components/buttons/text-button";
 import {LucideCalendarDays, LucideChevronDown} from "lucide-react";
+import {laravelDateToJsDate} from "@/helper";
 
 
 interface TaskDisplayProps {
@@ -18,8 +19,17 @@ interface TaskDisplayProps {
 
 function RenderTasks(tasks: ITask[]): ReactNode[] {
     const {__} = useLang();
+    // TODO fix date problems here
+    const length = tasks.length;
     let items: ReactNode[] = tasks.map((task: ITask, i: number) => {
-        return <TaskItem task={task} key={i}/>;
+        let month: number = laravelDateToJsDate(task.due_at).getMonth();
+        const precedentMonthCondition: boolean = i + 1 < length
+            && tasks[i - 1]
+            && (month > laravelDateToJsDate(tasks[i - 1].due_at).getMonth());
+        return (<li className="flex flex-col gap-4 @xl:gap-6">
+            {precedentMonthCondition? <span className="month-divider">{__('date.month.' + month)}</span>:''}
+            <TaskItem task={task}/>
+        </li>);
     });
 
     // TODO add separator between months
@@ -42,15 +52,15 @@ export default function TaskDisplay(
     const {__} = useLang();
     return <section className={cn('items-container', className)}>
         <h2 className={'flex justify-center p-6 py-3 bg-primary text-primary-foreground section-title'}>{title ?? __('project.task.title.upcoming')}</h2>
-        <div className={'p-2 @xl:p-5 px-3 @xl:px-6 flex flex-col gap-4 @xl:gap-6 items-center'}>
+        <ul className={'p-2 @xl:p-5 px-3 @xl:px-6 flex flex-col gap-4 @xl:gap-6 items-center'}>
             {
                 tasks
                     // Task items
                     // TODO add "See more" button at the bottom and month separators
                     ? RenderTasks(tasks)
-                    : <p>{__('project.task.empty_message')}</p>
+                    : <li><p>{__('project.task.empty_message')}</p></li>
             }
-        </div>
+        </ul>
         <div className="flex flex-col gap-3 p-3 pt-2 @xl:px-6 items-center">
             <TextButton textContent={actionText ?? __('project.task.show_agenda')} icon={LucideCalendarDays}/>
         </div>
