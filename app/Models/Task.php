@@ -9,34 +9,61 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Prompts\Note;
 
 class Task extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'description', 'project_id', 'starting_at', 'due_at', 'min_participations'];
+    protected $fillable = [
+        'title',
+        'description',
+        'project_id',
+        'starting_at',
+        'due_at',
+        'min_participations'
+    ];
     use SoftDeletes;
 
 
     /**
-     * Returns the task owner
+     * Returns the task owner.
      */
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    /**
+     * Returns the task's notes.
+     */
+    public function notes():HasMany
+    {
+        return $this->hasMany(Note::class);
+    }
+
+    /**
+     * Returns the task's participations
+     */
     public function participations(): HasMany
     {
         return $this->hasMany(Participation::class, 'task_id');
     }
 
+    /**
+     * Returns a list of participating users.
+     */
     public function participatingUsers(): BelongsToMany
     {
-        // TODO attach profiles to participatingUsers (to get profile infos for task participant)
+        // TODO attach profiles to participatingUsers (to get profile infos for task participants)
         return $this->belongsToMany(User::class, Participation::class);
     }
 
+    /**
+     * Tries to make a user join a task.
+     * If user is already participating or if it doesn't belong to the project, returns false.
+     * Returns true after adding the participation otherwise.
+     */
     public function participate(User $user): bool
     {
         if (Participation::where('user_id', $user->id)->where('task_id', $this->id)->exists()) {
