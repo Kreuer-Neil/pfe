@@ -28,7 +28,7 @@ function TaskIconParticipation({participations, min, className = ''}: {
             cn("task-icon",
                 colorClass,
                 className)
-        }><UsersRound className={"size-6"}/>
+        }><UsersRound />
             {participations ?? 0}/{min}
         </span>
     );

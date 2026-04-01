@@ -45,7 +45,7 @@ export default function Dashboard() {
 
                 {/*Tasks section*/}
                 <TaskDisplay level={2} tasks={tasks}/>
-                {/* TODO setup absence
+                {/* TODO setup absence feature (do not disturb-like)
                 <Button as={"a"} textContent={__('project.get_absent')} type="warning" className="-mt-4"/>*/}
 
                 <MyProjects projects={userProjects}/>
