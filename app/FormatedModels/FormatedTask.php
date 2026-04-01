@@ -28,8 +28,12 @@ class FormatedTask
         $this->description = $task->description;
         $this->project_id = $task->project_id;
         $this->min_participations = $task->min_participations;
-        // TODO change to profiles
-        $this->participating_users = $task->participatingUsers($currentUserId);
+        // Turns users model collection into profile data
+        $this->participating_users = [];
+        foreach($task->participatingUsers($currentUserId)->get() as $user) {
+            $this->participating_users[] = new FormatedProfile($user);
+        }
+
         $this->self_participating = $task->isParticipating($currentUserId);
         $this->starting_at = $task->starting_at;
         $this->due_at = $task->due_at;
