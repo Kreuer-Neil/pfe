@@ -3,9 +3,9 @@ import TaskItem from "@/components/tasks/task-item";
 import {useLang} from "@/hooks/useLang";
 import {ReactNode} from "react";
 import {cn} from "@/lib/utils";
-import TextButton from "@/components/buttons/text-button";
+import ButtonText from "@/components/buttons/button-text";
 import {LucideCalendarDays, LucideChevronDown} from "lucide-react";
-import {laravelDateToJsDate} from "@/helper";
+import {laravelDateToJsDate} from "@/helpers/date";
 
 
 interface TaskDisplayProps {
@@ -35,7 +35,7 @@ function RenderTasks(tasks: ITask[]): ReactNode[] {
     });
 
     // TODO Adds the "See more" button function to load more items
-    items.push(<TextButton icon={LucideChevronDown} textContent={__('pagination.show_more')} key={0}/>);
+    items.push(<ButtonText icon={LucideChevronDown} textContent={__('pagination.show_more')} key={0}/>);
     return items;
 }
 
@@ -50,7 +50,7 @@ export default function TaskDisplay(
     }: TaskDisplayProps,): ReactNode {
     const {__} = useLang();
     return <section className={cn('items-container', className)}>
-        <h2 className={'flex justify-center p-6 py-3 bg-primary text-primary-foreground section-title'}>{title ?? __('project.task.title.upcoming')}</h2>
+        <h2 className={'flex justify-center p-6 py-3 bg-container text-primary-foreground section-title'}>{title ?? __('project.task.title.upcoming')}</h2>
         <ol className={'p-2 @xl:p-5 px-3 @xl:px-6 flex flex-col gap-4 @xl:gap-6 items-center'}>
             {
                 tasks
@@ -61,7 +61,7 @@ export default function TaskDisplay(
             }
         </ol>
         <div className="flex flex-col gap-3 p-3 pt-2 @xl:px-6 items-center">
-            <TextButton textContent={actionText ?? __('project.task.show_agenda')} icon={LucideCalendarDays}/>
+            <ButtonText textContent={actionText ?? __('project.task.show_agenda')} icon={LucideCalendarDays}/>
         </div>
     </section>
 }

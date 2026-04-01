@@ -4,7 +4,8 @@ import React, {ReactNode} from "react";
 import {cn} from "@/lib/utils";
 
 
-interface TextButtonProps {
+
+interface ButtonTextProps {
     icon?: LucideIcon | null,
     textContent: string,
     href?: string,
@@ -12,21 +13,21 @@ interface TextButtonProps {
     type?: "default" | "destroy",
 }
 
-export default ({
+export default function ButtonText ({
                     icon: Icon = null,
                     textContent,
                     href = '#',
                     className = '',
                     type = 'default'
-                }: TextButtonProps): ReactNode => {
+                }: ButtonTextProps): ReactNode {
 
-    let style: string;
+    let style: string = '';
     switch (type) {
-        case 'default':
-            style = 'text-link hover:bg-primary';
-            break;
         case 'destroy':
             style = 'text-danger-md hover:text-danger-foreground hover:bg-danger';
+            break;
+        case 'default':
+            style = '';
             break;
     }
 

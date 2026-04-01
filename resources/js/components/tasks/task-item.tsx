@@ -3,7 +3,7 @@ import {ITask} from "@/types";
 import {useLang} from "@/hooks/useLang";
 import PostedBy from "@/components/general-posts/posted-by";
 import {cn} from "@/lib/utils";
-import {laravelDateToJsDate, upcomingDateToString} from "@/helper";
+import {laravelDateToJsDate, upcomingDateToString} from "@/helpers/date";
 
 
 function ParticipatingIcon({participating}: { participating: boolean }) {
@@ -11,7 +11,7 @@ function ParticipatingIcon({participating}: { participating: boolean }) {
         return (
             <CalendarCheck
                 // title={"You are participating"}
-                className={"widget-item-icon"}/>
+                className={"task-icon"}/>
         );
     }
 }
@@ -22,14 +22,15 @@ function TaskIconParticipation({participations, min, className = ''}: {
     className?: string
 }) {
     const colorClass: string = (participations / min > /*recommendedTaskParticipationsRate*/ .8)
-        ? 'bg-primary' : "bg-warning";
+        ? 'bg-primary' : "bg-warning text-warning-foreground";
     return (
         <span className={
-            cn("flex gap-1 p-1 px-1.5 rounded-xs",
+            cn("task-icon",
                 colorClass,
                 className)
-        }><UsersRound
-            className={"size-5 "}/> {participations ?? '0'}/{min}</span>
+        }><UsersRound className={"size-6"}/>
+            {participations ?? 0}/{min}
+        </span>
     );
 }
 
@@ -37,8 +38,8 @@ function TaskIconParticipation({participations, min, className = ''}: {
 // TODO find where to put the link
 export default function TaskItem({task, className = ''}: { task: ITask, className?: string }) {
     const {__} = useLang();
-    const dueAt:Date = laravelDateToJsDate(task.due_at);
-    const dueAtYear:number = dueAt.getFullYear();
+    const dueAt: Date = laravelDateToJsDate(task.due_at);
+    const dueAtYear: number = dueAt.getFullYear();
     return (
         <article className={cn("task-item item-md", className)} key={task.id.toString()}>
             {/* TODO add open on click and not drag, see bsky duckduckgo etc. */}

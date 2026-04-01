@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Prompts\Note;
+use function PHPUnit\Framework\isInt;
 
 class Task extends Model
 {
@@ -53,9 +54,9 @@ class Task extends Model
     /**
      * Returns a list of participating users.
      */
-    public function participatingUsers(): BelongsToMany
+    public function participatingUsers(int $currentUserId): BelongsToMany
     {
-        // TODO attach profiles to participatingUsers (to get profile infos for task participants)
+        // TODO order by contacts with currentUser
         return $this->belongsToMany(User::class, Participation::class);
     }
 
@@ -80,8 +81,9 @@ class Task extends Model
         return true;
     }
 
-    public function isParticipating(User $user): bool
+    public function isParticipating(User|int $user): bool
     {
-        return $this->where('user_id', $user->id)->exists();
+        $userId = isInt($user) ? $user :$user->id;
+        return !$this->participations->where('user_id', '==' , $userId)->isEmpty();
     }
 }

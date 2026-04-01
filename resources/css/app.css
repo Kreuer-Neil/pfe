@@ -19,9 +19,6 @@
     --radius-sm: calc(var(--radius) * 2);
     --radius-xs: var(--radius);
 
-    --color-danger: var(--danger);
-    --color-danger-md: var(--danger-md);
-
     --color-background: var(--background);
     --color-foreground: var(--foreground);
 
@@ -37,12 +34,22 @@
 
     --color-primary: var(--primary);
     --color-primary-foreground: var(--primary-foreground);
-
     --color-secondary: var(--secondary);
     --color-secondary-foreground: var(--secondary-foreground);
-
     --color-tertiary: var(--tertiary);
     --color-tertiary-foreground: var(--tertiary-foreground);
+
+    --color-container: var(--container);
+
+
+    --color-danger: var(--danger);
+    --color-danger-md: var(--danger-md);
+
+    --color-warning: var(--warning);
+    --color-warning-foreground: var(--warning-foreground);
+    /*--color-warning-light: var(--warning-light);*/
+
+    --color-valid: var(--valid);
 
     --color-muted: var(--muted);
     --color-muted-foreground: var(--muted-foreground);
@@ -73,9 +80,6 @@
     --color-sidebar-ring: var(--sidebar-ring);
 
 
-    --color-notifications: var(--notifications);
-    --color-warning: var(--warning);
-    --color-warning-light: var(--warning-light);
 
     /* Numbers */
     --number-navbar-h: 3.5rem;
@@ -92,10 +96,8 @@
     --cambrige-blue: oklch(0.7769 0.0566 149.03);
     --tea-green: oklch(0.8861 0.043 132.23);
     --atomic-tangerine: oklch(0.7875 0.1 46.85);
-
-    --danger: oklch(0.6782 0.184 29.32);
-    --danger-foreground: var(--foreground-light);
-    --danger-md: oklch(0.5872 0.175 26.11);
+    --blueish-green: oklch(0.825 0.0369 179.03);
+    --sprout-green: oklch(0.8704 0.1427 118.04);
 
     --black-shadow: oklch(0 0 0 / 0.25);
 
@@ -121,6 +123,18 @@
     --secondary-foreground: var(--foreground-main);
     --tertiary: var(--pine-green);
     --tertiary-foreground: var(--foreground-light);
+
+    --container: var(--blueish-green);
+
+    --danger: oklch(0.6782 0.184 29.32);
+    --danger-foreground: var(--foreground-light);
+    --danger-md: oklch(0.5872 0.175 26.11);
+
+    --warning: var(--atomic-tangerine);
+    --warning-foreground: var(--foreground-main);
+    /*--warning-light: var(--pine-green-transparent);*/
+
+    --valid: var(--sprout-green);
 
     --muted: oklch(0.97 0 0);
     --muted-foreground: oklch(0.5472 0.022 262.93);
@@ -150,9 +164,6 @@
     --sidebar-border: var(--pine-green);
     --sidebar-ring: oklch(0.87 0 0);
 
-    --notifications: var(--atomic-tangerine);
-    --warning: var(--atomic-tangerine);
-    --warning-light: var(--pine-green-transparent);
 }
 
 .dark {
@@ -372,6 +383,15 @@
         @apply bg-background text-foreground rounded-sm drop-shadow-sm max-w-[var(--text-max-w)];
     }
 
+    /* Overwrites default Lucide icons style*/
+    .lucide {
+        @apply size-6 box-content;
+    }
+
+    .task-icon {
+        @apply bg-valid flex gap-1 p-1 px-1.5 rounded-xs items-center;
+    }
+
     .month-divider {
         @apply flex items-center gap-2 py-0.5 text-muted-foreground text-xs -mx-1;
         &:before, &:after {
@@ -395,7 +415,7 @@
     }
 
     .button-text {
-        @apply flex gap-2 py-1.5 justify-center items-center w-full max-w-md rounded-sm cursor-pointer;
+        @apply text-link hover:bg-primary flex gap-2 py-1.5 justify-center items-center w-full max-w-md rounded-sm cursor-pointer;
     }
 
     /* Generic Widgets style */

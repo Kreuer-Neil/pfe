@@ -17,6 +17,9 @@ class Project extends Model
     //TODO: Slug as project identifier
     protected $fillable = ['owner_id', 'name', 'icon', 'description', 'status', 'slug', 'lang', 'coordinates', 'is_private'];
 
+    /**
+     * Returns
+     */
     public function members(): BelongsToMany
     {
         return $this->belongsToMany(User::class, Member::class)->withPivot(['role_id']);

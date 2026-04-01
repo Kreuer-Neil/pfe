@@ -6,6 +6,7 @@ import {useLang} from "@/hooks/useLang";
 import MyProjects from "@/components/sections/myProjects";
 import TaskDisplay from "@/components/tasks/task-display";
 import PageFlowContainer from "@/components/page-flow-container";
+import Button from "@/components/buttons/button";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -44,6 +45,8 @@ export default function Dashboard() {
 
                 {/*Tasks section*/}
                 <TaskDisplay level={2} tasks={tasks}/>
+                {/* TODO setup absence
+                <Button as={"a"} textContent={__('project.get_absent')} type="warning" className="-mt-4"/>*/}
 
                 <MyProjects projects={userProjects}/>
 

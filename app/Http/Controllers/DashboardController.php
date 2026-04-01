@@ -17,25 +17,9 @@ class DashboardController extends Controller
         $userProjects = $currentUser->projects;
 
         $tasks = [];
-        // TODO turn into generic function (model method) to do that
         // TODO do the same with users & profiles
         foreach ($currentUser->upcomingTasks->take(3) as $upcomingTask) {
-            $formatedUpcomingTask = new FormatedTask(
-                id: $upcomingTask->id,
-                owner: $upcomingTask->owner()->first(),
-                title: $upcomingTask->title,
-                description: $upcomingTask->description,
-                project_id: $upcomingTask->project_id,
-                min_participations: $upcomingTask->min_participations,
-                participating_users: $upcomingTask->participatingUsers()
-                    ->select(['id', 'nickname', 'image', 'bio',]),
-                // if self is participating
-                is_self_participating: $upcomingTask->isParticipating($currentUser),
-                starting_at: $upcomingTask->starting_at,
-                due_at: $upcomingTask->due_at,
-                created_at: $upcomingTask->created_at,
-                updated_at: $upcomingTask->updated_at,
-            );
+            $formatedUpcomingTask = new FormatedTask($upcomingTask, $currentUser->id);
             $tasks[] = $formatedUpcomingTask;
         }
 
