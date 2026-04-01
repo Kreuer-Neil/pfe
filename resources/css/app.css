@@ -48,7 +48,6 @@
     --color-warning: var(--warning);
     --color-warning-foreground: var(--warning-foreground);
     /*--color-warning-light: var(--warning-light);*/
-
     --color-valid: var(--valid);
 
     --color-muted: var(--muted);
@@ -273,13 +272,16 @@
             }
 
             label {
-                @apply /*md:*/hidden; /* TODO CSS burger menu */
+                @apply /*md:*/
+                hidden;
+                /* TODO CSS burger menu */
             }
         }
 
         li:has(.nav-register) {
             @apply grow-0;
         }
+
         .nav-register {
             @apply bg-tertiary text-tertiary-foreground font-semibold px-12;
         }
@@ -368,7 +370,8 @@
     }
 
     .items-container {
-        @apply w-full max-w-3xl rounded-lg bg-card overflow-clip;
+        @apply w-full max-w-3xl /*rounded-lg bg-card*/
+        overflow-clip;
     }
 
     .main-container {
@@ -380,7 +383,8 @@
     }
 
     .task-item {
-        @apply bg-background text-foreground rounded-sm drop-shadow-sm max-w-[var(--text-max-w)];
+        @apply border-2 border-ring bg-background text-foreground rounded-sm /*drop-shadow-sm*/
+        max-w-[var(--text-max-w)];
     }
 
     /* Overwrites default Lucide icons style*/
@@ -394,6 +398,7 @@
 
     .month-divider {
         @apply flex items-center gap-2 py-0.5 text-muted-foreground text-xs -mx-1;
+
         &:before, &:after {
             flex-grow: 1;
             content: '';
@@ -410,6 +415,7 @@
     .posted-by {
         @apply text-gray-500 text-xs self-end pr-2;
     }
+
     .postinfo {
         @apply text-gray-400 text-xs self-end pr-2;
     }

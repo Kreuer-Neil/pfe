@@ -50,7 +50,7 @@ export default function TaskDisplay(
     }: TaskDisplayProps,): ReactNode {
     const {__} = useLang();
     return <section className={cn('items-container', className)}>
-        <h2 className={'flex justify-center p-6 py-3 bg-container text-primary-foreground section-title'}>{title ?? __('project.task.title.upcoming')}</h2>
+        <h2 className={'flex justify-center p-6 py-3 text-primary-foreground section-title'}>{title ?? __('project.task.title.upcoming')}</h2>
         <ol className={'p-2 @xl:p-5 px-3 @xl:px-6 flex flex-col gap-4 @xl:gap-6 items-center'}>
             {
                 tasks
