@@ -22,6 +22,7 @@ class FormatedUser
         $this->last_name = $user->last_name;
         $this->nickname = $user->nickname();
         $this->image = $user->image;
+//        $this->image = getImagePaths('userProfile', $user->image);
         $this->bio = $user->bio;
 
     }
