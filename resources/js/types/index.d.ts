@@ -85,7 +85,7 @@ export interface ITask {
     title: string,
     description: string,
     project_id: string,
-    min_participations: number,
+    min_participations: ?number,
     // if self is participating
     self_participating: boolean,
     participating_users: IProfile[],

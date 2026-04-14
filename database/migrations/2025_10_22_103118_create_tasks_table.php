@@ -25,7 +25,7 @@ return new class extends Migration {
             // $table->foreignId('repeatable_task_setting_id')->nullable()->constrained()->cascadeOnDelete();
 
             // Recommended number of users participating
-            $table->integer('min_participations');
+            $table->integer('min_participations')->nullable();
 
             // When the task is due
             $table->dateTime('due_at');

@@ -18,20 +18,32 @@ function ParticipatingIcon({participating}: { participating: boolean }) {
 
 function TaskIconParticipation({participations, min, className = ''}: {
     participations: number,
-    min: number,
+    min?: number|null,
     className?: string
 }) {
-    const colorClass: string = (participations / min > /*recommendedTaskParticipationsRate*/ .8)
-        ? 'bg-primary' : "bg-warning text-warning-foreground";
-    return (
-        <span className={
-            cn("task-icon",
-                colorClass,
-                className)
-        }><UsersRound />
-            {participations ?? 0}/{min}
+    if (min) {
+        const colorClass: string = (participations / min > /*recommendedTaskParticipationsRate*/ .8)
+            ? 'bg-primary' : "bg-warning text-warning-foreground";
+        return (
+            <span className={
+                cn("task-icon",
+                    colorClass,
+                    className)
+            }>
+                {participations ?? 0}/{min}&nbsp;<UsersRound/>
         </span>
-    );
+        );
+    }
+    else {
+        return (
+            <span className={
+                cn("task-icon bg-card",
+                    className)
+            }>
+                {participations ?? 0}&nbsp;<UsersRound/>
+        </span>
+        );
+    }
 }
 
 
