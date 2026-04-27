@@ -1,5 +1,6 @@
 <?php
 return [
+    'no_time_limit' => 'Pas de date limite',
     'day' => [
         '0' => 'Dimanche',
         '1' => 'Lundi',

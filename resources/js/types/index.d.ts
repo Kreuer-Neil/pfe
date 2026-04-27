@@ -90,7 +90,7 @@ export interface ITask {
     self_participating: boolean,
     participating_users: IProfile[],
     starting_at: ?string,
-    due_at: string ,
+    due_at: ?string,
     // created_at: string,
     // updated_at: string,
     notes: INote[]|null,

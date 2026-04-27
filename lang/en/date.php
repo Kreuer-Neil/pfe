@@ -1,5 +1,6 @@
 <?php
 return [
+    'no_time_limit' => 'No time limit', // or no deadline
     'day' => [
         '0' => 'Sunday',
         '1' => 'Monday',

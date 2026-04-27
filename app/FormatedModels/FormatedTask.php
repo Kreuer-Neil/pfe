@@ -16,7 +16,7 @@ class FormatedTask
     public $participating_users;
     public bool $self_participating;
     public ?string $starting_at;
-    public string $due_at;
+    public ?string $due_at;
     public string $created_at;
     public string $updated_at;
 

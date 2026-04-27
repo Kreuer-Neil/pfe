@@ -28,7 +28,7 @@ return new class extends Migration {
             $table->integer('min_participations')->nullable();
 
             // When the task is due
-            $table->dateTime('due_at');
+            $table->dateTime('due_at')->nullable(); // -> No time limit
 
             // If task has an action timespan (ex. only during one weekend)
             $table->dateTime('starting_at')->nullable();
