@@ -26,6 +26,13 @@ class Task extends Model
     ];
     use SoftDeletes;
 
+    /**
+     * Returns the task's project.
+     */
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class);
+    }
 
     /**
      * Returns the task owner.
@@ -38,7 +45,7 @@ class Task extends Model
     /**
      * Returns the task's notes.
      */
-    public function notes():HasMany
+    public function notes(): HasMany
     {
         return $this->hasMany(Note::class);
     }
@@ -83,7 +90,7 @@ class Task extends Model
 
     public function isParticipating(User|int $user): bool
     {
-        $userId = isInt($user) ? $user :$user->id;
-        return !$this->participations->where('user_id', '==' , $userId)->isEmpty();
+        $userId = isInt($user) ? $user : $user->id;
+        return !$this->participations->where('user_id', '==', $userId)->isEmpty();
     }
 }

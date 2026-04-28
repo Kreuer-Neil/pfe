@@ -85,13 +85,14 @@ export interface ITask {
     title: string,
     description: string,
     project_id: string,
+    project_name: string,
     min_participations: ?number,
     // if self is participating
     self_participating: boolean,
     participating_users: IProfile[],
     starting_at: ?string,
     due_at: ?string,
-    // created_at: string,
+    created_at: string,
     // updated_at: string,
     notes: INote[]|null,
 

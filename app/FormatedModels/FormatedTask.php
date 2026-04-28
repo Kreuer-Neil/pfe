@@ -12,6 +12,7 @@ class FormatedTask
     public string $title;
     public string $description;
     public string $project_id;
+    public string $project_name;
     public string $min_participations;
     public $participating_users;
     public bool $self_participating;
@@ -27,6 +28,8 @@ class FormatedTask
         $this->title = $task->title;
         $this->description = $task->description;
         $this->project_id = $task->project_id;
+        $this->project_name = $task->project->name;
+
         $this->min_participations = $task->min_participations;
         // Turns users model collection into profile data
         $this->participating_users = [];

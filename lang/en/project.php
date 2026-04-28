@@ -10,6 +10,7 @@ return [
         'show_agenda' => 'Show full agenda',
         'title' => [
             'upcoming' => 'Upcoming tasks'
-        ]
+        ],
+        'from_project' => 'Task from project {project}',
     ]
 ];

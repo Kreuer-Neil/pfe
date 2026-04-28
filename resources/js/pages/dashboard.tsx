@@ -37,14 +37,14 @@ export default function Dashboard() {
             <Head title="Dashboard"/>
             <PageFlowContainer>
                 {/* TODO if first connection, use simple welcome text? */}
-                <p>{trans('dashboard.welcome_back', {name: currentUser.nickname})}</p>
+                <p className={'mx-3'}>{trans('dashboard.welcome_back', {name: currentUser.nickname})}</p>
 
                 <section className="bg-red-50">
                     <h2>{__('dashboard.notifications')}</h2>
                 </section>
 
                 {/*Tasks section*/}
-                <TaskDisplay level={2} tasks={tasks}/>
+                <TaskDisplay level={2} tasks={tasks} projectContext={true}/>
                 {/* TODO setup absence feature (do not disturb-like)
                 <Button as={"a"} textContent={__('project.get_absent')} type="warning" className="-mt-4"/>*/}
 

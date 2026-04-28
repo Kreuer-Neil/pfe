@@ -230,6 +230,10 @@
         @apply bg-tertiary text-shadow-tertiary-foreground;
     }
 
+    .icon-btn {
+        @apply p-1 cursor-pointer;
+    }
+
     /** Frontpage specific style **/
     .frontpage {
         main > * {
@@ -358,20 +362,20 @@
 
     /** Generic app style **/
     .main-page {
-        @apply @container w-full max-w-7xl p-4 flex flex-col items-center gap-8;
+        @apply @container w-full max-w-7xl flex flex-col items-center gap-8 py-8;
     }
 
     .section-title {
-        @apply font-medium text-[2rem];
+        @apply font-medium text-[2rem] w-full text-left;
     }
 
     .item-title {
-        @apply font-medium text-2xl self-center;
+        @apply font-medium text-2xl self-start;
     }
 
     .items-container {
         @apply w-full max-w-3xl /*rounded-lg bg-card*/
-        overflow-clip;
+        overflow-clip flex flex-col gap-4;
     }
 
     .main-container {
@@ -379,12 +383,11 @@
     }
 
     .item-md {
-        @apply flex flex-col gap-3 p-3 py-4;
+        @apply flex flex-col gap-1 p-2;
     }
 
     .task-item {
-        @apply border-2 border-ring bg-background text-foreground rounded-sm /*drop-shadow-sm*/
-        max-w-[var(--text-max-w)];
+        @apply rounded-sm bg-background drop-shadow-sm max-w-[var(--text-max-w)];
     }
 
     /* Overwrites default Lucide icons style*/
@@ -393,11 +396,11 @@
     }
 
     .task-icon {
-        @apply bg-valid flex gap-1 p-1 px-1.5 rounded-xs items-center;
+        @apply bg-valid flex /*gap-1*/ p-1 px-1.5 rounded-xs items-center;
     }
 
     .month-divider {
-        @apply flex items-center gap-2 py-0.5 text-muted-foreground text-xs -mx-1;
+        @apply flex items-center gap-1 p-1 py-0.5 text-muted-foreground text-xs -mx-1;
 
         &:before, &:after {
             flex-grow: 1;
