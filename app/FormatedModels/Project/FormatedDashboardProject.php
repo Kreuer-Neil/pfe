@@ -4,7 +4,7 @@ namespace App\FormatedModels\Project;
 
 use App\Models\Project;
 
-class FormatedProjectMiniature extends FormatedProjectContext
+class FormatedDashboardProject extends FormatedProjectContext
 {
 
     public string $id;
@@ -12,7 +12,7 @@ class FormatedProjectMiniature extends FormatedProjectContext
     public string $name;
     public string $icon;
     public string $description;
-    public int $memberCount;
+    public int $members_count;
 
     public function __construct(Project $project)
     {
@@ -20,7 +20,7 @@ class FormatedProjectMiniature extends FormatedProjectContext
         $this->name = $project->name;
         $this->icon = $project->icon;
         $this->description = $project->description;
-        $this->memberCount = $project->members->count();
+        $this->members_count = $project->members->count();
         // TODO add notifications etc. later? On another version
     }
 }

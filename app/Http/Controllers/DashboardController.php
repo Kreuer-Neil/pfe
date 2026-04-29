@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\FormatedModels\FormatedTask;
-use App\FormatedModels\Project\FormatedProjectMiniature;
+use App\FormatedModels\Project\FormatedDashboardProject;
 use App\Models\Project;
 use App\Models\Task;
 use Illuminate\Http\Request;
@@ -17,7 +17,7 @@ class DashboardController extends Controller
 
         $userProjects = [];
         foreach ($currentUser->projects as $project) {
-            $userProjects[] = new FormatedProjectMiniature($project);
+            $userProjects[] = new FormatedDashboardProject($project);
         }
 
         $tasks = [];

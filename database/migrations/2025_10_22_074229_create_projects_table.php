@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\Languages;
+use App\Enums\Language;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -23,7 +23,7 @@ return new class extends Migration {
             // Status is a list of posts related to the project
             // $table->text('status')->nullable();
             $table->string('slug',/*24*/)->unique();
-            $table->enum('lang', Languages::cases()); // Project languages. Default: User lang
+            $table->enum('lang', Language::cases()); // Project languages. Default: User lang
             $table->string('coordinates')->nullable();
             $table->boolean('is_private')->default(true);
 

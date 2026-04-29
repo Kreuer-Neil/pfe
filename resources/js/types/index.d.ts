@@ -76,9 +76,14 @@ export interface IProjectContext {
     [key: string]: unknown;
 }
 
+export interface IDashboardProject extends IProjectContext {
+    description: string;
+    // featured_members: IUser[];
+}
 export interface IProjectMiniature extends IProjectContext {
     description: string;
     featured_members: IUser[];
+    members_count: number;
 }
 
 export interface IProject extends IProjectMiniature {

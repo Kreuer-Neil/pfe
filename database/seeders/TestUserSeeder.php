@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ProjectRole;
 use App\Models\Member;
 use App\Models\Project;
 use App\Models\Task;
@@ -38,13 +39,19 @@ class TestUserSeeder
             ]
         );
 
-            $sharedGardenProject->addTask(new Task([
-                'title' => 'Water the plants',
-                'user_id' => $testUser->id,
-                'description' => 'The plants in our appartment’s shared garden need constant watering and care, especially if it didn’t rain.',
-                'min_participations' => 8,
-                'due_at' => Carbon::createFromDate('2026', '06', '23')
-            ]))->participate($testUser);
+        Member::create([
+            'project_id' => $sharedGardenProject->id,
+            'user_id' => $testUser->id,
+            'role' => ProjectRole::ADMIN,
+        ]);
+
+        $sharedGardenProject->addTask(new Task([
+            'title' => 'Water the plants',
+            'user_id' => $testUser->id,
+            'description' => 'The plants in our appartment’s shared garden need constant watering and care, especially if it didn’t rain.',
+            'min_participations' => 8,
+            'due_at' => Carbon::createFromDate('2026', '06', '23')
+        ]), $testUser)->participate($testUser);
 
         foreach (Task::factory(5)->create([
             'user_id' => $testUser->id,

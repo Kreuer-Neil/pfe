@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum ProjectRoles: string
+enum ProjectRole: string
 {
     // Can do pretty much everything except delete project
     case ADMIN = 'admin';

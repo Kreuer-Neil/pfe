@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('task_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('owner_id')->nullable()->constrained('user','id')->nullOnDelete();
+            $table->foreignId('owner_id')->nullable()->constrained('users','id')->nullOnDelete();
             $table->string('content');
             $table->softDeletes();
             $table->timestamps();

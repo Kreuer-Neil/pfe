@@ -74,8 +74,10 @@ class Task extends Model
      */
     public function participate(User $user): bool
     {
-        $this->project->members;
-        if (Participation::where('user_id', $user->id)->where('task_id', $this->id)->exists()) {
+        // Checks if user belongs to the project
+        $canParticipate = !$this->project->members->where('id', $user->id)->isEmpty();
+
+        if ($canParticipate && Participation::where('user_id', $user->id)->where('task_id', $this->id)->exists()) {
             return false;
         }
         try {

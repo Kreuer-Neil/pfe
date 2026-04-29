@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import {dashboard} from '@/routes';
-import {type BreadcrumbItem, IProject, IProjectMiniature, ITask, IUser, SharedData} from '@/types';
+import {type BreadcrumbItem, IProject, IDashboardProject, ITask, IUser, SharedData} from '@/types';
 import {Head, usePage} from '@inertiajs/react';
 import {useLang} from "@/hooks/useLang";
 import MyProjects from "@/components/sections/myProjects";
@@ -17,7 +17,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 
 type PageProps = {
-    userProjects: IProjectMiniature[],
+    userProjects: IDashboardProject[],
     tasks: ITask[],
 };
 export default function Dashboard() {

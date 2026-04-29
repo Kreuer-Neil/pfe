@@ -1,7 +1,7 @@
 <?php
 
 
-use App\Enums\Languages;
+use App\Enums\Language;
 use App\Models\User;
 
 test('landing pages can be accessed and contain translated strings', function () {
