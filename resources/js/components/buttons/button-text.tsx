@@ -4,22 +4,27 @@ import React, {ReactNode} from "react";
 import {cn} from "@/lib/utils";
 
 
-
 interface ButtonTextProps {
     icon?: LucideIcon | null,
     textContent: string,
     href?: string,
     className?: string,
     type?: "default" | "destroy",
+    onClick?: ((e: any) => void) | null
 }
 
-export default function ButtonText ({
-                    icon: Icon = null,
-                    textContent,
-                    href = '#',
-                    className = '',
-                    type = 'default'
-                }: ButtonTextProps): ReactNode {
+// Shouldn't we name it "Text link" ? Or another name
+/**
+ * Displays a button with a clickable text appearance.
+ */
+export default function ButtonText({
+                                       icon: Icon = null,
+                                       textContent,
+                                       href = '',
+                                       className = '',
+                                       type = 'default',
+                                       onClick = null,
+                                   }: ButtonTextProps): ReactNode {
 
     let style: string = '';
     switch (type) {
@@ -30,7 +35,15 @@ export default function ButtonText ({
             style = '';
             break;
     }
+    if (onClick) {
+        return (
+            <Link onClick={onClick} as={'button'} className={cn('button-text', style, className)}>
+                {Icon ? <Icon/> : ''}
+                {textContent}
+            </Link>
+        );
 
+    }
     return (
         <Link href={href} as={'a'} className={cn('button-text', style, className)}>
             {Icon ? <Icon/> : ''}

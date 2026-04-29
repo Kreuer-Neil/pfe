@@ -1,4 +1,5 @@
 import {IProject, ITask} from "@/types";
+// import {agenda} from '@/routes';
 import TaskItem from "@/components/tasks/task-item";
 import {useLang} from "@/hooks/useLang";
 import {ReactNode} from "react";
@@ -72,8 +73,11 @@ export default function TaskDisplay(
             }
         </ol>
         <div className="flex flex-col gap-4 px-3 items-center">
-            <ButtonText icon={LucideChevronDown} textContent={__('pagination.show_more')}/>
-            <ButtonText textContent={actionText ?? __('project.task.show_agenda')} icon={LucideCalendarDays}/>
+            <ButtonText onClick={(e):void => {
+                // TODO implement later
+                // tasks.load(3)
+            }} icon={LucideChevronDown} textContent={__('pagination.show_more')}/>
+            {/*<ButtonText href={agenda().url} textContent={actionText ?? __('project.task.show_agenda')} icon={LucideCalendarDays}/>*/}
         </div>
     </section>
 }

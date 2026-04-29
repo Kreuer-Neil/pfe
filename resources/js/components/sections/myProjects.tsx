@@ -1,15 +1,15 @@
 import {useLang} from "@/hooks/useLang";
-import {IProject} from "@/types";
+import {IProject, IProjectMiniature} from "@/types";
 import {ReactNode} from "react";
 import {Link} from "@inertiajs/react";
 
-function ProjectItems({projects}: { projects: IProject[] }): ReactNode {
+function ProjectItems({projects}: { projects: IProjectMiniature[] }): ReactNode {
     const {__} = useLang()
     if (projects.length > 0) {
         return (
             <div className={"my-projects__container"}>
                 {
-                    projects.map((project: IProject): ReactNode => {
+                    projects.map((project: IProjectMiniature): ReactNode => {
                         return <article>
                             <h3>{project.name}</h3>
                             <div>
@@ -36,7 +36,7 @@ function ProjectItems({projects}: { projects: IProject[] }): ReactNode {
     );
 }
 
-export default function MyProjects({projects}: { projects: IProject[] | null }): ReactNode {
+export default function MyProjects({projects}: { projects: IProjectMiniature[] | null }): ReactNode {
     const {__} = useLang()
     if (!projects)
         // TODO translate no project text

@@ -1,17 +1,14 @@
 <?php
 
-namespace App\FormatedModels;
+namespace App\FormatedModels\Project;
 
 use App\Models\Project;
-use App\Models\User;
 
 class FormatedProjectContext
 {
     public string $id;
-//    public User $owner;
     public string $name;
     public string $icon;
-//    public string $description;
 
     public function __construct(Project $project)
     {

@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
-import {dashboard, projects as projectsIndex} from '@/routes';
-import {type BreadcrumbItem, IProject, ITask, IUser, SharedData} from '@/types';
+import {dashboard} from '@/routes';
+import {type BreadcrumbItem, IProject, IProjectMiniature, ITask, IUser, SharedData} from '@/types';
 import {Head, usePage} from '@inertiajs/react';
 import {useLang} from "@/hooks/useLang";
 import MyProjects from "@/components/sections/myProjects";
@@ -13,15 +13,11 @@ const breadcrumbs: BreadcrumbItem[] = [
         title: 'Dashboard',
         href: dashboard().url,
     },
-    {
-        title: 'Projects',
-        href: projectsIndex().url,
-    },
 ];
 
 
 type PageProps = {
-    userProjects: IProject[],
+    userProjects: IProjectMiniature[],
     tasks: ITask[],
 };
 export default function Dashboard() {

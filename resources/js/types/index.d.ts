@@ -44,7 +44,7 @@ export interface User {
     [key: string]: unknown; // This allows for additional properties...
 }
 
-
+// Custom types
 export interface IUser extends IProfile {
     id: number;
     first_name: string;
@@ -68,24 +68,28 @@ export interface IProfile {
     [key: string]: unknown; // This allows for additional properties...
 }
 
-// Custom types
 export interface IProjectContext {
     id: number;
     name: string;
     icon: string;
+
+    [key: string]: unknown;
 }
-export interface IProject extends IProjectContext {
+
+export interface IProjectMiniature extends IProjectContext {
+    description: string;
+    featured_members: IUser[];
+}
+
+export interface IProject extends IProjectMiniature {
     id: number;
     name: string;
     icon: string;
     description: string;
     // is_private: boolean;
     owner: IUser;
-    // members: IUser[];
-    featured_members: IUser[];
+    members: IUser[];
     members_count: number;
-
-    [key: string]: unknown; // This allows for additional properties...
 }
 
 export interface ITask {
@@ -105,11 +109,13 @@ export interface ITask {
     // updated_at: string,
     notes: INote[]|null,
 
-    [key: string]: unknown; // This allows for additional properties...
+    [key: string]: unknown;
 }
 
 export interface INote {
     id: string,
     owner: IProfile,
     content: string
+
+    [key: string]: unknown;
 }
