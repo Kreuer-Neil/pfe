@@ -46,11 +46,11 @@ function TaskIconParticipation({participations, min, className = ''}: {
     }
 }
 
-function TaskTitle({projectContext, children}: {
+function TaskTitle({isInProjectPage, children}: {
     children: string,
-    projectContext: boolean
+    isInProjectPage: boolean
 }): ReactNode {
-    if (!projectContext)
+    if (isInProjectPage)
         return (
             <h3 className={"item-title w-full"}>{children}</h3>
         );
@@ -64,10 +64,10 @@ function TaskTitle({projectContext, children}: {
 }
 
 // TODO find where to put the link
-export default function TaskItem({task, className = '', projectContext = false}: {
+export default function TaskItem({task, className = '', isInProjectPage = false}: {
     task: ITask,
     className?: string,
-    projectContext: boolean
+    isInProjectPage: boolean
 }) {
     const {__, trans} = useLang();
     const dueAt: string = task.due_at ? upcomingDateToString(laravelDateToJsDate(task.due_at)) : __('date.no_time_limit');
@@ -77,11 +77,11 @@ export default function TaskItem({task, className = '', projectContext = false}:
     return (
         <article className={cn("task-item item-md", className)} key={task.id.toString()}>
             {/* TODO add open on click and not drag, see bsky duckduckgo etc. */}
-            <TaskTitle projectContext={projectContext}>{task.title}</TaskTitle>
+            <TaskTitle isInProjectPage={isInProjectPage}>{task.title}</TaskTitle>
 
 
             {/* TODO limit desc max length when mobile */}
-            <p>{trans('project.task.from_project', {project: task.project_name})}</p>
+            <p>{trans('project.task.from_project', {project: task.project.name})}</p>
             <div className={"taskinfo mt-1 flex flex-wrap justify-between items-center gap-1"}>
                 {/* TODO change date format */}
                 <time className={"flex gap-1"}><Timer/><span>{dueAt}</span>

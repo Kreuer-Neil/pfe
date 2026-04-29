@@ -69,12 +69,21 @@ export interface IProfile {
 }
 
 // Custom types
-export interface IProject {
+export interface IProjectContext {
+    id: number;
+    name: string;
+    icon: string;
+}
+export interface IProject extends IProjectContext {
     id: number;
     name: string;
     icon: string;
     description: string;
-    isPrivate: boolean;
+    // is_private: boolean;
+    owner: IUser;
+    // members: IUser[];
+    featured_members: IUser[];
+    members_count: number;
 
     [key: string]: unknown; // This allows for additional properties...
 }
@@ -85,7 +94,7 @@ export interface ITask {
     title: string,
     description: string,
     project_id: string,
-    project_name: string,
+    project: IProjectContext,
     min_participations: ?number,
     // if self is participating
     self_participating: boolean,

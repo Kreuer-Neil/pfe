@@ -11,8 +11,7 @@ class FormatedTask
     public ?User $owner;
     public string $title;
     public string $description;
-    public string $project_id;
-    public string $project_name;
+    public FormatedProjectContext $project;
     public string $min_participations;
     public $participating_users;
     public bool $self_participating;
@@ -27,8 +26,7 @@ class FormatedTask
         $this->owner = $task->owner;
         $this->title = $task->title;
         $this->description = $task->description;
-        $this->project_id = $task->project_id;
-        $this->project_name = $task->project->name;
+        $this->project = new FormatedProjectContext($task->project()->first(['id','name','icon']));
 
         $this->min_participations = $task->min_participations;
         // Turns users model collection into profile data

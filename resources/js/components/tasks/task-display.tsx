@@ -1,4 +1,4 @@
-import {ITask} from "@/types";
+import {IProject, ITask} from "@/types";
 import TaskItem from "@/components/tasks/task-item";
 import {useLang} from "@/hooks/useLang";
 import {ReactNode} from "react";
@@ -15,7 +15,8 @@ interface TaskDisplayProps {
     className?: string,
     actionText?: string,
     action?: (() => void) | null,
-    projectContext?: boolean,
+    isInProjectPage?: boolean,
+    project?: IProject | null,
 }
 
 function RenderTasks({tasks, projectContext}: { tasks: ITask[], projectContext: boolean }): ReactNode[] {
@@ -30,14 +31,18 @@ function RenderTasks({tasks, projectContext}: { tasks: ITask[], projectContext: 
         return (
             <li className="w-full flex flex-col gap-4 @xl:gap-6" key={task.id.toString()}>
                 {precedentMonthCondition ? <span className="month-divider">{__('date.month.' + month)}</span> : ''}
-                <TaskItem task={task} projectContext={projectContext}/>
+                <TaskItem task={task} isInProjectPage={projectContext}/>
             </li>
         );
     });
-
-    // TODO Adds the "See more" button function to load more items
-    items.push(<ButtonText icon={LucideChevronDown} textContent={__('pagination.show_more')} key={0}/>);
     return items;
+}
+
+function AddTask() {
+    // TODO add role condition and modal apparition
+    return (
+        <ClipboardPlus className={'icon-btn'}/>
+    );
 }
 
 export default function TaskDisplay(
@@ -48,24 +53,26 @@ export default function TaskDisplay(
         className = '',
         actionText,
         action = null,
-        projectContext = false,
+        project = null,
+
     }: TaskDisplayProps,): ReactNode {
-    const {__} = useLang();
+    const {__, trans} = useLang();
     return <section className={cn('items-container', className)}>
         <div className={'flex items-center mx-3'}>
-            <h2 className={'section-title w-full'}>{title ?? __('project.task.title.upcoming')}</h2>
-            <ClipboardPlus className={'icon-btn'}/>
+            <h2 className={'section-title w-full'}>{title ?? (project ? trans('project.tasks_container_title', {project: project.name}) : __('project.task.title.upcoming'))}</h2>
+            {project ? <AddTask/> : ''}
         </div>
         <ol className={'px-2 flex flex-col gap-3 items-center'}>
             {
                 tasks
                     // Task items
                     // TODO add "See more" button at the bottom and month separators
-                    ? <RenderTasks tasks={tasks} projectContext={projectContext} />
+                    ? <RenderTasks tasks={tasks} projectContext={(project != null)}/>
                     : <li><p>{__('project.task.empty_message')}</p></li>
             }
         </ol>
-        <div className="flex flex-col gap-3 p-3 pt-2 @xl:px-6 items-center">
+        <div className="flex flex-col gap-4 px-3 items-center">
+            <ButtonText icon={LucideChevronDown} textContent={__('pagination.show_more')}/>
             <ButtonText textContent={actionText ?? __('project.task.show_agenda')} icon={LucideCalendarDays}/>
         </div>
     </section>
