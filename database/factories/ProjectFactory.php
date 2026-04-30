@@ -17,12 +17,9 @@ class ProjectFactory extends Factory
             'icon' => $this->faker->word(),
 //            'icon'=> Icons::randomIcon->id(),
             'description' => $this->faker->text(),
-            'status' => $this->faker->text(),
-            'lang' => $this->faker->randomElement(Language::cases()),
-            // + radius for coordinates?
-            'coordinates' => "[{$this->faker->latitude(49.30, 51.30)}, {$this->faker->longitude(2.30, 6.30)}]",
-            // Must be unique
             'slug' => $this->faker->slug(6),
+            'lang' => $this->faker->randomElement(Language::cases()),
+            'coordinates' => "{$this->faker->latitude(49.30, 51.30)}, {$this->faker->longitude(2.30, 6.30)}",
 
             'is_private' => $this->faker->boolean,
         ];

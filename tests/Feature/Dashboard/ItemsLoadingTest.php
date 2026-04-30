@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ProjectRole;
 use App\Models\Member;
 use App\Models\Participation;
 use App\Models\Project;
@@ -12,6 +13,7 @@ beforeEach(function () {
     $this->actingAs($this->user = User::factory()->create());
 
     $this->project = Project::factory()->create(['owner_id' => 1]);
+    Member::create(['user_id' => $this->user->id, 'project_id' => $this->project->id, 'role' => ProjectRole::ADMIN]);
 
     Task::factory(10)->create([
         'project_id' => $this->project->id,
@@ -37,12 +39,34 @@ beforeEach(function () {
         $userTask->participate($this->user);
     }
 
+    $this->response = $this->get(route('dashboard'));
 });
 
 test('upcoming tasks load correctly', function () {
-    $response = $this->get(route('dashboard'));
 
     foreach ($this->userTasks as $userTask) {
-        $response->assertSee($userTask['title']);
+        $this->response->assertSee($userTask->title);
+
+        // TODO assertion that contacts participating load when set up
+        // TODO assertion that tasks load when clicking "show more"
+    }
+});
+
+test('non-taken tasks doesn’t appear', function () {
+    $userTasks = $this->userTasks->toArray();
+    $userTasksIds = [];
+    for ($i = 0; $i < 3; $i++) {
+        $userTasksIds[$i] = $userTasks[$i]['id'];
+    }
+    // React is a BIG LOAD OF $#17 so the whole data from the app is loaded in a div and there's nothing to do against it.
+    foreach (Task::all()->whereNotIn('id', $userTasksIds) as $task) {
+        $this->response->assertDontSeeText($task->title);
+    }
+});
+
+
+test('projects load correctly', function () {
+    foreach ($this->user->projects as $project) {
+        $this->response->assertSee($project->name);
     }
 });

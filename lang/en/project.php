@@ -12,5 +12,7 @@ return [
             'upcoming' => 'Upcoming tasks'
         ],
         'from_project' => 'Task from project {project}',
-    ]
+    ],
+
+    'posted_by' => 'Posted by:'
 ];

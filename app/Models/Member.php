@@ -12,7 +12,9 @@ class Member extends Model
 {
 //    use SoftDeletes;
 
-    protected $fillable = ['user_id', 'project_id', 'role_id'];
+    protected $fillable = ['user_id', 'project_id', 'role_id',
+        'role'
+    ];
 
     /**
      * Returns the user corresponding to this project member.

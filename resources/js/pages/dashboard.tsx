@@ -1,9 +1,9 @@
 import AppLayout from '@/layouts/app-layout';
 import {dashboard} from '@/routes';
-import {type BreadcrumbItem, IProject, IDashboardProject, ITask, IUser, SharedData} from '@/types';
+import {type BreadcrumbItem, IDashboardProject, ITask, SharedData} from '@/types';
 import {Head, usePage} from '@inertiajs/react';
 import {useLang} from "@/hooks/useLang";
-import MyProjects from "@/components/sections/myProjects";
+import MyProjects from "@/components/dashboard/my-projects";
 import TaskDisplay from "@/components/tasks/task-display";
 import PageFlowContainer from "@/components/page-flow-container";
 import Button from "@/components/buttons/button";
@@ -33,10 +33,14 @@ export default function Dashboard() {
             <Head title="Dashboard"/>
             <PageFlowContainer>
                 {/* TODO if first connection, use simple welcome text? */}
-                <p className={'mx-3'}>{trans('dashboard.welcome_back', {name: currentUser.nickname})}</p>
-
-                <section className="bg-red-50">
-                    <h2>{__('dashboard.notifications')}</h2>
+                <section className="items-section hidden">
+                    <div className="mx-3">
+                    <h2 className="page-title">{trans('dashboard.welcome_back', {name: currentUser.nickname})}</h2>
+                    <p className="section-title">{__('dashboard.news')}</p>
+                    </div>
+                    <div>
+                        {/*scrollable news*/}
+                    </div>
                 </section>
 
                 {/*Tasks section*/}

@@ -2,5 +2,6 @@
 return [
     'notifications' => 'notifications',
 
-    'welcome_back' => 'Bon retour, {name}&nbsp;! Voilà ce que tu as manqué&nbsp;:'
+    'welcome_back' => 'Bon retour, {name}&nbsp;!',
+    'news' => 'Voilà ce que tu as manqué&nbsp;:'
 ];

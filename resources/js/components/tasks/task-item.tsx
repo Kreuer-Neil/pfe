@@ -1,10 +1,11 @@
 import {CalendarCheck, ClipboardPlus, Timer, UsersRound} from "lucide-react";
-import {IProject, ITask} from "@/types";
+import {IProject, IProjectContext, ITask} from "@/types";
 import {useLang} from "@/hooks/useLang";
 import PostedBy from "@/components/general-posts/posted-by";
 import {cn} from "@/lib/utils";
 import {laravelDateToJsDate, upcomingDateToString} from "@/helpers/date";
 import {ReactNode} from "react";
+import ProjectIcon from "@/components/icons/project-icon";
 
 
 function ParticipatingIcon({participating}: { participating: boolean }) {
@@ -12,7 +13,7 @@ function ParticipatingIcon({participating}: { participating: boolean }) {
         return (
             <CalendarCheck
                 // title={"You are participating"}
-                className={"task-icon"}/>
+                className="task-icon"/>
         );
     }
 }
@@ -31,7 +32,7 @@ function TaskIconParticipation({participations, min, className = ''}: {
                     colorClass,
                     className)
             }>
-                {participations ?? 0}/{min}&nbsp;<UsersRound/>
+                {participations ?? 0}/{min}<UsersRound/>
         </span>
         );
     } else {
@@ -40,25 +41,26 @@ function TaskIconParticipation({participations, min, className = ''}: {
                 cn("task-icon bg-card",
                     className)
             }>
-                {participations ?? 0}&nbsp;<UsersRound/>
+                {participations ?? 0}<UsersRound/>
         </span>
         );
     }
 }
 
-function TaskTitle({isInProjectPage, children}: {
+function TaskTitle({isInProjectPage, project, children}: {
     children: string,
+    project: IProjectContext,
     isInProjectPage: boolean
 }): ReactNode {
     if (isInProjectPage)
         return (
-            <h3 className={"item-title w-full"}>{children}</h3>
+            <h3 className="item-title w-full">{children}</h3>
         );
 
     return (
         <div className={'flex gap-1 justify-start items-center'}>
-            <div className={'size-8 rounded-full bg-container'}/>
-            <h3 className={"item-title w-full"}>{children}</h3>
+            <ProjectIcon project={project}/>
+            <h3 className="item-title w-full">{children}</h3>
         </div>
     );
 }
@@ -75,19 +77,19 @@ export default function TaskItem({task, className = '', isInProjectPage = false}
 
     // const dueAtYear: number = dueAt.getFullYear();
     return (
-        <article className={cn("task-item item-md", className)} key={task.id.toString()}>
+        <article className={cn("thumbnail-item", className)} key={task.id.toString()}>
             {/* TODO add open on click and not drag, see bsky duckduckgo etc. */}
-            <TaskTitle isInProjectPage={isInProjectPage}>{task.title}</TaskTitle>
+            <TaskTitle isInProjectPage={isInProjectPage} project={task.project}>{task.title}</TaskTitle>
 
 
             {/* TODO limit desc max length when mobile */}
             <p>{trans('project.task.from_project', {project: task.project.name})}</p>
-            <div className={"taskinfo mt-1 flex flex-wrap justify-between items-center gap-1"}>
+            <div className="taskinfo mt-1 flex flex-wrap justify-between items-center gap-1">
                 {/* TODO change date format */}
-                <time className={"flex gap-1"}><Timer/><span>{dueAt}</span>
+                <time className="flex gap-1"><Timer/><span>{dueAt}</span>
                 </time>
                 {/* TODO fix date string (or translate on a different property in the controller) */}
-                <div className={"flex gap-1 ml-auto"}>
+                <div className="flex gap-1 ml-auto">
                     { /* TODO add PFPs of participating people */}
                     {/*<RelatedUsers/>*/}
                     <TaskIconParticipation participations={task.participating_users.length}

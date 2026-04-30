@@ -78,6 +78,7 @@ export interface IProjectContext {
 
 export interface IDashboardProject extends IProjectContext {
     description: string;
+    members_count: number;
     // featured_members: IUser[];
 }
 export interface IProjectMiniature extends IProjectContext {
@@ -102,7 +103,6 @@ export interface ITask {
     owner: ?IProfile,
     title: string,
     description: string,
-    project_id: string,
     project: IProjectContext,
     min_participations: ?number,
     // if self is participating

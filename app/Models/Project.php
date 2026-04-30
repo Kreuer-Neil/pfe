@@ -68,7 +68,7 @@ class Project extends Model
         if (!$this->permission($user, ProjectAction::MANAGE_TASK))
             return null;
         return Task::create([
-            'user_id' => $task->user_id,
+            'user_id' => $user->id,
             'project_id' => $this->id,
             'title' => $task->title,
             'description' => $task->description,

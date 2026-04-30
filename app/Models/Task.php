@@ -22,7 +22,8 @@ class Task extends Model
         'project_id',
         'starting_at',
         'due_at',
-        'min_participations'
+        'min_participations',
+        'user_id'
     ];
     use SoftDeletes;
 

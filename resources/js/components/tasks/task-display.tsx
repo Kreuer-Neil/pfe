@@ -20,7 +20,7 @@ interface TaskDisplayProps {
     project?: IProject | null,
 }
 
-function RenderTasks({tasks, projectContext}: { tasks: ITask[], projectContext: boolean }): ReactNode[] {
+function TasksList({tasks, projectContext}: { tasks: ITask[], projectContext: boolean }): ReactNode[] {
     const {__} = useLang();
     // TODO fix date problems here
     const length = tasks.length;
@@ -30,7 +30,7 @@ function RenderTasks({tasks, projectContext}: { tasks: ITask[], projectContext: 
             && tasks[i - 1]
             && (month > laravelDateToJsDate(tasks[i - 1].due_at ?? tasks[i - 1].created_at).getMonth());
         return (
-            <li className="w-full flex flex-col gap-4 @xl:gap-6" key={task.id.toString()}>
+            <li className="w-full flex flex-col gap-4 @xl:gap-6" key={task.id}>
                 {precedentMonthCondition ? <span className="month-divider">{__('date.month.' + month)}</span> : ''}
                 <TaskItem task={task} isInProjectPage={projectContext}/>
             </li>
@@ -58,17 +58,17 @@ export default function TaskDisplay(
 
     }: TaskDisplayProps,): ReactNode {
     const {__, trans} = useLang();
-    return <section className={cn('items-container', className)}>
-        <div className={'flex items-center mx-3'}>
-            <h2 className={'section-title w-full'}>{title ?? (project ? trans('project.tasks_container_title', {project: project.name}) : __('project.task.title.upcoming'))}</h2>
+    return <section className={cn('items-section', className)}>
+        <div className="flex items-center mx-3">
+            <h2 className="section-title w-full">{title ?? (project ? trans('project.tasks_container_title', {project: project.name}) : __('project.task.title.upcoming'))}</h2>
             {project ? <AddTask/> : ''}
         </div>
-        <ol className={'px-2 flex flex-col gap-3 items-center'}>
+        <ol className="thumbnails-list-container">
             {
                 tasks
                     // Task items
                     // TODO add "See more" button at the bottom and month separators
-                    ? <RenderTasks tasks={tasks} projectContext={(project != null)}/>
+                    ? <TasksList tasks={tasks} projectContext={(project != null)}/>
                     : <li><p>{__('project.task.empty_message')}</p></li>
             }
         </ol>

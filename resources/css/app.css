@@ -25,6 +25,8 @@
     --color-card: var(--card);
     --color-card-foreground: var(--card-foreground);
 
+    --color-loading: var(--tertiary);
+
     --color-button: var(--button);
     --color-button-foreground: var(--button-foreground);
     --color-link: var(--link);
@@ -365,29 +367,34 @@
         @apply @container w-full max-w-7xl flex flex-col items-center gap-8 py-8;
     }
 
-    .section-title {
+    .page-title {
         @apply font-medium text-[2rem] w-full text-left;
+    }
+
+    .section-title {
+        @apply font-medium text-2xl w-full text-left;
     }
 
     .item-title {
         @apply font-medium text-2xl self-start;
     }
 
-    .items-container {
+    .items-section {
         @apply w-full max-w-3xl /*rounded-lg bg-card*/
         overflow-clip flex flex-col gap-4;
+    }
+
+    .thumbnails-list-container {
+        @apply px-2 flex flex-col gap-3 items-center;
     }
 
     .main-container {
         @apply max-w-[var(--number-container-max-width)] w-full;
     }
 
-    .item-md {
-        @apply flex flex-col gap-1 p-2;
-    }
-
-    .task-item {
-        @apply rounded-sm bg-background drop-shadow-sm max-w-[var(--text-max-w)];
+    .thumbnail-item {
+        @apply flex flex-col gap-1 p-2
+        rounded-sm bg-background drop-shadow-sm max-w-[var(--text-max-w)];
     }
 
     /* Overwrites default Lucide icons style*/
@@ -396,7 +403,7 @@
     }
 
     .task-icon {
-        @apply bg-valid flex /*gap-1*/ p-1 px-1.5 rounded-xs items-center;
+        @apply bg-valid flex gap-1 p-1 px-1.5 rounded-xs items-center;
     }
 
     .month-divider {

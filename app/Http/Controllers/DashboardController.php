@@ -27,7 +27,7 @@ class DashboardController extends Controller
             $tasks[] = $formatedUpcomingTask;
         }
 
-        syncLangFiles(['nav', 'dashboard', 'project', 'date', 'misc', 'user', 'pagination']);
+        syncLangFiles(['main-nav', 'dashboard', 'project', 'date', 'pagination']);
         return Inertia::render(
             'dashboard',
             compact('userProjects', 'tasks')
