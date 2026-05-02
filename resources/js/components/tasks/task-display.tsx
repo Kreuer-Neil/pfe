@@ -10,7 +10,7 @@ import {laravelDateToJsDate} from "@/helpers/date";
 
 
 interface TaskDisplayProps {
-    tasks: ITask[] | null,
+    tasks: ITask[],
     title?: string | null,
     level?: number,
     className?: string,
@@ -60,7 +60,7 @@ export default function TaskDisplay(
     const {__, trans} = useLang();
     return <section className={cn('items-section', className)}>
         <div className="flex items-center mx-3">
-            <h2 className="section-title w-full">{title ?? (project ? trans('project.tasks_container_title', {project: project.name}) : __('project.task.title.upcoming'))}</h2>
+            <h2 className="section-title w-full">{title ?? (project ? trans('project.tasks.container_title', {project: project.name}) : __('project.task.title.upcoming'))}</h2>
             {project ? <AddTask/> : ''}
         </div>
         <ol className="thumbnails-list-container">

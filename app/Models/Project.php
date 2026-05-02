@@ -44,10 +44,13 @@ class Project extends Model
     private function permission(User $user, ProjectAction $action): bool
     {
         // TODO make it dynamic with project settings separate "project_permission" table later
-        if (($member = $this->members->find($user->id))->exists()) {
+        if (($member = $this->members->find($user->id))) {
             $memberRole = $member->pivot->role;
             $returnValue = false;
             switch ($action) {
+                case ProjectAction::BELONGS;
+                    $returnValue = true;
+                    break;
                 case ProjectAction::MANAGE_TASK;
                     if (in_array($memberRole, [ProjectRole::TASK_MANAGER->value, ProjectRole::MODERATOR->value, ProjectRole::ADMIN->value,]))
                         $returnValue = true;
@@ -61,6 +64,11 @@ class Project extends Model
         }
 
         return false;
+    }
+
+    public function userBelongsTo(User $user):bool
+    {
+        return $this->permission($user, ProjectAction::BELONGS);
     }
 
     public function addTask(Task $task, User $user): Task|null

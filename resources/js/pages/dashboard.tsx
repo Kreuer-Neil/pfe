@@ -30,6 +30,7 @@ export default function Dashboard() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard"/>
+            <h1 className="sr-only">{__('dashboard.title')}</h1>
             <PageFlowContainer>
                 {/* TODO if first connection, use simple welcome text? */}
                 <section className="items-section hidden">

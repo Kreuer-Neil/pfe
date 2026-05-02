@@ -81,21 +81,31 @@ export interface IDashboardProject extends IProjectContext {
     members_count: number;
     // featured_members: IUser[];
 }
+
 export interface IProjectMiniature extends IProjectContext {
     description: string;
     featured_members: IUser[];
     members_count: number;
 }
 
-export interface IProject extends IProjectMiniature {
+export interface IProjectShow extends IProjectMiniature {
+
+    // is_private: boolean;
+    access: 'Viewer';
+}
+
+export interface IProject extends IProjectShow {
     id: number;
     name: string;
     icon: string;
     description: string;
-    // is_private: boolean;
     owner: IUser;
     members: IUser[];
     members_count: number;
+
+    access: 'Project';
+
+    upcoming_tasks: ITask[];
 }
 
 export interface ITask {
@@ -112,7 +122,7 @@ export interface ITask {
     due_at: ?string,
     created_at: string,
     // updated_at: string,
-    notes: INote[]|null,
+    notes: INote[] | null,
 
     [key: string]: unknown;
 }

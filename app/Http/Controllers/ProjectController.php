@@ -18,6 +18,13 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         $route = route('projects.show', $project->id);
+
+        if ((!$project->userBelongsTo(auth()->user()))) {
+
+            if ($project->is_private) {
+            }
+
+        }
         return Inertia::render('projects/show', ['project'=> $project, 'route' => $route]);
     }
 }
