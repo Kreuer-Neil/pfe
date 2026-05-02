@@ -6,11 +6,13 @@ use App\Enums\ProjectAction;
 use App\Enums\ProjectInvitationResponse;
 use App\Enums\ProjectPermissionResponse;
 use App\Enums\ProjectRole;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 class Project extends Model
 {
@@ -38,7 +40,15 @@ class Project extends Model
 
     public function tasks(): HasMany
     {
-        return $this->hasMany(Task::class);
+        return $this
+            ->hasMany(Task::class)
+            ->orderBy('due_at', 'asc');
+    }
+
+    public function upcomingTasks(): HasMany
+    {
+        return $this->tasks()
+            ->where('due_at', '>=', Carbon::now());
     }
 
     private function permission(User $user, ProjectAction $action): bool
@@ -66,7 +76,7 @@ class Project extends Model
         return false;
     }
 
-    public function userBelongsTo(User $user):bool
+    public function userIsMember(User $user): bool
     {
         return $this->permission($user, ProjectAction::BELONGS);
     }
@@ -120,4 +130,15 @@ class Project extends Model
     {
 
     }
+
+    /**
+     * Returns the user's role.
+     */
+    public function userRole(User $user)
+    {
+        $member = $this->members->find($user->id);
+        if (!$member) return ProjectRole::VIEWER;
+        return $member->pivot->role;
+    }
+
 }

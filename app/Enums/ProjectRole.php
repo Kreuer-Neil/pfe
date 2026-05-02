@@ -2,6 +2,7 @@
 
 namespace App\Enums;
 
+/// Remember to edit React types when editing these
 enum ProjectRole: string
 {
     // Can do pretty much everything except delete project
@@ -15,4 +16,8 @@ enum ProjectRole: string
 
     // Can only do basic interactions
     case MEMBER = 'member';
+
+    // Banned user
+    case BANNED = 'banned';
+    const VIEWER = 'viewer';
 }

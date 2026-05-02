@@ -14,7 +14,7 @@ class FormatedTask
     public string $description;
     public FormatedProjectContext $project;
     public string $min_participations;
-    public $participating_users;
+    public array $participating_users;
     public bool $self_participating;
     public ?string $starting_at;
     public ?string $due_at;

@@ -31,6 +31,7 @@ function Page404(): ReactNode {
     );
 }
 
+
 /**
  * Page display for non-members.
  */
@@ -47,7 +48,7 @@ function VisitorPage() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={project.name}/>
-            <h1>{__('project.show')}</h1>
+            <h1>{project.name}</h1>
             <PageFlowContainer className="pt-0">
                 <header>
                     <article>
@@ -63,6 +64,7 @@ function VisitorPage() {
         </AppLayout>
     );
 }
+
 
 /**
  * Page display for members only.
@@ -80,15 +82,15 @@ function MemberPage() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={project.name}/>
-            <h1>{__('project.show')}</h1>
             <PageFlowContainer className="pt-0">
                 <header>
+                    <h1 className="page-title">{project.name}</h1>
                     <article>
 
                     </article>
                 </header>
 
-                <TaskDisplay tasks={project.upcoming_tasks} title={__('project.tasks.upcoming_tasks')}/>
+                <TaskDisplay tasks={project.upcoming_tasks} title={__('project.upcoming_tasks')}/>
             </PageFlowContainer>
 
         </AppLayout>

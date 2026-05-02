@@ -91,7 +91,7 @@ export interface IProjectMiniature extends IProjectContext {
 export interface IProjectShow extends IProjectMiniature {
 
     // is_private: boolean;
-    access: 'Viewer';
+    user_role: 'viewer';
 }
 
 export interface IProject extends IProjectShow {
@@ -103,7 +103,7 @@ export interface IProject extends IProjectShow {
     members: IUser[];
     members_count: number;
 
-    access: 'Project';
+    user_role: 'member' | 'task_manager' | 'moderator' | 'admin';
 
     upcoming_tasks: ITask[];
 }

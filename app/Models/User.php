@@ -87,7 +87,18 @@ class User extends Authenticatable
     public function tasks(): BelongsToMany
     {
         return $this
-            ->belongsToMany(Task::class, Participation::class);
+            ->belongsToMany(Task::class, Participation::class)
+            ->orderBy('due_at', 'asc');
+    }
+
+    /**
+     * Get a user's upcoming tasks.
+     */
+    public function upcomingTasks(): BelongsToMany
+    {
+        return $this
+            ->tasks()
+            ->where('due_at', '>=', Carbon::now());
     }
 
     /**
@@ -106,14 +117,5 @@ class User extends Authenticatable
         return $this->nickname ?? "$this->first_name $this->last_name";
     }
 
-    /**
-     * Get a user's upcoming tasks.
-     */
-    public function upcomingTasks(): BelongsToMany
-    {
-        return $this
-            ->tasks()
-            ->where('due_at', '>=', Carbon::now())
-            ->orderBy('due_at', 'asc');
-    }
+
 }

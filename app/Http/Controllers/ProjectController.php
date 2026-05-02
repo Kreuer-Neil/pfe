@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\FormatedModels\Project\FormatedProject;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -19,12 +21,29 @@ class ProjectController extends Controller
     {
         $route = route('projects.show', $project->id);
 
-        if ((!$project->userBelongsTo(auth()->user()))) {
+        $project = $this->getShowDataFor(auth()->user(), $project);
+
+        syncLangFiles(['main-nav', 'project', 'date', 'pagination']);
+        return Inertia::render(
+            'projects/show',
+            compact('project', 'route'));
+    }
+
+
+    /**
+     * Gets the required show data for the project view (should not be here)
+     */
+    private function getShowDataFor(User $user, Project $project)
+    {
+        if (!$project->userIsMember(auth()->user())) {
 
             if ($project->is_private) {
+                return null;
             }
 
         }
-        return Inertia::render('projects/show', ['project'=> $project, 'route' => $route]);
+        // Get user role too
+
+        return new FormatedProject($project, $user);
     }
 }
