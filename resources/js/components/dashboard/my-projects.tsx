@@ -17,13 +17,14 @@ function DashboardProjectPreview({project}: { project: IDashboardProject }) {
             </div>
             <p>{project.description}</p>
             <div className="flex flex-wrap gap-1 gap-y-0.5">
-                {/*TODO buttons*/}
+                {/* TODO what's new since last passage on project */}
                 <div className="flex gap-1 ml-auto">
                     {/*Related users*/}
                     <div className="task-icon bg-secondary">
                         {project.members_count}
                         <UsersRound/>
                     </div>
+                    {/*Other infos*/}
                 </div>
             </div>
         </article>);
