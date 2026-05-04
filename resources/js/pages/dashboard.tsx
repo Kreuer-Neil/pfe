@@ -44,7 +44,7 @@ export default function Dashboard() {
                 </section>
 
                 {/*Tasks section*/}
-                <TaskDisplay level={2} tasks={tasks} isInProjectPage={false}/>
+                <TaskDisplay level={2} tasks={tasks} isInProjectPage={false} title={__('dashboard.upcoming_tasks')}/>
                 {/* TODO setup absence feature (do not disturb-like)
                 <Button as={"a"} textContent={__('project.get_absent')} type="warning" className="-mt-4"/>*/}
 

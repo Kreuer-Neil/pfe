@@ -37,10 +37,10 @@ export default function ButtonText({
     }
     if (onClick) {
         return (
-            <Link onClick={onClick} as={'button'} className={cn('button-text', style, className)}>
+            <button onClick={onClick} className={cn('button-text', style, className)}>
                 {Icon ? <Icon/> : ''}
                 {textContent}
-            </Link>
+            </button>
         );
 
     }
