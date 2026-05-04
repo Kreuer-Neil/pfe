@@ -6,8 +6,7 @@ import {Button as ButtonElement} from "@headlessui/react";
 
 interface ButtonProps {
     textContent: string,
-    as?: ElementType,
-    onClick?: () => void,
+    onClick?: (() => void) | null,
     className?: string,
     type?: 'default' | 'cta' | 'warning' | 'destructive',
 }
@@ -15,12 +14,12 @@ interface ButtonProps {
 export default function Button(
     {
         textContent,
-        as = "button",
         type = 'default',
         className = '',
-        onClick = (() => null),
+        onClick = null,
     }: ButtonProps
 ): ReactNode {
+
     let style: string = '';
     switch (type) {
         case 'cta':
@@ -33,11 +32,20 @@ export default function Button(
             style = 'bg-danger text-danger-foreground';
             break;
     }
+    
+    if (onClick)
+        return (
+            <button onClick={onClick}
+                    className={cn('text-center p-2 px-4 text-lg font-semibold w-full max-w-md rounded-sm bg-secondary text-secondary-foreground',
+                        style, className)}>
+                {textContent}
+            </button>
+        );
 
     return (
-        <Link as={as} onClick={onClick}
-              className={cn('text-center p-2 px-4 text-lg font-semibold w-full max-w-md rounded-sm bg-secondary text-secondary-foreground',
-                  style, className)}>
+        <Link
+            className={cn('text-center p-2 px-4 text-lg font-semibold w-full max-w-md rounded-sm bg-secondary text-secondary-foreground',
+                style, className)}>
             {textContent}
         </Link>
     );

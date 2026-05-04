@@ -51,6 +51,16 @@ class Project extends Model
             ->where('due_at', '>=', Carbon::now());
     }
 
+    /**
+     * Shows the project's latest news
+     */
+//    public function news(): HasMany
+//    {
+//        return $this
+//            ->hasMany(ProjectNews::class)
+//            ->orderBy('created_at','desc');
+//    }
+
     private function permission(User $user, ProjectAction $action): bool
     {
         // TODO make it dynamic with project settings separate "project_permission" table later

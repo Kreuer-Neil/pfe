@@ -8,6 +8,7 @@ import ButtonText from "@/components/buttons/button-text";
 import {ClipboardPlus, LucideChevronDown, LucideChevronUp} from "lucide-react";
 import {laravelDateToJsDate} from "@/helpers/date";
 import ShowMore from "@/components/buttons/show-more";
+import IconButton from "@/components/buttons/icon-button";
 
 
 interface TaskDisplayProps {
@@ -48,8 +49,9 @@ function TasksList({tasks, projectContext, maxLength}: {
 
 function AddTask() {
     // TODO add role condition and modal apparition
+    const {__} = useLang();
     return (
-        <ClipboardPlus className={'icon-btn'}/>
+        <IconButton icon={ClipboardPlus} textContent={__('project.add_task')}/>
     );
 }
 

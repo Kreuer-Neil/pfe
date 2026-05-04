@@ -7,6 +7,10 @@ import TaskDisplay from "@/components/tasks/task-display";
 import Layout from "@/layouts/app-layout";
 import {ReactNode} from "react";
 import {instanceOfProject, instanceOfProjectShow} from "@/helpers/type-check";
+import {Bookmark, BookmarkCheck, Flag, LogIn, Share2, UserRoundPlus} from "lucide-react";
+import IconButton from "@/components/buttons/icon-button";
+import Button from "@/components/buttons/button";
+import ProjectIcon from "@/components/icons/project-icon";
 
 type pageProps = {
     project: IProject | IProjectShow | null,
@@ -18,6 +22,70 @@ type visitorPageProps = {
 
 type memberPageProps = {
     project: IProject,
+}
+
+
+function ProjectHeader({project}: {
+    project: IProject | IProjectShow
+}) {
+    const {__} = useLang();
+
+    return (
+        <header className="w-full flex flex-col-reverse gap-2 max-w-xl">
+            <div className="flex flex-col items-center gap-4 px-3">
+                <h1 className="page-title text-center">{project.name}</h1>
+
+                <div className="w-full">
+                    <div className="flex gap-1 w-full">
+                        <p className="mr-auto">
+                            <span className="font-bold">{project.members_count}</span>
+                            &nbsp;{__('project.members_count')}
+                        </p>
+                        {/* TODO add condition with permission for inviting people to project, as well as sharing */}
+                        {project.user_role === 'viewer' ?
+                            // Add more conditions on project
+                            <IconButton icon={LogIn} textContent={__('project.join')} showText={true}/> :
+                            <IconButton textContent={__('project.buttons.invite')} icon={UserRoundPlus}
+                                        showText={true}/>
+                        }
+                        {
+                            project.user_following ?
+                                <IconButton icon={BookmarkCheck} textContent={__('project.following')}/> :
+                                <IconButton icon={Bookmark} textContent={__('project.follow')}/>
+                        }
+                        <IconButton icon={Share2} textContent={__('project.buttons.share')}/>
+                        <IconButton icon={Flag} textContent={__('project.buttons.report')}/>
+                    </div>
+                    <p className="">{project.description}</p>
+                </div>
+
+                {
+                    project.news ?
+                        <div>
+                            <article>
+                                <h2 className="section-title">
+                                    {/* TODO fix when news added */}
+                                    {/*{project.news.first.title}*/}
+                                </h2>
+                                <p>{/*{project.news.first.textContent}*/}</p>
+                            </article>
+                            <Button textContent={__('project.more_news')}/>
+                        </div> : ''
+                }
+
+            </div>
+
+            <div className="w-full">
+                {
+                    project.banner ?
+                        <img src={undefined} alt={''}
+                             className="aspect-[2.8] w-full bg-container"/> :
+                        <div className="aspect-[2.8] w-full bg-container"/>
+                }
+                <ProjectIcon project={project} size="large" className="bg-secondary -mt-14 mx-auto"/>
+            </div>
+        </header>
+    );
 }
 
 function Page404(): ReactNode {
@@ -48,13 +116,8 @@ function VisitorPage() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={project.name}/>
-            <h1>{project.name}</h1>
             <PageFlowContainer className="pt-0">
-                <header>
-                    <article>
-
-                    </article>
-                </header>
+                <ProjectHeader project={project} />
 
                 <section>
                 </section>
@@ -81,16 +144,10 @@ function MemberPage() {
     ];
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={project.name}/>
             <PageFlowContainer className="pt-0">
-                <header>
-                    <h1 className="page-title">{project.name}</h1>
-                    <article>
+                <ProjectHeader project={project}/>
 
-                    </article>
-                </header>
-
-                <TaskDisplay tasks={project.upcoming_tasks} title={__('project.upcoming_tasks')}/>
+                <TaskDisplay tasks={project.upcoming_tasks} title={__('project.upcoming_tasks')} project={project}/>
             </PageFlowContainer>
 
         </AppLayout>

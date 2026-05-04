@@ -8,6 +8,7 @@ interface ButtonTextProps {
     icon?: LucideIcon | null,
     textContent: string,
     href?: string,
+    title?: string | null,
     className?: string,
     type?: "default" | "destroy",
     onClick?: ((e: any) => void) | null

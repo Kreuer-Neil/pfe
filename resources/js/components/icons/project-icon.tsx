@@ -1,18 +1,20 @@
 import {IProjectContext} from "@/types";
+import {cn} from "@/lib/utils";
+import {useLang} from "@/hooks/useLang";
 
-interface ProjectIconProps {
-    project: IProjectContext;
-    size?: 'small' | 'large'
+type projectIconProps = {
+    project: IProjectContext,
+    size?: 'small' | 'medium' | 'large',
+    className?: string,
 }
-
-export default function ProjectIcon({project, size = 'small'}: ProjectIconProps) {
-    const alt = project.name + ' icon';
+// TODO add auto icon src
+export default function ProjectIcon({project, size = 'small', className = ''}: projectIconProps) {
+    const {trans} = useLang();
+    const alt = trans('project.icon_alt', {project: project.name});
     switch (size) {
         case 'large':
-            return <img alt={alt} className="size-32 rounded-full bg-loading"/>;
-            break;
+            return <img alt={alt} className={cn("size-[7rem] rounded-full bg-loading", className)}/>;
         case 'small':
-            return <img alt={alt} className="size-8 rounded-full bg-loading"/>;
-            break;
+            return <img alt={alt} className={cn("size-8 rounded-full bg-loading", className)}/>;
     }
 }

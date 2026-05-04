@@ -22,7 +22,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     require __DIR__ . '/profile.php';
     require __DIR__ . '/projects.php';
 
-    Route::get('users/{id}', );
+//    Route::get('users/{id}', );
 });
 
 require __DIR__ . '/auth.php';
