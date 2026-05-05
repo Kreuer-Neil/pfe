@@ -11,7 +11,7 @@ interface ButtonTextProps {
     title?: string | null,
     className?: string,
     type?: "default" | "destroy",
-    onClick?: ((e: any) => void) | null
+    onClick?: ((e: any) => void),
 }
 
 // Shouldn't we name it "Text link" ? Or another name
@@ -24,7 +24,7 @@ export default function ButtonText({
                                        href = '',
                                        className = '',
                                        type = 'default',
-                                       onClick = null,
+                                       onClick = () => null,
                                    }: ButtonTextProps): ReactNode {
 
     let style: string = '';
@@ -36,7 +36,8 @@ export default function ButtonText({
             style = '';
             break;
     }
-    if (onClick) {
+
+    if (href === '') {
         return (
             <button onClick={onClick} className={cn('button-text', style, className)}>
                 {Icon ? <Icon/> : ''}

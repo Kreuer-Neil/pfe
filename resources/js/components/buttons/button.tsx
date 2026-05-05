@@ -2,25 +2,30 @@ import {Link} from "@inertiajs/react";
 import {ElementType, ReactNode} from "react";
 import {cn} from "@/lib/utils";
 import {Button as ButtonElement} from "@headlessui/react";
+import {LucideIcon} from "lucide-react";
 
 
 interface ButtonProps {
     textContent: string,
-    onClick?: (() => void) | null,
-    className?: string,
+    icon?: LucideIcon | null,
     type?: 'default' | 'cta' | 'warning' | 'destructive',
+    href?: string,
+    onClick?: (() => void),
+    className?: string,
 }
 
 export default function Button(
     {
         textContent,
         type = 'default',
+        href,
         className = '',
-        onClick = null,
+        onClick = ()=>null,
+        icon = null
     }: ButtonProps
 ): ReactNode {
 
-    let style: string = '';
+    let style: string;
     switch (type) {
         case 'cta':
             style = 'bg-tertiary text-tertiary-foreground';
@@ -31,9 +36,12 @@ export default function Button(
         case 'destructive':
             style = 'bg-danger text-danger-foreground';
             break;
+        default:
+            style = 'bg-primary text-primary-foreground';
+            break;
     }
-    
-    if (onClick)
+
+    if (href === '')
         return (
             <button onClick={onClick}
                     className={cn('text-center p-2 px-4 text-lg font-semibold w-full max-w-md rounded-sm bg-secondary text-secondary-foreground',
@@ -43,7 +51,7 @@ export default function Button(
         );
 
     return (
-        <Link
+        <Link href={href}
             className={cn('text-center p-2 px-4 text-lg font-semibold w-full max-w-md rounded-sm bg-secondary text-secondary-foreground',
                 style, className)}>
             {textContent}

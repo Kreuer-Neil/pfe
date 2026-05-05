@@ -1,13 +1,16 @@
 import {ReactNode} from "react";
 import {cn} from "@/lib/utils";
 import {LucideIcon} from "lucide-react";
+import {Link} from "@inertiajs/react";
 
-type iconButtonProps = {
+interface IconButtonProps {
     icon: LucideIcon,
     textContent: string,
     showText?: boolean,
     title?: string,
     className?: string,
+    onClick?: ((e: any) => void),
+    href?: string,
 }
 
 export default function IconButton(
@@ -16,12 +19,20 @@ export default function IconButton(
         textContent,
         showText = false,
         title = '',
+        onClick = () => null,
+        href = '',
         className = '',
-    }: iconButtonProps): ReactNode {
+    }: IconButtonProps): ReactNode {
     // TODO show it's clickable !!!
-    const baseStyle = 'bg-button p-1 px-2 rounded-xs cursor-pointer'
+    const baseStyle = 'bg-button p-1 px-2 rounded-xs cursor-pointer flex gap-1'
+    const textSpanStyle = showText ? '' : 'sr-only';
 
-    if (showText) return <button title={title} className={cn(baseStyle, "flex items-center gap-1", className)}>{textContent}<Icon/></button>;
-    return <button title={title} className={cn(baseStyle, className)}><span className="sr-only">{textContent}</span><Icon/></button>;
+    if (href === '')
+        return <button title={title} className={cn(baseStyle, className)}><span
+            className={textSpanStyle} onClick={onClick}>{textContent}</span><Icon/></button>;
+
+    return <Link title={title} href={href} className={cn(baseStyle, className)}><span
+        className={textSpanStyle}>{textContent}</span><Icon/></Link>;
+
 
 }
