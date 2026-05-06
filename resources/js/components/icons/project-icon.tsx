@@ -10,7 +10,7 @@ type projectIconProps = {
 // TODO add auto icon src
 export default function ProjectIcon({project, size = 'small', className = ''}: projectIconProps) {
     const {trans} = useLang();
-    const alt = trans('project.icon_alt', {project: project.name});
+    const alt = trans('projects.icon_alt', {project: project.name});
     switch (size) {
         case 'large':
             return <img alt={alt} className={cn("size-[7rem] rounded-full bg-loading", className)}/>;

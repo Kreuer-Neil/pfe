@@ -39,22 +39,22 @@ function ProjectHeader({project}: {
                     <div className="flex gap-1 w-full">
                         <p className="mr-auto">
                             <span className="font-bold">{project.members_count}</span>
-                            &nbsp;{__('project.members_count')}
+                            &nbsp;{__('projects.members_count')}
                         </p>
                         {/* TODO add condition with permission for inviting people to project, as well as sharing */}
                         {project.user_role === 'viewer' ?
                             // Add more conditions on project
-                            <IconButton icon={LogIn} textContent={__('project.join')} showText={true}/> :
-                            <IconButton textContent={__('project.buttons.invite')} icon={UserRoundPlus}
+                            <IconButton icon={LogIn} textContent={__('projects.join')} showText={true}/> :
+                            <IconButton textContent={__('projects.buttons.invite')} icon={UserRoundPlus}
                                         showText={true}/>
                         }
                         {
                             project.user_following ?
-                                <IconButton icon={BookmarkCheck} textContent={__('project.following')}/> :
-                                <IconButton icon={Bookmark} textContent={__('project.follow')}/>
+                                <IconButton icon={BookmarkCheck} textContent={__('projects.following')}/> :
+                                <IconButton icon={Bookmark} textContent={__('projects.follow')}/>
                         }
-                        <IconButton icon={Share2} textContent={__('project.buttons.share')}/>
-                        <IconButton icon={Flag} textContent={__('project.buttons.report')}/>
+                        <IconButton icon={Share2} textContent={__('projects.buttons.share')}/>
+                        <IconButton icon={Flag} textContent={__('projects.buttons.report')}/>
                     </div>
                     <p className="">{project.description}</p>
                 </div>
@@ -67,9 +67,9 @@ function ProjectHeader({project}: {
                                     {/* TODO fix when news added */}
                                     {/*{project.news.first.title}*/}
                                 </h2>
-                                <p>{/*{project.news.first.textContent}*/}</p>
+                                <p>{/*{project.news.first.text_content}*/}</p>
                             </article>
-                            <Button textContent={__('project.more_news')}/>
+                            <Button textContent={__('projects.more_news')}/>
                         </div> : ''
                 }
 
@@ -147,7 +147,7 @@ function MemberPage() {
             <PageFlowContainer className="pt-0">
                 <ProjectHeader project={project}/>
 
-                <TaskDisplay tasks={project.upcoming_tasks} title={__('project.upcoming_tasks')} project={project}/>
+                <TaskDisplay tasks={project.upcoming_tasks} title={__('projects.upcoming_tasks')} project={project}/>
             </PageFlowContainer>
 
         </AppLayout>

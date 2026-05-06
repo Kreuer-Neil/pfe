@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\FormatedModels\Project\FormatedProject;
+use App\FormatedModels\Project\FormatedProjectMiniature;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -13,8 +14,18 @@ class ProjectController extends Controller
 
     public function index()
     {
-        $projects = Project::all();
-        return Inertia::render('projects/index', ['projects' => $projects]);
+        $order = 'coordinates';
+        $direction = 'desc';
+        $queriedProjects = Project::where('is_private', false)->orderBy($order, $direction)->get();
+        // TODO add filtering for data
+
+        $projects = [];
+        foreach ($queriedProjects as $project) {
+            $projects[] = new FormatedProjectMiniature($project, auth()->user());
+        }
+
+        syncLangFiles(['main-nav', 'projects', 'projects-index', 'date', 'pagination']);
+        return Inertia::render('projects/index', compact('projects'));
     }
 
     public function show(Project $project)
@@ -23,7 +34,7 @@ class ProjectController extends Controller
 
         $project = $this->getShowDataFor(auth()->user(), $project);
 
-        syncLangFiles(['main-nav', 'project', 'date', 'pagination']);
+        syncLangFiles(['main-nav', 'projects', 'date', 'pagination']);
         return Inertia::render(
             'projects/show',
             compact('project', 'route'));

@@ -52,6 +52,10 @@
     /*--color-warning-light: var(--warning-light);*/
     --color-valid: var(--valid);
 
+    --color-tag-valid: var(--tag-valid);
+    --color-tag-neutral: var(--tag-neutral);
+    --color-tag-warning: var(--tag-warning);
+
     --color-muted: var(--muted);
     --color-muted-foreground: var(--muted-foreground);
 
@@ -99,6 +103,7 @@
     --atomic-tangerine: oklch(0.7875 0.1 46.85);
     --blueish-green: oklch(0.825 0.0369 179.03);
     --sprout-green: oklch(0.8704 0.1427 118.04);
+    --neutral-blue: oklch(0.9 0.023 179.301);
 
     --black-shadow: oklch(0 0 0 / 0.25);
 
@@ -136,6 +141,10 @@
     /*--warning-light: var(--pine-green-transparent);*/
 
     --valid: var(--sprout-green);
+
+    --tag-valid: var(--sprout-green);
+    --tag-neutral: var(--neutral-blue);
+    --tag-warning: var(--atomic-tangerine);
 
     --muted: oklch(0.97 0 0);
     --muted-foreground: oklch(0.5472 0.022 262.93);
@@ -402,8 +411,8 @@
         @apply size-6 box-content;
     }
 
-    .task-icon {
-        @apply bg-valid flex gap-1 p-1 px-1.5 rounded-xs items-center;
+    .item-tag {
+        @apply bg-tag-neutral flex gap-1 p-1 px-1.5 rounded-xs items-center;
     }
 
     .month-divider {

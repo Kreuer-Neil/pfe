@@ -79,13 +79,18 @@ export interface IProjectContext {
 export interface IDashboardProject extends IProjectContext {
     description: string;
     members_count: number;
+    coordinates: string;
+    place: string | null;
     // featured_members: IUser[];
 }
 
 export interface IProjectMiniature extends IProjectContext {
     description: string;
-    featured_members: IUser[];
+    // featured_members: IUser[];
+    is_member: boolean;
     members_count: number;
+    coordinates: string;
+    place: string | null;
 }
 
 export interface IProjectShow extends IProjectMiniature {

@@ -2,33 +2,42 @@
 
 namespace App\FormatedModels\Project;
 
+use App\FormatedModels\FormatedProfile;
+use App\FormatedModels\FormatedTask;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Support\Str;
 
-class FormatedDashboardProject extends FormatedProjectContext
+class FormatedProjectMiniature extends FormatedProjectContext
 {
 
     public string $id;
-//    public User $owner;
     public string $name;
     public string $icon;
     public string $description;
 
+//    public User $owner;
+//    public array $related_members;
+//    public string $user_role;
+
+
     public ?string $coordinates;
     public ?string $place;
+
+    public bool $is_member;
     public int $members_count;
 
-    public function __construct(Project $project)
+    public function __construct(Project $project, User $user)
     {
         $this->id = $project->id;
         $this->name = $project->name;
         $this->icon = $project->icon;
         $this->description = Str::limit(value: $project->description, preserveWords: true);
 
-
         $this->coordinates = $project->coordinates;
         $this->place = $project->place();
+        $this->is_member = $project->members->find($user->id) !== null;
+
         $this->members_count = $project->members->count();
-        // TODO add notifications etc. later? On another version
     }
 }

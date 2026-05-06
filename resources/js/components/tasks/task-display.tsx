@@ -51,7 +51,7 @@ function AddTask() {
     // TODO add role condition and modal apparition
     const {__} = useLang();
     return (
-        <IconButton icon={ClipboardPlus} textContent={__('project.add_task')}/>
+        <IconButton icon={ClipboardPlus} textContent={__('projects.add_task')}/>
     );
 }
 
@@ -86,18 +86,18 @@ export default function TaskDisplay(
     const pageId = 'tasks';
     return <section className={cn('items-section', className)} id={pageId}>
         <div className="flex items-center mx-3">
-            <h2 className="section-title w-full">{title ?? (project ? trans('project.tasks.container_title', {project: project.name}) : __('project.task.title.upcoming'))}</h2>
+            <h2 className="section-title w-full">{title ?? (project ? trans('projects.tasks.container_title', {project: project.name}) : __('projects.task.title.upcoming'))}</h2>
             {project ? <AddTask/> : ''}
         </div>
         {
             tasks.length > 0
                 // Task items
                 ? <TasksList tasks={tasks} projectContext={(project != null)} maxLength={maxItemsLength!}/>
-                : <div className="thumbnails-list-container"><p>{__('project.task.empty_message')}</p></div>
+                : <div className="thumbnails-list-container"><p>{__('projects.task.empty_message')}</p></div>
         }
         <div className="flex flex-col gap-4 px-3 items-center">
             <ShowMore showMore={showMoreState} onClick={onShowMore}/>
-            {/*<ButtonText href={agenda().url} textContent={actionText ?? __('project.task.show_agenda')} icon={LucideCalendarDays}/>*/}
+            {/*<ButtonText href={agenda().url} textContent={actionText ?? __('projects.task.show_agenda')} icon={LucideCalendarDays}/>*/}
         </div>
     </section>
 }

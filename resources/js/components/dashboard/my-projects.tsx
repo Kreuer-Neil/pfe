@@ -1,34 +1,13 @@
 import {useLang} from "@/hooks/useLang";
-import {IDashboardProject, IProjectMiniature} from "@/types";
+import {projects as projectsPage} from '@/routes';
+import {IDashboardProject} from "@/types";
 import {ReactNode} from "react";
-import {Link} from "@inertiajs/react";
 import ProjectIcon from "@/components/icons/project-icon";
-import {LucideSearch, UsersRound} from "lucide-react";
+import {ListFilter, LucideSearch, UsersRound} from "lucide-react";
 import ButtonText from "@/components/buttons/button-text";
-
-function DashboardProjectPreview({project}: { project: IDashboardProject }) {
-    const {__} = useLang()
-    return (
-        <article onClick={(e) => {
-        }} className="thumbnail-item">
-            <div className={'flex gap-1 items-center'}>
-                <ProjectIcon project={project}/>
-                <h3 className="item-title w-full">{project.name}</h3>
-            </div>
-            <p>{project.description}</p>
-            <div className="flex flex-wrap gap-1 gap-y-0.5">
-                {/* TODO what's new since last passage on project */}
-                <div className="flex gap-1 ml-auto">
-                    {/*Related users*/}
-                    <div className="task-icon bg-secondary">
-                        {project.members_count}
-                        <UsersRound/>
-                    </div>
-                    {/*Other infos*/}
-                </div>
-            </div>
-        </article>);
-}
+import Button from "@/components/buttons/button";
+import IconButton from "@/components/buttons/icon-button";
+import ProjectItem from "@/components/projects/project-item";
 
 function ProjectsList({projects}: { projects: IDashboardProject[] }): ReactNode {
     const {__} = useLang()
@@ -41,7 +20,7 @@ function ProjectsList({projects}: { projects: IDashboardProject[] }): ReactNode 
                         index++;
                         return (
                             <li key={project.id} className="w-full">
-                                <DashboardProjectPreview project={project}/>
+                                <ProjectItem project={project}/>
                             </li>
                         );
                     })
@@ -52,10 +31,9 @@ function ProjectsList({projects}: { projects: IDashboardProject[] }): ReactNode 
     // Else
     return (
         <div className="empty-warning">
-            <p>{__("project.no_projects_joined")}</p>
+            <p>{__("projects.no_projects_joined")}</p>
             {/*TODO fix route*/}
-            <Link className="cta-button"
-                  href={"projects/search"}>{__("project.search_project")}</Link>
+            <Button href={projectsPage().url} textContent={__("projects.search_project")} type="cta"></Button>
         </div>
     );
 }
@@ -76,7 +54,8 @@ export default function MyProjects({projects}: { projects: IDashboardProject[] |
             </div>
             <div className="px-2 flex flex-col gap-3 items-center">
                 {/*Filters etc. for current project*/}
-                <button>{__("dashboard.project.filter")}</button>
+                <IconButton href={projectsPage().url} textContent={__("dashboard.project.filter")} icon={ListFilter}
+                            showText={true} className="ml-auto"/>
             </div>
             <ProjectsList projects={projects}/>
             <div className="flex flex-col gap-4 px-3 items-center">

@@ -13,7 +13,7 @@ function ParticipatingIcon({participating}: { participating: boolean }) {
         return (
             <CalendarCheck
                 // title={"You are participating"}
-                className="task-icon"/>
+                className="item-tag bg-tag-valid"/>
         );
     }
 }
@@ -25,10 +25,10 @@ function TaskIconParticipation({participations, min, className = ''}: {
 }) {
     if (min) {
         const colorClass: string = (participations / min > /*recommendedTaskParticipationsRate*/ .8)
-            ? 'bg-primary' : "bg-warning text-warning-foreground";
+            ? '' : "bg-warning text-warning-foreground";
         return (
             <span className={
-                cn("task-icon",
+                cn("item-tag",
                     colorClass,
                     className)
             }>
@@ -38,7 +38,7 @@ function TaskIconParticipation({participations, min, className = ''}: {
     } else {
         return (
             <span className={
-                cn("task-icon bg-card",
+                cn("item-tag",
                     className)
             }>
                 {participations ?? 0}<UsersRound/>
@@ -83,7 +83,7 @@ export default function TaskItem({task, className = '', isInProjectPage = false}
 
 
             {/* TODO limit desc max length when mobile */}
-            <p>{trans('project.task.from_project', {project: task.project.name})}</p>
+            <p>{trans('projects.task.from_project', {project: task.project.name})}</p>
             <div className="taskinfo mt-1 flex flex-wrap justify-between items-center gap-1">
                 {/* TODO change date format */}
                 <time className="flex gap-1"><Timer/><span>{dueAt}</span>

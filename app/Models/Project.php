@@ -23,7 +23,18 @@ class Project extends Model
     protected $fillable = ['owner_id', 'name', 'icon', 'description', 'status', 'slug', 'lang', 'coordinates', 'is_private'];
 
     /**
-     * Returns
+     * Returns the address where the project takes place
+     */
+    public function place(): ?string
+    {
+        if (!$this->coordinates) return null;
+        $coordinates = explode(', ', $this->coordinates);
+        // TODO return real location if possible with Google services? (And add column "address" on projects)
+        return "Place at ${coordinates[0]}, ${coordinates[1]}";
+    }
+
+    /**
+     * Returns member users
      */
     public function members(): BelongsToMany
     {
