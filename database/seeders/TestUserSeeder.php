@@ -38,6 +38,7 @@ class TestUserSeeder
                 'name' => 'Sunshine Alley 22b',
                 'description' => 'The group for Building 22b on Sunshine Alley. Our shared garden is soon to become a vegetable garden, and we\'re workin hard on it. So that we could dine together sometimes, nearly for free. Living already costs too much, at least mutual aid is free.',
                 'slug' => 'buil22',
+                'coordinates' => '50.61126712133781, 5.510050323190294',
 
                 'is_private' => true,
             ]
