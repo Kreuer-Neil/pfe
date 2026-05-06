@@ -38,7 +38,7 @@ function TasksList({tasks, projectContext, maxLength}: {
                 && tasks[i - 1]
                 && (month > laravelDateToJsDate(tasks[i - 1].due_at ?? tasks[i - 1].created_at).getMonth());
             return (
-                <li className="w-full flex flex-col gap-4 @xl:gap-6" key={task.id}>
+                <li className="w-full flex flex-col gap-4" key={task.id}>
                     {precedentMonthCondition ? <span className="month-divider">{__('date.month.' + month)}</span> : ''}
                     <TaskItem task={task} isInProjectPage={projectContext}/>
                 </li>

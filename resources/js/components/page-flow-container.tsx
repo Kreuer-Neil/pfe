@@ -2,7 +2,7 @@ import {ReactNode} from "react";
 import {cn} from "@/lib/utils";
 
 interface PageFlowContainerProps {
-    children: ReactNode[],
+    children: ReactNode | ReactNode[],
     className?: string,
 }
 
