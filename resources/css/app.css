@@ -66,6 +66,7 @@
     --color-destructive-foreground: var(--destructive-foreground);
 
     --color-border: var(--border);
+    --color-secondary-border: var(--secondary-border);
     --color-input: var(--input);
     --color-ring: var(--ring);
 
@@ -153,6 +154,7 @@
     --destructive: oklch(0.577 0.245 27.325);
     --destructive-foreground: oklch(0.577 0.245 27.325);
     --border: oklch(0.922 0 0);
+    --secondary-border: var(--pine-green);
     --input: oklch(0.922 0 0);
     --ring: oklch(0.87 0 0);
     --chart-1: oklch(0.646 0.222 41.116);
@@ -404,6 +406,17 @@
     .thumbnail-item {
         @apply flex flex-col gap-1 p-2
         rounded-sm bg-background drop-shadow-sm max-w-[var(--text-max-w)];
+    }
+
+    .search-box {
+        @apply flex gap-1 p-1 px-2 border border-border rounded-xs cursor-text;
+        &:has(.search-input:focus) {
+            @apply outline outline-secondary-border;
+        }
+    }
+
+    .search-input {
+        @apply bg-none border-none w-full outline-none;
     }
 
     /* Overwrites default Lucide icons style*/

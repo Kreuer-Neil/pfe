@@ -135,7 +135,7 @@ export interface ITask {
 export interface INote {
     id: string,
     owner: IProfile,
-    content: string
+    content: string,
 
     [key: string]: unknown;
 }

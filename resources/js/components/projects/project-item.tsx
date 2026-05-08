@@ -2,7 +2,7 @@ import ProjectIcon from "@/components/icons/project-icon";
 import {MapPin, UserRoundCheck, UsersRound} from "lucide-react";
 import {IDashboardProject, IProjectMiniature} from "@/types";
 import {Link} from "@inertiajs/react";
-import {projects as projectsPage} from '@/routes';
+import {projects as projectsIndex} from '@/routes';
 
 
 interface ProjectItemsProps {
@@ -13,7 +13,7 @@ export default function ProjectItem({project}: ProjectItemsProps) {
     const place: string | null = project.place;
     const coordinates: string | null = project.coordinates;
     return (
-        <Link as={'article'} href={''} className="thumbnail-item">
+        <Link as={'article'} href={projectsIndex().url + '/' + project.id} className="thumbnail-item">
             <div className={'flex gap-1 items-center'}>
                 <ProjectIcon project={project}/>
                 <h3 className="item-title w-full">{project.name}</h3>

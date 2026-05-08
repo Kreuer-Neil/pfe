@@ -16,8 +16,14 @@ class ProjectController extends Controller
     {
         $order = 'coordinates';
         $direction = 'desc';
-        $queriedProjects = Project::where('is_private', false)->orderBy($order, $direction)->get();
+        $search = NULL;
+        $queriedProjects = Project::where('is_private', false);
+        if ($search) {
+            $queriedProjects = $queriedProjects->whereLike('name', $search)->orWhereLike('description', $search);
+        }
+
         // TODO add filtering for data
+        $queriedProjects = $queriedProjects->orderBy($order, $direction)->get();
 
         $projects = [];
         foreach ($queriedProjects as $project) {
