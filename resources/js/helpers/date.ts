@@ -1,4 +1,5 @@
 import {useLang} from "@/hooks/useLang";
+import {useTranslation} from "react-i18next";
 
 /**
  * Returns a Date object when a Laravel date is given.
@@ -28,10 +29,9 @@ export function laravelDateToJsDate(date: string): Date {
  * Returns a translated string for the given date.
  */
 export function upcomingDateToString(date: Date): string {
-    const path = 'date.';
-    const fullPath = path + 'translatable_date.';
+    const fullPath = 'translate_date_';
     // lang
-    const {__, trans} = useLang();
+    const {t} = useTranslation('date');
 
     // Now date
     const now = new Date(Date.now());
@@ -49,30 +49,30 @@ export function upcomingDateToString(date: Date): string {
     if (date.getFullYear() === now.getFullYear()) {
         if (date.getMonth() === now.getMonth()) {
             if (date.getDate() === now.getDate()) {
-                return trans(fullPath + 'today', {
+                return t(fullPath + 'today', {
                     time: time,
                 })
             }
-            return trans(fullPath + 'day', {
-                dayOfWeek: __(path + 'day.' +dayOfWeek.toString()),
+            return t(fullPath + 'day', {
+                dayOfWeek: t('day_' + dayOfWeek.toString()),
                 day: day.toString(),
-                dayType: __(path + dayType),
+                dayType: t(dayType + '_day'),
                 time: time,
             })
         }
-        return trans(fullPath + 'month', {
-            dayOfWeek: __(path + 'day.' +dayOfWeek.toString()),
+        return t(fullPath + 'month', {
+            dayOfWeek: t('day_' + dayOfWeek.toString()),
             day: day.toString(),
-            dayType: __(path + 'dayType.' + dayType),
-            month: __(path + 'month.' + month.toString()),
+            dayType: t(dayType + '_day'),
+            month: t('month_' + month.toString()),
             time: time,
         })
     }
 
-    return trans(fullPath + 'year', {
+    return t(fullPath + 'year', {
         day: day.toString(),
-        dayType: __(path + 'dayType.' + dayType),
-        month: __(path + 'month.' + month.toString()),
+        dayType: t(dayType + '_day'),
+        month: t('month_' + month.toString()),
         year: date.getFullYear(),
         time: time,
     });

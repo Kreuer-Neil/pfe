@@ -30,7 +30,7 @@ class ProjectController extends Controller
             $projects[] = new FormatedProjectMiniature($project, auth()->user());
         }
 
-        syncLangFiles(['main-nav', 'projects', 'projects-index', 'date', 'pagination']);
+//        syncLangFiles(['main-nav', 'projects', 'projects-index', 'date', 'pagination']);
         return Inertia::render('projects/index', compact('projects'));
     }
 
@@ -40,7 +40,7 @@ class ProjectController extends Controller
 
         $project = $this->getShowDataFor(auth()->user(), $project);
 
-        syncLangFiles(['main-nav', 'projects', 'date', 'pagination']);
+//        syncLangFiles(['main-nav', 'projects', 'date', 'pagination']);
         return Inertia::render(
             'projects/show',
             compact('project', 'route'));

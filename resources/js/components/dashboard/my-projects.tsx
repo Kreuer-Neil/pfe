@@ -8,9 +8,10 @@ import ButtonText from "@/components/buttons/button-text";
 import Button from "@/components/buttons/button";
 import IconButton from "@/components/buttons/icon-button";
 import ProjectItem from "@/components/projects/project-item";
+import {useTranslation} from "react-i18next";
 
 function ProjectsList({projects}: { projects: IDashboardProject[] }): ReactNode {
-    const {__} = useLang()
+    const {t} = useTranslation(['projects','dashboard']);
     if (projects.length > 0) {
         let index = 0;
         return (
@@ -31,35 +32,35 @@ function ProjectsList({projects}: { projects: IDashboardProject[] }): ReactNode 
     // Else
     return (
         <div className="empty-warning">
-            <p>{__("projects.no_projects_joined")}</p>
+            <p>{t("no_projects_joined")}</p>
             {/*TODO fix route*/}
-            <Button href={projectsPage().url} textContent={__("projects.search_project")} type="cta"></Button>
+            <Button href={projectsPage().url} textContent={t("search_project")} type="cta"></Button>
         </div>
     );
 }
 
 export default function MyProjects({projects}: { projects: IDashboardProject[] | null }): ReactNode {
-    const {__} = useLang()
+    const {t} = useTranslation(['dashboard']);
     if (!projects)
         // TODO translate no project text
         return (
-            <p>{__('main-nav.no_projects')}</p>
+            <p>{t('common:no_projects')}</p>
         );
     return (
         <section className="items-section">
             <div className="flex items-center mx-3">
                 <h2 className="section-title w-full">
-                    {__('main-nav.my_projects')}
+                    {t('common:my_projects')}
                 </h2>
             </div>
             <div className="px-2 flex flex-col gap-3 items-center">
                 {/*Filters etc. for current project*/}
-                <IconButton href={projectsPage().url} textContent={__("dashboard.project.filter")} icon={ListFilter}
+                <IconButton href={projectsPage().url} textContent={t("dashboard:project_filter")} icon={ListFilter}
                             showText={true} className="ml-auto"/>
             </div>
             <ProjectsList projects={projects}/>
             <div className="flex flex-col gap-4 px-3 items-center">
-                <ButtonText textContent={__('dashboard.project.more')} icon={LucideSearch}/>
+                <ButtonText textContent={t('dashboard:more_projects')} icon={LucideSearch}/>
             </div>
         </section>
     );
