@@ -2,7 +2,6 @@ import {type BreadcrumbItem, IProject, IProjectShow} from "@/types";
 import AppLayout from "@/layouts/app-layout";
 import {Head, usePage} from "@inertiajs/react";
 import PageFlowContainer from "@/components/page-flow-container";
-import {useLang} from "@/hooks/useLang";
 import TaskDisplay from "@/components/tasks/task-display";
 import Layout from "@/layouts/app-layout";
 import {ReactNode} from "react";
@@ -11,6 +10,7 @@ import {Bookmark, BookmarkCheck, Flag, LogIn, Share2, UserRoundPlus} from "lucid
 import IconButton from "@/components/buttons/icon-button";
 import Button from "@/components/buttons/button";
 import ProjectIcon from "@/components/icons/project-icon";
+import {useTranslation} from "react-i18next";
 
 type pageProps = {
     project: IProject | IProjectShow | null,
@@ -28,7 +28,7 @@ type memberPageProps = {
 function ProjectHeader({project}: {
     project: IProject | IProjectShow
 }) {
-    const {__} = useLang();
+    const {t} = useTranslation('projects');
 
     return (
         <header className="w-full flex flex-col-reverse gap-2 max-w-xl">
@@ -39,22 +39,22 @@ function ProjectHeader({project}: {
                     <div className="flex gap-1 w-full">
                         <p className="mr-auto">
                             <span className="font-bold">{project.members_count}</span>
-                            &nbsp;{__('projects.members_count')}
+                            &nbsp;{t('members_count')}
                         </p>
                         {/* TODO add condition with permission for inviting people to project, as well as sharing */}
                         {project.user_role === 'viewer' ?
                             // Add more conditions on project
-                            <IconButton icon={LogIn} textContent={__('projects.join')} showText={true}/> :
-                            <IconButton textContent={__('projects.buttons.invite')} icon={UserRoundPlus}
+                            <IconButton icon={LogIn} textContent={t('join')} showText={true}/> :
+                            <IconButton textContent={t('button_invite')} icon={UserRoundPlus}
                                         showText={true}/>
                         }
                         {
                             project.user_following ?
-                                <IconButton icon={BookmarkCheck} textContent={__('projects.following')}/> :
-                                <IconButton icon={Bookmark} textContent={__('projects.follow')}/>
+                                <IconButton icon={BookmarkCheck} textContent={t('following')}/> :
+                                <IconButton icon={Bookmark} textContent={t('follow')}/>
                         }
-                        <IconButton icon={Share2} textContent={__('projects.buttons.share')}/>
-                        <IconButton icon={Flag} textContent={__('projects.buttons.report')}/>
+                        <IconButton icon={Share2} textContent={t('button_share')}/>
+                        <IconButton icon={Flag} textContent={t('button_report')}/>
                     </div>
                     <p className="">{project.description}</p>
                 </div>
@@ -69,7 +69,7 @@ function ProjectHeader({project}: {
                                 </h2>
                                 <p>{/*{project.news.first.text_content}*/}</p>
                             </article>
-                            <Button textContent={__('projects.more_news')}/>
+                            <Button textContent={t('more_news')}/>
                         </div> : ''
                 }
 
@@ -106,7 +106,7 @@ function Page404(): ReactNode {
 function VisitorPage() {
     const {project} = usePage<visitorPageProps>().props;
     const {route} = usePage<{ route: string }>().props;
-    const {__} = useLang();
+    const {t} = useTranslation('projects');
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: project.name,
@@ -135,7 +135,7 @@ function VisitorPage() {
 function MemberPage() {
     const {project} = usePage<memberPageProps>().props;
     const {route} = usePage<{ route: string }>().props;
-    const {__} = useLang();
+    const {t} = useTranslation('projects');
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: project.name,
@@ -147,7 +147,7 @@ function MemberPage() {
             <PageFlowContainer className="pt-0">
                 <ProjectHeader project={project}/>
 
-                <TaskDisplay tasks={project.upcoming_tasks} title={__('projects.upcoming_tasks')} project={project}/>
+                <TaskDisplay tasks={project.upcoming_tasks} title={t('upcoming_tasks')} project={project}/>
             </PageFlowContainer>
 
         </AppLayout>

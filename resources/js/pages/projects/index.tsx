@@ -2,7 +2,6 @@ import type {BreadcrumbItem, IProject} from "@/types";
 import {dashboard} from "@/routes";
 import AppLayout from "@/layouts/app-layout";
 import {Head, usePage} from "@inertiajs/react";
-import {useLang} from "@/hooks/useLang";
 import {ReactNode, useEffect, useState} from "react";
 import ProjectItem from "@/components/projects/project-item";
 import PageFlowContainer from "@/components/page-flow-container";
@@ -11,6 +10,7 @@ import {ArrowDownWideNarrow, ListFilter} from "lucide-react";
 import SearchBar from "@/components/filtering/search-bar";
 import {get} from "node:http";
 import {projects as projectsIndex} from '@/routes';
+import {useTranslation} from "react-i18next";
 // import { Inertia } from "@inertiajs/inertia-laravel";
 
 /*const breadcrumbs: BreadcrumbItem[] = [
@@ -31,15 +31,15 @@ interface ProjectsContainerProps {
 
 function ProjectsContainer({currentPage, maxItems}: ProjectsContainerProps): ReactNode {
     const {projects} = usePage<PageProps>().props;
-    const {__} = useLang();
+    const {t} = useTranslation(['projects-index','projects']);
 
     if (projects.length <= 0) {
-        return <p>{__('projects.empty')}</p>
+        return <p>{t('projects:empty')}</p>
     }
 
     return (
         <section className="flex flex-col gap-4">
-            <p className="section-title px-3">{__('projects-index.results')}</p>
+            <p className="section-title px-3">{t('results')}</p>
 
             <ul className="px-2 flex flex-col gap-3">
                 {/* TODO see if better to load everything then slice or load progressively server-side */}
@@ -54,20 +54,20 @@ function ProjectsContainer({currentPage, maxItems}: ProjectsContainerProps): Rea
 }
 
 function TagsContainer({tags}: { tags: string[] }) {
-    const {__} = useLang();
+    const {t} = useTranslation('projects');
 
     if (tags.length > 0)
         return (
             <ul className="flex flex-wrap gap-1">
                 {tags.map((tag) => {
-                    return <li>{__('projects.tags.' + tag)}</li>
+                    return <li>{t('tag_' + tag)}</li>
                 })}
             </ul>
         );
 }
 
 export default function ProjectIndex() {
-    const {__} = useLang();
+    const {t} = useTranslation(['projects-index','projects']);
     const {projects} = usePage<PageProps>().props;
 
     // TODO do it server-side
@@ -90,9 +90,9 @@ export default function ProjectIndex() {
     const search = (e: any): any => {
         setSearchData(e.target!.value);
 
-        get(projectsIndex().url + '/search', (response) => {
+        /*get(projectsIndex().url + '/search', (response) => {
             console.log(response)
-        });
+        });*/
     }
 
     /* code picked-up from another project
@@ -118,16 +118,16 @@ export default function ProjectIndex() {
 
     return (
         <AppLayout>
-            <Head title={__('projects-index.title')}/>
+            <Head title={t('title')}/>
             <PageFlowContainer>
 
-                <h1 className="page-title text-center mx-auto">{__('projects-index.search_title')}</h1>
+                <h1 className="page-title text-center mx-auto">{t('search_title')}</h1>
 
                 <div className="flex flex-col gap-2 w-full px-3">
                     <div className="flex gap-1">
-                        <IconButton icon={ArrowDownWideNarrow} textContent={__('pagination.' + direction)}/>
-                        <p className="section-title mx-1">{__('projects-index.filters.' + filter)}</p>
-                        <IconButton className="ml-auto" icon={ListFilter} textContent={__('pagination.')}/>
+                        <IconButton icon={ArrowDownWideNarrow} textContent={t('pagination:' + direction)}/>
+                        <p className="section-title mx-1">{t('filter_' + filter)}</p>
+                        <IconButton className="ml-auto" icon={ListFilter} textContent={t('filter')}/>
                     </div>
                     <TagsContainer tags={tags}/>
                     {/* Tags container (only if tags.) */}

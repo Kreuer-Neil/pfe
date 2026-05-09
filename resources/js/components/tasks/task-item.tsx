@@ -6,6 +6,7 @@ import {cn} from "@/lib/utils";
 import {laravelDateToJsDate, upcomingDateToString} from "@/helpers/date";
 import {ReactNode} from "react";
 import ProjectIcon from "@/components/icons/project-icon";
+import {useTranslation} from "react-i18next";
 
 
 function ParticipatingIcon({participating}: { participating: boolean }) {
@@ -71,8 +72,8 @@ export default function TaskItem({task, className = '', isInProjectPage = false}
     className?: string,
     isInProjectPage: boolean
 }) {
-    const {__, trans} = useLang();
-    const dueAt: string = task.due_at ? upcomingDateToString(laravelDateToJsDate(task.due_at)) : __('date.no_time_limit');
+    const {t} = useTranslation(['projects','date']);
+    const dueAt: string = task.due_at ? upcomingDateToString(laravelDateToJsDate(task.due_at)) : t('date:no_time_limit');
 
 
     // const dueAtYear: number = dueAt.getFullYear();
@@ -83,7 +84,7 @@ export default function TaskItem({task, className = '', isInProjectPage = false}
 
 
             {/* TODO limit desc max length when mobile */}
-            <p>{trans('projects.task.from_project', {project: task.project.name})}</p>
+            <p>{t('task_from_project', {project: task.project.name})}</p>
             <div className="taskinfo mt-1 flex flex-wrap justify-between items-center gap-1">
                 {/* TODO change date format */}
                 <time className="flex gap-1"><Timer/><span>{dueAt}</span>
