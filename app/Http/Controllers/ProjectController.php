@@ -34,6 +34,11 @@ class ProjectController extends Controller
         return Inertia::render('projects/index', compact('projects'));
     }
 
+    public function indexSearch()
+    {
+        $_REQUEST;
+    }
+
     public function show(Project $project)
     {
         $route = route('projects.show', $project->id);

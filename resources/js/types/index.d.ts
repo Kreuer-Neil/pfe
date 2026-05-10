@@ -139,3 +139,10 @@ export interface INote {
 
     [key: string]: unknown;
 }
+
+// Non-items related items
+interface IPaginationLink {
+    url: string | null;
+    label: string;
+    active: boolean;
+}

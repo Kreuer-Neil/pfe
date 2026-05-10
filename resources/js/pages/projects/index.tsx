@@ -1,4 +1,4 @@
-import type {BreadcrumbItem, IProject} from "@/types";
+import type {BreadcrumbItem, IDashboardProject, IPaginationLink, IProject, IProjectMiniature} from "@/types";
 import {dashboard} from "@/routes";
 import AppLayout from "@/layouts/app-layout";
 import {Head, usePage} from "@inertiajs/react";
@@ -29,9 +29,14 @@ interface ProjectsContainerProps {
     maxItems: number,
 }
 
+interface IPaginatedProjects {
+    data: IProjectMiniature[] | IDashboardProject[],
+    links: IPaginationLink[],
+}
+
 function ProjectsContainer({currentPage, maxItems}: ProjectsContainerProps): ReactNode {
     const {projects} = usePage<PageProps>().props;
-    const {t} = useTranslation(['projects-index','projects']);
+    const {t} = useTranslation(['projects-index', 'projects']);
 
     if (projects.length <= 0) {
         return <p>{t('projects:empty')}</p>
@@ -67,18 +72,20 @@ function TagsContainer({tags}: { tags: string[] }) {
 }
 
 export default function ProjectIndex() {
-    const {t} = useTranslation(['projects-index','projects']);
-    const {projects} = usePage<PageProps>().props;
+    const {t} = useTranslation(['projects-index', 'projects']);
+    // const {projects} = usePage<PageProps>().props;
 
     // TODO do it server-side
     const [currentPage, setCurrentPage] = useState(0);
     const [maxItems, setMaxItems] = useState(20);
 
+    const [projects, setProjects] = useState<IPaginatedProjects>({ data: [], links: []});
+
     const [filter, setFilter] = useState('pertinence');
     const [direction, setDirection] = useState('desc');
     const [tags, setTags] = useState([]);
 
-    const [searchData, setSearchData] = useState('');
+    const [query, setQuery] = useState('');
 
     /*useEffect(() => {
         Inertia.get(route(route().current()), searchData, {
@@ -87,12 +94,34 @@ export default function ProjectIndex() {
         });
     }, [searchData]);*/
 
-    const search = (e: any): any => {
-        setSearchData(e.target!.value);
+    /*useEffect(() => {
+        const fetchProjects = async (): Promise<void> => {
+            try {
+                const params = new URLSearchParams();
+                if (query) params.append("query", query);
+                if (filter) params.append("filter", filter);
+                if (tags.length>0) params.append("tags", tags.toString());
+                if (direction) params.append("direction", direction);
+                // if (tags) params.append("filter[tags]", tags);
+                params.append("page", currentPage.toString());
 
-        /*get(projectsIndex().url + '/search', (response) => {
-            console.log(response)
-        });*/
+                const response = await fetch(projectsIndex().url + `/search?${params.toString()}`);
+                const data: IPaginatedProjects = await response.json();
+                setProjects(data);
+            } catch (error) {
+                console.error(`Erreur : ${error}`);
+            }
+        }
+        fetchProjects().then();
+    }, ['query','filter','direction']);*/
+
+    const search = (e: any): any => {
+        setQuery(e.target!.value);
+
+
+        // get(projectsIndex().url + '/search', (response) => {
+        //     console.log(response);
+        // });
     }
 
     /* code picked-up from another project
@@ -132,7 +161,7 @@ export default function ProjectIndex() {
                     <TagsContainer tags={tags}/>
                     {/* Tags container (only if tags.) */}
                     {/* Search bar */}
-                    <SearchBar onChange={search} data={searchData}/>
+                    <SearchBar onChange={search} data={query}/>
                 </div>
 
                 <ProjectsContainer currentPage={currentPage} maxItems={maxItems}/>

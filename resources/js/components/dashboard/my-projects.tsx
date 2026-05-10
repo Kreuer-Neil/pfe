@@ -9,6 +9,8 @@ import Button from "@/components/buttons/button";
 import IconButton from "@/components/buttons/icon-button";
 import ProjectItem from "@/components/projects/project-item";
 import {useTranslation} from "react-i18next";
+import {projects as projectsIndex} from '@/routes';
+
 
 function ProjectsList({projects}: { projects: IDashboardProject[] }): ReactNode {
     const {t} = useTranslation(['projects','dashboard']);
@@ -60,7 +62,7 @@ export default function MyProjects({projects}: { projects: IDashboardProject[] |
             </div>
             <ProjectsList projects={projects}/>
             <div className="flex flex-col gap-4 px-3 items-center">
-                <ButtonText textContent={t('dashboard:more_projects')} icon={LucideSearch}/>
+                <ButtonText textContent={t('dashboard:more_projects')} icon={LucideSearch} href={projectsIndex().url}/>
             </div>
         </section>
     );
