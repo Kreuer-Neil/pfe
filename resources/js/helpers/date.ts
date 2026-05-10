@@ -37,7 +37,7 @@ export function upcomingDateToString(date: Date): string {
     const now = new Date(Date.now());
 
     // Given date time of the day
-    const time: string = date.getHours() + ':' + date.getMinutes();
+    const time: string = date.getHours() + ':' + (0 + date.getMinutes().toString()).slice(-2);
     //
 
     const day = date.getDate();
