@@ -34,7 +34,7 @@ class ProjectController extends Controller
         $tags = BaseTags::cases();
         $title = 'my_projects';
 
-        return Inertia::render('projects/index', compact(['filters', 'tags', 'title']));
+        return Inertia::render('projects/index', compact(['filters', 'queryFilters', 'tags', 'title']));
     }
 
     public function indexSearch()
@@ -78,9 +78,10 @@ class ProjectController extends Controller
         ];
     }
 
-    public function show(Project $project)
+    public function show(string $slug)
     {
-        $route = route('projects.show', $project->id);
+        $project = Project::where('slug',$slug)->first();
+        $route = route('projects.show', $project->slug);
 
         $user = auth()->user();
         $project = $this->getShowDataFor($user, $project);
@@ -89,7 +90,6 @@ class ProjectController extends Controller
             abort(404);
         }
 
-//        syncLangFiles(['main-nav', 'projects', 'date', 'pagination']);
         return Inertia::render(
             'projects/show',
             compact('project', 'route'));

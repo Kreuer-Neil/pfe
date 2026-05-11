@@ -13,7 +13,7 @@ export default function ProjectItem({project}: ProjectItemsProps) {
     const place: string | null = project.place;
     const coordinates: string | null = project.coordinates;
     return (
-        <Link as={'article'} tabIndex={0} href={projectsIndex().url + '/' + project.id} className="thumbnail-item">
+        <Link as={'article'} tabIndex={0} href={projectsIndex().url + '/' + project.slug} className="thumbnail-item">
             <div className={'flex gap-1 items-center'}>
                 <ProjectIcon project={project}/>
                 <h3 className="item-title w-full">{project.name}</h3>
