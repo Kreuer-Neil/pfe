@@ -38,6 +38,10 @@ class ProjectController extends Controller
 
     public function indexSearch()
     {
+        // TODO find a better way to do this
+        if (!(array_key_exists('user_request',$_REQUEST) && $_REQUEST['user_request'] === '1')) {
+            return redirect(route('projects'));
+        }
         $order = 'coordinates';
         $direction = (array_key_exists('direction', $_REQUEST)) ? ($_REQUEST['direction'] === 'desc' ? 'desc' : 'asc') : 'desc';
 

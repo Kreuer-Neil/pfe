@@ -106,6 +106,7 @@ export default function ProjectIndex() {
         const fetchProjects = async (): Promise<void> => {
             try {
                 const params = new URLSearchParams();
+                params.append('user_request','1');
                 if (query) params.append("query", query);
                 if (direction) params.append("direction", direction);
                 if (filter) params.append("filter", filter);
