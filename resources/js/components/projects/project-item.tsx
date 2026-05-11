@@ -22,6 +22,7 @@ export default function ProjectItem({project}: ProjectItemsProps) {
             {
                 place && coordinates ?
                     // Google maps link
+                    // TODO fix link not clickable because of link nav
                     <a href={'https://www.google.com/maps/@' + coordinates.replace(' ', '') +',14z?entry=ttu&g_ep=EgoyMDI2MDUwMi4wIKXMDSoASAFQAw%3D%3D'}
                        className="flex gap-1">
                         <MapPin/>

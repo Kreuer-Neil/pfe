@@ -2,41 +2,75 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\BaseTags;
+use App\Enums\ProjectsFilters;
 use App\FormatedModels\Project\FormatedProject;
 use App\FormatedModels\Project\FormatedProjectMiniature;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use function Pest\Laravel\json;
 
 class ProjectController extends Controller
 {
 
     public function index()
     {
+        $filters = null;
+        // TODO create
+        $tags = BaseTags::cases();
+
+//        syncLangFiles(['main-nav', 'projects', 'projects-index', 'date', 'pagination']);
+        return Inertia::render('projects/index', compact(['filters', 'tags']));
+    }
+
+    public function indexPersonnal()
+    {
+        $filters = [ProjectsFilters::MyProjects,ProjectsFilters::RecentProjects];
+        $queryFilters = ['filter' => ProjectsFilters::MyProjects];
+
+        $tags = BaseTags::cases();
+        $title = 'my_projects';
+
+        return Inertia::render('projects/index', compact(['filters', 'tags', 'title']));
+    }
+
+    public function indexSearch()
+    {
         $order = 'coordinates';
-        $direction = 'desc';
-        $search = NULL;
+        $direction = (array_key_exists('direction', $_REQUEST)) ? ($_REQUEST['direction'] === 'desc' ? 'desc' : 'asc') : 'desc';
+
         $queriedProjects = Project::where('is_private', false);
-        if ($search) {
-            $queriedProjects = $queriedProjects->whereLike('name', $search)->orWhereLike('description', $search);
+
+        if (array_key_exists('query', $_REQUEST)) {
+            $query = $_REQUEST['query'];
+            $queriedProjects = $queriedProjects
+                ->whereLike('name', '%'.$query.'%')
+                ->orWhereLike('description', '%'.$query.'%');
         }
 
         // TODO add filtering for data
-        $queriedProjects = $queriedProjects->orderBy($order, $direction)->get();
+        $queriedProjects = $queriedProjects
+            ->orderBy($order, $direction)
+            ->get();
 
         $projects = [];
         foreach ($queriedProjects as $project) {
             $projects[] = new FormatedProjectMiniature($project, auth()->user());
         }
 
-//        syncLangFiles(['main-nav', 'projects', 'projects-index', 'date', 'pagination']);
-        return Inertia::render('projects/index', compact('projects'));
-    }
 
-    public function indexSearch()
-    {
-        $_REQUEST;
+        return [
+            'links' => [
+                [
+                    'url' => route('projects') . '/1',
+                    'label' => 'label',
+                    'active' => false
+                ]
+            ],
+            'data' => $projects
+        ];
     }
 
     public function show(Project $project)

@@ -13,12 +13,14 @@ interface SearchBarProps {
 
 export default function SearchBar({onChange, data, className = '', id = 'search'}: SearchBarProps) {
 
-    const {t} = useTranslation('projects-index');
+    const {t} = useTranslation(['projects-index']);
     return (
         <label className={cn('search-box', className)}>
             <span className="sr-only">{t('search')}</span>
             <Search/>
-            <input type="search" name="search" className="search-input" onChange={onChange} value={data} id={id} autoComplete="projects projects-descriptions"/>
+            <input type="search" name="search" className="search-input"
+                   onChange={onChange} value={data} id={id}
+                   placeholder={t('search')} autoComplete="projects projects-descriptions"/>
         </label>
     );
 }
