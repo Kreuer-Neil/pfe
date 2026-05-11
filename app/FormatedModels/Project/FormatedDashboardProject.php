@@ -16,6 +16,7 @@ class FormatedDashboardProject extends FormatedProjectContext
 
     public ?string $coordinates;
     public ?string $place;
+    public string $slug;
     public int $members_count;
 
     public function __construct(Project $project)
@@ -28,6 +29,7 @@ class FormatedDashboardProject extends FormatedProjectContext
 
         $this->coordinates = $project->coordinates;
         $this->place = $project->place();
+        $this->slug = $project->slug;
         $this->members_count = $project->members->count();
         // TODO add notifications etc. later? On another version
     }

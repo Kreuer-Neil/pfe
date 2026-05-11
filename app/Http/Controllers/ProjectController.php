@@ -10,6 +10,7 @@ use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use PHPUnit\Logging\OpenTestReporting\Status;
 use function Pest\Laravel\json;
 
 class ProjectController extends Controller
@@ -81,7 +82,12 @@ class ProjectController extends Controller
     {
         $route = route('projects.show', $project->id);
 
-        $project = $this->getShowDataFor(auth()->user(), $project);
+        $user = auth()->user();
+        $project = $this->getShowDataFor($user, $project);
+
+        if (!$project) {
+            abort(404);
+        }
 
 //        syncLangFiles(['main-nav', 'projects', 'date', 'pagination']);
         return Inertia::render(

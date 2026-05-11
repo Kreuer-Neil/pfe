@@ -20,16 +20,16 @@ beforeEach(function () {
         'user_id' => 1
     ]);
 
-    foreach (User::all()->toArray() as $user) {
+    foreach (User::all() as $user) {
         // Add all users to the projects
         Member::create([
-            'user_id' => $user['id'],
+            'user_id' => $user->id,
             'project_id' => $this->project->id
         ]);
 
         if ($user['id'] != $this->user->id) {
             foreach (Task::all()->random(4) as $task) {
-                $task->participate($this->user);
+                $task->participate($user);
             }
         }
     }
@@ -45,7 +45,7 @@ beforeEach(function () {
 test('upcoming tasks load correctly', function () {
 
     foreach ($this->userTasks as $userTask) {
-        $this->response->assertSee($userTask->title);
+        $this->response->assertSeeText($userTask->title);
 
         // TODO assertion that contacts participating load when set up
         // TODO assertion that tasks load when clicking "show more"
@@ -67,6 +67,10 @@ test('non-taken tasks doesn’t appear', function () {
 
 test('projects load correctly', function () {
     foreach ($this->user->projects as $project) {
-        $this->response->assertSee($project->name);
+        $this->response->assertSeeText($project->name);
     }
 });
+
+//test('users can open a project from the project thumbnail', function () {
+//    // Test with laravel Dusk
+//});

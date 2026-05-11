@@ -25,6 +25,7 @@ class FormatedProjectMiniature extends FormatedProjectContext
     public ?string $place;
 
     public bool $is_member;
+    public string $slug;
     public int $members_count;
 
     public function __construct(Project $project, User $user)
@@ -37,6 +38,7 @@ class FormatedProjectMiniature extends FormatedProjectContext
         $this->coordinates = $project->coordinates;
         $this->place = $project->place();
         $this->is_member = $project->members->find($user->id) !== null;
+        $this->slug = $project->slug;
 
         $this->members_count = $project->members->count();
     }

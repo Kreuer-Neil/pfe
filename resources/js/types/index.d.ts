@@ -81,6 +81,8 @@ export interface IDashboardProject extends IProjectContext {
     members_count: number;
     coordinates: string;
     place: string | null;
+
+    slug: string;
     // featured_members: IUser[];
 }
 
@@ -91,6 +93,8 @@ export interface IProjectMiniature extends IProjectContext {
     members_count: number;
     coordinates: string;
     place: string | null;
+
+    slug: string;
 }
 
 export interface IProjectShow extends IProjectMiniature {

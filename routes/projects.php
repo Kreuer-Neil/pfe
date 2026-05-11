@@ -11,5 +11,6 @@ Route::get('projects', [ProjectController::class, 'index'])
 Route::get('projects/search', [ProjectController::class, 'indexSearch'])
     ->name('projects.search');
 
+// TODO use slug
 Route::get('projects/{project}', [ProjectController::class, 'show'])
     ->name('projects.show');
