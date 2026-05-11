@@ -78,7 +78,7 @@ export default function TaskItem({task, className = '', isInProjectPage = false}
 
     // const dueAtYear: number = dueAt.getFullYear();
     return (
-        <article className={cn("thumbnail-item", className)} key={task.id.toString()}>
+        <article className={cn("thumbnail-item", className)} tabIndex={0} key={task.id.toString()}>
             {/* TODO add open on click and not drag, see bsky duckduckgo etc. */}
             <TaskTitle isInProjectPage={isInProjectPage} project={task.project}>{task.title}</TaskTitle>
 

@@ -91,7 +91,7 @@ export default function ProjectIndex() {
 
     const [projects, setProjects] = useState<IPaginatedProjects>({data: [], links: []});
 
-    const [filter, setFilter] = useState<string>('pertinence');
+    const [filter, setFilter] = useState<string>('recent');
     const [direction, setDirection] = useState<string>('desc');
     const [currentTags, setCurrentTags] = useState<string[]>([]);
 
