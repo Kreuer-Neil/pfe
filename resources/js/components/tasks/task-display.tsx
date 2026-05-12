@@ -32,7 +32,7 @@ function TasksList({tasks, projectContext, maxLength}: {
     const {t} = useTranslation('date');
     const length = tasks.length;
 
-    return <ol className="thumbnails-list-container">
+    return <ul className="thumbnails-list-container">
         {tasks.slice(0, Number(maxLength)).map((task: ITask, i: number) => {
             let month: number = laravelDateToJsDate(task.due_at ?? task.created_at).getMonth();
             const precedentMonthCondition: boolean = i + 1 < length
@@ -45,7 +45,7 @@ function TasksList({tasks, projectContext, maxLength}: {
                 </li>
             );
         })}
-    </ol>
+    </ul>
 }
 
 function AddTask() {

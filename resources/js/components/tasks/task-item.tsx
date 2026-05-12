@@ -98,11 +98,11 @@ export default function TaskItem({task, className = '', isInProjectPage = false}
                     <ParticipatingIcon participating={task.self_participating}/>
                 </div>
             </div>
-            {
+            {/*
                 task.owner
                     ? <PostedBy owner={task.owner}/>
                     : ''
-            }
+            */}
         </article>
     );
 }

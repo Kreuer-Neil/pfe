@@ -45,20 +45,18 @@ interface IPaginatedProjects {
 function ProjectsContainer({currentPage, projects}: ProjectsContainerProps): ReactNode {
     const {t} = useTranslation(['projects-index', 'projects']);
 
-    if (projects.length <= 0) {
-        return (
-            <section className="flex flex-col gap-4">
-                <h2 className="section-title px-3">{t('results')}</h2>
-                <p>{t('projects:empty')}</p>
-            </section>
-        );
-    }
+    if (projects.length <= 0) return (
+        <section className="flex flex-col gap-4">
+            <h2 className="section-title px-3">{t('results')}</h2>
+            <p>{t('projects:empty')}</p>
+        </section>
+    );
 
     return (
         <section className="flex flex-col gap-4">
             <h2 className="section-title px-3">{t('results')}</h2>
 
-            <ul className="px-2 flex flex-col gap-3">
+            <ul className="thumbnails-list-container">
                 {/* TODO see if better to load everything then slice or load progressively server-side */}
                 {projects.map((project: IProjectMiniature | IDashboardProject): ReactNode => (
                     <li key={project.id}>
@@ -73,14 +71,13 @@ function ProjectsContainer({currentPage, projects}: ProjectsContainerProps): Rea
 function TagsContainer({tags}: { tags: string[] }) {
     const {t} = useTranslation('projects');
 
-    if (tags.length > 0)
-        return (
-            <ul className="flex flex-wrap gap-1">
-                {tags.map((tag: string, i: number) => {
-                    return <li key={i}>{t('tag_' + tag)}</li>
-                })}
-            </ul>
-        );
+    if (tags.length > 0) return (
+        <ul className="flex flex-wrap gap-1">
+            {tags.map((tag: string, i: number) => {
+                return <li key={i}>{t('tag_' + tag)}</li>
+            })}
+        </ul>
+    );
 }
 
 export default function ProjectIndex() {
@@ -97,7 +94,7 @@ export default function ProjectIndex() {
 
     if (queryFilters) {
         queryFilters.filter ? setFilter(queryFilters.filter) : '';
-        queryFilters.tags.length>0 ? setCurrentTags(queryFilters.tags) : '';
+        queryFilters.tags.length > 0 ? setCurrentTags(queryFilters.tags) : '';
     }
 
     const [query, setQuery] = useState<string>('');
@@ -106,7 +103,7 @@ export default function ProjectIndex() {
         const fetchProjects = async (): Promise<void> => {
             try {
                 const params = new URLSearchParams();
-                params.append('user_request','1');
+                params.append('user_request', '1');
                 if (query) params.append("query", query);
                 if (direction) params.append("direction", direction);
                 if (filter) params.append("filter", filter);
