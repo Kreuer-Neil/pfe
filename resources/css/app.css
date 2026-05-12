@@ -392,7 +392,7 @@
 
     .items-section {
         @apply w-full max-w-3xl /*rounded-lg bg-card*/
-        overflow-clip flex flex-col gap-4;
+        flex flex-col gap-4;
     }
 
     .thumbnails-list-container {
@@ -453,7 +453,7 @@
     }
 
     .button-text {
-        @apply text-link hover:bg-primary flex gap-2 py-1.5 justify-center items-center w-full max-w-md rounded-sm cursor-pointer;
+        @apply text-link hover:bg-primary focus:bg-primary flex gap-2 py-1.5 justify-center items-center w-full max-w-md rounded-sm cursor-pointer font-medium;
     }
 
     /* Generic Widgets style */

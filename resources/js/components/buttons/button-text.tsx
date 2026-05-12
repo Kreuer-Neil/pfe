@@ -30,7 +30,7 @@ export default function ButtonText({
     let style: string = '';
     switch (type) {
         case 'destroy':
-            style = 'text-danger-md hover:text-danger-foreground hover:bg-danger';
+            style = 'text-danger-md hover:text-danger-foreground hover:bg-danger focus:text-danger-foreground focus:bg-danger';
             break;
         case 'default':
             style = '';
