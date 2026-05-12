@@ -51,12 +51,9 @@ export default function MyProjects({projects}: { projects: IDashboardProject[] |
     return (
         <section className="items-section">
             <div className="flex items-center mx-3">
-                <h2 className="section-title w-full">
+                <h2 className="section-title w-fit mr-auto">
                     {t('common:my_projects')}
                 </h2>
-            </div>
-            <div className="px-2 flex flex-col gap-3 items-center">
-                {/*Filters etc. for current project*/}
                 <IconButton href={projectsPage().url} textContent={t("dashboard:project_filter")} icon={ListFilter}
                             showText={true} className="ml-auto"/>
             </div>
