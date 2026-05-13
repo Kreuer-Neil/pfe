@@ -24,13 +24,14 @@ class FormatedTask extends FormatedTaskMiniature
 
     public function __construct(Task $task, int $currentUserId)
     {
+        parent::__construct($task, $currentUserId);
         $this->owner = $task->owner;
         $this->description = $task->description;
-        $this->project = new FormatedProjectContext($task->project()->first(['id','name','icon','slug']));
+        $this->project = new FormatedProjectContext($task->project()->first(['id', 'name', 'icon', 'slug']));
 
         // Turns users model collection into profile data
         $this->participating_users = [];
-        foreach($task->participatingUsers($currentUserId)->get() as $user) {
+        foreach ($task->participatingUsers($currentUserId)->get() as $user) {
             $this->participating_users[] = new FormatedProfile($user);
         }
 

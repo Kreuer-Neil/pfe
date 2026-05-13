@@ -24,9 +24,7 @@ class FormatedProject extends FormatedProjectContext
 
     public function __construct(Project $project, User $user)
     {
-        $this->id = $project->id;
-        $this->name = $project->name;
-        $this->icon = $project->icon;
+        parent::__construct($project);
         $this->description = $project->description;
 
         $this->owner = User::find($project->owner_id);

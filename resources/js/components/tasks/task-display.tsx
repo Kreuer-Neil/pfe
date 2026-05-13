@@ -38,7 +38,7 @@ function TasksList({tasks, projectContext, maxLength, /*onTapTask*/}: {
             return (
                 <li className="w-full flex flex-col gap-4" key={task.id}>
                     {precedentMonthCondition ? <span className="month-divider">{t('month_' + month)}</span> : ''}
-                    <TaskItem task={task} isInProjectPage={projectContext}
+                    <TaskItem taskMiniature={task} isInProjectPage={projectContext}
                               // setModalTaskId={onTapTask}
                     />
                 </li>

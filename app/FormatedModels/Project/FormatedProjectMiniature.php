@@ -30,15 +30,12 @@ class FormatedProjectMiniature extends FormatedProjectContext
 
     public function __construct(Project $project, User $user)
     {
-        $this->id = $project->id;
-        $this->name = $project->name;
-        $this->icon = $project->icon;
+        parent::__construct($project);
         $this->description = Str::limit(value: $project->description, preserveWords: true);
 
         $this->coordinates = $project->coordinates;
         $this->place = $project->place();
         $this->is_member = $project->members->find($user->id) !== null;
-        $this->slug = $project->slug;
 
         $this->members_count = $project->members->count();
     }
