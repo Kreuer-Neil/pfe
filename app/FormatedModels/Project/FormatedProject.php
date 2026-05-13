@@ -3,7 +3,7 @@
 namespace App\FormatedModels\Project;
 
 use App\FormatedModels\FormatedProfile;
-use App\FormatedModels\FormatedTask;
+use App\FormatedModels\FormatedTaskMiniature;
 use App\Models\Project;
 use App\Models\User;
 
@@ -37,7 +37,7 @@ class FormatedProject extends FormatedProjectContext
 
         $this->upcoming_tasks = [];
         foreach ($project->upcomingTasks as $task) {
-            $this->upcoming_tasks[] = new FormatedTask($task, $user->id);
+            $this->upcoming_tasks[] = new FormatedTaskMiniature($task, $user->id);
         }
 
         $this->user_role = $project->userRole($user);

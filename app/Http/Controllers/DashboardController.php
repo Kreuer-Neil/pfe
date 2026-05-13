@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\FormatedModels\FormatedTask;
+use App\FormatedModels\FormatedTaskMiniature;
 use App\FormatedModels\Project\FormatedDashboardProject;
 use App\Models\Project;
 use App\Models\Task;
@@ -23,7 +23,7 @@ class DashboardController extends Controller
         $tasks = [];
         // TODO do the same with users & profiles
         foreach ($currentUser->upcomingTasks/*->take(3)*/ as $upcomingTask) {
-            $formatedUpcomingTask = new FormatedTask($upcomingTask, $currentUser->id);
+            $formatedUpcomingTask = new FormatedTaskMiniature($upcomingTask, $currentUser->id);
             $tasks[] = $formatedUpcomingTask;
         }
 

@@ -21,6 +21,7 @@
 
     --color-background: var(--background);
     --color-foreground: var(--foreground);
+    --color-modal-behind: var(--modal-behind);
 
     --color-card: var(--card);
     --color-card-foreground: var(--card-foreground);
@@ -113,6 +114,7 @@
 
     --background: oklch(1 0 0);
     --foreground: var(--foreground-main);
+    --modal-behind: oklch(1 0 0 / 0.25);
     /*--card: oklch(1 0 0);*/
 
     --card: oklch(0.9612 0 0);

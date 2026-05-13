@@ -97,4 +97,11 @@ class Task extends Model
         $userId = isInt($user) ? $user : $user->id;
         return !$this->participations->where('user_id', '==', $userId)->isEmpty();
     }
+
+    public function canSee(User $user)
+    {
+        // TODO check if user can see task
+        $this->project;
+        return true;
+    }
 }

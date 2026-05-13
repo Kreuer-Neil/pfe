@@ -1,39 +1,36 @@
-import {IProject, ITask} from "@/types";
+import {IProject, ITask, ITaskMiniature} from "@/types";
 // import {agenda} from '@/routes';
 import TaskItem from "@/components/tasks/task-item";
-import {useLang} from "@/hooks/useLang";
-import {ReactNode, useState} from "react";
+import { ReactNode, useState} from "react";
 import {cn} from "@/lib/utils";
-import ButtonText from "@/components/buttons/button-text";
-import {ClipboardPlus, LucideChevronDown, LucideChevronUp} from "lucide-react";
-import {laravelDateToJsDate} from "@/helpers/date";
+import {ClipboardPlus} from "lucide-react";
+import {laravelDateToJsDate,} from "@/helpers/date";
 import ShowMore from "@/components/buttons/show-more";
 import IconButton from "@/components/buttons/icon-button";
 import {useTranslation} from "react-i18next";
 
 
 interface TaskDisplayProps {
-    tasks: ITask[],
-    title?: string | null,
-    level?: number,
-    className?: string,
-    actionText?: string,
-    action?: (() => void) | null,
-    isInProjectPage?: boolean,
-    project?: IProject | null,
-    maxLength?: bigint | null,
+    tasks: ITaskMiniature[];
+    title?: string | null;
+    className?: string;
+    action?: (() => void) | null;
+    isInProjectPage?: boolean;
+    project?: IProject | null;
+    maxLength?: bigint | null;
 }
 
-function TasksList({tasks, projectContext, maxLength}: {
-    tasks: ITask[],
-    projectContext: boolean,
-    maxLength: bigint
+function TasksList({tasks, projectContext, maxLength, /*onTapTask*/}: {
+    tasks: ITaskMiniature[];
+    projectContext: boolean;
+    maxLength: bigint;
+    // onTapTask: (id: string) => void;
 }): ReactNode {
     const {t} = useTranslation('date');
     const length = tasks.length;
 
     return <ul className="thumbnails-list-container">
-        {tasks.slice(0, Number(maxLength)).map((task: ITask, i: number) => {
+        {tasks.slice(0, Number(maxLength)).map((task: ITaskMiniature, i: number) => {
             let month: number = laravelDateToJsDate(task.due_at ?? task.created_at).getMonth();
             const precedentMonthCondition: boolean = i + 1 < length
                 && tasks[i - 1]
@@ -41,7 +38,9 @@ function TasksList({tasks, projectContext, maxLength}: {
             return (
                 <li className="w-full flex flex-col gap-4" key={task.id}>
                     {precedentMonthCondition ? <span className="month-divider">{t('month_' + month)}</span> : ''}
-                    <TaskItem task={task} isInProjectPage={projectContext}/>
+                    <TaskItem task={task} isInProjectPage={projectContext}
+                              // setModalTaskId={onTapTask}
+                    />
                 </li>
             );
         })}
@@ -60,10 +59,7 @@ export default function TaskDisplay(
     {
         tasks,
         title = null,
-        level = 2,
         className = '',
-        actionText,
-        action = null,
         project = null,
         maxLength = 3n,
     }: TaskDisplayProps,): ReactNode {
@@ -84,21 +80,51 @@ export default function TaskDisplay(
 
     }
 
-    const pageId = 'tasks';
-    return <section className={cn('items-section', className)} id={pageId}>
-        <div className="flex items-center mx-3">
-            <h2 className="section-title w-full">{title ?? (project ? t('tasks_container_title', {project: project.name}) : t('task_upcoming_title'))}</h2>
-            {project ? <AddTask/> : ''}
-        </div>
-        {
-            tasks.length > 0
-                // Task items
-                ? <TasksList tasks={tasks} projectContext={(project != null)} maxLength={maxItemsLength!}/>
-                : <div className="thumbnails-list-container"><p>{t('task_empty_message')}</p></div>
+    /*useEffect(() => {
+        if (modalTaskId && modalTaskId !== '' && modalTaskId !== '0') {
+            const fetchTask = async (): Promise<ITask | undefined> => {
+                try {
+                    const params = new URLSearchParams();
+                    params.append('task_id', modalTaskId);
+
+                    const response = await fetch(`${tasksShow(modalTaskId).url}?${params}`);
+                    // console.log(await response.json());
+                    const data: { task: ITask } = await response.json();
+                    return (data.task);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+            fetchTask().then((task: ITask | undefined) => {
+                if (!task) {
+                    //     setShowErrorModal(true);
+                    return;
+                }
+                setTask(task);
+                setShowModal(true);
+            });
         }
-        <div className="flex flex-col gap-4 px-3 items-center">
-            <ShowMore showMore={showMoreState} onClick={onShowMore}/>
-            {/*<ButtonText href={agenda().url} textContent={actionText ?? t('task.show_agenda')} icon={LucideCalendarDays}/>*/}
-        </div>
-    </section>
+    }, [modalTaskId]);*/
+
+    const pageId = 'tasks';
+    return (
+        <section className={cn('items-section', className)} id={pageId}>
+            <div className="flex items-center mx-3">
+                <h2 className="section-title w-full">{title ?? (project ? t('tasks_container_title', {project: project.name}) : t('task_upcoming_title'))}</h2>
+                {project ? <AddTask/> : ''}
+            </div>
+            {
+                tasks.length > 0
+                    // Task items
+                    ? <TasksList tasks={tasks} projectContext={(project != null)} maxLength={maxItemsLength!}
+                                 // onTapTask={onTaskTap}
+                    />
+                    : <div className="thumbnails-list-container"><p>{t('task_empty_message')}</p></div>
+            }
+            <div className="flex flex-col gap-4 px-3 items-center">
+                <ShowMore showMore={showMoreState} onClick={onShowMore}/>
+                {/*<ButtonText href={agenda().url} textContent={actionText ?? t('task.show_agenda')} icon={LucideCalendarDays}/>*/}
+            </div>
+        </section>
+    );
 }

@@ -1,5 +1,4 @@
 import type {BreadcrumbItem, IDashboardProject, IPaginationLink, IProject, IProjectMiniature} from "@/types";
-import {dashboard} from "@/routes";
 import AppLayout from "@/layouts/app-layout";
 import {Head, usePage} from "@inertiajs/react";
 import {ReactNode, useEffect, useState} from "react";
@@ -8,8 +7,7 @@ import PageFlowContainer from "@/components/page-flow-container";
 import IconButton from "@/components/buttons/icon-button";
 import {ArrowDownWideNarrow, ArrowUpWideNarrow, ListFilter} from "lucide-react";
 import SearchBar from "@/components/filtering/search-bar";
-import {get} from "node:http";
-import {projects as projectsIndex} from '@/routes';
+import {index as projectsIndex, indexSearch} from '@/actions/App/Http/Controllers/ProjectController';
 import {useTranslation} from "react-i18next";
 
 /*const breadcrumbs: BreadcrumbItem[] = [
@@ -103,7 +101,7 @@ export default function ProjectIndex() {
         const fetchProjects = async (): Promise<void> => {
             try {
                 const params = new URLSearchParams();
-                params.append('user_request', '1');
+                params.append('user_id', '1');
                 if (query) params.append("query", query);
                 if (direction) params.append("direction", direction);
                 if (filter) params.append("filter", filter);
@@ -127,27 +125,6 @@ export default function ProjectIndex() {
     const changeDirection = (): any => {
         setDirection(direction === 'desc' ? 'asc' : 'desc');
     }
-
-    /* code picked-up from another project
-    useEffect(() => {
-        const fetchProjects = async (): Promise<void> => {
-            try {
-                const params = new URLSearchParams();
-                if (filter) params.append("filter[filter]", filter);
-                if (direction) params.append("direction", direction);
-                if (tags) params.append("filter[tags]", tags);
-                params.append("page", currentPage.toString());
-
-                const response = await fetch(`/search?${params.toString()}`);
-                const data: PaginatedAnimals = await response.json();
-                setProjects(data);
-            } catch (error) {
-                console.error(`Erreur : ${error}`);
-            }
-        }
-
-        fetchAnimals().then();
-    }, [query, gender, status, breed, organization, specie, currentPage]);*/
 
     return (
         <AppLayout>

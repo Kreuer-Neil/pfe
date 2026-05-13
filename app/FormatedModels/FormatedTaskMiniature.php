@@ -6,7 +6,7 @@ use App\FormatedModels\Project\FormatedProjectContext;
 use App\Models\Task;
 use App\Models\User;
 
-class FormatedTask extends FormatedTaskMiniature
+class FormatedTaskMiniature
 {
     public string $id;
     public ?User $owner;
@@ -24,23 +24,27 @@ class FormatedTask extends FormatedTaskMiniature
 
     public function __construct(Task $task, int $currentUserId)
     {
-        $this->owner = $task->owner;
-        $this->description = $task->description;
+        $this->id = $task->id;
+//        $this->owner = $task->owner;
+        $this->title = $task->title;
+//        $this->description = $task->description;
         $this->project = new FormatedProjectContext($task->project()->first(['id','name','icon','slug']));
 
+        $this->min_participations = $task->min_participations;
         // Turns users model collection into profile data
-        $this->participating_users = [];
-        foreach($task->participatingUsers($currentUserId)->get() as $user) {
-            $this->participating_users[] = new FormatedProfile($user);
-        }
+//        $this->participating_users = [];
+//        foreach($task->participatingUsers($currentUserId)->get() as $user) {
+//            $this->participating_users[] = new FormatedProfile($user);
+//        }
 
         $this->participations_count = $task->participatingUsers($currentUserId)->count();
+//        $this->participations_count = $task->loadCount('participatingUsers');
 
         $this->self_participating = $task->isParticipating($currentUserId);
         $this->starting_at = $task->starting_at;
         $this->due_at = $task->due_at;
         $this->created_at = $task->created_at;
-        $this->updated_at = $task->updated_at;
+//        $this->updated_at = $task->updated_at;
     }
 
 }

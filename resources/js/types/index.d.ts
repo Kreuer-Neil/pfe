@@ -69,9 +69,10 @@ export interface IProfile {
 }
 
 export interface IProjectContext {
-    id: number;
+    id:string,
     name: string;
     icon: string;
+    slug: string;
 
     [key: string]: unknown;
 }
@@ -114,23 +115,39 @@ export interface IProject extends IProjectShow {
 
     user_role: 'member' | 'task_manager' | 'moderator' | 'admin';
 
-    upcoming_tasks: ITask[];
+    upcoming_tasks: ITaskMiniature[];
 }
 
-export interface ITask {
+export interface ITaskMiniature {
+    id: string,
+    title: string,
+    project: IProjectContext,
+    min_participations: ?number,
+    participations_count: number,
+    // if self is participating
+    self_participating: boolean,
+    starting_at: ?string,
+    due_at: ?string,
+    notes: INote[] | null,
+    created_at: string,
+
+    [key: string]: unknown;
+}
+export interface ITask extends ITaskMiniature {
     id: string,
     owner: ?IProfile,
     title: string,
     description: string,
     project: IProjectContext,
     min_participations: ?number,
+    participations_count: number,
     // if self is participating
     self_participating: boolean,
     participating_users: IProfile[],
     starting_at: ?string,
     due_at: ?string,
     created_at: string,
-    // updated_at: string,
+    updated_at: string,
     notes: INote[] | null,
 
     [key: string]: unknown;

@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import {dashboard} from '@/routes';
-import {type BreadcrumbItem, IDashboardProject, ITask, SharedData} from '@/types';
+import {type BreadcrumbItem, IDashboardProject, ITaskMiniature, SharedData} from '@/types';
 import {Head, usePage} from '@inertiajs/react';
 import MyProjects from "@/components/dashboard/my-projects";
 import TaskDisplay from "@/components/tasks/task-display";
@@ -18,16 +18,17 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 type PageProps = {
     userProjects: IDashboardProject[],
-    tasks: ITask[],
+    tasks: ITaskMiniature[],
 };
 export default function Dashboard() {
     const {userProjects, tasks} = usePage<PageProps>().props;
     const {auth} = usePage<SharedData>().props;
     const currentUser = auth.user;
     const {t} = useTranslation('dashboard');
-    // console.log(i18n.language);
 
-    currentUser.nickname = currentUser.nickname ?? `${currentUser.firstName} ${currentUser.lastName}`;
+    // currentUser.nickname = currentUser.nickname ?? `${currentUser.firstName} ${currentUser.lastName}`;
+
+    // Task modal values
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -46,8 +47,9 @@ export default function Dashboard() {
                 </section>
 
                 {/*Tasks section*/}
-                <TaskDisplay level={2} tasks={tasks} isInProjectPage={false}
-                             title={t('upcoming_tasks')}/>
+                <TaskDisplay tasks={tasks} isInProjectPage={false}
+                             title={t('upcoming_tasks')}
+                />
                 {/* TODO setup absence feature (do not disturb-like)
                 <Button as={"a"} textContent={t('project.get_absent')} type="warning" className="-mt-4"/>*/}
 

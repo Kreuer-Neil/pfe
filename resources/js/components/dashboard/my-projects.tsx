@@ -1,9 +1,7 @@
-import {useLang} from "@/hooks/useLang";
 import {projects as projectsPage} from '@/routes';
 import {IDashboardProject} from "@/types";
 import {ReactNode} from "react";
-import ProjectIcon from "@/components/icons/project-icon";
-import {ListFilter, LucideSearch, UsersRound} from "lucide-react";
+import {ListFilter, LucideSearch} from "lucide-react";
 import ButtonText from "@/components/buttons/button-text";
 import Button from "@/components/buttons/button";
 import IconButton from "@/components/buttons/icon-button";
@@ -50,7 +48,7 @@ export default function MyProjects({projects}: { projects: IDashboardProject[] |
         );
     return (
         <section className="items-section">
-            <div className="flex items-center mx-3">
+            <div className="flex flex-wrap items-center mx-3 mb-1">
                 <h2 className="section-title w-fit mr-auto">
                     {t('common:my_projects')}
                 </h2>

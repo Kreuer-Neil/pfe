@@ -1,12 +1,23 @@
-import {CalendarCheck, ClipboardPlus, Timer, UsersRound} from "lucide-react";
-import {IProject, IProjectContext, ITask} from "@/types";
-import {useLang} from "@/hooks/useLang";
-import PostedBy from "@/components/general-posts/posted-by";
+import {CalendarCheck, CalendarClock, Timer, UsersRound} from "lucide-react";
+import {IProjectContext, ITask, ITaskMiniature} from "@/types";
 import {cn} from "@/lib/utils";
 import {laravelDateToJsDate, upcomingDateToString} from "@/helpers/date";
-import {ReactNode} from "react";
+import {ReactNode, useState} from "react";
 import ProjectIcon from "@/components/icons/project-icon";
 import {useTranslation} from "react-i18next";
+import ModalCast from "@/components/modals/modal-cast";
+import ModalSection from "@/components/modals/modal-section";
+import {show as tasksShow} from "@/actions/App/Http/Controllers/TaskController";
+import ReactModal from "react-modal";
+
+
+interface TaskItemProps {
+    task: ITaskMiniature | ITask;
+    className?: string;
+    isInProjectPage: boolean;
+    // taskShow: ((e:any) => void);
+    // setModalTaskId: (id: string) => void;
+}
 
 
 function ParticipatingIcon({participating}: { participating: boolean }) {
@@ -67,42 +78,110 @@ function TaskTitle({isInProjectPage, project, children}: {
 }
 
 // TODO find where to put the link
-export default function TaskItem({task, className = '', isInProjectPage = false}: {
-    task: ITask,
-    className?: string,
-    isInProjectPage: boolean
-}) {
-    const {t} = useTranslation(['projects','date']);
+export default function TaskItem(
+    {
+        task,
+        className = '',
+        isInProjectPage = false,
+        // taskShow
+        // setModalTaskId,
+    }: TaskItemProps) {
+    const {t} = useTranslation(['projects', 'date']);
     const dueAt: string = task.due_at ? upcomingDateToString(laravelDateToJsDate(task.due_at)) : t('date:no_time_limit');
 
-
     // const dueAtYear: number = dueAt.getFullYear();
+
+    const [showModal, setShowModal] = useState<boolean>(false);
+
+    const onTap = () => {
+        // TODO find how to optimize this (and avoid multiple code reception)
+        if (task.description == null) {
+            const fetchTask = async (): Promise<ITask | undefined> => {
+                try {
+                    const params = new URLSearchParams();
+                    params.append('task_id', task.id);
+
+                    const response = await fetch(`${tasksShow(task.id).url}?${params}`);
+                    // console.log(await response.json());
+                    const data: { task: ITask } = await response.json();
+                    return (data.task);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+            fetchTask().then((modalTask: ITask | undefined) => {
+                if (!modalTask) {
+                    //     setShowErrorModal(true);
+                    return;
+                }
+                setShowModal(true);
+                task = modalTask;
+            });
+        } else setShowModal(true);
+    }
+
     return (
-        <article className={cn("thumbnail-item", className)} tabIndex={0} key={task.id.toString()}>
-            {/* TODO add open on click and not drag, see bsky duckduckgo etc. */}
-            <TaskTitle isInProjectPage={isInProjectPage} project={task.project}>{task.title}</TaskTitle>
+        <div>
+
+            <article className={cn("thumbnail-item", className)} tabIndex={0} key={task.id.toString()}
+                     onClick={() => onTap()}
+            >
+                {/* TODO add open on click and not drag, see bsky duckduckgo etc. */}
+                <TaskTitle isInProjectPage={isInProjectPage} project={task.project}>{task.title}</TaskTitle>
 
 
-            {/* TODO limit desc max length when mobile */}
-            <p>{t('task_from_project', {project: task.project.name})}</p>
-            <div className="taskinfo mt-1 flex flex-wrap justify-between items-center gap-1">
-                {/* TODO change date format */}
-                <time className="flex gap-1"><Timer/><span>{dueAt}</span>
-                </time>
-                {/* TODO fix date string (or translate on a different property in the controller) */}
-                <div className="flex gap-1 ml-auto">
-                    { /* TODO add PFPs of participating people */}
-                    {/*<RelatedUsers/>*/}
-                    <TaskIconParticipation participations={task.participating_users.length}
-                                           min={task.min_participations}/>
-                    <ParticipatingIcon participating={task.self_participating}/>
+                <p>{t('task_from_project', {project: task.project.name})}</p>
+                <div className="taskinfo mt-1 flex flex-wrap justify-between items-center gap-1">
+                    <time className="flex gap-1"><Timer/><span>{dueAt}</span>
+                    </time>
+                    <div className="flex gap-1 ml-auto">
+                        { /* TODO add PFPs of participating people */}
+                        {/*<RelatedUsers/>*/}
+                        <TaskIconParticipation participations={task.participations_count}
+                                               min={task.min_participations}/>
+                        <ParticipatingIcon participating={task.self_participating}/>
+                    </div>
                 </div>
-            </div>
-            {/*
+                {/*
                 task.owner
                     ? <PostedBy owner={task.owner}/>
                     : ''
             */}
-        </article>
+
+
+            </article>
+            <ReactModal isOpen={showModal} appElement={document.querySelector('body')!} className="mx-2 my-3 max-w-3xl"
+                        style={{overlay: {backgroundColor: 'var(--color-modal-bg)'},}}>
+                {task.description !== null ?
+                    <ModalCast title={task.title} closeModal={() => setShowModal(false)}>
+
+                        <ModalSection className="border-none">
+                            <div className="flex gap-1">
+                                <ProjectIcon project={task.project} size="small"/>
+                                <p className="item-title">{task.project.name}</p>
+                            </div>
+                            {task.due_at ?
+                                <p className="flex gap-1">
+                                    <CalendarClock/>{upcomingDateToString(laravelDateToJsDate(task.due_at))}
+                                </p> : ''
+                            }
+                            <p className="mt-1">
+                                {/* @ts-ignore */}
+                                {task.description}
+                            </p>
+                        </ModalSection>
+
+                        {/* Modal section */}
+                        <ModalSection>
+                            test
+                        </ModalSection>
+                    </ModalCast> :
+                    <ModalCast title={t('task_item_not_found')} closeModal={() => setShowModal(false)}>
+                        {''}
+                    </ModalCast>
+                }
+            </ReactModal>
+
+        </div>
     );
 }

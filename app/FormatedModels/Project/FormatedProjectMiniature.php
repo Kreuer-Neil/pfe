@@ -3,7 +3,7 @@
 namespace App\FormatedModels\Project;
 
 use App\FormatedModels\FormatedProfile;
-use App\FormatedModels\FormatedTask;
+use App\FormatedModels\FormatedTaskMiniature;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Support\Str;
