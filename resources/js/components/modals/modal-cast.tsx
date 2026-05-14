@@ -10,18 +10,19 @@ interface ModalCastProps {
     className?: string;
 }
 
-export default function ModalCast({
-                                      title = '',
-                                      // isOpen = false,
-                                      closeModal,
-                                      children,
-                                      className
-                                  }: ModalCastProps): ReactNode {
+export default function ModalCast(
+    {
+        title = '',
+        // isOpen = false,
+        closeModal,
+        children,
+        className
+    }: ModalCastProps): ReactNode {
 
     return (
         // <ReactModal isOpen={isOpen} appElement={document.querySelector('body')!} className="mx-2 my-3 max-w-3xl"
         //             style={{overlay: {backgroundColor: 'var(--bg-modal-bg)'},}}>
-        <aside className={cn(className, "p-2 py-3 bg-background rounded-xl")}>
+        <aside className={cn(className, "p-2 py-3 bg-background rounded-lg self-center")}>
             <div className="flex pb-3">
                 {title !== '' ?
                     <h2 className="section-title"> {title} </h2> : ''

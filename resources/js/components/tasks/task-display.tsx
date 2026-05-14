@@ -1,18 +1,18 @@
 import {IProject, ITask, ITaskMiniature} from "@/types";
 // import {agenda} from '@/routes';
 import TaskItem from "@/components/tasks/task-item";
-import {ReactNode, useState} from "react";
+import {Dispatch, ReactNode, SetStateAction, useState} from "react";
 import {cn} from "@/lib/utils";
 import {CalendarClock, ClipboardPlus} from "lucide-react";
-import {laravelDateToJsDate, upcomingDateToString,} from "@/helpers/date";
+import {laravelDateToJsDate,} from "@/helpers/date";
 import ShowMore from "@/components/buttons/show-more";
 import IconButton from "@/components/buttons/icon-button";
 import {useTranslation} from "react-i18next";
 import ModalCast from "@/components/modals/modal-cast";
 import ModalSection from "@/components/modals/modal-section";
 import ProjectIcon from "@/components/icons/project-icon";
-import ReactModal from "react-modal";
 import {show as tasksShow} from "@/actions/App/Http/Controllers/TaskController";
+import CustomReactModal from "@/components/modals/custom-react-modal";
 
 
 interface TaskDisplayProps {
@@ -60,6 +60,39 @@ function AddTask() {
     );
 }
 
+function TaskModal({modalTask, showModal, setShowModal}: {
+    modalTask?: ITask,
+    showModal: boolean,
+    setShowModal: Dispatch<SetStateAction<boolean>>
+}) {
+    return (
+        <CustomReactModal isOpen={showModal}>
+            <ModalCast title={modalTask?.title ?? ''} closeModal={() => setShowModal(false)}>
+                <ModalSection className="border-none">
+                    <div className="flex gap-1">
+                        <ProjectIcon
+                            project={modalTask?.project ?? {name: '', icon: '', slug: '', id: ''}}
+                            size="small"/>
+                        <p className="item-title">{modalTask?.project.name ?? null}</p>
+                    </div>
+
+                    <p className={cn("flex gap-1", modalTask?.due_at ? '' : 'hidden')}>
+                        <CalendarClock/>{modalTask?.due_at ?? null}
+                    </p>
+                    <p className="mt-1">
+                        {modalTask?.description ?? null}
+                    </p>
+                </ModalSection>
+
+                {/*Modal section*/}
+                <ModalSection>
+                    test
+                </ModalSection>
+            </ModalCast>
+        </CustomReactModal>
+    );
+}
+
 export default function TaskDisplay(
     {
         tasks,
@@ -86,57 +119,40 @@ export default function TaskDisplay(
 
     const [modalTask, setModalTask] = useState<ITask>();
     const [showModal, setShowModal] = useState<boolean>(false);
+    const [savedTasks, setSavedTasks] = useState<ITask[]>([]);
 
     function onTaskTap(id: string) {
-        // TODO find how to optimize this (and avoid multiple code reception)
-        const fetchTask = async (): Promise<ITask | undefined> => {
-            try {
-                const params = new URLSearchParams();
-                params.append('task_id', id);
-
-                const response = await fetch(`${tasksShow(id).url}?${params}`);
-                const data: { task: ITask } = await response.json();
-                return (data.task);
-            } catch (error) {
-                console.error(error);
-            }
-        }
-        fetchTask().then((modalTask: ITask | undefined) => {
-            if (!modalTask) {
-                //     setShowErrorModal(true);
-                return;
-            }
-            setModalTask(modalTask);
-            setShowModal(true);
-        });
-    }
-
-    /*useEffect(() => {
-        if (modalTaskId && modalTaskId !== '' && modalTaskId !== '0') {
+        const idNumber = Number(id);
+        if (!savedTasks[idNumber]) {
             const fetchTask = async (): Promise<ITask | undefined> => {
                 try {
                     const params = new URLSearchParams();
-                    params.append('task_id', modalTaskId);
+                    params.append('task_id', id);
 
-                    const response = await fetch(`${tasksShow(modalTaskId).url}?${params}`);
-                    // console.log(await response.json());
+                    const response = await fetch(`${tasksShow(id).url}?${params}`);
                     const data: { task: ITask } = await response.json();
                     return (data.task);
                 } catch (error) {
+                    // TODO handle errors with error modal
                     console.error(error);
                 }
             }
-            fetchTask().then((task: ITask | undefined) => {
-                if (!task) {
+            fetchTask().then((modalTask: ITask | undefined) => {
+                if (!modalTask) {
                     //     setShowErrorModal(true);
                     return;
                 }
-                setTask(task);
+                savedTasks[idNumber] = modalTask;
+                setSavedTasks(savedTasks);
+
+                setModalTask(modalTask);
                 setShowModal(true);
             });
+        } else {
+            setModalTask(savedTasks[idNumber])
+            setShowModal(true);
         }
-    }, [modalTaskId]);*/
-
+    }
 
     const pageId = 'tasks';
     return (
@@ -157,34 +173,7 @@ export default function TaskDisplay(
                 <ShowMore showMore={showMoreState} onClick={onShowMore}/>
                 {/*<ButtonText href={agenda().url} textContent={actionText ?? t('task.show_agenda')} icon={LucideCalendarDays}/>*/}
             </div>
-            <ReactModal isOpen={showModal} appElement={document.querySelector('body')!} className="mx-2 my-3 max-w-3xl"
-                        style={{overlay: {backgroundColor: 'var(--color-modal-behind)'},}}>
-                <ModalCast title={modalTask?.title ?? ''} closeModal={() => {
-                    setShowModal(false)
-                }}>
-
-                    <ModalSection className="border-none">
-                        <div className="flex gap-1">
-                            <ProjectIcon
-                                project={modalTask?.project ?? {name: '', icon: '', slug: '', id: ''}}
-                                size="small"/>
-                            <p className="item-title">{modalTask?.project.name ?? null}</p>
-                        </div>
-
-                        <p className={cn("flex gap-1", modalTask?.due_at ? '' : 'hidden')}>
-                            <CalendarClock/>{modalTask?.due_at ?? null}
-                        </p>
-                        <p className="mt-1">
-                            {modalTask?.description ?? null}
-                        </p>
-                    </ModalSection>
-
-                    {/*Modal section*/}
-                    <ModalSection>
-                        test
-                    </ModalSection>
-                </ModalCast>
-            </ReactModal>
+            <TaskModal modalTask={modalTask} showModal={showModal} setShowModal={setShowModal}/>
         </section>
     );
 }
