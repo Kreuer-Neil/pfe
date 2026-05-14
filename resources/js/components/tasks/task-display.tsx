@@ -1,13 +1,18 @@
 import {IProject, ITask, ITaskMiniature} from "@/types";
 // import {agenda} from '@/routes';
 import TaskItem from "@/components/tasks/task-item";
-import { ReactNode, useState} from "react";
+import {Dispatch, ReactNode, SetStateAction, useState} from "react";
 import {cn} from "@/lib/utils";
-import {ClipboardPlus} from "lucide-react";
+import {CalendarClock, ClipboardPlus} from "lucide-react";
 import {laravelDateToJsDate,} from "@/helpers/date";
 import ShowMore from "@/components/buttons/show-more";
 import IconButton from "@/components/buttons/icon-button";
 import {useTranslation} from "react-i18next";
+import ModalCast from "@/components/modals/modal-cast";
+import ModalSection from "@/components/modals/modal-section";
+import ProjectIcon from "@/components/icons/project-icon";
+import {show as tasksShow} from "@/actions/App/Http/Controllers/TaskController";
+import CustomReactModal from "@/components/modals/custom-react-modal";
 
 
 interface TaskDisplayProps {
@@ -20,11 +25,11 @@ interface TaskDisplayProps {
     maxLength?: bigint | null;
 }
 
-function TasksList({tasks, projectContext, maxLength, /*onTapTask*/}: {
+function TasksList({tasks, projectContext, maxLength, onTapTask}: {
     tasks: ITaskMiniature[];
     projectContext: boolean;
     maxLength: bigint;
-    // onTapTask: (id: string) => void;
+    onTapTask: (id: string) => void;
 }): ReactNode {
     const {t} = useTranslation('date');
     const length = tasks.length;
@@ -38,8 +43,8 @@ function TasksList({tasks, projectContext, maxLength, /*onTapTask*/}: {
             return (
                 <li className="w-full flex flex-col gap-4" key={task.id}>
                     {precedentMonthCondition ? <span className="month-divider">{t('month_' + month)}</span> : ''}
-                    <TaskItem taskMiniature={task} isInProjectPage={projectContext}
-                              // setModalTaskId={onTapTask}
+                    <TaskItem task={task} isInProjectPage={projectContext}
+                              onTap={onTapTask}
                     />
                 </li>
             );
@@ -55,6 +60,39 @@ function AddTask() {
     );
 }
 
+function TaskModal({modalTask, showModal, setShowModal}: {
+    modalTask?: ITask,
+    showModal: boolean,
+    setShowModal: Dispatch<SetStateAction<boolean>>
+}) {
+    return (
+        <CustomReactModal isOpen={showModal}>
+            <ModalCast title={modalTask?.title ?? ''} closeModal={() => setShowModal(false)}>
+                <ModalSection className="border-none">
+                    <div className="flex gap-1">
+                        <ProjectIcon
+                            project={modalTask?.project ?? {name: '', icon: '', slug: '', id: ''}}
+                            size="small"/>
+                        <p className="item-title">{modalTask?.project.name ?? null}</p>
+                    </div>
+
+                    <p className={cn("flex gap-1", modalTask?.due_at ? '' : 'hidden')}>
+                        <CalendarClock/>{modalTask?.due_at ?? null}
+                    </p>
+                    <p className="mt-1">
+                        {modalTask?.description ?? null}
+                    </p>
+                </ModalSection>
+
+                {/*Modal section*/}
+                <ModalSection>
+                    test
+                </ModalSection>
+            </ModalCast>
+        </CustomReactModal>
+    );
+}
+
 export default function TaskDisplay(
     {
         tasks,
@@ -62,8 +100,8 @@ export default function TaskDisplay(
         className = '',
         project = null,
         maxLength = 3n,
-    }: TaskDisplayProps,): ReactNode {
-    const {t} = useTranslation('projects');
+    }: TaskDisplayProps): ReactNode {
+    const {t} = useTranslation(['projects', 'date']);
     const [maxItemsLength, setMaxItemsLength] = useState(maxLength);
     // const [showMoreIcon, setShowMoreIcon] = useState(LucideChevronDown);
     const [showMoreState, setShowMoreState] = useState(true);
@@ -77,34 +115,44 @@ export default function TaskDisplay(
             setMaxItemsLength(maxLength! * 2n);
             setShowMoreState(false);
         }
-
     }
 
-    /*useEffect(() => {
-        if (modalTaskId && modalTaskId !== '' && modalTaskId !== '0') {
+    const [modalTask, setModalTask] = useState<ITask>();
+    const [showModal, setShowModal] = useState<boolean>(false);
+    const [savedTasks, setSavedTasks] = useState<ITask[]>([]);
+
+    function onTaskTap(id: string) {
+        const idNumber = Number(id);
+        if (!savedTasks[idNumber]) {
             const fetchTask = async (): Promise<ITask | undefined> => {
                 try {
                     const params = new URLSearchParams();
-                    params.append('task_id', modalTaskId);
+                    params.append('task_id', id);
 
-                    const response = await fetch(`${tasksShow(modalTaskId).url}?${params}`);
-                    // console.log(await response.json());
+                    const response = await fetch(`${tasksShow(id).url}?${params}`);
                     const data: { task: ITask } = await response.json();
                     return (data.task);
                 } catch (error) {
+                    // TODO handle errors with error modal
                     console.error(error);
                 }
             }
-            fetchTask().then((task: ITask | undefined) => {
-                if (!task) {
+            fetchTask().then((modalTask: ITask | undefined) => {
+                if (!modalTask) {
                     //     setShowErrorModal(true);
                     return;
                 }
-                setTask(task);
+                savedTasks[idNumber] = modalTask;
+                setSavedTasks(savedTasks);
+
+                setModalTask(modalTask);
                 setShowModal(true);
             });
+        } else {
+            setModalTask(savedTasks[idNumber])
+            setShowModal(true);
         }
-    }, [modalTaskId]);*/
+    }
 
     const pageId = 'tasks';
     return (
@@ -117,7 +165,7 @@ export default function TaskDisplay(
                 tasks.length > 0
                     // Task items
                     ? <TasksList tasks={tasks} projectContext={(project != null)} maxLength={maxItemsLength!}
-                                 // onTapTask={onTaskTap}
+                                 onTapTask={onTaskTap}
                     />
                     : <div className="thumbnails-list-container"><p>{t('task_empty_message')}</p></div>
             }
@@ -125,6 +173,7 @@ export default function TaskDisplay(
                 <ShowMore showMore={showMoreState} onClick={onShowMore}/>
                 {/*<ButtonText href={agenda().url} textContent={actionText ?? t('task.show_agenda')} icon={LucideCalendarDays}/>*/}
             </div>
+            <TaskModal modalTask={modalTask} showModal={showModal} setShowModal={setShowModal}/>
         </section>
     );
 }

@@ -23,7 +23,7 @@ export function laravelDateToJsDate(date: string): Date {
     ));
 }
 
-// TODO translate php-side and add prop with translated string to items instead ?
+// TODO translate php-side and add prop with translated string to items instead !!!
 
 /**
  * Returns a translated string for the given date.
