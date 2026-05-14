@@ -68,7 +68,7 @@ export default function TaskDisplay(
         project = null,
         maxLength = 3n,
     }: TaskDisplayProps): ReactNode {
-    const {t} = useTranslation('projects');
+    const {t} = useTranslation(['projects', 'date']);
     const [maxItemsLength, setMaxItemsLength] = useState(maxLength);
     // const [showMoreIcon, setShowMoreIcon] = useState(LucideChevronDown);
     const [showMoreState, setShowMoreState] = useState(true);
@@ -137,6 +137,7 @@ export default function TaskDisplay(
         }
     }, [modalTaskId]);*/
 
+
     const pageId = 'tasks';
     return (
         <section className={cn('items-section', className)} id={pageId}>
@@ -148,7 +149,7 @@ export default function TaskDisplay(
                 tasks.length > 0
                     // Task items
                     ? <TasksList tasks={tasks} projectContext={(project != null)} maxLength={maxItemsLength!}
-                        onTapTask={onTaskTap}
+                                 onTapTask={onTaskTap}
                     />
                     : <div className="thumbnails-list-container"><p>{t('task_empty_message')}</p></div>
             }
@@ -158,28 +159,27 @@ export default function TaskDisplay(
             </div>
             <ReactModal isOpen={showModal} appElement={document.querySelector('body')!} className="mx-2 my-3 max-w-3xl"
                         style={{overlay: {backgroundColor: 'var(--color-modal-behind)'},}}>
-                <ModalCast title={modalTask ? modalTask.title : ''} closeModal={() => {
+                <ModalCast title={modalTask?.title ?? ''} closeModal={() => {
                     setShowModal(false)
                 }}>
 
                     <ModalSection className="border-none">
                         <div className="flex gap-1">
                             <ProjectIcon
-                                project={modalTask ? modalTask.project : {name: '', icon: '', slug: '', id: ''}}
+                                project={modalTask?.project ?? {name: '', icon: '', slug: '', id: ''}}
                                 size="small"/>
-                            <p className="item-title">{modalTask ? modalTask.project.name : ''}</p>
+                            <p className="item-title">{modalTask?.project.name ?? null}</p>
                         </div>
-                        {modalTask ? modalTask.due_at ?
-                            <p className="flex gap-1">
-                                <CalendarClock/>{upcomingDateToString(laravelDateToJsDate(modalTask ? modalTask.due_at : ''))}
-                            </p> : '' : ''
-                        }
+
+                        <p className={cn("flex gap-1", modalTask?.due_at ? '' : 'hidden')}>
+                            <CalendarClock/>{modalTask?.due_at ?? null}
+                        </p>
                         <p className="mt-1">
-                            {modalTask ? modalTask.description : ''}
+                            {modalTask?.description ?? null}
                         </p>
                     </ModalSection>
 
-                    {/* Modal section */}
+                    {/*Modal section*/}
                     <ModalSection>
                         test
                     </ModalSection>

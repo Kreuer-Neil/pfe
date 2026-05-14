@@ -69,7 +69,7 @@ export interface IProfile {
 }
 
 export interface IProjectContext {
-    id:string,
+    id: string,
     name: string;
     icon: string;
     slug: string;
@@ -133,6 +133,7 @@ export interface ITaskMiniature {
 
     [key: string]: unknown;
 }
+
 export interface ITask extends ITaskMiniature {
     id: string,
     owner: ?IProfile,
