@@ -22,7 +22,7 @@ class DashboardController extends Controller
 
         $tasks = [];
         // TODO do the same with users & profiles
-        foreach ($currentUser->upcomingTasks/*->take(3)*/ as $upcomingTask) {
+        foreach ($currentUser->upcomingTasks->take(6) as $upcomingTask) {
             $formatedUpcomingTask = new FormatedTaskMiniature($upcomingTask, $currentUser->id);
             $tasks[] = $formatedUpcomingTask;
         }

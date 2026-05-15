@@ -53,6 +53,9 @@
     /*--color-warning-light: var(--warning-light);*/
     --color-valid: var(--valid);
 
+    --color-edit: var(--edit);
+    --color-edit-foreground: var(--edit-foreground);
+
     --color-tag-valid: var(--tag-valid);
     --color-tag-neutral: var(--tag-neutral);
     --color-tag-warning: var(--tag-warning);
@@ -114,7 +117,7 @@
 
     --background: oklch(1 0 0);
     --foreground: var(--foreground-main);
-    --modal-behind: oklch(0.5 0 0 / 0.5);
+    --modal-behind: oklch(0.69 0.035 157 /0.5);
     /*--card: oklch(1 0 0);*/
 
     --card: oklch(0.9612 0 0);
@@ -142,6 +145,9 @@
     --warning: var(--atomic-tangerine);
     --warning-foreground: var(--foreground-main);
     /*--warning-light: var(--pine-green-transparent);*/
+
+    --edit: var(--verdigris);
+    --edit-foreground: var(--foreground-main);
 
     --valid: var(--sprout-green);
 
@@ -430,6 +436,10 @@
         @apply bg-tag-neutral flex gap-1 p-1 px-1.5 rounded-xs items-center;
     }
 
+    .text-with-icon {
+        @apply flex items-center gap-1;
+    }
+
     .month-divider {
         @apply flex items-center gap-1 p-1 py-0.5 text-muted-foreground text-xs -mx-1;
 
@@ -447,7 +457,7 @@
     }*/
     /* Generic MISC style */
     .posted-by {
-        @apply text-gray-500 text-xs self-end pr-2;
+        @apply text-gray-500 text-xs ml-auto pr-2;
     }
 
     .postinfo {

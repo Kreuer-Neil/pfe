@@ -8,7 +8,7 @@ import {LucideIcon} from "lucide-react";
 interface ButtonProps {
     textContent: string,
     icon?: LucideIcon | null,
-    type?: 'default' | 'cta' | 'warning' | 'destructive',
+    type?: 'default' | 'edit' | 'cta' | 'warning' | 'destructive',
     href?: string,
     onClick?: (() => void),
     className?: string,
@@ -20,13 +20,16 @@ export default function Button(
         type = 'default',
         href,
         className = '',
-        onClick = ()=>null,
+        onClick = () => null,
         icon = null
     }: ButtonProps
 ): ReactNode {
 
     let style: string;
     switch (type) {
+        case 'edit':
+            style = 'bg-edit text-edit-foreground';
+            break;
         case 'cta':
             style = 'bg-tertiary text-tertiary-foreground';
             break;
@@ -52,8 +55,8 @@ export default function Button(
 
     return (
         <Link href={href}
-            className={cn('text-center p-2 px-4 text-lg font-semibold w-full max-w-md rounded-sm bg-secondary text-secondary-foreground',
-                style, className)}>
+              className={cn('text-center p-2 px-4 text-lg font-semibold w-full max-w-md rounded-sm bg-secondary text-secondary-foreground',
+                  style, className)}>
             {textContent}
         </Link>
     );

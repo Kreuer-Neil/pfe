@@ -59,24 +59,6 @@ function TaskIconParticipation({participations, min, className = ''}: {
     }
 }
 
-function TaskTitle({isInProjectPage, project, children}: {
-    children: string,
-    project: IProjectContext,
-    isInProjectPage: boolean
-}): ReactNode {
-    if (isInProjectPage)
-        return (
-            <h3 className="item-title w-full">{children}</h3>
-        );
-
-    return (
-        <div className={'flex gap-1 justify-start items-center'}>
-            <ProjectIcon project={project}/>
-            <h3 className="item-title w-full">{children}</h3>
-        </div>
-    );
-}
-
 // TODO find where to put the link
 export default function TaskItem(
     {
@@ -91,19 +73,15 @@ export default function TaskItem(
 
     // const dueAtYear: number = dueAt.getFullYear();
 
-    const [showModal, setShowModal] = useState<boolean>(false);
-
-
     return (
         <article className={cn("thumbnail-item", className)} tabIndex={0} key={task.id.toString()}
                  onClick={() => onTap(task.id)}
         >
-            {/* TODO add open on click and not drag, see bsky duckduckgo etc. */}
-            <TaskTitle isInProjectPage={isInProjectPage}
-                       project={task.project}>{task.title}</TaskTitle>
+            <h3 className="item-title w-full">{task.title}</h3>
 
-
-            <p>{t('task_from_project', {project: task.project.name})}</p>
+            <p className="flex gap-1">
+            <ProjectIcon project={task.project} className="size-6"/>
+                {t('task_from_project', {project: task.project.name})}</p>
             <div className="taskinfo mt-1 flex flex-wrap justify-between items-center gap-1">
                 <time className="flex gap-1"><Timer/><span>{dueAt}</span>
                 </time>

@@ -1,9 +1,9 @@
-import {IProject, ITask, ITaskMiniature} from "@/types";
+import {INote, IProject, ITask, ITaskMiniature} from "@/types";
 // import {agenda} from '@/routes';
 import TaskItem from "@/components/tasks/task-item";
 import {Dispatch, ReactNode, SetStateAction, useState} from "react";
 import {cn} from "@/lib/utils";
-import {CalendarClock, ClipboardPlus} from "lucide-react";
+import {CalendarCheck, CalendarClock, ClipboardPlus, ClockAlert, Notebook, NotebookPen, UsersRound} from "lucide-react";
 import {laravelDateToJsDate,} from "@/helpers/date";
 import ShowMore from "@/components/buttons/show-more";
 import IconButton from "@/components/buttons/icon-button";
@@ -13,6 +13,9 @@ import ModalSection from "@/components/modals/modal-section";
 import ProjectIcon from "@/components/icons/project-icon";
 import {show as tasksShow} from "@/actions/App/Http/Controllers/TaskController";
 import CustomReactModal from "@/components/modals/custom-react-modal";
+import PostedBy from "@/components/general-posts/posted-by";
+import ButtonText from "@/components/buttons/button-text";
+import Button from "@/components/buttons/button";
 
 
 interface TaskDisplayProps {
@@ -65,29 +68,81 @@ function TaskModal({modalTask, showModal, setShowModal}: {
     showModal: boolean,
     setShowModal: Dispatch<SetStateAction<boolean>>
 }) {
+    const {t} = useTranslation(['projects', 'date']);
     return (
         <CustomReactModal isOpen={showModal}>
             <ModalCast title={modalTask?.title ?? ''} closeModal={() => setShowModal(false)}>
                 <ModalSection className="border-none">
-                    <div className="flex gap-1">
+                    <p className="item-title text-with-icon">
                         <ProjectIcon
                             project={modalTask?.project ?? {name: '', icon: '', slug: '', id: ''}}
                             size="small"/>
-                        <p className="item-title">{modalTask?.project.name ?? null}</p>
-                    </div>
-
-                    <p className={cn("flex gap-1", modalTask?.due_at ? '' : 'hidden')}>
-                        <CalendarClock/>{modalTask?.due_at ?? null}
+                        {modalTask?.project.name ?? null}
                     </p>
+                    {/* TODO fix date */}
+                    {modalTask?.due_at ?
+                        <p className={cn("flex gap-1", modalTask?.due_at ? '' : 'hidden')}>
+                            <CalendarClock/>{modalTask.due_at}
+                        </p> : null
+                    }
                     <p className="mt-1">
                         {modalTask?.description ?? null}
                     </p>
                 </ModalSection>
-
-                {/*Modal section*/}
                 <ModalSection>
-                    test
+                    <div className="flex wrap">
+                        <p className="text-with-icon mr-auto">
+                            {/*<RelatedUsers />*/}
+                            {modalTask?.participations_count ? t('task_participations_count', {count: modalTask.participations_count}) : null}
+                        </p>
+                        {modalTask?.min_participations ?
+                            <p className="text-with-icon">
+                                <UsersRound className="item-tag"/>
+                                {t('task_recommended_participations_count', {count: modalTask.min_participations})}
+                            </p> : null
+                        }
+                    </div>
+                    {modalTask?.self_participating ?
+                        <p className="text-with-icon">
+                            <CalendarCheck className="item-tag bg-tag-valid"/>
+                            {t('task_self_participating')}
+                        </p> : null}
+                    {/*modalTask.due_at > Date.now()*/}
+                    {modalTask?.due_at && false ?
+                        <p className="flex gap-1">
+                            <ClockAlert className="item-tag bg-tag-warning"/>
+                            {t('task_due_soon')}
+                        </p> : null
+                    }
                 </ModalSection>
+                <ModalSection title={t('task_note_title')} icon={Notebook}>
+                    {modalTask?.notes && modalTask.notes.length > 0 ?
+                        <ul className="flex flex-col gap-2">
+                            {modalTask.notes.map((note: INote, i: number) => {
+                                // TODO add edit/delete variable for note owner/admin (only delete for admin)
+                                // TODO limit notes to 1/2 per task per user
+                                return (
+                                    <li className="flex flex-col gap-1">
+                                        <p>{note.content}</p>
+                                        <PostedBy owner={note.owner}/>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                        : <p>{t('task_note_empty')}</p>
+                    }
+                    <ButtonText textContent={t('task_note_add')} icon={NotebookPen} className="self-center"
+                                onClick={() => {
+                                    // TODO note creation logic
+                                }}/>
+                </ModalSection>
+                {
+                    <Button textContent={t('task_participate')}/>
+                }
+                {true ?
+                    <Button textContent={t('task_edit')} type="edit"/>
+                    : null
+                }
             </ModalCast>
         </CustomReactModal>
     );
