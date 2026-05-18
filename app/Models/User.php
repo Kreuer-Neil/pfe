@@ -28,7 +28,6 @@ class User extends Authenticatable
         'password',
 
         'nickname',
-        'show_name',
         'bio',
     ];
 
@@ -98,7 +97,8 @@ class User extends Authenticatable
     {
         return $this
             ->tasks()
-            ->where('due_at', '>=', Carbon::now());
+            // TODO check for this later, only for non-validated tasks if possible
+            ->where('due_at', '>=', Carbon::now()->addHours(-24));
     }
 
     /**

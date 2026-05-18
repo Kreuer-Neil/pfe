@@ -98,7 +98,7 @@ class Task extends Model
         return !$this->participations->where('user_id', '==', $userId)->isEmpty();
     }
 
-    public function canSee(User $user)
+    public function canSee(User $user): bool
     {
         // TODO check if user can see task
         $this->project;

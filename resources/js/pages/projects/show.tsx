@@ -3,8 +3,6 @@ import AppLayout from "@/layouts/app-layout";
 import {Head, usePage} from "@inertiajs/react";
 import PageFlowContainer from "@/components/page-flow-container";
 import TaskDisplay from "@/components/tasks/task-display";
-import Layout from "@/layouts/app-layout";
-import {ReactNode} from "react";
 import {instanceOfProject, instanceOfProjectShow} from "@/helpers/type-check";
 import {Bookmark, BookmarkCheck, Flag, LogIn, Share2, UserRoundPlus} from "lucide-react";
 import IconButton from "@/components/buttons/icon-button";
@@ -88,18 +86,6 @@ function ProjectHeader({project}: {
     );
 }
 
-function Page404(): ReactNode {
-    return (
-        <Layout>
-            <Head title="404"/>
-            <h1 className="page-title text-center">
-                404: Project not found
-            </h1>
-        </Layout>
-    );
-}
-
-
 /**
  * Page display for non-members.
  */
@@ -117,7 +103,7 @@ function VisitorPage() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={project.name}/>
             <PageFlowContainer className="pt-0">
-                <ProjectHeader project={project} />
+                <ProjectHeader project={project}/>
 
                 <section>
                 </section>
@@ -157,13 +143,10 @@ function MemberPage() {
 export default function ProjectShow() {
     const {project} = usePage<pageProps>().props;
 
-    if (!project) {
-        return <Page404/>;
-    } else if (instanceOfProjectShow(project)) {
+    if (instanceOfProjectShow(project)) {
         return <VisitorPage/>;
         //
     } else if (instanceOfProject(project)) {
         return <MemberPage/>
     }
-    return <Page404/>;
 }

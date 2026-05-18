@@ -105,7 +105,7 @@ export interface IProjectShow extends IProjectMiniature {
 }
 
 export interface IProject extends IProjectShow {
-    id: number;
+    id: string;
     name: string;
     icon: string;
     description: string;
@@ -129,7 +129,8 @@ export interface ITaskMiniature {
     starting_at: ?string,
     due_at: ?string,
     notes: INote[] | null,
-    created_at: string,
+    created_at: string;
+    owner?: IProfile;
 
     [key: string]: unknown;
 }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\FormatedModels\FormatedTask;
 use App\Models\Task;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class TaskController extends Controller

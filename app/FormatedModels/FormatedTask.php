@@ -9,13 +9,13 @@ use App\Models\User;
 class FormatedTask extends FormatedTaskMiniature
 {
     public string $id;
-    public ?User $owner;
     public string $title;
     public string $description;
     public FormatedProjectContext $project;
     public string $min_participations;
     public int $participations_count;
     public array $participating_users;
+    public array $notes;
     public bool $self_participating;
     public ?string $starting_at;
     public ?string $due_at;
@@ -25,7 +25,6 @@ class FormatedTask extends FormatedTaskMiniature
     public function __construct(Task $task, int $currentUserId)
     {
         parent::__construct($task, $currentUserId);
-        $this->owner = $task->owner;
         $this->description = $task->description;
         $this->project = new FormatedProjectContext($task->project()->first(['id', 'name', 'icon', 'slug']));
 
@@ -35,6 +34,12 @@ class FormatedTask extends FormatedTaskMiniature
             $this->participating_users[] = new FormatedProfile($user);
         }
 
+        // TODO eager load related users and notes and proj
+        $this->notes = [];
+        /*foreach ($task->notes as $note) {
+            $this->notes[] = new FormatedNote($note);
+        }*/
+
         $this->participations_count = $task->participatingUsers($currentUserId)->count();
 
         $this->self_participating = $task->isParticipating($currentUserId);
@@ -43,5 +48,4 @@ class FormatedTask extends FormatedTaskMiniature
         $this->created_at = $task->created_at;
         $this->updated_at = $task->updated_at;
     }
-
 }

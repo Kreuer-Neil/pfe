@@ -9,7 +9,7 @@ use App\Models\User;
 class FormatedTaskMiniature
 {
     public string $id;
-    public ?User $owner;
+    public ?FormatedProfile $owner;
     public string $title;
     public string $description;
     public FormatedProjectContext $project;
@@ -25,7 +25,7 @@ class FormatedTaskMiniature
     public function __construct(Task $task, int $currentUserId)
     {
         $this->id = $task->id;
-//        $this->owner = $task->owner;
+        $this->owner = new FormatedProfile($task->owner);
         $this->title = $task->title;
 //        $this->description = $task->description;
         $this->project = new FormatedProjectContext($task->project()->first(['id','name','icon','slug']));

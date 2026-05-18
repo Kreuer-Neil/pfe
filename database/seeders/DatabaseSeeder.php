@@ -11,6 +11,7 @@ use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -54,5 +55,69 @@ class DatabaseSeeder extends Seeder
         }
 
 
+        // New seeder
+
+        $projectsData = [
+            [
+                'name' => 'Luigi\'s Garden',
+                'is_private' => 'false',
+                'description' => 'Luigi’s Garden is about maintaining sir Luigi’s mansion garden, an unofficial park in this choking city, open to anyone respectful enough.',
+                'slug' => Str::slug('Luigi\'s Garden'),
+//                'coordinates' => '50.61126712133781, 5.510050323190294',
+            ],
+            [
+                'name' => 'Silk Song Band',
+                'is_private' => 'true',
+                'description' => 'Eh Guarana Adida SHAW',
+                'slug' => Str::slug('Silk Song Band'),
+                'owner' => [
+                    'first_name' => 'Hornet',
+                    'last_name' => 'Silk',
+                    'email' => 'hornet@teamcherry.com'
+                ],
+                'users' => [
+                    [
+                        'first_name' => 'Hollow',
+                        'last_name' => 'Knight',
+                        'email' => 'hollowknight@teamcherry.com'
+                    ]
+                ],
+                'tasks' => [
+                    [
+                        'title' => 'The final concert',
+                        'description' => 'Everyone, get ready for the concert! That\'s the day we ascend!',
+                        'min_participations' => 6,
+                        'due_at' => Carbon::create(year: 2026, month: 07, day: 21, hour: 17),
+                    ]
+                ],
+            ],
+        ];
+
+        // TODO finish customized data seeder to replace factories
+        /*foreach ($projectsData as $projectData) {
+            $owner = '';
+            if (array_key_exists('owner', $projectData)) {
+                $owner = User::factory()->create($projectData['owner']);
+            } else {
+                $owner = User::factory()->create();
+            }
+
+            $project = Project::factory()->create($projectData);
+
+            Member::create([
+                'user_id' => $owner->id,
+                'project_id' => $project->id,
+                'role' => ProjectRole::ADMIN,
+            ]);
+
+            if (array_key_exists('users', $projectData))
+                foreach ($projectData['users'] as $user) {
+                    Member::create([
+                        'user_id' => $user->id,
+                        'project_id' => $project->id,
+                        'role' => random_int(0, 1) ? ProjectRole::MEMBER : ProjectRole::TASK_MANAGER,
+                    ]);
+                }
+        }*/
     }
 }

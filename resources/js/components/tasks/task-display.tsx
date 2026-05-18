@@ -3,7 +3,16 @@ import {INote, IProject, ITask, ITaskMiniature} from "@/types";
 import TaskItem from "@/components/tasks/task-item";
 import {Dispatch, ReactNode, SetStateAction, useState} from "react";
 import {cn} from "@/lib/utils";
-import {CalendarCheck, CalendarClock, ClipboardPlus, ClockAlert, Notebook, NotebookPen, UsersRound} from "lucide-react";
+import {
+    CalendarCheck,
+    CalendarClock,
+    ClipboardCopy,
+    ClipboardPlus,
+    ClockAlert,
+    Notebook,
+    NotebookPen,
+    UsersRound
+} from "lucide-react";
 import {laravelDateToJsDate,} from "@/helpers/date";
 import ShowMore from "@/components/buttons/show-more";
 import IconButton from "@/components/buttons/icon-button";
@@ -16,6 +25,9 @@ import CustomReactModal from "@/components/modals/custom-react-modal";
 import PostedBy from "@/components/general-posts/posted-by";
 import ButtonText from "@/components/buttons/button-text";
 import Button from "@/components/buttons/button";
+import auth from "@/actions/App/Http/Controllers/Auth";
+import TextInput from "@/components/form/text-input";
+import {Switch} from "@headlessui/react";
 
 
 interface TaskDisplayProps {
@@ -53,14 +65,6 @@ function TasksList({tasks, projectContext, maxLength, onTapTask}: {
             );
         })}
     </ul>
-}
-
-function AddTask() {
-    // TODO add role condition and modal apparition
-    const {t} = useTranslation('projects');
-    return (
-        <IconButton icon={ClipboardPlus} textContent={t('add_task')}/>
-    );
 }
 
 function TaskModal({modalTask, showModal, setShowModal}: {
@@ -112,14 +116,13 @@ function TaskModal({modalTask, showModal, setShowModal}: {
                         <p className="flex gap-1">
                             <ClockAlert className="item-tag bg-tag-warning"/>
                             {t('task_due_soon')}
-                        </p> : null
-                    }
+                        </p> : null}
                 </ModalSection>
                 <ModalSection title={t('task_note_title')} icon={Notebook}>
                     {modalTask?.notes && modalTask.notes.length > 0 ?
                         <ul className="flex flex-col gap-2">
-                            {modalTask.notes.map((note: INote, i: number) => {
-                                // TODO add edit/delete variable for note owner/admin (only delete for admin)
+                            {modalTask.notes.map((note: INote) => {
+                                // TODO add edit/delete variable for note owner/admin (only delete for admin not owner)
                                 // TODO limit notes to 1/2 per task per user
                                 return (
                                     <li className="flex flex-col gap-1">
@@ -139,10 +142,57 @@ function TaskModal({modalTask, showModal, setShowModal}: {
                 {
                     <Button textContent={t('task_participate')}/>
                 }
-                {true ?
+                {/* TODO replace with current user ID */}
+                {modalTask?.owner?.id === '' ?
                     <Button textContent={t('task_edit')} type="edit"/>
-                    : null
-                }
+                    : null}
+            </ModalCast>
+        </CustomReactModal>
+    );
+}
+
+
+function TaskCreateModal({showModal, setShowModal, project}: {
+    showModal: boolean,
+    setShowModal: Dispatch<SetStateAction<boolean>>,
+    project: IProject,
+}) {
+    const {t} = useTranslation('projects');
+
+    const [taskName, setTaskName] = useState<string>('');
+    const [taskDescription, setTaskDescription] = useState<string>('');
+
+    return (
+        <CustomReactModal isOpen={showModal}>
+            <ModalCast title={t('task_create')} closeModal={() => setShowModal(false)} className="w-full"
+                       element="form">
+                <ModalSection as="fieldset" title={t('task_create_for_project', {project: project.name})}>
+                    <input type="hidden" name="project_id" id="project_id" value={project.id}/>
+                    <TextInput name="task_name" label={t('task_form_title')} placeholder={t('task_form_title_placeholder')}
+                               value={taskName} setValue={setTaskName} required={true}/>
+                    <TextInput name="task_desc" label={t('task_form_description')} type="textarea" placeholder={t('task_form_description_placeholder')}
+                               value={taskDescription} setValue={setTaskDescription} required={true}/>
+                </ModalSection>
+                <ModalSection as="fieldset" title={t('task_form_date')}>
+                    {/* TODO switch
+                        <div className="flex">
+                            <span className="mr-auto">{t('task_form_starting_time')}</span>
+                            <button />
+                        </div>*/}
+                    <div className="grid grid-cols-2">
+                        <span>
+                            select 1
+                        </span>
+                        <span>
+                                select 2
+                        </span>
+                        {/* Select 3 + 4 */}
+                    </div>
+                </ModalSection>
+                <div className="flex flex-col gap-3 px-2">
+                    <Button textContent={t('task_create_button')}/>
+                    <ButtonText icon={ClipboardCopy} textContent={t('task_create_fill')}/>
+                </div>
             </ModalCast>
         </CustomReactModal>
     );
@@ -173,7 +223,8 @@ export default function TaskDisplay(
     }
 
     const [modalTask, setModalTask] = useState<ITask>();
-    const [showModal, setShowModal] = useState<boolean>(false);
+    const [showTaskModal, setShowTaskModal] = useState<boolean>(false);
+    const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
     const [savedTasks, setSavedTasks] = useState<ITask[]>([]);
 
     function onTaskTap(id: string) {
@@ -201,11 +252,11 @@ export default function TaskDisplay(
                 setSavedTasks(savedTasks);
 
                 setModalTask(modalTask);
-                setShowModal(true);
+                setShowTaskModal(true);
             });
         } else {
             setModalTask(savedTasks[idNumber])
-            setShowModal(true);
+            setShowTaskModal(true);
         }
     }
 
@@ -214,21 +265,27 @@ export default function TaskDisplay(
         <section className={cn('items-section', className)} id={pageId}>
             <div className="flex items-center mx-3">
                 <h2 className="section-title w-full">{title ?? (project ? t('tasks_container_title', {project: project.name}) : t('task_upcoming_title'))}</h2>
-                {project ? <AddTask/> : ''}
+                {project ?
+                    <IconButton icon={ClipboardPlus} textContent={t('add_task')}
+                                onClick={() => setShowCreateModal(true)}/>
+                    : null}
             </div>
             {
                 tasks.length > 0
                     // Task items
                     ? <TasksList tasks={tasks} projectContext={(project != null)} maxLength={maxItemsLength!}
-                                 onTapTask={onTaskTap}
-                    />
+                                 onTapTask={onTaskTap}/>
                     : <div className="thumbnails-list-container"><p>{t('task_empty_message')}</p></div>
             }
             <div className="flex flex-col gap-4 px-3 items-center">
                 <ShowMore showMore={showMoreState} onClick={onShowMore}/>
                 {/*<ButtonText href={agenda().url} textContent={actionText ?? t('task.show_agenda')} icon={LucideCalendarDays}/>*/}
             </div>
-            <TaskModal modalTask={modalTask} showModal={showModal} setShowModal={setShowModal}/>
+            <TaskModal modalTask={modalTask} showModal={showTaskModal} setShowModal={setShowTaskModal}/>
+            {project ?
+                <TaskCreateModal showModal={showCreateModal} setShowModal={setShowCreateModal}
+                                 project={project}/>
+                : null}
         </section>
     );
 }

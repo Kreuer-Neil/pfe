@@ -11,10 +11,11 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('show_name')->default(0);
+//            $table->boolean('show_name')->default(0);
 
             $table->string('nickname')->nullable();
             $table->string('image')->nullable();
+            $table->string('pronouns')->nullable();
             $table->text('bio')->nullable();
 
         });

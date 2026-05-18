@@ -56,9 +56,9 @@ export default function MyProjects({projects}: { projects: IDashboardProject[] |
                             showText={true} className="ml-auto"/>
             </div>
             <ProjectsList projects={projects}/>
-            <div className="flex flex-col gap-4 px-3 items-center">
+            {/*<div className="flex flex-col gap-4 px-3 items-center">
                 <ButtonText textContent={t('dashboard:more_projects')} icon={LucideSearch} href={projectsIndex().url}/>
-            </div>
+            </div>*/}
         </section>
     );
 }

@@ -33,9 +33,9 @@ class UserFactory extends Factory
             'two_factor_recovery_codes' => Str::random(10),
             'two_factor_confirmed_at' => now(),
 
-            'nickname' => $this->faker->word(),
-            'show_name' => random_int(0,1),
-            'bio' => $this->faker->text(),
+            'nickname' => $this->faker->word,
+            'bio' => $this->faker->text,
+            'pronouns' => $this->faker->title,
         ];
     }
 
