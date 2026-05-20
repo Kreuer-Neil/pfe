@@ -26,15 +26,13 @@ function checkValidationRules(
     label: string,
 ): ITranslatableObject | void {
 
-    if (validationRules?.length > 0) {
-        for (let i = 0; i < validationRules.length; i++) {
-            switch (validationRules[i]) {
-                case "required":
-                    if ((!value) && value.length <= 0) {
-                        return {key: 'field_required', params: {fieldName: label}};
-                    }
-                    break;
-            }
+    for (let i = 0; i < validationRules.length - 1; i++) {
+        switch (validationRules[i]) {
+            case "required":
+                if ((!value) && value.length <= 0) {
+                    return {key: 'field_required', params: {fieldName: label}};
+                }
+                break;
         }
     }
 }
