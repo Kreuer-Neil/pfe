@@ -1,4 +1,4 @@
-import {INote, IProject, ITask, ITaskMiniature} from "@/types";
+import {INote, IProject, ISubmitError, ITask, ITaskMiniature} from "@/types";
 // import {agenda} from '@/routes';
 import TaskItem from "@/components/tasks/task-item";
 import {Dispatch, ReactNode, SetStateAction, useState} from "react";
@@ -160,24 +160,46 @@ function TaskCreateModal({showModal, setShowModal, project}: {
     const {t} = useTranslation('projects');
 
     const [taskName, setTaskName] = useState<string>('');
+
+    function taskNameValidation(value: string): null | ISubmitError {
+        if ((!value) || value === '') {
+            return {key: 'field_required', params: {fieldName: 'title'}};
+        }
+        if (value.length <= 6) {
+            return {key:'field_min_length',params:{length: '6', fieldName: 'title'}}
+        }
+            return null;
+    }
+
     const [taskDescription, setTaskDescription] = useState<string>('');
     const [taskDueDate, setTaskDueDate] = useState<string>('');
+    const [createError, setCreateError] = useState<string | null>(null);
 
     // const testArray = ['ara', 'bill', 'case', 'dice'];
     // const [testItems, setTestItems] = useState<Array<string>>([]);
 
-    const submit = (e:any)=> {
-        e.preventDefault();
+    async function create() {
+        if (
+            // Use form onChange check fn for each
+            (taskName && taskName !== '')
+            &&
+            (taskDescription && taskDescription !== '')
+            &&
+            (taskDueDate && taskDueDate !== '')
+        ) {
+            // try
+        }
     }
 
     return (
         <CustomModal showModal={showModal} setShowModal={setShowModal} id="task-create">
-            <ModalCast title={t('task_create_for_project', {project: project.name})} closeModal={() => setShowModal(false)} className="w-full"
-                       element="form" action="/tasks/create">
+            <ModalCast title={t('task_create_for_project', {project: project.name})}
+                       closeModal={() => setShowModal(false)} className="w-full"
+                       element="form">
                 <ModalSection as="fieldset" title={t('task_base_informations')}>
                     <input type="hidden" name="project_id" id="project_id" value={project.id}/>
                     <GeneralInput name="task_name" label={t('task_form_title')}
-                                  placeholder={t('task_form_title_placeholder')}
+                                  placeholder={t('task_form_title_placeholder')} validation={taskNameValidation}
                                   value={taskName} setValue={setTaskName} required={true} autoFocus={true}/>
                     <GeneralInput name="task_desc" label={t('task_form_description')} type="textarea"
                                   placeholder={t('task_form_description_placeholder')}
@@ -190,9 +212,9 @@ function TaskCreateModal({showModal, setShowModal, project}: {
                             <button />
                         </div>*/}
                     <div className="grid grid-cols-2 gap-2">
-                        <GeneralInput name="due_date" label={t('task_form_due_date')} type="date"
+                        <GeneralInput name="due_date" label={t('task_form_due_date')} type="date" required={true}
                                       value={taskDueDate} setValue={setTaskDueDate}/>
-                        <GeneralInput name="due_time" label={t('task_form_due_time')} type="time"
+                        <GeneralInput name="due_time" label={t('task_form_due_time')} type="time" required={true}
                                       value={taskDueDate} setValue={setTaskDueDate}/>
 
                         {/*<label htmlFor="due_date" className="flex flex-col gap-1">
@@ -231,7 +253,8 @@ function TaskCreateModal({showModal, setShowModal, project}: {
                     </div>
                 </ModalSection>
                 <div className="flex flex-col gap-3 px-2">
-                    <Button textContent={t('task_create_button')} type="submit" onClick={submit}/>
+                    <Button textContent={t('task_create_button')} type="submit" onClick={create}/>
+                    {createError ? <span className="field-error">{createError}</span> : null}
                     <ButtonText icon={ClipboardCopy} textContent={t('task_create_fill')}/>
                 </div>
             </ModalCast>

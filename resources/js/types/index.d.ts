@@ -169,3 +169,8 @@ interface IPaginationLink {
     label: string;
     active: boolean;
 }
+
+export interface ISubmitError {
+    key:string;
+    params: {[key: string]:string};
+}

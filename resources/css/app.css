@@ -444,6 +444,10 @@
         @apply w-full outline-none;
     }
 
+    .field-error {
+        @apply text-xs text-red-900;
+    }
+
     /* Overwrites default Lucide icons style*/
     .lucide {
         @apply size-6 box-content;
