@@ -423,8 +423,12 @@
         }
     }
 
+    .input {
+        @apply bg-none border-none block w-full p-2 outline outline-input;
+    }
+
     .search-input {
-        @apply bg-none border-none w-full outline-none;
+        @apply bg-none border-none block w-full p-2 outline-none;
     }
 
     /* Overwrites default Lucide icons style*/

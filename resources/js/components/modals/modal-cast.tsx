@@ -3,11 +3,13 @@ import {ReactNode} from "react";
 import {cn} from "@/lib/utils";
 
 interface ModalCastProps {
-    title?: string,
-    closeModal: (() => void),
-    children: ReactNode | ReactNode[],
-    className?: string,
-    element?: 'div' | 'form',
+    title?: string;
+    closeModal: (() => void);
+    children: ReactNode | ReactNode[];
+    className?: string;
+    element?: 'div' | 'form';
+    action?: string;
+    method?: string;
 }
 
 export default function ModalCast(
@@ -16,7 +18,9 @@ export default function ModalCast(
         closeModal,
         children,
         className,
-        element: HtmlElement = 'div'
+        element: HtmlElement = 'div',
+        action = '',
+        method = '',
     }: ModalCastProps): ReactNode {
 
     return (
@@ -33,9 +37,13 @@ export default function ModalCast(
                     <X/>
                 </div>
             </div>
-            <HtmlElement className="flex flex-col gap-4">
-                {children}
-            </HtmlElement>
+            {HtmlElement === 'form' ? <HtmlElement className="flex flex-col gap-4">
+                    {children}
+                </HtmlElement> :
+                <form action={action} method={method}>
+                    {children}
+                </form>
+            }
         </aside>
         // </ReactModal>
     );

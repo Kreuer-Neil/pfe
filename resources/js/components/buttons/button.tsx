@@ -6,27 +6,29 @@ import {LucideIcon} from "lucide-react";
 
 
 interface ButtonProps {
-    textContent: string,
-    icon?: LucideIcon | null,
-    type?: 'default' | 'edit' | 'cta' | 'warning' | 'destructive',
-    href?: string,
-    onClick?: (() => void),
-    className?: string,
+    textContent: string;
+    icon?: LucideIcon | null;
+    color?: 'default' | 'edit' | 'cta' | 'warning' | 'destructive';
+    type?: 'button' | 'submit';
+    href?: string;
+    onClick?: ((e: any) => void);
+    className?: string;
 }
 
 export default function Button(
     {
         textContent,
-        type = 'default',
+        icon = null,
+        color = 'default',
+        type = 'button',
         href,
         className = '',
-        onClick = () => null,
-        icon = null
+        onClick = (e) => e.currentTarget.preventDefault,
     }: ButtonProps
 ): ReactNode {
 
     let style: string;
-    switch (type) {
+    switch (color) {
         case 'edit':
             style = 'bg-edit text-edit-foreground';
             break;
@@ -46,7 +48,7 @@ export default function Button(
 
     if (href === '')
         return (
-            <button onClick={onClick}
+            <button onClick={onClick} type={type}
                     className={cn('text-center p-2 px-4 text-lg font-semibold w-full max-w-md rounded-sm bg-secondary text-secondary-foreground',
                         style, className)}>
                 {textContent}

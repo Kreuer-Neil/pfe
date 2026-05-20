@@ -34,7 +34,7 @@ function ProjectsList({projects}: { projects: IDashboardProject[] }): ReactNode 
         <div className="empty-warning">
             <p>{t("no_projects_joined")}</p>
             {/*TODO fix route*/}
-            <Button href={projectsPage().url} textContent={t("search_project")} type="cta"></Button>
+            <Button href={projectsPage().url} textContent={t("search_project")} color="cta"></Button>
         </div>
     );
 }
