@@ -21,9 +21,9 @@ export default function Button(
         icon = null,
         color = 'default',
         type = 'button',
-        href,
+        href = '',
         className = '',
-        onClick = (e) => e.currentTarget.preventDefault,
+        onClick = (e) => e.preventDefault(),
     }: ButtonProps
 ): ReactNode {
 
@@ -49,7 +49,7 @@ export default function Button(
     if (href === '')
         return (
             <button onClick={onClick} type={type}
-                    className={cn('text-center p-2 px-4 text-lg font-semibold w-full max-w-md rounded-sm bg-secondary text-secondary-foreground',
+                    className={cn('text-center p-2 px-4 text-lg font-semibold w-full max-w-md rounded-sm bg-secondary text-secondary-foreground cursor-pointer',
                         style, className)}>
                 {textContent}
             </button>

@@ -24,16 +24,14 @@ export default function ModalCast(
     }: ModalCastProps): ReactNode {
 
     return (
-        // <ReactModal isOpen={isOpen} appElement={document.querySelector('body')!} className="mx-2 my-3 max-w-3xl"
-        //             style={{overlay: {backgroundColor: 'var(--bg-modal-bg)'},}}>
-        <aside className={cn(className, "p-2 py-3 bg-background rounded-lg self-center mx-auto")}>
+
+        <aside className={className}>
             <div className="flex pb-3">
                 {title !== '' ?
                     <h2 className="section-title"> {title} </h2> : ''
                 }
-                <div
-                    onClick={closeModal}
-                    className="p-2 ml-auto cursor-pointer">
+                <div onClick={closeModal} tabIndex={0}
+                     className="p-2 ml-auto cursor-pointer rounded-full">
                     <X/>
                 </div>
             </div>
@@ -45,6 +43,5 @@ export default function ModalCast(
                 </form>
             }
         </aside>
-        // </ReactModal>
     );
 }

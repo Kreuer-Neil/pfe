@@ -21,7 +21,7 @@ import ModalCast from "@/components/modals/modal-cast";
 import ModalSection from "@/components/modals/modal-section";
 import ProjectIcon from "@/components/icons/project-icon";
 import {show as tasksShow} from "@/actions/App/Http/Controllers/TaskController";
-import CustomReactModal from "@/components/modals/custom-react-modal";
+import CustomModal from "@/components/modals/custom-modal";
 import PostedBy from "@/components/general-posts/posted-by";
 import ButtonText from "@/components/buttons/button-text";
 import Button from "@/components/buttons/button";
@@ -74,7 +74,7 @@ function TaskModal({modalTask, showModal, setShowModal}: {
 }) {
     const {t} = useTranslation(['projects', 'date']);
     return (
-        <CustomReactModal isOpen={showModal}>
+        <CustomModal showModal={showModal} setShowModal={setShowModal} id="task-show">
             <ModalCast title={modalTask?.title ?? ''} closeModal={() => setShowModal(false)}>
                 <ModalSection className="border-none">
                     <p className="item-title text-with-icon">
@@ -137,7 +137,7 @@ function TaskModal({modalTask, showModal, setShowModal}: {
                     <ButtonText textContent={t('task_note_add')} icon={NotebookPen} className="self-center"
                                 onClick={() => {
                                     // TODO note creation logic
-                                }}/>
+                                }} autoFocus={true}/>
                 </ModalSection>
                 {
                     <Button textContent={t('task_participate')}/>
@@ -147,7 +147,7 @@ function TaskModal({modalTask, showModal, setShowModal}: {
                     <Button textContent={t('task_edit')} color="edit"/>
                     : null}
             </ModalCast>
-        </CustomReactModal>
+        </CustomModal>
     );
 }
 
@@ -166,15 +166,19 @@ function TaskCreateModal({showModal, setShowModal, project}: {
     // const testArray = ['ara', 'bill', 'case', 'dice'];
     // const [testItems, setTestItems] = useState<Array<string>>([]);
 
+    const submit = (e:any)=> {
+        e.preventDefault();
+    }
+
     return (
-        <CustomReactModal isOpen={showModal}>
-            <ModalCast title={t('task_create')} closeModal={() => setShowModal(false)} className="w-full"
+        <CustomModal showModal={showModal} setShowModal={setShowModal} id="task-create">
+            <ModalCast title={t('task_base_informations')} closeModal={() => setShowModal(false)} className="w-full"
                        element="form" action="/tasks/create">
                 <ModalSection as="fieldset" title={t('task_create_for_project', {project: project.name})}>
                     <input type="hidden" name="project_id" id="project_id" value={project.id}/>
                     <GeneralInput name="task_name" label={t('task_form_title')}
                                   placeholder={t('task_form_title_placeholder')}
-                                  value={taskName} setValue={setTaskName} required={true}/>
+                                  value={taskName} setValue={setTaskName} required={true} autoFocus={true}/>
                     <GeneralInput name="task_desc" label={t('task_form_description')} type="textarea"
                                   placeholder={t('task_form_description_placeholder')}
                                   value={taskDescription} setValue={setTaskDescription} required={true}/>
@@ -227,13 +231,11 @@ function TaskCreateModal({showModal, setShowModal, project}: {
                     </div>
                 </ModalSection>
                 <div className="flex flex-col gap-3 px-2">
-                    <Button textContent={t('task_create_button')} type="submit" onClick={(e)=> {
-                        e.currentTarget.preventDefault();
-                    }}/>
+                    <Button textContent={t('task_create_button')} type="submit" onClick={submit}/>
                     <ButtonText icon={ClipboardCopy} textContent={t('task_create_fill')}/>
                 </div>
             </ModalCast>
-        </CustomReactModal>
+        </CustomModal>
     );
 }
 

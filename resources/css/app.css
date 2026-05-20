@@ -117,7 +117,7 @@
 
     --background: oklch(1 0 0);
     --foreground: var(--foreground-main);
-    --modal-behind: oklch(0.69 0.035 157 /0.5);
+    --modal-behind: oklch(0.576 0.053 159.319 / 0.5);
     /*--card: oklch(1 0 0);*/
 
     --card: oklch(0.9612 0 0);
@@ -416,19 +416,32 @@
         rounded-sm bg-background drop-shadow-sm max-w-[var(--text-max-w)];
     }
 
+    dialog:modal {
+        max-width: calc(100vw - 0.75rem);
+    }
+
+    .modal {
+        @apply m-auto p-2 py-3 bg-background rounded-lg w-full;
+
+        &::backdrop {
+            @apply bg-modal-behind;
+        }
+    }
+
+    .input {
+        @apply block w-full p-1 px-2 border border-input focus:outline-secondary-border rounded-xs;
+    }
+
     .search-box {
-        @apply flex gap-1 p-1 px-2 border border-border rounded-xs cursor-text;
+        @apply flex gap-1 p-1 px-2 border border-border rounded-xs cursor-text items-center;
+
         &:has(.search-input:focus) {
             @apply outline outline-secondary-border;
         }
     }
 
-    .input {
-        @apply bg-none border-none block w-full p-2 outline outline-input;
-    }
-
     .search-input {
-        @apply bg-none border-none block w-full p-2 outline-none;
+        @apply w-full outline-none;
     }
 
     /* Overwrites default Lucide icons style*/
