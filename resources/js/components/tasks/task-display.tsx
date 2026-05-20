@@ -172,9 +172,9 @@ function TaskCreateModal({showModal, setShowModal, project}: {
 
     return (
         <CustomModal showModal={showModal} setShowModal={setShowModal} id="task-create">
-            <ModalCast title={t('task_base_informations')} closeModal={() => setShowModal(false)} className="w-full"
+            <ModalCast title={t('task_create_for_project', {project: project.name})} closeModal={() => setShowModal(false)} className="w-full"
                        element="form" action="/tasks/create">
-                <ModalSection as="fieldset" title={t('task_create_for_project', {project: project.name})}>
+                <ModalSection as="fieldset" title={t('task_base_informations')}>
                     <input type="hidden" name="project_id" id="project_id" value={project.id}/>
                     <GeneralInput name="task_name" label={t('task_form_title')}
                                   placeholder={t('task_form_title_placeholder')}

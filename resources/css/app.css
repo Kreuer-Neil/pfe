@@ -429,11 +429,11 @@
     }
 
     .input {
-        @apply block w-full p-1 px-2 border border-input focus:outline-secondary-border rounded-xs;
+        @apply block w-full p-2 border border-input focus:outline-secondary-border rounded-xs;
     }
 
     .search-box {
-        @apply flex gap-1 p-1 px-2 border border-border rounded-xs cursor-text items-center;
+        @apply flex gap-1 p-2 border border-border rounded-xs cursor-text items-center;
 
         &:has(.search-input:focus) {
             @apply outline outline-secondary-border;
