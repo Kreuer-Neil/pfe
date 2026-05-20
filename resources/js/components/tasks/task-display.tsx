@@ -21,12 +21,12 @@ import ModalCast from "@/components/modals/modal-cast";
 import ModalSection from "@/components/modals/modal-section";
 import ProjectIcon from "@/components/icons/project-icon";
 import {show as tasksShow} from "@/actions/App/Http/Controllers/TaskController";
-import CustomReactModal from "@/components/modals/custom-react-modal";
+import CustomModal from "@/components/modals/custom-modal";
 import PostedBy from "@/components/general-posts/posted-by";
 import ButtonText from "@/components/buttons/button-text";
 import Button from "@/components/buttons/button";
 import auth from "@/actions/App/Http/Controllers/Auth";
-import TextInput from "@/components/form/text-input";
+import GeneralInput from "@/components/form/general-input";
 import {Switch} from "@headlessui/react";
 
 
@@ -74,7 +74,7 @@ function TaskModal({modalTask, showModal, setShowModal}: {
 }) {
     const {t} = useTranslation(['projects', 'date']);
     return (
-        <CustomReactModal isOpen={showModal}>
+        <CustomModal showModal={showModal} setShowModal={setShowModal} id="task-show">
             <ModalCast title={modalTask?.title ?? ''} closeModal={() => setShowModal(false)}>
                 <ModalSection className="border-none">
                     <p className="item-title text-with-icon">
@@ -137,17 +137,17 @@ function TaskModal({modalTask, showModal, setShowModal}: {
                     <ButtonText textContent={t('task_note_add')} icon={NotebookPen} className="self-center"
                                 onClick={() => {
                                     // TODO note creation logic
-                                }}/>
+                                }} autoFocus={true}/>
                 </ModalSection>
                 {
                     <Button textContent={t('task_participate')}/>
                 }
                 {/* TODO replace with current user ID */}
                 {modalTask?.owner?.id === '' ?
-                    <Button textContent={t('task_edit')} type="edit"/>
+                    <Button textContent={t('task_edit')} color="edit"/>
                     : null}
             </ModalCast>
-        </CustomReactModal>
+        </CustomModal>
     );
 }
 
@@ -161,17 +161,27 @@ function TaskCreateModal({showModal, setShowModal, project}: {
 
     const [taskName, setTaskName] = useState<string>('');
     const [taskDescription, setTaskDescription] = useState<string>('');
+    const [taskDueDate, setTaskDueDate] = useState<string>('');
+
+    // const testArray = ['ara', 'bill', 'case', 'dice'];
+    // const [testItems, setTestItems] = useState<Array<string>>([]);
+
+    const submit = (e:any)=> {
+        e.preventDefault();
+    }
 
     return (
-        <CustomReactModal isOpen={showModal}>
-            <ModalCast title={t('task_create')} closeModal={() => setShowModal(false)} className="w-full"
-                       element="form">
-                <ModalSection as="fieldset" title={t('task_create_for_project', {project: project.name})}>
+        <CustomModal showModal={showModal} setShowModal={setShowModal} id="task-create">
+            <ModalCast title={t('task_create_for_project', {project: project.name})} closeModal={() => setShowModal(false)} className="w-full"
+                       element="form" action="/tasks/create">
+                <ModalSection as="fieldset" title={t('task_base_informations')}>
                     <input type="hidden" name="project_id" id="project_id" value={project.id}/>
-                    <TextInput name="task_name" label={t('task_form_title')} placeholder={t('task_form_title_placeholder')}
-                               value={taskName} setValue={setTaskName} required={true}/>
-                    <TextInput name="task_desc" label={t('task_form_description')} type="textarea" placeholder={t('task_form_description_placeholder')}
-                               value={taskDescription} setValue={setTaskDescription} required={true}/>
+                    <GeneralInput name="task_name" label={t('task_form_title')}
+                                  placeholder={t('task_form_title_placeholder')}
+                                  value={taskName} setValue={setTaskName} required={true} autoFocus={true}/>
+                    <GeneralInput name="task_desc" label={t('task_form_description')} type="textarea"
+                                  placeholder={t('task_form_description_placeholder')}
+                                  value={taskDescription} setValue={setTaskDescription} required={true}/>
                 </ModalSection>
                 <ModalSection as="fieldset" title={t('task_form_date')}>
                     {/* TODO switch
@@ -179,22 +189,53 @@ function TaskCreateModal({showModal, setShowModal, project}: {
                             <span className="mr-auto">{t('task_form_starting_time')}</span>
                             <button />
                         </div>*/}
-                    <div className="grid grid-cols-2">
-                        <span>
-                            select 1
-                        </span>
-                        <span>
-                                select 2
-                        </span>
-                        {/* Select 3 + 4 */}
+                    <div className="grid grid-cols-2 gap-2">
+                        <GeneralInput name="due_date" label={t('task_form_due_date')} type="date"
+                                      value={taskDueDate} setValue={setTaskDueDate}/>
+                        <GeneralInput name="due_time" label={t('task_form_due_time')} type="time"
+                                      value={taskDueDate} setValue={setTaskDueDate}/>
+
+                        {/*<label htmlFor="due_date" className="flex flex-col gap-1">
+                            <input type="text" list="test" className="input" onChange={(e) => {
+                                if (testArray.includes(e.currentTarget.value) && !testItems.includes(e.currentTarget.value)) {
+                                    testItems.push(e.currentTarget.value);
+                                    setTestItems(testItems);
+                                    e.currentTarget.value = '';
+                                }
+                            }}/>
+
+                            <datalist id="test">
+                                {
+                                    testArray.map((item) => {
+                                        return (
+                                            <option value={item} key={item}>{item}</option>
+                                        );
+                                    })
+                                }
+                            </datalist>
+                            <select name="due_date" id="due_date">
+                            <option value={'test'}>
+
+                            </option>
+                        </select>
+                        </label>
+                        <ul>
+                            {testItems.length > 0 ? testItems.map((item) => {
+                                    return <li onClick={() => {
+                                        setTestItems(testItems.splice(testItems.indexOf(item), 1));
+                                    }}>{item}</li>
+                                })
+                                : null
+                            }
+                        </ul>*/}
                     </div>
                 </ModalSection>
                 <div className="flex flex-col gap-3 px-2">
-                    <Button textContent={t('task_create_button')}/>
+                    <Button textContent={t('task_create_button')} type="submit" onClick={submit}/>
                     <ButtonText icon={ClipboardCopy} textContent={t('task_create_fill')}/>
                 </div>
             </ModalCast>
-        </CustomReactModal>
+        </CustomModal>
     );
 }
 

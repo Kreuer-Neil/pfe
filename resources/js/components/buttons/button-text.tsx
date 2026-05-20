@@ -5,27 +5,30 @@ import {cn} from "@/lib/utils";
 
 
 interface ButtonTextProps {
-    icon?: LucideIcon | null,
-    textContent: string,
-    href?: string,
-    title?: string | null,
-    className?: string,
-    type?: "default" | "destroy",
-    onClick?: ((e: any) => void),
+    icon?: LucideIcon | null;
+    textContent: string;
+    href?: string;
+    title?: string | null;
+    className?: string;
+    type?: "default" | "destroy";
+    autoFocus?: boolean;
+    onClick?: ((e: any) => void);
 }
 
 // Shouldn't we name it "Text link" ? Or another name
 /**
  * Displays a button with a clickable text appearance.
  */
-export default function ButtonText({
-                                       icon: Icon = null,
-                                       textContent,
-                                       href = '',
-                                       className = '',
-                                       type = 'default',
-                                       onClick = () => null,
-                                   }: ButtonTextProps): ReactNode {
+export default function ButtonText(
+    {
+        icon: Icon = null,
+        textContent,
+        href = '',
+        className = '',
+        type = 'default',
+        autoFocus = false,
+        onClick = () => null,
+    }: ButtonTextProps): ReactNode {
 
     let style: string = '';
     switch (type) {
@@ -39,7 +42,7 @@ export default function ButtonText({
 
     if (href === '') {
         return (
-            <button onClick={onClick} className={cn('button-text', style, className)}>
+            <button onClick={onClick} className={cn('button-text', style, className)} autoFocus={autoFocus}>
                 {Icon ? <Icon/> : ''}
                 {textContent}
             </button>
@@ -47,7 +50,7 @@ export default function ButtonText({
 
     }
     return (
-        <Link href={href} as={'a'} className={cn('button-text', style, className)}>
+        <Link href={href} as={'a'} className={cn('button-text', style, className)} autoFocus={autoFocus}>
             {Icon ? <Icon/> : ''}
             {textContent}
         </Link>
