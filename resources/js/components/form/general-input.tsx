@@ -1,7 +1,9 @@
-import {ReactNode} from "react";
+import {ReactNode, useState} from "react";
 import {cn} from "@/lib/utils";
-import {ISubmitError} from "@/types";
+import {ITranslatableObject} from "@/types";
 import {useTranslation} from "react-i18next";
+
+type ValidationRule = 'required' | 'min-8' | 'date';
 
 interface TextInputProps {
     name: string;
@@ -10,11 +12,31 @@ interface TextInputProps {
     required?: boolean;
     value: string;
     setValue: any;
-    validation?: ((value:string) => ISubmitError | null);
+    validation?: ((value: string) => ITranslatableObject | null);
+    validationRules?: ValidationRule[];
     placeholder?: string;
     autoFocus?: boolean;
     className?: string;
     inputClassName?: string;
+}
+
+function checkValidationRules(
+    validationRules: ValidationRule[],
+    value: string,
+    label: string,
+): ITranslatableObject | void {
+
+    if (validationRules?.length > 0) {
+        for (let i = 0; i < validationRules.length; i++) {
+            switch (validationRules[i]) {
+                case "required":
+                    if ((!value) && value.length <= 0) {
+                        return {key: 'field_required', params: {fieldName: label}};
+                    }
+                    break;
+            }
+        }
+    }
 }
 
 export default function GeneralInput(
@@ -25,7 +47,7 @@ export default function GeneralInput(
         required = false,
         value,
         setValue,
-        validation = () => null,
+        validationRules = [],
         placeholder = '',
         autoFocus = false,
         className = '',
@@ -33,8 +55,19 @@ export default function GeneralInput(
     }: TextInputProps): ReactNode {
     const {t} = useTranslation('errors');
 
-    inputClassName += required ? ' input-required' : '';
-    const error: ISubmitError | null = validation(value);
+    if (required) {
+        className += ' input-required';
+        validationRules!.push('required');
+    }
+
+    const [error, setError] = useState<ITranslatableObject | null>(null);
+
+    const validate = () => {
+        if (validationRules?.length > 0) {
+            setError(checkValidationRules(validationRules, value, label) ?? null);
+        }
+    }
+
     return (
         <label htmlFor={name} className={cn('flex flex-col gap-1', className)}>
             {required ? '*' : null}
@@ -42,14 +75,18 @@ export default function GeneralInput(
             {type === 'textarea' ?
                 <textarea id={name} name={name} value={value} className={cn("input min-h-20", inputClassName)}
                           autoFocus={autoFocus}
-                          onChange={(e) => setValue(e.currentTarget.value)} placeholder={placeholder}/>
+                          onChange={(e) => setValue(e.currentTarget.value)}
+                          onBlur={validate}
+                          placeholder={placeholder}/>
                 :
                 <input id={name} name={name} type={type} value={value} className={cn("input", inputClassName)}
                        autoFocus={autoFocus}
-                       onChange={(e) => setValue(e.currentTarget.value)} autoComplete={name} placeholder={placeholder}/>
+                       onChange={(e) => setValue(e.currentTarget.value)} autoComplete={name}
+                       onBlur={validate}
+                       placeholder={placeholder}/>
             }
             {error ?
-                <span className="field-error">{t(error.key,error.params)}</span>
+                <span className="field-error">{t(error.key, error.params)}</span>
                 : null}
         </label>
     )

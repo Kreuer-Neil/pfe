@@ -170,7 +170,7 @@ interface IPaginationLink {
     active: boolean;
 }
 
-export interface ISubmitError {
+export interface ITranslatableObject {
     key:string;
     params: {[key: string]:string};
 }

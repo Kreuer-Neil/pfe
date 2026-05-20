@@ -1,4 +1,4 @@
-import {INote, IProject, ISubmitError, ITask, ITaskMiniature} from "@/types";
+import {INote, IProject, ITranslatableObject, ITask, ITaskMiniature} from "@/types";
 // import {agenda} from '@/routes';
 import TaskItem from "@/components/tasks/task-item";
 import {Dispatch, ReactNode, SetStateAction, useState} from "react";
@@ -161,7 +161,7 @@ function TaskCreateModal({showModal, setShowModal, project}: {
 
     const [taskName, setTaskName] = useState<string>('');
 
-    function taskNameValidation(value: string): null | ISubmitError {
+    function taskNameValidation(value: string): null | ITranslatableObject {
         if ((!value) || value === '') {
             return {key: 'field_required', params: {fieldName: 'title'}};
         }
