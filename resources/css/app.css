@@ -445,7 +445,7 @@
     }
 
     .field-error {
-        @apply text-xs text-red-900;
+        @apply text-xs text-red-800;
     }
 
     /* Overwrites default Lucide icons style*/
