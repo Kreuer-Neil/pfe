@@ -170,7 +170,12 @@ interface IPaginationLink {
     active: boolean;
 }
 
+export interface IServerResponse {
+    success: boolean;
+    error: ITranslatableObject | null;
+}
+
 export interface ITranslatableObject {
-    key:string;
-    params: {[key: string]:string};
+    key: string;
+    params: { [key: string]: string };
 }

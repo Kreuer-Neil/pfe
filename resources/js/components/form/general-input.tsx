@@ -3,17 +3,18 @@ import {cn} from "@/lib/utils";
 import {ITranslatableObject} from "@/types";
 import {useTranslation} from "react-i18next";
 
-type ValidationRule = 'required' | 'min-8' | 'date' | 'time';
+type ValidationRule = 'required' | 'min-8' | 'number' | 'int' | 'date' | 'time';
 
 interface TextInputProps {
     name: string;
     label: string;
-    type?: 'text' | 'textarea' | 'date' | 'time';
+    type?: 'text' | 'number' | 'textarea' | 'date' | 'time';
     required?: boolean;
     value: string;
     setValue: any;
     validation?: ((value: string) => ITranslatableObject | null);
     validationRules?: ValidationRule[];
+    hasError?:((error: boolean) => void);
     placeholder?: string;
     autoFocus?: boolean;
     className?: string;
@@ -31,9 +32,13 @@ function checkValidationRules(
                 if ((!value) && value.length <= 0)
                     return {key: 'field_required', params: {fieldName: label}};
                 break;
+            case "number":
+                if (!(Number(value) !== 0) && value !== '')
+                    return {key: 'field_not_number', params: {fieldName: label}};
+                break;
             // TODO see how to automate the min length
             case "min-8":
-                if (value.length < 8)
+                if (!(value.length > 8))
                     return {key: 'field_min_length', params: {fieldName: label, min: '8'}};
                 break;
             case "date":
@@ -59,6 +64,7 @@ export default function GeneralInput(
         value,
         setValue,
         validationRules = [],
+        hasError = (()=> null),
         placeholder = '',
         autoFocus = false,
         className = '',
@@ -75,12 +81,15 @@ export default function GeneralInput(
         validationRules!.push('date');
     } else if (type === 'time') {
         validationRules!.push('time');
+    } else if (type === 'number') {
+        validationRules!.push('number');
     }
 
     const [error, setError] = useState<ITranslatableObject | null>(null);
 
     const validate = () => {
         setError(checkValidationRules(validationRules, value, label) ?? null);
+        hasError(!!error);
     }
 
     return (
@@ -92,12 +101,14 @@ export default function GeneralInput(
                           autoFocus={autoFocus}
                           onChange={(e) => setValue(e.currentTarget.value)}
                           onBlur={validate}
+                          onSubmit={validate}
                           placeholder={placeholder}/>
                 :
                 <input id={name} name={name} type={type} value={value} className={cn("input", inputClassName)}
                        autoFocus={autoFocus}
                        onChange={(e) => setValue(e.currentTarget.value)} autoComplete={name}
                        onBlur={validate}
+                       onSubmit={validate}
                        placeholder={placeholder}/>
             }
             {error ?

@@ -24,11 +24,10 @@ export default function ModalCast(
     }: ModalCastProps): ReactNode {
 
     return (
-
         <aside className={className}>
             <div className="flex pb-3">
                 {title !== '' ?
-                    <h2 className="section-title"> {title} </h2> : ''
+                    <h2 className="section-title"> {title} </h2> : null
                 }
                 <div onClick={closeModal} tabIndex={0}
                      className="p-2 ml-auto cursor-pointer rounded-full">

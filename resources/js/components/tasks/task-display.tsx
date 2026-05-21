@@ -1,4 +1,4 @@
-import {INote, IProject, ITranslatableObject, ITask, ITaskMiniature} from "@/types";
+import {INote, IProject, ITranslatableObject, ITask, ITaskMiniature, IServerResponse} from "@/types";
 // import {agenda} from '@/routes';
 import TaskItem from "@/components/tasks/task-item";
 import {Dispatch, ReactNode, SetStateAction, useState} from "react";
@@ -25,9 +25,9 @@ import CustomModal from "@/components/modals/custom-modal";
 import PostedBy from "@/components/general-posts/posted-by";
 import ButtonText from "@/components/buttons/button-text";
 import Button from "@/components/buttons/button";
-import auth from "@/actions/App/Http/Controllers/Auth";
 import GeneralInput from "@/components/form/general-input";
-import {Switch} from "@headlessui/react";
+import {store as TaskStore} from "@/actions/App/Http/Controllers/TaskController";
+import {RouteQueryOptions} from "@/wayfinder";
 
 
 interface TaskDisplayProps {
@@ -157,28 +157,58 @@ function TaskCreateModal({showModal, setShowModal, project}: {
     setShowModal: Dispatch<SetStateAction<boolean>>,
     project: IProject,
 }) {
-    const {t} = useTranslation('projects');
+    const {t} = useTranslation(['projects', 'errors']);
 
-    const [taskName, setTaskName] = useState<string>('');
+    const [taskTitle, setTaskTitle] = useState<string>('');
 
     const [taskDescription, setTaskDescription] = useState<string>('');
     const [taskDueDate, setTaskDueDate] = useState<string>('');
     const [taskDueTime, setTaskDueTime] = useState<string>('');
-    const [createError, setCreateError] = useState<string | null>(null);
+    const [minParticipations, setMinParticipations] = useState<number | null>(null);
+
+    const [formError, setFormError] = useState({
+        title: true,
+        'description': true,
+        'due_date': true,
+        'due_time': true,
+        'min_participations': false,
+    });
+
+    const [createError, setCreateError] = useState<ITranslatableObject | null>(null);
 
     // const testArray = ['ara', 'bill', 'case', 'dice'];
     // const [testItems, setTestItems] = useState<Array<string>>([]);
 
-    async function create() {
-        if (
-            // Use form onChange check fn for each
-            (taskName && taskName !== '')
-            &&
-            (taskDescription && taskDescription !== '')
-            &&
-            (taskDueDate && taskDueDate !== '')
-        ) {
-            // try
+    async function create(e: Event) {
+        e.preventDefault();
+        // TODO check if fields still have errors
+        if (!(formError.title || formError.description || formError.due_date || formError.due_time || formError.min_participations)) {
+            const sendCreateData = async () => {
+                try {
+                    const queryOptions: RouteQueryOptions = {
+                        query: {
+                            "project_id": project.id,
+                            "title": taskTitle,
+                            "description": taskDescription,
+                            "due_at": `${taskDueDate} ${taskDueTime}`,
+                            "min_participations": minParticipations?.toString() ?? null
+                        }
+                    }
+
+                    const response = await fetch(TaskStore(queryOptions).url);
+                    const data: IServerResponse = await response.json();
+                    setCreateError(data.error);
+                    return data.success;
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+            sendCreateData().then((value) => {
+                if (value) {
+                    setCreateError({key: 'success', params: {}})
+                    // TODO Toast if successful. Also if error?
+                }
+            });
         }
     }
 
@@ -191,32 +221,43 @@ function TaskCreateModal({showModal, setShowModal, project}: {
                     <input type="hidden" name="project_id" id="project_id" value={project.id}/>
                     <GeneralInput name="task_name" label={t('task_form_title')}
                                   placeholder={t('task_form_title_placeholder')}
-                                  validationRules={['min-8']}
-                                  value={taskName} setValue={setTaskName} required={true} autoFocus={true}/>
+                                  validationRules={['min-8']} hasError={(error) => {
+                        formError.title = error;
+                        setFormError(formError)
+                    }}
+                                  value={taskTitle} setValue={setTaskTitle} required={true} autoFocus={true}/>
                     <GeneralInput name="task_desc" label={t('task_form_description')} type="textarea"
                                   placeholder={t('task_form_description_placeholder')}
-                                  validationRules={['min-8']}
+                                  validationRules={['min-8']} hasError={(error) => {
+                        formError.description = error;
+                        setFormError(formError)
+                    }}
                                   value={taskDescription} setValue={setTaskDescription} required={true}/>
                 </ModalSection>
-                <ModalSection as="fieldset" title={t('task_form_date')}>
+                <ModalSection as="fieldset" title={t('task_form_date')} className="grid grid-cols-2 gap-2">
                     {/* TODO switch
                         <div className="flex">
                             <span className="mr-auto">{t('task_form_starting_time')}</span>
                             <button />
                         </div>*/}
-                    <div className="grid grid-cols-2 gap-2">
-                        <GeneralInput name="due_date" label={t('task_form_due_date')} type="date" required={true}
-                                      value={taskDueDate} setValue={setTaskDueDate}/>
-                        <GeneralInput name="due_time" label={t('task_form_due_time')} type="time" required={true}
-                                      value={taskDueTime} setValue={setTaskDueTime}/>
+                    <GeneralInput name="due_date" label={t('task_form_due_date')} type="date" required={true}
+                                  value={taskDueDate} hasError={(error) => {
+                        formError.due_date = error;
+                        setFormError(formError)
+                    }} setValue={setTaskDueDate}/>
+                    <GeneralInput name="due_time" label={t('task_form_due_time')} type="time" required={true}
+                                  value={taskDueTime} hasError={(error) => {
+                        formError.due_time = error;
+                        setFormError(formError)
+                    }} setValue={setTaskDueTime}/>
 
-                        {/*<label htmlFor="due_date" className="flex flex-col gap-1">
-                            <input type="text" list="test" className="input" onChange={(e) => {
+                    {/*<label htmlFor="due_date" className="flex flex-col gap-1">
+                            <input type="text" list="test" className="input" onBlur={(e) => {
                                 if (testArray.includes(e.currentTarget.value) && !testItems.includes(e.currentTarget.value)) {
                                     testItems.push(e.currentTarget.value);
                                     setTestItems(testItems);
                                     e.currentTarget.value = '';
-                                }
+                                } else e.currentTarget.classList.add('input_error');
                             }}/>
 
                             <datalist id="test">
@@ -228,26 +269,30 @@ function TaskCreateModal({showModal, setShowModal, project}: {
                                     })
                                 }
                             </datalist>
-                            <select name="due_date" id="due_date">
-                            <option value={'test'}>
-
-                            </option>
-                        </select>
                         </label>
                         <ul>
                             {testItems.length > 0 ? testItems.map((item) => {
-                                    return <li onClick={() => {
+                                    return <li key={item.id} onClick={() => {
                                         setTestItems(testItems.splice(testItems.indexOf(item), 1));
                                     }}>{item}</li>
                                 })
                                 : null
                             }
                         </ul>*/}
-                    </div>
+                </ModalSection>
+                <ModalSection as="fieldset">
+                    <GeneralInput name="min_participations" label={t('form_min_participations')}
+                                  value={minParticipations?.toString() ?? ''} setValue={setMinParticipations}
+                                  type="number" validationRules={['int']} hasError={(error) => {
+                        formError.min_participations = error;
+                        setFormError(formError)
+                    }}
+                    />
                 </ModalSection>
                 <div className="flex flex-col gap-3 px-2">
                     <Button textContent={t('task_create_button')} type="submit" onClick={create}/>
-                    {createError ? <span className="field-error">{createError}</span> : null}
+                    {createError ? <span
+                        className="field-error -mt-2">{t('errors:' + createError.key, createError.params)}</span> : null}
                     <ButtonText icon={ClipboardCopy} textContent={t('task_create_fill')}/>
                 </div>
             </ModalCast>

@@ -5,9 +5,9 @@ import {LucideIcon} from "lucide-react";
 interface ModalSectionProps {
     title?: string;
     children: ReactNode | ReactNode[];
-    className?: string;
     icon?: LucideIcon;
     as?: 'div' | 'fieldset';
+    className?: string;
 }
 
 function ModalSectionTitle({title, icon: Icon, sectionTitleElement: HtmlElement}: {
@@ -16,7 +16,7 @@ function ModalSectionTitle({title, icon: Icon, sectionTitleElement: HtmlElement}
     sectionTitleElement: any
 }): ReactNode | null {
     if (title && title != '')
-        return <HtmlElement className="item-title flex gap-1">
+        return <HtmlElement className="item-title flex gap-1 col-span-2">
             {Icon ?
                 <Icon/> : null
             }
@@ -24,13 +24,20 @@ function ModalSectionTitle({title, icon: Icon, sectionTitleElement: HtmlElement}
         </HtmlElement>;
 }
 
-export default function ModalSection({title, children, className = '', icon, as: HtmlElement = 'div'}: ModalSectionProps): ReactNode {
+export default function ModalSection(
+    {
+        title,
+        children,
+        icon,
+        as: HtmlElement = 'div',
+        className = '',
+    }: ModalSectionProps): ReactNode {
 
-    let sectionTitleType:string = 'p';
+    let sectionTitleType: string = 'p';
     if (HtmlElement === 'fieldset') sectionTitleType = 'legend';
 
     return (
-        <HtmlElement className={cn(className, "flex flex-col gap-2 pb-2 border-b border-black")}>
+        <HtmlElement className={cn("flex flex-col gap-2 pb-2 border-b border-black",className)}>
             <ModalSectionTitle title={title} icon={icon} sectionTitleElement={sectionTitleType}/>
 
             {children}
