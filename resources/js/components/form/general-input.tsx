@@ -101,14 +101,12 @@ export default function GeneralInput(
                           autoFocus={autoFocus}
                           onChange={(e) => setValue(e.currentTarget.value)}
                           onBlur={validate}
-                          onSubmit={validate}
                           placeholder={placeholder}/>
                 :
                 <input id={name} name={name} type={type} value={value} className={cn("input", inputClassName)}
                        autoFocus={autoFocus}
                        onChange={(e) => setValue(e.currentTarget.value)} autoComplete={name}
                        onBlur={validate}
-                       onSubmit={validate}
                        placeholder={placeholder}/>
             }
             {error ?

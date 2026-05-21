@@ -182,34 +182,34 @@ function TaskCreateModal({showModal, setShowModal, project}: {
     async function create(e: Event) {
         e.preventDefault();
         // TODO check if fields still have errors
-        if (!(formError.title || formError.description || formError.due_date || formError.due_time || formError.min_participations)) {
-            const sendCreateData = async () => {
-                try {
-                    const queryOptions: RouteQueryOptions = {
-                        query: {
-                            "project_id": project.id,
-                            "title": taskTitle,
-                            "description": taskDescription,
-                            "due_at": `${taskDueDate} ${taskDueTime}`,
-                            "min_participations": minParticipations?.toString() ?? null
-                        }
+        // if (!(formError.title || formError.description || formError.due_date || formError.due_time || formError.min_participations)) {
+        const sendCreateData = async () => {
+            try {
+                const queryOptions: RouteQueryOptions = {
+                    query: {
+                        "project_id": project.id,
+                        "title": taskTitle,
+                        "description": taskDescription,
+                        "due_at": `${taskDueDate} ${taskDueTime}`,
+                        "min_participations": minParticipations?.toString() ?? null
                     }
+                }
 
-                    const response = await fetch(TaskStore(queryOptions).url);
-                    const data: IServerResponse = await response.json();
-                    setCreateError(data.error);
-                    return data.success;
-                } catch (e) {
-                    console.error(e);
-                }
+                const response = await fetch(TaskStore(queryOptions).url);
+                const data: IServerResponse = await response.json();
+                setCreateError(data.error);
+                return data.success;
+            } catch (e) {
+                console.error(e);
             }
-            sendCreateData().then((value) => {
-                if (value) {
-                    setCreateError({key: 'success', params: {}})
-                    // TODO Toast if successful. Also if error?
-                }
-            });
         }
+        sendCreateData().then((value) => {
+            if (value) {
+                setCreateError({key: 'success', params: {}})
+                // TODO Toast if successful. Also if error?
+            }
+        });
+        // }
     }
 
     return (
