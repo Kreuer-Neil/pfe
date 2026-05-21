@@ -37,14 +37,13 @@ function checkValidationRules(
                     return {key: 'field_min_length', params: {fieldName: label, min: '8'}};
                 break;
             case "date":
-                const dateRegExp: RegExp = /^[0-9]{4}\-[0-9]{2}\-[0-9]{2}?$/;
-                if (value.length === 10 && dateRegExp.test(value))
+                const dateRegExp: RegExp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}?$/;
+                if (value.length !== 10 && dateRegExp.test(value))
                     return {key: 'field_not_date', params: {fieldName: label}};
                 break;
             case "time":
-                console.log('test')
-                const timeRegExp: RegExp = /^[0-9]{2}\:[0-9]{2}?$/;
-                if (value.length === 5 && timeRegExp.test(value))
+                const timeRegExp: RegExp = /^[0-9]{2}:[0-9]{2}?$/;
+                if (value.length !== 5 && timeRegExp.test(value))
                     return {key: 'field_not_time', params: {fieldName: label}};
                 break;
         }
