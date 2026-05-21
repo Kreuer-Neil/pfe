@@ -161,18 +161,9 @@ function TaskCreateModal({showModal, setShowModal, project}: {
 
     const [taskName, setTaskName] = useState<string>('');
 
-    function taskNameValidation(value: string): null | ITranslatableObject {
-        if ((!value) || value === '') {
-            return {key: 'field_required', params: {fieldName: 'title'}};
-        }
-        if (value.length <= 6) {
-            return {key:'field_min_length',params:{length: '6', fieldName: 'title'}}
-        }
-            return null;
-    }
-
     const [taskDescription, setTaskDescription] = useState<string>('');
     const [taskDueDate, setTaskDueDate] = useState<string>('');
+    const [taskDueTime, setTaskDueTime] = useState<string>('');
     const [createError, setCreateError] = useState<string | null>(null);
 
     // const testArray = ['ara', 'bill', 'case', 'dice'];
@@ -199,10 +190,12 @@ function TaskCreateModal({showModal, setShowModal, project}: {
                 <ModalSection as="fieldset" title={t('task_base_informations')}>
                     <input type="hidden" name="project_id" id="project_id" value={project.id}/>
                     <GeneralInput name="task_name" label={t('task_form_title')}
-                                  placeholder={t('task_form_title_placeholder')} validation={taskNameValidation}
+                                  placeholder={t('task_form_title_placeholder')}
+                                  validationRules={['min-8']}
                                   value={taskName} setValue={setTaskName} required={true} autoFocus={true}/>
                     <GeneralInput name="task_desc" label={t('task_form_description')} type="textarea"
                                   placeholder={t('task_form_description_placeholder')}
+                                  validationRules={['min-8']}
                                   value={taskDescription} setValue={setTaskDescription} required={true}/>
                 </ModalSection>
                 <ModalSection as="fieldset" title={t('task_form_date')}>
@@ -215,7 +208,7 @@ function TaskCreateModal({showModal, setShowModal, project}: {
                         <GeneralInput name="due_date" label={t('task_form_due_date')} type="date" required={true}
                                       value={taskDueDate} setValue={setTaskDueDate}/>
                         <GeneralInput name="due_time" label={t('task_form_due_time')} type="time" required={true}
-                                      value={taskDueDate} setValue={setTaskDueDate}/>
+                                      value={taskDueTime} setValue={setTaskDueTime}/>
 
                         {/*<label htmlFor="due_date" className="flex flex-col gap-1">
                             <input type="text" list="test" className="input" onChange={(e) => {

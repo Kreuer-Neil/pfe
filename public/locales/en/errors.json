@@ -1,3 +1,6 @@
 {
-    "field_required": "The field \"{{fieldName}}\" is required."
+    "field_required": "The field \"{{fieldName}}\" is required.",
+    "field_min_length": "The field \"{{fieldName}}\" must contain at least {{min}} characters.",
+    "field_not_date": "The field \"{{fieldName}}\" must be a date like 2026-01-15. Please use the Date picker and don't try to change the values manually.",
+    "field_not_time": "The field \"{{fieldName}}\" must be a time like 20:56. Please use the Time picker and don't try to change the values manually."
 }

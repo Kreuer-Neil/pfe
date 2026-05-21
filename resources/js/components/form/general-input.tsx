@@ -3,7 +3,7 @@ import {cn} from "@/lib/utils";
 import {ITranslatableObject} from "@/types";
 import {useTranslation} from "react-i18next";
 
-type ValidationRule = 'required' | 'min-8' | 'date';
+type ValidationRule = 'required' | 'min-8' | 'date' | 'time';
 
 interface TextInputProps {
     name: string;
@@ -25,13 +25,27 @@ function checkValidationRules(
     value: string,
     label: string,
 ): ITranslatableObject | void {
-
-    for (let i = 0; i < validationRules.length - 1; i++) {
+    for (let i = 0; i < validationRules.length; i++) {
         switch (validationRules[i]) {
             case "required":
-                if ((!value) && value.length <= 0) {
+                if ((!value) && value.length <= 0)
                     return {key: 'field_required', params: {fieldName: label}};
-                }
+                break;
+            // TODO see how to automate the min length
+            case "min-8":
+                if (value.length < 8)
+                    return {key: 'field_min_length', params: {fieldName: label, min: '8'}};
+                break;
+            case "date":
+                const dateRegExp: RegExp = /^[0-9]{4}\-[0-9]{2}\-[0-9]{2}?$/;
+                if (value.length === 10 && dateRegExp.test(value))
+                    return {key: 'field_not_date', params: {fieldName: label}};
+                break;
+            case "time":
+                console.log('test')
+                const timeRegExp: RegExp = /^[0-9]{2}\:[0-9]{2}?$/;
+                if (value.length === 5 && timeRegExp.test(value))
+                    return {key: 'field_not_time', params: {fieldName: label}};
                 break;
         }
     }
@@ -55,15 +69,19 @@ export default function GeneralInput(
 
     if (required) {
         className += ' input-required';
-        validationRules!.push('required');
+        validationRules!.unshift('required');
+    }
+
+    if (type === 'date') {
+        validationRules!.push('date');
+    } else if (type === 'time') {
+        validationRules!.push('time');
     }
 
     const [error, setError] = useState<ITranslatableObject | null>(null);
 
     const validate = () => {
-        if (validationRules?.length > 0) {
-            setError(checkValidationRules(validationRules, value, label) ?? null);
-        }
+        setError(checkValidationRules(validationRules, value, label) ?? null);
     }
 
     return (
