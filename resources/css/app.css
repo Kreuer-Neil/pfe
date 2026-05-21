@@ -448,6 +448,10 @@
         @apply text-xs text-red-800;
     }
 
+    .field-success {
+        @apply text-xs text-green-700;
+    }
+
     /* Overwrites default Lucide icons style*/
     .lucide {
         @apply size-6 box-content;

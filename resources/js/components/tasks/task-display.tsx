@@ -174,7 +174,10 @@ function TaskCreateModal({showModal, setShowModal, project}: {
         'min_participations': false,
     });
 
-    const [createError, setCreateError] = useState<ITranslatableObject | null>(null);
+    const [createResponse, setCreateResponse] = useState<IServerResponse>({
+        success: false,
+        error: {key: '', params: {}}
+    });
 
     // const testArray = ['ara', 'bill', 'case', 'dice'];
     // const [testItems, setTestItems] = useState<Array<string>>([]);
@@ -197,15 +200,19 @@ function TaskCreateModal({showModal, setShowModal, project}: {
 
                 const response = await fetch(TaskStore(queryOptions).url);
                 const data: IServerResponse = await response.json();
-                setCreateError(data.error);
-                return data.success;
+                setCreateResponse(data);
+                return data;
             } catch (e) {
                 console.error(e);
             }
         }
         sendCreateData().then((value) => {
-            if (value) {
-                setCreateError({key: 'success', params: {}})
+            if (value?.success) {
+                setTaskTitle('');
+                setTaskDescription('');
+                setTaskDueDate('');
+                setTaskDueTime('');
+                setMinParticipations(null);
                 // TODO Toast if successful. Also if error?
             }
         });
@@ -221,16 +228,16 @@ function TaskCreateModal({showModal, setShowModal, project}: {
                     <input type="hidden" name="project_id" id="project_id" value={project.id}/>
                     <GeneralInput name="task_name" label={t('task_form_title')}
                                   placeholder={t('task_form_title_placeholder')}
-                                  validationRules={['min-8']} hasError={(error) => {
+                                  validationRules={['min-6']} hasError={(error) => {
                         formError.title = error;
-                        setFormError(formError)
+                        setFormError(formError);
                     }}
                                   value={taskTitle} setValue={setTaskTitle} required={true} autoFocus={true}/>
                     <GeneralInput name="task_desc" label={t('task_form_description')} type="textarea"
                                   placeholder={t('task_form_description_placeholder')}
-                                  validationRules={['min-8']} hasError={(error) => {
+                                  validationRules={['min-6']} hasError={(error) => {
                         formError.description = error;
-                        setFormError(formError)
+                        setFormError(formError);
                     }}
                                   value={taskDescription} setValue={setTaskDescription} required={true}/>
                 </ModalSection>
@@ -285,14 +292,14 @@ function TaskCreateModal({showModal, setShowModal, project}: {
                                   value={minParticipations?.toString() ?? ''} setValue={setMinParticipations}
                                   type="number" validationRules={['int']} hasError={(error) => {
                         formError.min_participations = error;
-                        setFormError(formError)
+                        setFormError(formError);
                     }}
                     />
                 </ModalSection>
                 <div className="flex flex-col gap-3 px-2">
                     <Button textContent={t('task_create_button')} type="submit" onClick={create}/>
-                    {createError ? <span
-                        className="field-error -mt-2">{t('errors:' + createError.key, createError.params)}</span> : null}
+                    {createResponse.error ? <span
+                        className={createResponse.success ? 'field-success' : 'field-error' + ' -mt-2'}>{t('errors:' + createResponse.error.key, createResponse.error.params)}</span> : null}
                     <ButtonText icon={ClipboardCopy} textContent={t('task_create_fill')}/>
                 </div>
             </ModalCast>

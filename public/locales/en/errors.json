@@ -3,5 +3,8 @@
     "field_min_length": "The field \"{{fieldName}}\" must contain at least {{min}} characters.",
     "field_not_number": "The value in field \"{{fieldName}}\" must be a number.",
     "field_not_date": "The value in field \"{{fieldName}}\" must be a date like 2026-01-15. Please use the Date picker and don't try to change the values manually.",
-    "field_not_time": "The value in field \"{{fieldName}}\" must be a time like 20:56. Please use the Time picker and don't try to change the values manually."
+    "field_not_time": "The value in field \"{{fieldName}}\" must be a time like 20:56. Please use the Time picker and don't try to change the values manually.",
+    "invalid_parameter": "Please check that you have filled all the required fields.",
+    "not_allowed_on_project": "You are not allowed to add tasks to this project.",
+    "success_task_created": "Task {{task}} created successfully."
 }

@@ -13,7 +13,8 @@ class FormatedTaskMiniature
     public string $title;
     public string $description;
     public FormatedProjectContext $project;
-    public string $min_participations;
+    public int|null $min_participations;
+
     public int $participations_count;
     public array $participating_users;
     public bool $self_participating;
@@ -28,7 +29,7 @@ class FormatedTaskMiniature
         $this->owner = new FormatedProfile($task->owner);
         $this->title = $task->title;
 //        $this->description = $task->description;
-        $this->project = new FormatedProjectContext($task->project()->first(['id','name','icon','slug']));
+        $this->project = new FormatedProjectContext($task->project()->first(['id', 'name', 'icon', 'slug']));
 
         $this->min_participations = $task->min_participations;
         // Turns users model collection into profile data

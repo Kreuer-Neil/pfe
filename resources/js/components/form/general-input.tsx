@@ -3,7 +3,7 @@ import {cn} from "@/lib/utils";
 import {ITranslatableObject} from "@/types";
 import {useTranslation} from "react-i18next";
 
-type ValidationRule = 'required' | 'min-8' | 'number' | 'int' | 'date' | 'time';
+type ValidationRule = 'required' | 'min-6' | 'number' | 'int' | 'date' | 'time';
 
 interface TextInputProps {
     name: string;
@@ -37,9 +37,9 @@ function checkValidationRules(
                     return {key: 'field_not_number', params: {fieldName: label}};
                 break;
             // TODO see how to automate the min length
-            case "min-8":
-                if (!(value.length > 8))
-                    return {key: 'field_min_length', params: {fieldName: label, min: '8'}};
+            case "min-6":
+                if (!(value.length >= 6))
+                    return {key: 'field_min_length', params: {fieldName: label, min: '6'}};
                 break;
             case "date":
                 const dateRegExp: RegExp = /^[0-9]{4}-[0-9]{2}-[0-9]{2}?$/;
