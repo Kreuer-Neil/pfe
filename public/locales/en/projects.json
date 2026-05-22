@@ -16,6 +16,7 @@
     "task_empty_message": "No task here. Try adding a task yourself! But if this problem persists, please let support know.",
     "task_project_empty_message": "No task here. Try adding a task to the project yourself! But if this problem persists, please let the support team know.",
     "task_participations_count": "{{count}} participations",
+    "task_no_participations": "No participations",
     "task_recommended_participations_count": "{{count}} recommended",
     "task_self_participating": "You joined this task.",
     "task_due_soon": "This task is soon due!",

@@ -24,8 +24,7 @@ class TaskController extends Controller
         $currentUser = auth()->user();
 
         $task = Task::find($_REQUEST['task_id']);
-        if (!$task || !$task->canSee($currentUser)) return 'Task not found';
-
+        if (!$task || !$task->canSee($currentUser)) return ['Task not found'];
 //        dd(new FormatedTask($task, $currentUser->id));
         return [
             'task' => new FormatedTask($task, $currentUser->id)
@@ -92,6 +91,11 @@ class TaskController extends Controller
                 ]
             ]
         ];
+
+    }
+
+    public function participate()
+    {
 
     }
 }

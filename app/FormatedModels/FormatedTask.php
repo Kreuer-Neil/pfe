@@ -12,7 +12,7 @@ class FormatedTask extends FormatedTaskMiniature
     public string $title;
     public string $description;
     public FormatedProjectContext $project;
-    public string $min_participations;
+    public int|null $min_participations;
     public int $participations_count;
     public array $participating_users;
     public array $notes;

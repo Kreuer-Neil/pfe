@@ -34,12 +34,13 @@ export default function ModalCast(
                     <X/>
                 </div>
             </div>
-            {HtmlElement === 'form' ? <HtmlElement className="flex flex-col gap-4">
-                    {children}
-                </HtmlElement> :
-                <form action={action} method={method}>
+            {HtmlElement === 'form' ?
+                <form action={action} method={method} className="flex flex-col gap-4">
                     {children}
                 </form>
+                : <HtmlElement className="flex flex-col gap-4">
+                    {children}
+                </HtmlElement>
             }
         </aside>
     );
