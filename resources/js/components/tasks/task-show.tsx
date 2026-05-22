@@ -10,8 +10,7 @@ import {CalendarCheck, CalendarClock, ClockAlert, Notebook, NotebookPen, UsersRo
 import PostedBy from "@/components/general-posts/posted-by";
 import ButtonText from "@/components/buttons/button-text";
 import Button from "@/components/buttons/button";
-import {RouteQueryOptions} from "@/wayfinder";
-import {store as TaskStore} from "@/actions/App/Http/Controllers/TaskController";
+import {participate as taskParticipate} from "@/actions/App/Http/Controllers/TaskController";
 
 export default function TaskShowModal({task, showModal, setShowModal}: {
     task?: ITask,
@@ -20,10 +19,24 @@ export default function TaskShowModal({task, showModal, setShowModal}: {
 }): ReactNode {
     const {t} = useTranslation(['projects', 'date']);
 
-    const [participationResponse, setParticipationResponse] = useState<IServerResponse >({success:false,error:null})
+    const [participationResponse, setParticipationResponse] = useState<IServerResponse>({success: false, error: null})
 
-    const participate = ()=>{
-
+    const participate = () => {
+        const askParticipation = async () => {
+            try {
+                const response = await fetch(taskParticipate(task!.id).url);
+                const data: IServerResponse = await response.json();
+                return data;
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        askParticipation().then((value) => {
+            if (value?.success) {
+                // TODO success modal toast + item reload + page items reload on task-display
+            }
+            setParticipationResponse(value!)
+        });
     }
 
     return (
@@ -95,8 +108,10 @@ export default function TaskShowModal({task, showModal, setShowModal}: {
                 {
                     <Button textContent={t('task_participate')} onClick={participate}/>
                 }
+                {participationResponse.error ? <span
+                    className={participationResponse.success ? 'field-success' : 'field-error' + ' -mt-2'}>{t('errors:' + participationResponse.error.key, participationResponse.error.params)}</span> : null}
                 {/* TODO replace with current user ID */}
-                {task?.owner?.id === '' ?
+                {task?.isOwner ?
                     <Button textContent={t('task_edit')} color="edit"/>
                     : null}
             </ModalCast>

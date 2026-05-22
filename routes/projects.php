@@ -17,8 +17,12 @@ Route::get('projects/{slug}', [ProjectController::class, 'show'])
 
 Route::get('tasks', [TaskController::class, 'index'])
     ->name('tasks');
+
 Route::get('tasks/create', [TaskController::class, 'store'])
     ->name('tasks.store');
 
 Route::get('tasks/{id}', [TaskController::class, 'show'])
     ->name('tasks.show');
+
+Route::get('tasks/{id}/participate', [TaskController::class, 'participate'])
+    ->name('tasks.participate');

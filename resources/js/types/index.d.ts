@@ -131,6 +131,7 @@ export interface ITaskMiniature {
     notes: INote[] | null,
     created_at: string;
     owner?: IProfile;
+    isOwner: boolean | null;
 
     [key: string]: unknown;
 }

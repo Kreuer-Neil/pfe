@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\FormatedModels\FormatedTask;
 use App\Models\Project;
 use App\Models\Task;
+use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
@@ -85,17 +86,42 @@ class TaskController extends Controller
         return [
             'success' => true,
             'error' => [
-                'key'=>'success_task_created',
-                'params'=>[
-                    'task'=> $validated['title']
+                'key' => 'success_task_created',
+                'params' => [
+                    'task' => $validated['title']
                 ]
             ]
         ];
 
     }
 
-    public function participate()
+    public function participate($id)
     {
+        $task = null;
+        try {
+            $task = Task::findOrFail($id);
+        } catch (QueryException) {
+            return [
+                'success' => false,
+                'error' => [
+                    'key' => 'participation_error',
+                    'params' => [],
+                ]];
+        }
+        if($task->participate(auth()->user())){
+            return [
+                'success' => true,
+                'error' => [
+                    'key' => 'participation_success',
+                    'params' => [],
+                ]];
+        }
 
+        return [
+            'success' => false,
+            'error' => [
+                'key' => 'participation_error',
+                'params' => [],
+            ]];
     }
 }

@@ -7,7 +7,7 @@ import ModalSection from "../modals/modal-section";
 import GeneralInput from "@/components/form/general-input";
 import {RouteQueryOptions} from "@/wayfinder";
 import {IProject, IServerResponse} from "@/types";
-import {store as TaskStore} from "@/actions/App/Http/Controllers/TaskController";
+import {store as taskStore} from "@/actions/App/Http/Controllers/TaskController";
 import {Dispatch, SetStateAction, useState} from "react";
 import {useTranslation} from "react-i18next";
 
@@ -57,7 +57,7 @@ export default function TaskCreateModal({showModal, setShowModal, project}: {
                     }
                 }
 
-                const response = await fetch(TaskStore(queryOptions).url);
+                const response = await fetch(taskStore(queryOptions).url);
                 const data: IServerResponse = await response.json();
                 setCreateResponse(data);
                 return data;

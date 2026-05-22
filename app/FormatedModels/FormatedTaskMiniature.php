@@ -10,6 +10,7 @@ class FormatedTaskMiniature
 {
     public string $id;
     public ?FormatedProfile $owner;
+    public ?bool $isOwner;
     public string $title;
     public string $description;
     public FormatedProjectContext $project;
@@ -27,6 +28,7 @@ class FormatedTaskMiniature
     {
         $this->id = $task->id;
         $this->owner = new FormatedProfile($task->owner);
+        $this->isOwner = ($ownerId = $task->owner->id) ? $ownerId === $currentUserId : null;
         $this->title = $task->title;
 //        $this->description = $task->description;
         $this->project = new FormatedProjectContext($task->project()->first(['id', 'name', 'icon', 'slug']));
