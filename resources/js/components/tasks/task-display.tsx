@@ -32,8 +32,12 @@ function TasksList({tasks, projectContext, maxLength, onTapTask}: {
     maxLength: bigint;
     onTapTask: (id: string) => void;
 }): ReactNode {
-    const {t} = useTranslation('date');
+    const {t} = useTranslation(['date', 'projects']);
     const length = tasks.length;
+
+    if (length < 0) {
+        return <div className="thumbnails-list-container"><p>{t('projects:task_empty_message')}</p></div>
+    }
 
     return <ul className="thumbnails-list-container">
         {tasks.slice(0, Number(maxLength)).map((task: ITaskMiniature, i: number) => {
@@ -51,6 +55,7 @@ function TasksList({tasks, projectContext, maxLength, onTapTask}: {
             );
         })}
     </ul>
+
 }
 
 
@@ -67,8 +72,7 @@ export default function TaskDisplay(
     // const [showMoreIcon, setShowMoreIcon] = useState(LucideChevronDown);
     const [showMoreState, setShowMoreState] = useState(true);
 
-    const onShowMore = (e: any): void => {
-
+    const onShowMore = (): void => {
         if (maxItemsLength != maxLength) {
             setMaxItemsLength(maxLength);
             setShowMoreState(true);
@@ -88,9 +92,9 @@ export default function TaskDisplay(
         if (!savedTasks[idNumber]) {
             const fetchTask = async (): Promise<ITask | undefined> => {
                 try {
-                    const params:RouteQueryOptions = {query: {'task_id': id}};
+                    const params: RouteQueryOptions = {query: {'task_id': id}};
 
-                    const response = await fetch(tasksShow(id,params).url);
+                    const response = await fetch(tasksShow(id, params).url);
 
                     const data: { task: ITask } = await response.json();
                     return (data.task);
@@ -126,12 +130,8 @@ export default function TaskDisplay(
                                 onClick={() => setShowCreateModal(true)}/>
                     : null}
             </div>
-            {tasks.length > 0
-                // Task items
-                ? <TasksList tasks={tasks} projectContext={(project != null)} maxLength={maxItemsLength!}
-                             onTapTask={onTaskTap}/>
-                : <div className="thumbnails-list-container"><p>{t('task_empty_message')}</p></div>
-            }
+            <TasksList tasks={tasks} projectContext={(project != null)} maxLength={maxItemsLength!}
+                       onTapTask={onTaskTap}/>
             <div className="flex flex-col gap-4 px-3 items-center">
                 <ShowMore showMore={showMoreState} onClick={onShowMore}/>
                 {/*<ButtonText href={agenda().url} textContent={actionText ?? t('task.show_agenda')} icon={LucideCalendarDays}/>*/}

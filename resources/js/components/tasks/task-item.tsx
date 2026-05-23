@@ -1,14 +1,10 @@
-import {CalendarCheck, CalendarClock, Timer, UsersRound} from "lucide-react";
-import {IProjectContext, ITask, ITaskMiniature} from "@/types";
+import {CalendarCheck, Timer, UsersRound} from "lucide-react";
+import {ITask, ITaskMiniature} from "@/types";
 import {cn} from "@/lib/utils";
 import {laravelDateToJsDate, upcomingDateToString} from "@/helpers/date";
-import {ReactNode, useState} from "react";
 import ProjectIcon from "@/components/icons/project-icon";
 import {useTranslation} from "react-i18next";
-import ModalCast from "@/components/modals/modal-cast";
-import ModalSection from "@/components/modals/modal-section";
-import {show as tasksShow} from "@/actions/App/Http/Controllers/TaskController";
-import ReactModal from "react-modal";
+import {ReactNode} from "react";
 
 
 interface TaskItemProps {
@@ -20,7 +16,7 @@ interface TaskItemProps {
 }
 
 
-function ParticipatingIcon({participating}: { participating: boolean }) {
+function ParticipatingIcon({participating}: { participating: boolean }): ReactNode {
     if (participating) {
         return (
             <CalendarCheck
@@ -79,9 +75,12 @@ export default function TaskItem(
         >
             <h3 className="item-title w-full">{task.title}</h3>
 
-            <p className="flex gap-1">
-            <ProjectIcon project={task.project} className="size-6"/>
-                {t('task_from_project', {project: task.project.name})}</p>
+            {!isInProjectPage ?
+                <p className="flex gap-1">
+                    <ProjectIcon project={task.project} className="size-6"/>
+                    {t('task_from_project', {project: task.project.name})}
+                </p>
+                : null}
             <div className="taskinfo mt-1 flex flex-wrap justify-between items-center gap-1">
                 <time className="flex gap-1"><Timer/><span>{dueAt}</span>
                 </time>
