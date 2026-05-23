@@ -23,7 +23,7 @@
     "task_participate": "Participate",
     "task_edit": "Edit task",
     "task_note_title": "Notes",
-    "task_note_empty": "No notes were found on this task. If you saw the \"notes\" icon, try reloading the page. If there are no notes, you can create one here:",
+    "task_note_empty": "No notes were found on this task. If you want to add a note, you can do it here:",
     "task_note_add" : "Add note",
     "task_create_for_project": "Create task for {{project}}",
     "task_base_informations": "Base informations",

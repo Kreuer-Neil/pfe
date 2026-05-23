@@ -26,3 +26,6 @@ Route::get('tasks/{id}', [TaskController::class, 'show'])
 
 Route::get('tasks/{id}/participate', [TaskController::class, 'participate'])
     ->name('tasks.participate');
+
+Route::get('tasks/{id}/edit', [TaskController::class, 'update'])
+    ->name('tasks.update');

@@ -3,7 +3,7 @@ import {ReactNode} from "react";
 import {cn} from "@/lib/utils";
 
 interface ModalCastProps {
-    title?: string;
+    title?: string | ReactNode;
     closeModal: (() => void);
     children: ReactNode | ReactNode[];
     className?: string;

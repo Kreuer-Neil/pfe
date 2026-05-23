@@ -33,7 +33,7 @@ export default function TaskCreateModal({showModal, setShowModal, project}: {
         'min_participations': false,
     });
 
-    const [createResponse, setCreateResponse] = useState<IServerResponse>({
+    const [storeResponse, setStoreResponse] = useState<IServerResponse>({
         success: false,
         error: {key: '', params: {}}
     });
@@ -41,7 +41,7 @@ export default function TaskCreateModal({showModal, setShowModal, project}: {
     // const testArray = ['ara', 'bill', 'case', 'dice'];
     // const [testItems, setTestItems] = useState<Array<string>>([]);
 
-    async function create(e: Event) {
+    async function store(e: Event) {
         e.preventDefault();
         // TODO check if fields still have errors
         // if (!(formError.title || formError.description || formError.due_date || formError.due_time || formError.min_participations)) {
@@ -59,7 +59,7 @@ export default function TaskCreateModal({showModal, setShowModal, project}: {
 
                 const response = await fetch(taskStore(queryOptions).url);
                 const data: IServerResponse = await response.json();
-                setCreateResponse(data);
+                setStoreResponse(data);
                 return data;
             } catch (e) {
                 console.error(e);
@@ -156,9 +156,9 @@ export default function TaskCreateModal({showModal, setShowModal, project}: {
                     />
                 </ModalSection>
                 <div className="flex flex-col gap-3 px-2">
-                    <Button textContent={t('task_create_button')} type="submit" onClick={create}/>
-                    {createResponse.error ? <span
-                        className={createResponse.success ? 'field-success' : 'field-error' + ' -mt-2'}>{t('errors:' + createResponse.error.key, createResponse.error.params)}</span> : null}
+                    <Button textContent={t('task_create_button')} type="submit" onClick={store}/>
+                    {storeResponse.error ? <span
+                        className={storeResponse.success ? 'field-success' : 'field-error' + ' -mt-2'}>{t('errors:' + storeResponse.error.key, storeResponse.error.params)}</span> : null}
                     <ButtonText icon={ClipboardCopy} textContent={t('task_create_fill')}/>
                 </div>
             </ModalCast>

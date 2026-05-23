@@ -6,5 +6,7 @@
     "field_not_time": "The value in field \"{{fieldName}}\" must be a time like 20:56. Please use the Time picker and don't try to change the values manually.",
     "invalid_parameter": "Please check that you have filled all the required fields.",
     "not_allowed_on_project": "You are not allowed to add tasks to this project.",
-    "success_task_created": "Task {{task}} created successfully."
+    "success_task_created": "Task {{task}} created successfully.",
+    "success_task_updated": "Task {{task}} updated successfully.",
+    "participation_error": "Participation rejected."
 }

@@ -127,7 +127,7 @@ export interface ITaskMiniature {
     // if self is participating
     self_participating: boolean,
     starting_at: ?string,
-    due_at: ?string,
+    due_at: string,
     notes: INote[] | null,
     created_at: string;
     owner?: IProfile;
@@ -148,7 +148,7 @@ export interface ITask extends ITaskMiniature {
     self_participating: boolean,
     participating_users: IProfile[],
     starting_at: ?string,
-    due_at: ?string,
+    due_at: string,
     created_at: string,
     updated_at: string,
     notes: INote[] | null,

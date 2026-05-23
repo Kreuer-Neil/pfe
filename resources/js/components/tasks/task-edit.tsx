@@ -12,20 +12,20 @@ import ButtonText from "@/components/buttons/button-text";
 import Button from "@/components/buttons/button";
 
 export default function TaskEdit({task, showModal, setShowModal}: {
-    task?: ITask,
+    task: ITask,
     showModal: boolean,
     setShowModal: Dispatch<SetStateAction<boolean>>
 }) {
     const {t} = useTranslation(['projects', 'date']);
     return (
         <CustomModal showModal={showModal} setShowModal={setShowModal} id="task-show">
-            <ModalCast title={task?.title ?? ''} closeModal={() => setShowModal(false)}>
+            <ModalCast title={task.title} closeModal={() => setShowModal(false)}>
                 <ModalSection className="border-none">
                     <p className="item-title text-with-icon">
                         <ProjectIcon
-                            project={task?.project ?? {name: '', icon: '', slug: '', id: ''}}
+                            project={task.project}
                             size="small"/>
-                        {task?.project.name ?? null}
+                        {task.project.name}
                     </p>
                     {/* TODO fix date */}
                     {task?.due_at ?

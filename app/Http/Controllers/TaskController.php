@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\FormatedModels\FormatedTask;
 use App\Models\Project;
 use App\Models\Task;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -52,8 +53,6 @@ class TaskController extends Controller
         $project = Project::find($_REQUEST['project_id']);
         $currentUser = auth()->user();
 
-        // TODO add last PHP-side verification before sending
-
         try {
             $validated = request()->validate([
                 'project_id' => 'required|string|exists:projects,id',
@@ -81,7 +80,7 @@ class TaskController extends Controller
                     'params' => []
                 ],
             ];
-        };
+        }
 
         return [
             'success' => true,
@@ -106,15 +105,17 @@ class TaskController extends Controller
                 'error' => [
                     'key' => 'participation_error',
                     'params' => [],
-                ]];
+                ]
+            ];
         }
-        if($task->participate(auth()->user())){
+        if ($task->participate(auth()->user())) {
             return [
                 'success' => true,
                 'error' => [
                     'key' => 'participation_success',
                     'params' => [],
-                ]];
+                ]
+            ];
         }
 
         return [
@@ -122,6 +123,90 @@ class TaskController extends Controller
             'error' => [
                 'key' => 'participation_error',
                 'params' => [],
-            ]];
+            ]
+        ];
+    }
+
+    public function update($id)
+    {
+        if (!(
+            array_key_exists('title', $_REQUEST) &&
+            array_key_exists('description', $_REQUEST) &&
+            array_key_exists('due_at', $_REQUEST))
+        ) {
+            return [
+                'success' => false,
+                'error' => [
+                    'key' => 'missing_parameters',
+                    'params' => [
+                    ],
+                ]
+            ];
+        }
+        $task = new Task();
+        try {
+            $task = Task::findOrFail($id);
+        } catch (ModelNotFoundException) {
+            return [
+                'success' => false,
+                'error' => [
+                    'key' => 'task_not_found',
+                    'params' => [
+                    ],
+                ]
+            ];
+        }
+        $currentUser = auth()->user();
+
+        try {
+            $validated = request()->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'required|string',
+                'due_at' => 'required|date',
+                'min_participations' => 'nullable|integer|min:0',
+            ]);
+        } catch (ValidationException) {
+            return [
+                'success' => false,
+                'error' => [
+                    'key' => 'invalid_parameters',
+                    'params' => [
+                    ],
+                ]
+            ];
+        }
+
+        if (!($task->owner->id === $currentUser->id)) {
+            return [
+                'success' => false,
+                'error' => [
+                    'key' => 'not_allowed',
+                    'params' => []
+                ],
+            ];
+        }
+
+        $task->title = $validated['title'];
+        $task->description = $validated['description'];
+        $task->due_at = ($validated['due_at']);
+        $task->min_participations = $validated['min_participations'] ?? null;
+
+        if (!$task->save()) {
+            return [
+                'success' => false,
+                'error' => [
+                    'key' => 'not_allowed',
+                    'params' => []
+                ],
+            ];
+        }
+
+        return ['success' => true,
+            'error' => ['key' => 'success_task_edited',
+                'params' => [
+                    'task' => $validated['title']
+                ]
+            ]
+        ];
     }
 }
