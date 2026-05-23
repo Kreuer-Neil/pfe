@@ -79,7 +79,7 @@ export default function TaskCreateModal({showModal, setShowModal, project}: {
     }
 
     return (
-        <CustomModal showModal={showModal} setShowModal={setShowModal} id="task-create">
+        <CustomModal showModal={showModal} onClose={()=>setShowModal(false)} id="task-create">
             <ModalCast title={t('task_create_for_project', {project: project.name})}
                        closeModal={() => setShowModal(false)} className="w-full"
                        element="form">

@@ -143,7 +143,7 @@ class TaskController extends Controller
                 ]
             ];
         }
-        $task = new Task();
+
         try {
             $task = Task::findOrFail($id);
         } catch (ModelNotFoundException) {

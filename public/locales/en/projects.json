@@ -35,5 +35,7 @@
     "task_form_due_date": "Due date",
     "task_form_due_time": "Due time",
     "task_create_button": "Add task",
-    "task_create_fill": "Fill using task model"
+    "task_create_fill": "Fill using task model",
+    "task_confirm_changes": "Confirm changes",
+    "task_edit_cancel": "Cancel edition"
 }

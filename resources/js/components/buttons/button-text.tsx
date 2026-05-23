@@ -9,10 +9,11 @@ interface ButtonTextProps {
     textContent: string;
     href?: string;
     title?: string | null;
-    className?: string;
-    type?: "default" | "destroy";
+    type?: 'button' | 'submit';
+    color?: "default" | "destructive";
     autoFocus?: boolean;
     onClick?: ((e: any) => void);
+    className?: string;
 }
 
 // Shouldn't we name it "Text link" ? Or another name
@@ -24,15 +25,16 @@ export default function ButtonText(
         icon: Icon = null,
         textContent,
         href = '',
-        className = '',
-        type = 'default',
+        type = 'button',
+        color = 'default',
         autoFocus = false,
         onClick = () => null,
+        className = '',
     }: ButtonTextProps): ReactNode {
 
     let style: string = '';
-    switch (type) {
-        case 'destroy':
+    switch (color) {
+        case 'destructive':
             style = 'text-danger-md hover:text-danger-foreground hover:bg-danger focus:text-danger-foreground focus:bg-danger';
             break;
         case 'default':
@@ -42,7 +44,7 @@ export default function ButtonText(
 
     if (href === '') {
         return (
-            <button onClick={onClick} className={cn('button-text', style, className)} autoFocus={autoFocus}>
+            <button onClick={onClick} type={type} className={cn('button-text', style, className)} autoFocus={autoFocus}>
                 {Icon ? <Icon/> : ''}
                 {textContent}
             </button>

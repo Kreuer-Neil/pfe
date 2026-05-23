@@ -3,13 +3,13 @@ import {cn} from "@/lib/utils";
 
 interface CustomReactModalProps {
     showModal: boolean;
-    setShowModal: Dispatch<SetStateAction<boolean>>;
+    onClose: ()=>void;
     id: string;
     className?: string;
     children: ReactNode | ReactNode[];
 }
 
-export default function CustomModal({showModal, setShowModal, id, className = '', children}: CustomReactModalProps) {
+export default function CustomModal({showModal, onClose, id, className = '', children}: CustomReactModalProps) {
 
     useEffect(() => {
         if (showModal) {
@@ -26,7 +26,7 @@ export default function CustomModal({showModal, setShowModal, id, className = ''
     }, [showModal]);
 
     return (
-        <dialog closedby="any" id={id} onClose={() => setShowModal(false)}
+        <dialog closedby="any" id={id} onClose={onClose}
                 className={cn("modal", className)}>
             {children}
         </dialog>

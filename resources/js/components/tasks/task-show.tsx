@@ -15,18 +15,19 @@ import GeneralInput from "@/components/form/general-input";
 import {RouteQueryOptions} from "@/wayfinder";
 
 type EditProps = {
-    task: ITask | undefined,
-    onCloseModal: () => void,
-    editTitle: string,
-    setEditTitle: Dispatch<SetStateAction<string>>,
-    editDescription: string,
-    setEditDescription: Dispatch<SetStateAction<string>>,
-    editDueAtDate: string,
-    setEditDueAtDate: Dispatch<SetStateAction<string>>,
-    editDueAtTime: string | null,
-    setEditDueAtTime: Dispatch<SetStateAction<string | null>>,
-    editRecommendedParticipations: number | null,
-    setEditRecommendedParticipations: Dispatch<SetStateAction<number | null>>,
+    task: ITask | undefined;
+    onCloseModal: () => void;
+    editTitle: string;
+    setEditTitle: Dispatch<SetStateAction<string>>;
+    editDescription: string;
+    setEditDescription: Dispatch<SetStateAction<string>>;
+    editDueAtDate: string;
+    setEditDueAtDate: Dispatch<SetStateAction<string>>;
+    editDueAtTime: string | null;
+    setEditDueAtTime: Dispatch<SetStateAction<string | null>>;
+    editRecommendedParticipations: number | null;
+    setEditRecommendedParticipations: Dispatch<SetStateAction<number | null>>;
+    resetTask: () => void;
 }
 
 function Show({task, onCloseModal, startEdit}: {
@@ -154,7 +155,8 @@ function Edit(
         editDueAtTime,
         setEditDueAtTime,
         editRecommendedParticipations,
-        setEditRecommendedParticipations
+        setEditRecommendedParticipations,
+        resetTask
     }: EditProps): ReactNode {
     const {t} = useTranslation(['projects', 'date']);
 
@@ -253,7 +255,10 @@ function Edit(
                 <Button color="edit" textContent={t('task_confirm_changes')} onClick={update}/>
                 {updateResponse.error ? <span
                     className={updateResponse.success ? 'field-success' : 'field-error' + ' -mt-2'}>{t('errors:' + updateResponse.error.key, updateResponse.error.params)}</span> : null}
-                <ButtonText textContent={t('cancel')} type="destroy"/>
+                <Button textContent={t('task_edit_cancel')} color="destructive" onClick={() => {
+                    onCloseModal();
+                    resetTask();
+                }}/>
             </div>
         </ModalCast>
     );
@@ -273,16 +278,20 @@ export default function TaskShowModal({task, showModal, setShowModal}: {
     const [editDueAtTime, setEditDueAtTime] = useState<string | null>('');
     const [editRecommendedParticipations, setEditRecommendedParticipations] = useState<number | null>(null);
 
+    function resetTask() {
+        const taskDueAt = task!.due_at.split(' ');
+        setEditTitle(task!.title);
+        setEditDescription(task!.description);
+        setEditDueAtDate(taskDueAt[0]);
+        setEditDueAtTime(taskDueAt[1]);
+        setEditRecommendedParticipations(task!.min_participations);
+    }
+
     const startEdit = (task: ITask) => {
         setIsEditing(true);
 
         if (!(editedTaskId === task.id)) {
-            const taskDueAt = task.due_at.split(' ');
-            setEditTitle(task.title);
-            setEditDescription(task.description);
-            setEditDueAtDate(taskDueAt[0]);
-            setEditDueAtTime(taskDueAt[1]);
-            setEditRecommendedParticipations(task.min_participations);
+            resetTask();
 
             setEditedTaskId(task.id);
         }
@@ -293,7 +302,7 @@ export default function TaskShowModal({task, showModal, setShowModal}: {
         setIsEditing(false);
     }
     return (
-        <CustomModal showModal={showModal} setShowModal={setShowModal} id="task-show">
+        <CustomModal showModal={showModal} onClose={closeModal} id="task-show">
             {
                 !isEditing ? <Show task={task} onCloseModal={closeModal} startEdit={startEdit}/>
                     :
@@ -304,6 +313,7 @@ export default function TaskShowModal({task, showModal, setShowModal}: {
                           editDueAtTime={editDueAtTime} setEditDueAtTime={setEditDueAtTime}
                           editRecommendedParticipations={editRecommendedParticipations}
                           setEditRecommendedParticipations={setEditRecommendedParticipations}
+                          resetTask={resetTask}
                     />
             }
         </CustomModal>
