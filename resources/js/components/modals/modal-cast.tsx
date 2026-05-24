@@ -24,7 +24,7 @@ export default function ModalCast(
     }: ModalCastProps): ReactNode {
 
     return (
-        <aside className={className}>
+        <aside className={cn('relative', className)}>
             <div className="flex pb-3">
                 {title !== '' ?
                     <h2 className="section-title"> {title} </h2> : null

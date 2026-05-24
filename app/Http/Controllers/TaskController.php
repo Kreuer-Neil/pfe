@@ -127,6 +127,7 @@ class TaskController extends Controller
         ];
     }
 
+    // TODO refactor functions
     public function update($id)
     {
         if (!(
@@ -207,6 +208,43 @@ class TaskController extends Controller
                     'task' => $validated['title']
                 ]
             ]
+        ];
+    }
+
+    public function destroy(string $id)
+    {
+        try {
+            $task = Task::findOrFail($id);
+        } catch (ModelNotFoundException) {
+            return [
+                'success' => false,
+                'error' => [
+                    'key' => 'task_not_found',
+                    'params' => [
+                    ],
+                ]
+            ];
+        }
+        $currentUser = auth()->user();
+
+        if (!($task->owner->id === $currentUser->id)) {
+            return [
+                'success' => false,
+                'error' => [
+                    'key' => 'not_allowed',
+                    'params' => []
+                ],
+            ];
+        }
+
+        $task->delete();
+
+        return [
+            'success' => true,
+            'error' => [
+                'key' => 'task_deleted',
+                'params' => ['taskName' => $task->title]
+            ],
         ];
     }
 }

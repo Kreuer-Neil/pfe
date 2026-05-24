@@ -29,3 +29,6 @@ Route::get('tasks/{id}/participate', [TaskController::class, 'participate'])
 
 Route::get('tasks/{id}/edit', [TaskController::class, 'update'])
     ->name('tasks.update');
+
+Route::get('tasks/{id}/delete', [TaskController::class, 'destroy'])
+    ->name('tasks.destroy');

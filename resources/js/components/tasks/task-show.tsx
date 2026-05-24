@@ -10,9 +10,14 @@ import {CalendarCheck, CalendarClock, ClockAlert, Notebook, NotebookPen, UsersRo
 import PostedBy from "@/components/general-posts/posted-by";
 import ButtonText from "@/components/buttons/button-text";
 import Button from "@/components/buttons/button";
-import {participate as taskParticipate, update as taskUpdate} from "@/actions/App/Http/Controllers/TaskController";
+import {
+    participate as taskParticipate,
+    update as taskUpdate,
+    destroy as taskDestroy
+} from "@/actions/App/Http/Controllers/TaskController";
 import GeneralInput from "@/components/form/general-input";
 import {RouteQueryOptions} from "@/wayfinder";
+import ConfirmModal from "@/components/modals/confirm-modal";
 
 type EditProps = {
     task: ITask | undefined;
@@ -28,12 +33,37 @@ type EditProps = {
     editRecommendedParticipations: number | null;
     setEditRecommendedParticipations: Dispatch<SetStateAction<number | null>>;
     resetTask: () => void;
+    setIsEditing: Dispatch<SetStateAction<boolean>>;
 }
 
-function Show({task, onCloseModal, startEdit}: {
+
+function NotesList({task}: { task: ITask | undefined }) {
+    const {t} = useTranslation('projects');
+
+    if (!(task?.notes && task.notes.length > 0)) {
+        return <p>{t('task_note_empty')}</p>
+    }
+    return (
+        <ul className="flex flex-col gap-2">
+            {task.notes.map((note: INote) => {
+                // TODO add edit/delete variable for note owner/admin (only delete for admin not owner)
+                // TODO limit notes to 1/2 per task per user
+                return (
+                    <li className="flex flex-col gap-1">
+                        <p>{note.content}</p>
+                        <PostedBy owner={note.owner}/>
+                    </li>
+                );
+            })}
+        </ul>
+    );
+}
+
+function Show({task, onCloseModal, startEdit, deleteTask}: {
     task: ITask | undefined,
     onCloseModal: () => void,
-    startEdit: (task: ITask) => void
+    startEdit: (task: ITask) => void,
+    deleteTask: (task: ITask) => void
 }) {
     const {t} = useTranslation(['projects', 'date']);
 
@@ -108,37 +138,18 @@ function Show({task, onCloseModal, startEdit}: {
                             }} autoFocus={true}/>
             </ModalSection>
             <div className="flex flex-col gap-3 px-2">
+                {/* TODO restyle this corner */}
                 <Button textContent={t('task_participate')} onClick={participate}/>
                 {participationResponse.error ? <span
                     className={participationResponse.success ? 'field-success' : 'field-error' + ' -mt-2'}>{t('errors:' + participationResponse.error.key, participationResponse.error.params)}</span> : null}
-                {/* TODO replace with current user ID */}
                 {task?.isOwner ?
                     <Button textContent={t('task_edit')} color="edit" onClick={() => startEdit(task)}/>
                     : null}
+                {task?.isOwner ?
+                    <Button textContent={t('task_delete')} color="destructive" onClick={() => deleteTask(task)}/>
+                    : null}
             </div>
         </ModalCast>
-    );
-}
-
-function NotesList({task}: { task: ITask | undefined }) {
-    const {t} = useTranslation('projects');
-
-    if (!(task?.notes && task.notes.length > 0)) {
-        return <p>{t('task_note_empty')}</p>
-    }
-    return (
-        <ul className="flex flex-col gap-2">
-            {task.notes.map((note: INote) => {
-                // TODO add edit/delete variable for note owner/admin (only delete for admin not owner)
-                // TODO limit notes to 1/2 per task per user
-                return (
-                    <li className="flex flex-col gap-1">
-                        <p>{note.content}</p>
-                        <PostedBy owner={note.owner}/>
-                    </li>
-                );
-            })}
-        </ul>
     );
 }
 
@@ -156,7 +167,8 @@ function Edit(
         setEditDueAtTime,
         editRecommendedParticipations,
         setEditRecommendedParticipations,
-        resetTask
+        resetTask,
+        setIsEditing
     }: EditProps): ReactNode {
     const {t} = useTranslation(['projects', 'date']);
 
@@ -166,7 +178,7 @@ function Edit(
         e.preventDefault();
         // TODO check if fields still have errors
         // if (!(formError.title || formError.description || formError.due_date || formError.due_time || formError.min_participations)) {
-        const sendCreateData = async () => {
+        const sendUpdateData = async () => {
             try {
                 const queryOptions: RouteQueryOptions = {
                     query: {
@@ -185,7 +197,7 @@ function Edit(
                 console.error(e);
             }
         }
-        sendCreateData().then((value) => {
+        sendUpdateData().then((value) => {
             // if (value?.success) {
             // TODO Toast ?
             // }
@@ -256,7 +268,7 @@ function Edit(
                 {updateResponse.error ? <span
                     className={updateResponse.success ? 'field-success' : 'field-error' + ' -mt-2'}>{t('errors:' + updateResponse.error.key, updateResponse.error.params)}</span> : null}
                 <Button textContent={t('task_edit_cancel')} color="destructive" onClick={() => {
-                    onCloseModal();
+                    setIsEditing(false);
                     resetTask();
                 }}/>
             </div>
@@ -268,7 +280,9 @@ export default function TaskShowModal({task, showModal, setShowModal}: {
     task?: ITask,
     showModal: boolean,
     setShowModal: Dispatch<SetStateAction<boolean>>
-}): ReactNode {
+}): [ReactNode, ReactNode] {
+    const {t} = useTranslation('projects');
+
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
     const [editedTaskId, setEditedTaskId] = useState<string>('');
@@ -297,25 +311,52 @@ export default function TaskShowModal({task, showModal, setShowModal}: {
         }
     }
 
+    const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
+    const [destroyResponse, setDestroyResponse] = useState<IServerResponse>({success: false, error: null});
+
+    function deleteTask(task: ITask) {
+        const destroy = async () => {
+            try {
+
+                const response = await fetch(taskDestroy(task.id).url);
+                const data: IServerResponse = await response.json();
+                // setUpdateResponse(data);
+                setDestroyResponse(data);
+                return data;
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        destroy().then((value) => {
+        });
+    }
+
     const closeModal = () => {
         setShowModal(false);
         setIsEditing(false);
     }
-    return (
-        <CustomModal showModal={showModal} onClose={closeModal} id="task-show">
-            {
-                !isEditing ? <Show task={task} onCloseModal={closeModal} startEdit={startEdit}/>
-                    :
-                    <Edit task={task} onCloseModal={closeModal}
-                          editTitle={editTitle} setEditTitle={setEditTitle}
-                          editDescription={editDescription} setEditDescription={setEditDescription}
-                          editDueAtDate={editDueAtDate} setEditDueAtDate={setEditDueAtDate}
-                          editDueAtTime={editDueAtTime} setEditDueAtTime={setEditDueAtTime}
-                          editRecommendedParticipations={editRecommendedParticipations}
-                          setEditRecommendedParticipations={setEditRecommendedParticipations}
-                          resetTask={resetTask}
-                    />
+
+    return ([
+        <CustomModal showModal={showModal} onClose={closeModal} id="task-show" key="show">
+            {!isEditing ?
+                <Show task={task} onCloseModal={closeModal} startEdit={startEdit}
+                      deleteTask={() => setShowConfirmationModal(true)}/>
+                :
+                <Edit task={task} onCloseModal={closeModal}
+                      editTitle={editTitle} setEditTitle={setEditTitle}
+                      editDescription={editDescription} setEditDescription={setEditDescription}
+                      editDueAtDate={editDueAtDate} setEditDueAtDate={setEditDueAtDate}
+                      editDueAtTime={editDueAtTime} setEditDueAtTime={setEditDueAtTime}
+                      editRecommendedParticipations={editRecommendedParticipations}
+                      setEditRecommendedParticipations={setEditRecommendedParticipations}
+                      resetTask={resetTask} setIsEditing={setIsEditing}
+                />
             }
-        </CustomModal>
-    );
+        </CustomModal>,
+        <ConfirmModal title={t('task_delete_warning')} message={t('task_delete_warning_message', {task:task?.title ?? ''})}
+                      showModal={showConfirmationModal} onClose={() => {
+            setShowConfirmationModal(false);
+        }}
+                      onConfirm={() => deleteTask(task!)} key="delete"/>
+    ]);
 }
