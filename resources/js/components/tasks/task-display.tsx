@@ -67,9 +67,10 @@ export default function TaskDisplay(
         project = null,
         maxLength = 3n,
     }: TaskDisplayProps): ReactNode {
+    {/* TODO use flash data for tasks? Needs auto-update */}
+
     const {t} = useTranslation(['projects', 'date']);
     const [maxItemsLength, setMaxItemsLength] = useState(maxLength);
-    // const [showMoreIcon, setShowMoreIcon] = useState(LucideChevronDown);
     const [showMoreState, setShowMoreState] = useState(true);
 
     const onShowMore = (): void => {
