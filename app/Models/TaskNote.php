@@ -5,8 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TaskNotes extends Model
+class TaskNote extends Model
 {
     use HasFactory;
-    protected $fillable = ['content'];
+    protected $fillable = ['content',
+        'task_id',
+        'user_id'
+    ];
 }

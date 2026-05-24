@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\TaskNotes;
+use App\Models\TaskNote;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class TaskNotesFactory extends Factory
+class TaskNoteFactory extends Factory
 {
-    protected $model = TaskNotes::class;
+    protected $model = TaskNote::class;
 
     public function definition(): array
     {

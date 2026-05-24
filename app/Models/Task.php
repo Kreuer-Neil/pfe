@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Laravel\Prompts\Note;
 use function PHPUnit\Framework\isInt;
 
 class Task extends Model
@@ -48,7 +47,7 @@ class Task extends Model
      */
     public function notes(): HasMany
     {
-        return $this->hasMany(Note::class);
+        return $this->hasMany(TaskNote::class);
     }
 
     /**

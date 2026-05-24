@@ -17,9 +17,8 @@ class TaskFactory extends Factory
         return [
             'title' => $this->faker->company(),
             'description' => $this->faker->text(),
-            // TODO fix
-//            'project_id' => ($project = Project::all()->random())->id,
-//            'user_id' => $project->members()->get()->random()->id,
+            'project_id' => ($project = Project::all()->random())->id,
+            'user_id' => $project->members()->get()->random()->id,
             'min_participations' => random_int(2, 12),
             'due_at' => $this->faker->dateTimeBetween('-1 days', '1 year'),
         ];

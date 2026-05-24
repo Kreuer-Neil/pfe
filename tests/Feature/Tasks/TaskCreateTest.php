@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
+use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {
     $this->adminUser = User::factory()->create();
@@ -33,6 +34,13 @@ beforeEach(function () {
 
 test('Users with role can create tasks', function () {
     $this->actingAs($this->managerUser);
+
+    $this->get(route('projects.show',$this->project->slug))
+        ->assertInertia(fn (Assert $page)=> $page
+            ->component('projects/show')
+            ->has('task',fn(Assert $page) => $page
+            ->has(''))
+        );
 
     // Try store
     // route('tasks.store', $this->project->id);

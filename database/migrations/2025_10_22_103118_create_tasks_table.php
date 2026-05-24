@@ -16,7 +16,7 @@ return new class extends Migration {
             // Task poster ID?
             // Use user ID instead of member ID for things not directly admin-related like tasks
             $table->foreignId('user_id')->unsigned()->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('extends_id');
+            $table->foreignId('extends_id')->nullable()->constrained('tasks')->nullOnDelete();
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
 
             $table->string('title');

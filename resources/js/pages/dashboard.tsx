@@ -17,11 +17,11 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 
 type PageProps = {
-    userProjects: IDashboardProject[],
+    projects: IDashboardProject[],
     tasks: ITaskMiniature[],
 };
 export default function Dashboard() {
-    const {userProjects, tasks} = usePage<PageProps>().props;
+    const {projects, tasks} = usePage<PageProps>().props;
     const {auth} = usePage<SharedData>().props;
     const currentUser = auth.user;
     const {t} = useTranslation('dashboard');
@@ -53,7 +53,7 @@ export default function Dashboard() {
                 {/* TODO setup absence feature (do not disturb-like)
                 <Button as={"a"} textContent={t('project.get_absent')} type="warning" className="-mt-4"/>*/}
 
-                <MyProjects projects={userProjects}/>
+                <MyProjects projects={projects}/>
 
 
                 {/*<div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4 ">

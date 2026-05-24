@@ -15,9 +15,9 @@ class DashboardController extends Controller
     {
         $currentUser = auth()->user();
 
-        $userProjects = [];
+        $projects = [];
         foreach ($currentUser->projects as $project) {
-            $userProjects[] = new FormatedDashboardProject($project);
+            $projects[] = new FormatedDashboardProject($project);
         }
 
         $tasks = [];
@@ -30,7 +30,7 @@ class DashboardController extends Controller
 //        syncLangFiles(['main-nav', 'dashboard', 'project', 'date', 'pagination']);
         return Inertia::render(
             'dashboard',
-            compact('userProjects', 'tasks')
+            compact('projects', 'tasks')
         );
     }
 }

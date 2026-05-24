@@ -60,16 +60,16 @@ export interface IUser extends IProfile {
 }
 
 export interface IProfile {
-    id: string,
-    nickname: string,
-    image: string,
-    bio: string,
+    id: string;
+    nickname: string;
+    image: string;
+    bio: string;
 
     [key: string]: unknown; // This allows for additional properties...
 }
 
 export interface IProjectContext {
-    id: string,
+    id: string;
     name: string;
     icon: string;
     slug: string;
@@ -119,17 +119,18 @@ export interface IProject extends IProjectShow {
 }
 
 export interface ITaskMiniature {
-    id: string,
-    title: string,
-    project: IProjectContext,
-    min_participations: ?number,
-    participations_count: number,
+    id: string;
+    title: string;
+    project: IProjectContext;
+    min_participations: ?number;
+    participations_count: number;
     // if self is participating
-    self_participating: boolean,
-    starting_at: ?string,
-    due_at: string,
-    notes: INote[] | null,
-    created_at: string;
+    self_participating: boolean;
+    starting_at: ?string;
+    due_at: string;
+    hasNotes: boolean;
+    // notes: INote[] | null;
+    // created_at: string;
     owner?: IProfile;
     isOwner: boolean | null;
 
@@ -137,29 +138,29 @@ export interface ITaskMiniature {
 }
 
 export interface ITask extends ITaskMiniature {
-    id: string,
-    owner: ?IProfile,
-    title: string,
-    description: string,
-    project: IProjectContext,
-    min_participations: ?number,
-    participations_count: number,
+    id: string;
+    owner: ?IProfile;
+    title: string;
+    description: string;
+    project: IProjectContext;
+    min_participations: ?number;
+    participations_count: number;
     // if self is participating
-    self_participating: boolean,
-    participating_users: IProfile[],
-    starting_at: ?string,
-    due_at: string,
-    created_at: string,
-    updated_at: string,
-    notes: INote[] | null,
+    self_participating: boolean;
+    participating_users: IProfile[];
+    starting_at: ?string;
+    due_at: string;
+    // created_at: string;
+    // updated_at: string;
+    notes: INote[] | null;
 
     [key: string]: unknown;
 }
 
 export interface INote {
-    id: string,
-    owner: IProfile,
-    content: string,
+    id: string;
+    owner: IProfile;
+    content: string;
 
     [key: string]: unknown;
 }

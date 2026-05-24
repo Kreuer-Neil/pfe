@@ -21,8 +21,7 @@ class FormatedTaskMiniature
     public bool $self_participating;
     public ?string $starting_at;
     public ?string $due_at;
-    public string $created_at;
-    public string $updated_at;
+    public bool $hasNotes;
 
     public function __construct(Task $task, int $currentUserId)
     {
@@ -46,8 +45,10 @@ class FormatedTaskMiniature
         $this->self_participating = $task->isParticipating($currentUserId);
         $this->starting_at = $task->starting_at;
         $this->due_at = $task->due_at;
-        $this->created_at = $task->created_at;
+//        $this->created_at = $task->created_at;
 //        $this->updated_at = $task->updated_at;
+
+        $this->hasNotes = $task->notes()->count() >= 0;
     }
 
 }
