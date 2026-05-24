@@ -7,8 +7,9 @@ import PageFlowContainer from "@/components/page-flow-container";
 import IconButton from "@/components/buttons/icon-button";
 import {ArrowDownWideNarrow, ArrowUpWideNarrow, ListFilter} from "lucide-react";
 import SearchBar from "@/components/filtering/search-bar";
-import {index as projectsIndex, indexSearch} from '@/actions/App/Http/Controllers/ProjectController';
+import {index as projectsIndex, indexSearch as projectsSearch} from '@/actions/App/Http/Controllers/ProjectController';
 import {useTranslation} from "react-i18next";
+import {RouteQueryOptions} from "@/wayfinder";
 
 /*const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -100,8 +101,19 @@ export default function ProjectIndex() {
     useEffect(() => {
         const fetchProjects = async (): Promise<void> => {
             try {
+                // const options: RouteQueryOptions = {
+                //     query: {
+                //         user_request: 1,
+                //         query: query,
+                //         direction: direction,
+                //         filter: filter,
+                //         tags: currentTags.toString(),
+                //     }
+                // }
+                // projectsSearch(options).url;
+
                 const params = new URLSearchParams();
-                params.append('user_id', '1');
+                params.append('user_request', '1');
                 if (query) params.append("query", query);
                 if (direction) params.append("direction", direction);
                 if (filter) params.append("filter", filter);
@@ -149,7 +161,6 @@ export default function ProjectIndex() {
                 </div>
 
                 <ProjectsContainer currentPage={currentPage} projects={projects.data}/>
-
 
             </PageFlowContainer>
         </AppLayout>

@@ -28,7 +28,7 @@ class ProjectController extends Controller
 
     public function indexPersonnal()
     {
-        $filters = [ProjectsFilters::MyProjects,ProjectsFilters::RecentProjects];
+        $filters = [ProjectsFilters::MyProjects, ProjectsFilters::RecentProjects];
         $queryFilters = ['filter' => ProjectsFilters::MyProjects];
 
         $tags = BaseTags::cases();
@@ -40,19 +40,20 @@ class ProjectController extends Controller
     public function indexSearch()
     {
         // TODO find a better way to do this
-        if (!(array_key_exists('user_request',$_REQUEST) && $_REQUEST['user_request'] === '1')) {
+        if (!(array_key_exists('user_request', $_REQUEST) && $_REQUEST['user_request'] === '1')) {
             return redirect(route('projects'));
         }
         $order = 'coordinates';
-        $direction = (array_key_exists('direction', $_REQUEST)) ? ($_REQUEST['direction'] === 'desc' ? 'desc' : 'asc') : 'desc';
+        $direction = (array_key_exists('direction', $_REQUEST) && $_REQUEST['direction'] === 'asc')
+            ? 'asc' : 'desc';
 
         $queriedProjects = Project::where('is_private', false);
 
         if (array_key_exists('query', $_REQUEST)) {
             $query = $_REQUEST['query'];
             $queriedProjects = $queriedProjects
-                ->whereLike('name', '%'.$query.'%')
-                ->orWhereLike('description', '%'.$query.'%');
+                ->whereLike('name', '%' . $query . '%')
+                ->orWhereLike('description', '%' . $query . '%');
         }
 
         // TODO add filtering for data
@@ -80,7 +81,7 @@ class ProjectController extends Controller
 
     public function show(string $slug)
     {
-        $project = Project::where('slug',$slug)->first();
+        $project = Project::where('slug', $slug)->first();
         $route = route('projects.show', $project->slug);
 
         $user = auth()->user();

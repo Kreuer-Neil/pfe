@@ -92,7 +92,7 @@ export interface IProjectMiniature extends IProjectContext {
     // featured_members: IUser[];
     is_member: boolean;
     members_count: number;
-    coordinates: string;
+    coordinates: string|null;
     place: string | null;
 
     slug: string;
