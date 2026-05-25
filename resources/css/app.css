@@ -477,6 +477,11 @@
         }
     }
 
+    /* APP SIDEBAR STYLE */
+    .app-container {
+        @apply relative flex max-sm:flex-col;
+    }
+
     /* Generic section + items style */
     /*.empty-warning {
         @apply bg-warning-light w-full my-2 min-md:mx-2 p-2 rounded-lg;
