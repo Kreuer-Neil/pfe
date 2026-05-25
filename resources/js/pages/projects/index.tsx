@@ -101,26 +101,17 @@ export default function ProjectIndex() {
     useEffect(() => {
         const fetchProjects = async (): Promise<void> => {
             try {
-                // const options: RouteQueryOptions = {
-                //     query: {
-                //         user_request: 1,
-                //         query: query,
-                //         direction: direction,
-                //         filter: filter,
-                //         tags: currentTags.toString(),
-                //     }
-                // }
-                // projectsSearch(options).url;
+                const options: RouteQueryOptions = {
+                    query: {
+                        user_request: 1,
+                        query: query,
+                        direction: direction,
+                        filter: filter,
+                        tags: currentTags.toString(),
+                    }
+                }
 
-                const params = new URLSearchParams();
-                params.append('user_request', '1');
-                if (query) params.append("query", query);
-                if (direction) params.append("direction", direction);
-                if (filter) params.append("filter", filter);
-                if (currentTags.length > 0) params.append("tags", currentTags.toString());
-                params.append("page", currentPage.toString());
-
-                const response = await fetch(projectsIndex().url + `/search?${params.toString()}`);
+                const response = await fetch(projectsSearch(options).url);
                 // console.log(await response.json());
                 const data: IPaginatedProjects = await response.json();
                 setProjects(data);

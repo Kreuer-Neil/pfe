@@ -51,9 +51,11 @@ class ProjectController extends Controller
 
         if (array_key_exists('query', $_REQUEST)) {
             $query = $_REQUEST['query'];
+            // TODO use advanced queries to not cancel is_private clause
             $queriedProjects = $queriedProjects
                 ->whereLike('name', '%' . $query . '%')
-                ->orWhereLike('description', '%' . $query . '%');
+                ->orWhere('is_private', false)
+                ->whereLike('description', '%' . $query . '%');
         }
 
         // TODO add filtering for data
