@@ -43,7 +43,7 @@ class ProjectController extends Controller
         if (!(array_key_exists('user_request', $_REQUEST) && $_REQUEST['user_request'] === '1')) {
             return redirect(route('projects'));
         }
-        $order = 'coordinates';
+        $order = ProjectsFilters::RecentProjects->value;
         $direction = (array_key_exists('direction', $_REQUEST) && $_REQUEST['direction'] === 'asc')
             ? 'asc' : 'desc';
 
