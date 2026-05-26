@@ -8,10 +8,7 @@ use App\FormatedModels\Project\FormatedProject;
 use App\FormatedModels\Project\FormatedProjectMiniature;
 use App\Models\Project;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
-use PHPUnit\Logging\OpenTestReporting\Status;
-use function Pest\Laravel\json;
 
 class ProjectController extends Controller
 {
@@ -84,18 +81,14 @@ class ProjectController extends Controller
     public function show(string $slug)
     {
         $project = Project::where('slug', $slug)->first();
-        $route = route('projects.show', $project->slug);
-
         $user = auth()->user();
-        $project = $this->getShowDataFor($user, $project);
-
-        if (!$project) {
+        if (!$project || !($project = $this->getShowDataFor($user, $project))) {
             abort(404);
         }
 
         return Inertia::render(
             'projects/show',
-            compact('project', 'route'));
+            compact('project'));
     }
 
 

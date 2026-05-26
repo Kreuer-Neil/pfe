@@ -1,11 +1,9 @@
 import {ReactNode} from "react";
 import {IProfile} from "@/types";
-import {useLang} from "@/hooks/useLang";
 
 function ProfileIcon({profile}: { profile: IProfile }) {
-    const {__} = useLang();
     return (
-        <img src={'./assets/img/profiles/' + profile.image} alt={__('user.profile_picture', profile.nickname)}/>
+        <img src={'./assets/img/profiles/' + profile.image} alt={profile.nickname}/>
     );
 }
 

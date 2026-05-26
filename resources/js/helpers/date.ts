@@ -1,4 +1,3 @@
-import {useLang} from "@/hooks/useLang";
 import {useTranslation} from "react-i18next";
 
 /**

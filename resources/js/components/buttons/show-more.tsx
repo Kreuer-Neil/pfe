@@ -1,6 +1,5 @@
 import ButtonText from "@/components/buttons/button-text";
 import {LucideChevronDown, LucideChevronUp} from "lucide-react";
-import {useLang} from "@/hooks/useLang";
 import {useTranslation} from "react-i18next";
 
 type showMoreProps = {

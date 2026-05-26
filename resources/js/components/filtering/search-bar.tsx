@@ -1,4 +1,3 @@
-import {useLang} from "@/hooks/useLang";
 import {Search} from "lucide-react";
 import {cn} from "@/lib/utils";
 import {useTranslation} from "react-i18next";
