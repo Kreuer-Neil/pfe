@@ -1,13 +1,20 @@
 import {ReactNode, useState} from "react";
-import CustomSidebar from "@/layouts/custom-sidebar";
+import CustomSidebarCast from "@/layouts/custom-sidebar-cast";
 import {useIsMobile} from "@/hooks/use-mobile";
 import {cn} from "@/lib/utils";
+import {IAppHeaderContext} from "@/types";
 
 type AppLayoutProps = {
     children: ReactNode | ReactNode[];
+    appHeaderContext: IAppHeaderContext | null;
 }
 
-export default function CustomAppLayout({children, ...props}: AppLayoutProps) {
+export default function CustomAppLayout(
+    {
+        children,
+        appHeaderContext = null,
+        ...props
+    }: AppLayoutProps) {
     const isMobile = useIsMobile();
 
     const [openMobile, setOpenMobile] = useState(false);
@@ -19,7 +26,7 @@ export default function CustomAppLayout({children, ...props}: AppLayoutProps) {
 
     return (
         <div className="app-container">
-            <CustomSidebar isMobile={isMobile}/>
+            <CustomSidebarCast isMobile={isMobile} appHeaderContext={appHeaderContext}/>
             {children}
         </div>
     );
