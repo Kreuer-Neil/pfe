@@ -4,8 +4,8 @@ import {Bell, Calendar, Home, LucideIcon, Search, Settings2} from "lucide-react"
 import ProjectIcon from "@/components/icons/project-icon";
 import {dashboard} from "@/routes";
 import {index as tasksIndex} from "@/actions/App/Http/Controllers/TaskController";
-import {Link} from "@inertiajs/react";
-import {IProjectContext} from "@/types";
+import {Link, usePage} from "@inertiajs/react";
+import {IProjectContext, type SharedData} from "@/types";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import {show as projectsShow} from "@/routes/projects";
 import ButtonText from "@/components/buttons/button-text";
@@ -27,7 +27,7 @@ function SidebarNavItem({props}: { props: INavItemProps }) {
                 <Icon className="p-1"/>
                 /* @ts-ignore */
                 : props.project
-                    ? <ProjectIcon project={props.project}/>
+                    ? <ProjectIcon project={props.project} className="border border-secondary-border"/>
                     : null}
             {props.title}
         </Link>
@@ -36,6 +36,8 @@ function SidebarNavItem({props}: { props: INavItemProps }) {
 
 export default function CustomSidebar(): ReactNode {
     const {t} = useTranslation('common');
+
+    const {auth} = usePage<SharedData>().props;
 
     const navItems: INavItemProps[] = [
         {
@@ -60,13 +62,8 @@ export default function CustomSidebar(): ReactNode {
         }
     ]
 
-    // TODO get user projects for here
-    const projects: IProjectContext[] = [{
-        id: "2",
-        name: "Fake project",
-        icon: "asfeadas",
-        slug: "build22"
-    }];
+    // TODO change auth.user declaration
+    const projects: IProjectContext[] = auth.user.projects as IProjectContext[];
 
     const searchNavItem: INavItemProps = {
         title: t('search_project'),
@@ -74,10 +71,9 @@ export default function CustomSidebar(): ReactNode {
         href: projectsIndex().url,
     };
 
-
     return (
         <nav
-            className="h-screen overflow-y-scroll bg-sidebar w-2xs max-w-[85vw] max-sm:absolute max-sm:top-0 max-sm:left-0">
+            className="h-screen overflow-y-scroll bg-sidebar w-2xs max-w-[85vw] max-sm:absolute max-sm:left-0 max-sm:top-0">
             <h2 className="sr-only">{t('title')}</h2>
             <div className="p-2 py-12 flex flex-col gap-8">
 
