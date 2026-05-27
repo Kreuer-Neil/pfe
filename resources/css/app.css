@@ -489,6 +489,10 @@
         }
     }
 
+    .navitems-container {
+        @apply flex flex-col pl-1.5 ml-8 border-l-2 border-secondary-border;
+    }
+
     /* Generic section + items style */
     /*.empty-warning {
         @apply bg-warning-light w-full my-2 min-md:mx-2 p-2 rounded-lg;

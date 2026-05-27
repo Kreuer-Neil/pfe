@@ -8,21 +8,22 @@ import {Link, usePage} from "@inertiajs/react";
 import {IProjectContext, type SharedData} from "@/types";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import {show as projectsShow} from "@/routes/projects";
-import ButtonText from "@/components/buttons/button-text";
 import {index as projectsIndex} from "@/actions/App/Http/Controllers/ProjectController";
+import {show as showProfile} from "@/actions/App/Http/Controllers/UserProfileController";
+import {cn} from "@/lib/utils";
 
 interface INavItemProps {
     icon?: LucideIcon;
     title: string;
     href: string;
-    project?: IProjectContext,
+    project?: IProjectContext;
 }
 
-function SidebarNavItem({props}: { props: INavItemProps }) {
+function SidebarNavItem({props, className = ''}: { props: INavItemProps, className?: string; }) {
     const Icon = props.icon;
     return (
         <Link as="li" href={props.href}
-              className="p-2 flex gap-2 items-center section-title cursor-pointer hover:bg-secondary rounded-sm">
+              className={cn('p-2 flex gap-2 items-center section-title cursor-pointer hover:bg-secondary rounded-sm', className)}>
             {Icon ?
                 <Icon className="p-1"/>
                 /* @ts-ignore */
@@ -78,13 +79,14 @@ export default function CustomSidebar(): ReactNode {
             <div className="p-2 py-12 flex flex-col gap-8">
 
                 <div>
-                    <span className="page-title flex gap-3 p-2">
-                        <img src={useImageAsset(`users/${'user_slug'}/small`)}
-                             alt={t('user_profile_picture', {username: 'username'})}
+                    <Link as="span" href={showProfile(auth.user.id).url}
+                          className="page-title flex gap-3 p-2 cursor-pointer">
+                        <img src={useImageAsset(`users/${auth.user.avatar}/small`)}
+                             alt={t('user_profile_picture', {username: auth.user.nickname})}
                              className="bg-loading rounded-full size-12 border border-secondary-border"/>
-                        {'username'}
-                    </span>
-                    <ul className="flex flex-col pl-0.5 ml-8 mr-4 border-l-2 border-secondary-border">
+                        {auth.user.nickname}
+                    </Link>
+                    <ul className="navitems-container">
                         {
                             navItems.map((navItem, i) => {
                                 return (
@@ -98,7 +100,7 @@ export default function CustomSidebar(): ReactNode {
                     <span className="page-title flex items-center min-h-16 px-2">
                         {t('my_projects')}
                     </span>
-                    <ul className="flex flex-col pl-0.5 ml-8 mr-4 border-l-2 border-secondary-border">
+                    <ul className="navitems-container">
                         {projects.length > 0 ?
                             projects.map((project: IProjectContext, i) => {
                                 const navItem: INavItemProps = {
@@ -114,7 +116,7 @@ export default function CustomSidebar(): ReactNode {
                                 {t('projects_not_found')}
                             </p></li>
                         }
-                        <SidebarNavItem props={searchNavItem}/>
+                        <SidebarNavItem props={searchNavItem} className="mt-4"/>
                     </ul>
                 </div>
 
