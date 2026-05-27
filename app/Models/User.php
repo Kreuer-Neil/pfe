@@ -3,10 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class User extends Authenticatable
@@ -20,9 +22,13 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
+
+        'nickname',
+        'bio',
     ];
 
     /**
@@ -51,9 +57,65 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Get a user's profile informations
+     */
+    public function profile(): User
+    {
+        return $this->select([
+            'id',
+            'nickname',
+            'image',
+            'bio',
+        ]);
+    }
+    // TODO fix later
 
-    protected function projects(): BelongsToMany
+//    /**
+//     * Get a user's list of projects.
+//     */
+//    public function projects(): BelongsToMany
+//    {
+//        return $this
+//            ->belongsToMany(Project::class, Member::class)->withPivot('role');
+//    }
+
+    /**
+     * Get the list of a user's tasks participation.
+     */
+    public function tasks(): BelongsToMany
+    {
+        return $this
+            ->belongsToMany(Task::class, Participation::class)
+            ->orderBy('due_at', 'asc');
+    }
+
+    /**
+     * Get a user's upcoming tasks.
+     */
+    public function upcomingTasks(): BelongsToMany
+    {
+        return $this
+            ->tasks()
+            // TODO check for this later, only for non-validated tasks if possible
+            ->where('due_at', '>=', Carbon::now()->addHours(-24));
+    }
+
+    /**
+     * Get the user's projects
+     */
+    public function projects():BelongsToMany
     {
         return $this->belongsToMany(Project::class, Member::class);
     }
+
+    /**
+     * Ensures that if user has no nickname, returns the user's name
+     */
+    public function nickname():string
+    {
+        return $this->nickname ?? "$this->first_name $this->last_name";
+    }
+
+
 }

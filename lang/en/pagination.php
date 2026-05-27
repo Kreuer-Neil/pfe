@@ -16,4 +16,7 @@ return [
     'previous' => '&laquo; Previous',
     'next' => 'Next &raquo;',
 
+    'show_more' => 'Show more',
+    'show_less' => 'Show less',
+
 ];

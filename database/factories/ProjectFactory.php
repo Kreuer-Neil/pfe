@@ -2,8 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Enums\Language;
 use App\Models\Project;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class ProjectFactory extends Factory
 {
@@ -12,11 +14,14 @@ class ProjectFactory extends Factory
     public function definition()
     {
         return [
-            'name'=> $this->faker->company,
+            'name' => $name = $this->faker->unique()->name,
 //            'icon'=> Icons::randomIcon->id(),
-            'description'=> $this->faker->text(),
-            'status'=> $this->faker->text(),
-            'is_private'=> $this->faker->boolean,
+            'description' => $this->faker->text(),
+            'slug' => Str::slug($name),
+            'lang' => $this->faker->randomElement(Language::cases()),
+            'coordinates' => "{$this->faker->latitude(49.30, 51.30)}, {$this->faker->longitude(2.30, 6.30)}",
+
+            'is_private' => $this->faker->boolean,
         ];
     }
 }

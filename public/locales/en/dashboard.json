@@ -1,0 +1,9 @@
+{
+    "title": "Dashboard",
+    "welcome_back": "Welcome back {{name}}!",
+    "news": "Here's what you missed",
+    "upcoming_tasks": "Upcoming tasks",
+
+    "project_filter" : "Filter my projects",
+    "more_projects" : "Find a project"
+}

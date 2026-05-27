@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ProjectRole;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,9 +20,11 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 
             // TODO See how to make it work
-//            $table->foreignId('role_id')->nullable()->constrained()->nullOnDelete();
+            $table->enum('role', ProjectRole::cases())->nullable()->default(ProjectRole::MEMBER);
 
-            $table->softDeletes();
+            $table->boolean('banned')->default(false);
+
+//            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -1,8 +1,11 @@
 <?php
 return [
+    'alt' => 'To the ":name" page.',
+
     'home' => 'home',
     'dashboard' => 'dashboard',
-    'my projects' => 'my projects',
+    'my_projects' => 'my projects',
     'project' => 'project',
     'settings' => 'settings',
+    'register' => 'register',
 ];

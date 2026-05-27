@@ -4,6 +4,7 @@ import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-appearance';
+import i18n from "@/utils/i18n";
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -15,6 +16,7 @@ createInertiaApp({
             import.meta.glob('./pages/**/*.tsx'),
         ),
     setup({ el, App, props }) {
+        i18n;
         const root = createRoot(el);
 
         root.render(<App {...props} />);

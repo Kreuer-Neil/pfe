@@ -1,4 +1,7 @@
 <?php
 return [
-    'notifications' => 'notifs',
+    'notifications' => 'notifications',
+
+    'welcome_back' => 'Bon retour, {name}&nbsp;!',
+    'news' => 'Voilà ce que tu as manqué&nbsp;:'
 ];

@@ -20,6 +20,7 @@ export function NavUser() {
     const { auth } = usePage<SharedData>().props;
     const { state } = useSidebar();
     const isMobile = useIsMobile();
+    // TODO Add lang over settings
 
     return (
         <SidebarMenu>
@@ -31,6 +32,7 @@ export function NavUser() {
                             className="group text-sidebar-accent-foreground data-[state=open]:bg-sidebar-accent"
                             data-test="sidebar-menu-button"
                         >
+                            {/* @ts-ignore */}
                             <UserInfo user={auth.user} />
                             <ChevronsUpDown className="ml-auto size-4" />
                         </SidebarMenuButton>
