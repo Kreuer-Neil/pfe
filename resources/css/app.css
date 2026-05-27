@@ -477,6 +477,84 @@
         }
     }
 
+    /* APP SIDEBAR STYLE */
+    .app-container {
+        @apply relative flex flex-col sm:flex-row;
+    }
+
+    .sidebar-cast {
+        /*@apply max-sm:fixed max-sm:top-0 max-sm:left-0 max-sm:w-screen max-sm:h-screen max-sm:bg-modal-behind max-sm:invisible;*/
+        @media (width < 40rem) {
+            @apply fixed top-0 left-0 bg-modal-behind;
+        }
+    }
+
+    .sidebar-cast:has(.open) {
+        @apply max-sm:w-screen max-sm:h-screen;
+    }
+
+    /* TODO animate change? */
+    .sidebar {
+        @apply h-screen overflow-y-scroll bg-sidebar w-2xs max-w-[85vw] z-20 max-sm:absolute max-sm:-left-80 max-sm:top-0;
+
+        &.open {
+            @apply max-sm:left-0;
+        }
+
+        &.closed {
+            @apply w-19;
+        }
+    }
+
+    .sidebar-content {
+        @apply p-2 py-12 flex flex-col gap-8;
+    }
+
+    .closed .sidebar-content {
+        @apply gap-0;
+    }
+
+    .nav-profile {
+        @apply flex gap-3 p-2 cursor-pointer;
+    }
+
+    .closed .nav-profile {
+        @apply p-0 mb-4;
+    }
+
+    .nav-pfp {
+        @apply bg-loading rounded-full size-12 border border-secondary-border;
+    }
+
+    .closed .nav-pfp {
+        @apply mx-auto;
+    }
+
+    .nav-item-container {
+        @apply flex flex-col pl-1.5 ml-8 border-l-2 border-secondary-border;
+    }
+
+    .nav-item {
+        @apply p-2 flex gap-2 items-center cursor-pointer hover:bg-secondary rounded-sm;
+    }
+
+    .closed .nav-item {
+        @apply justify-center;
+
+    }
+
+    .closed span {
+        @apply sr-only;
+    }
+
+    .closed .nav-item-container {
+        @apply border-none p-0 m-0;
+    }
+
+    .closed .nav-closed-separator {
+        @apply h-0.5 rounded-full bg-secondary-border mb-4 m-4;
+    }
+
     /* Generic section + items style */
     /*.empty-warning {
         @apply bg-warning-light w-full my-2 min-md:mx-2 p-2 rounded-lg;
@@ -491,7 +569,7 @@
     }
 
     .button-text {
-        @apply text-link hover:bg-primary focus:bg-primary flex gap-2 py-1.5 justify-center items-center w-full max-w-md rounded-sm cursor-pointer font-medium;
+        @apply text-link hover:bg-primary focus:bg-primary flex gap-2 p-1.5 justify-center items-center w-full max-w-md rounded-sm cursor-pointer font-medium;
     }
 
     /* Generic Widgets style */

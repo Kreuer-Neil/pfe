@@ -92,7 +92,7 @@ export interface IProjectMiniature extends IProjectContext {
     // featured_members: IUser[];
     is_member: boolean;
     members_count: number;
-    coordinates: string|null;
+    coordinates: string | null;
     place: string | null;
 
     slug: string;
@@ -166,6 +166,13 @@ export interface INote {
 }
 
 // Non-items related items
+export interface IAppHeaderContext {
+    contextImageSrc?: string;
+    contextImageAlt?: string;
+    context?: string;
+    contextSecondary?: string | null;
+}
+
 interface IPaginationLink {
     url: string | null;
     label: string;
