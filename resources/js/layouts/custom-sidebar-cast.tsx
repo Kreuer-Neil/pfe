@@ -1,15 +1,21 @@
 import {ReactNode} from "react";
-import {BellDot, Menu} from "lucide-react";
+import {BellDot, LucideIcon, Menu} from "lucide-react";
 import {IAppHeaderContext} from "@/types";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import CustomSidebar from "@/layouts/custom-sidebar";
 
 type CustomSidebarProps = {
-    isMobile: boolean;
-    appHeaderContext: IAppHeaderContext | null;
+    isMobile: boolean,
+    appHeaderContext: IAppHeaderContext | null,
+    switchModalState: () => void,
+    sidebarSwitchIcon: LucideIcon,
+    onClickOutsideSidebar: () => void
 }
 
-function MobileHeader({appHeaderContext}: { appHeaderContext: IAppHeaderContext | null }) {
+function MobileHeader({appHeaderContext, switchModalState}: {
+    appHeaderContext: IAppHeaderContext | null,
+    switchModalState: () => void
+}) {
     const defaultTitle = 'Come Unite';
 
     return (
@@ -31,8 +37,7 @@ function MobileHeader({appHeaderContext}: { appHeaderContext: IAppHeaderContext 
                          onClick={() => {
                          }}/>
                 <Menu className="p-2 cursor-pointer hover:bg-secondary focus:bg-secondary rounded-sm"
-                      onClick={() => {
-                      }}/>
+                      onClick={switchModalState}/>
             </div>
 
         </div>
@@ -43,13 +48,16 @@ export default function CustomSidebarCast(
     {
         isMobile,
         appHeaderContext,
+        switchModalState,
+        sidebarSwitchIcon,
+        onClickOutsideSidebar
     }: CustomSidebarProps): ReactNode {
 
     return (
         <header className="z-10">
-            <MobileHeader appHeaderContext={appHeaderContext}/>
-            <div className="sidebar-cast">
-                <CustomSidebar/>
+            <MobileHeader appHeaderContext={appHeaderContext} switchModalState={switchModalState}/>
+            <div className="sidebar-cast" onClick={onClickOutsideSidebar}>
+                <CustomSidebar switchModalState={switchModalState} sidebarSwitchIcon={sidebarSwitchIcon}/>
             </div>
         </header>
     );
