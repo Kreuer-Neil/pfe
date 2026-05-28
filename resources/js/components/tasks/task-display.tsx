@@ -123,7 +123,7 @@ export default function TaskDisplay(
 
     const pageId = 'tasks';
     return (
-        <section className={cn('items-section', className)} id={pageId}>
+        <section className={cn('items-section max-w-xl', className)} id={pageId}>
             <div className="flex items-center mx-3">
                 <h2 className="section-title w-full">{title ?? (project ? t('tasks_container_title', {project: project.name}) : t('task_upcoming_title'))}</h2>
                 {project ?

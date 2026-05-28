@@ -417,12 +417,13 @@
         rounded-sm bg-background drop-shadow-sm max-w-[var(--text-max-w)];
     }
 
+    /* To overwrite style from browsers like Firefox */
     dialog:modal {
-        max-width: calc(100vw - 0.75rem);
+        max-width: min(calc(100vw - 0.75rem), 48rem);
     }
 
     .modal {
-        @apply m-auto p-2 py-3 bg-background rounded-lg w-full;
+        @apply m-auto p-2 py-3 bg-background rounded-lg w-full max-w-3xl;
 
         &::backdrop {
             @apply bg-modal-behind;
@@ -483,10 +484,7 @@
     }
 
     .sidebar-cast {
-        /*@apply max-sm:fixed max-sm:top-0 max-sm:left-0 max-sm:w-screen max-sm:h-screen max-sm:bg-modal-behind max-sm:invisible;*/
-        @media (width < 40rem) {
-            @apply fixed top-0 left-0 bg-modal-behind;
-        }
+        @apply max-sm:fixed max-sm:top-0 max-sm:left-0 max-sm:bg-modal-behind;
     }
 
     .sidebar-cast:has(.open) {

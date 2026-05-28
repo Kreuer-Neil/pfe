@@ -188,3 +188,16 @@ export interface ITranslatableObject {
     key: string;
     params: { [key: string]: string };
 }
+
+export interface INavUser extends IProfile {
+    id: number;
+    first_name: string;
+    last_name: string;
+    avatar?: string;
+    created_at: string;
+    updated_at: string;
+
+    projects: IProjectContext[];
+
+    [key: string]: unknown;
+}

@@ -1,4 +1,4 @@
-import {Dispatch, ReactNode, SetStateAction, useEffect} from "react";
+import {ReactNode, useEffect} from "react";
 import {cn} from "@/lib/utils";
 
 interface CustomReactModalProps {

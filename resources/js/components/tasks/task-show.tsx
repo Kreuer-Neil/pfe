@@ -137,7 +137,7 @@ function Show({task, onCloseModal, startEdit, deleteTask}: {
                                 // TODO note creation logic
                             }} autoFocus={true}/>
             </ModalSection>
-            <div className="flex flex-col gap-3 px-2">
+            <div className="flex flex-col gap-3 px-2 items-center">
                 {/* TODO restyle this corner */}
                 <Button textContent={t('task_participate')} onClick={participate}/>
                 {participationResponse.error ? <span

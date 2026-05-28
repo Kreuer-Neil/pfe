@@ -15,11 +15,14 @@ class ProjectController extends Controller
 
     public function index()
     {
+
         $filters = null;
         // TODO create
         $tags = BaseTags::cases();
 
-//        syncLangFiles(['main-nav', 'projects', 'projects-index', 'date', 'pagination']);
+        // TODO fix this for nav
+//        auth()->user()->toFormatedNavUser();
+        auth()->user()->projects;
         return Inertia::render('projects/index', compact(['filters', 'tags']));
     }
 
@@ -86,6 +89,7 @@ class ProjectController extends Controller
             abort(404);
         }
 
+        auth()->user()->projects;
         return Inertia::render(
             'projects/show',
             compact('project'));

@@ -54,11 +54,11 @@ export default function CustomSidebarCast(
     }: CustomSidebarProps): ReactNode {
 
     return (
-        <header className="z-10">
+        <div className="z-10 max-h-screen sticky top-0">
             <MobileHeader appHeaderContext={appHeaderContext} switchModalState={switchModalState}/>
             <div className="sidebar-cast" onClick={onClickOutsideSidebar}>
                 <CustomSidebar switchModalState={switchModalState} sidebarSwitchIcon={sidebarSwitchIcon}/>
             </div>
-        </header>
+        </div>
     );
 }

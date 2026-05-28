@@ -79,8 +79,9 @@ function TagsContainer({tags}: { tags: string[] }) {
     );
 }
 
-export default function ProjectIndex() {
+export default function ProjectsIndex() {
     const {title, filters, tags, queryFilters} = usePage<PageProps>().props;
+
     const {t} = useTranslation(['projects-index', 'projects']);
 
     const [currentPage, setCurrentPage] = useState<number>(0);
