@@ -69,8 +69,6 @@ export default function CustomSidebar(
 
     // TODO change auth.user declaration
     const projects: IProjectContext[] = auth.user.projects as IProjectContext[];
-    console.log(auth.user)
-    console.log(projects);
 
     const searchNavItem: INavItemProps = {
         title: t('search_project'),
