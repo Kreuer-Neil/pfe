@@ -11,7 +11,7 @@ class FormatedUser
     public string $last_name;
 
     public string $nickname;
-    public ?string $image;
+    public ?string $avatar;
     public ?string $bio;
 
 
@@ -21,7 +21,7 @@ class FormatedUser
         $this->first_name = $user->first_name;
         $this->last_name = $user->last_name;
         $this->nickname = $user->nickname();
-        $this->image = $user->image;
+        $this->avatar = $user->avatar;
 //        $this->image = getImagePaths('userProfile', $user->image);
         $this->bio = $user->bio;
 
