@@ -1,6 +1,6 @@
-import {Dispatch, ReactNode, SetStateAction} from "react";
+import {ReactNode} from "react";
 import {useTranslation} from "react-i18next";
-import {Bell, Calendar, ChevronLeft, Home, LucideIcon, Search, Settings2} from "lucide-react";
+import {Bell, Calendar, Home, LucideIcon, Search, Settings2} from "lucide-react";
 import ProjectIcon from "@/components/icons/project-icon";
 import {dashboard} from "@/routes";
 import {index as tasksIndex} from "@/actions/App/Http/Controllers/TaskController";
@@ -50,11 +50,11 @@ export default function CustomSidebar(
             title: t('dashboard'),
             href: dashboard().url
         },
-        {
+        /*{
             icon: Bell,
             title: t('notifications'),
             href: ''
-        },
+        },*/
         {
             icon: Calendar,
             title: t('my_tasks'),

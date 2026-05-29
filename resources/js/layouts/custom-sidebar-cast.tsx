@@ -33,9 +33,9 @@ function MobileHeader({appHeaderContext, switchModalState}: {
             </div>
 
             <div className="flex ml-auto">
-                <BellDot className="p-2 cursor-pointer hover:bg-secondary focus:bg-secondary rounded-sm"
+                {/*<BellDot className="p-2 cursor-pointer hover:bg-secondary focus:bg-secondary rounded-sm"
                          onClick={() => {
-                         }}/>
+                         }}/>*/}
                 <Menu className="p-2 cursor-pointer hover:bg-secondary focus:bg-secondary rounded-sm"
                       onClick={switchModalState}/>
             </div>
