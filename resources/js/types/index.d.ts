@@ -90,7 +90,8 @@ export interface IDashboardProject extends IProjectContext {
 export interface IProjectMiniature extends IProjectContext {
     description: string;
     // featured_members: IUser[];
-    is_member: boolean;
+    user_role: 'viewer' | 'member' | 'taskmaster' | 'moderator' | 'admin';
+    // is_member: boolean;
     members_count: number;
     coordinates: string | null;
     place: string | null;

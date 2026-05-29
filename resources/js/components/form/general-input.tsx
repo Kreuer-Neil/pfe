@@ -89,7 +89,7 @@ export default function GeneralInput(
 
     const [error, setError] = useState<ITranslatableObject | null>(null);
 
-    const validate = (e:any) => {
+    const validate = (e: any) => {
         if (type === "number" && Number(e.currentTarget.value) === 0) {
             setValue(null);
         }
@@ -101,7 +101,7 @@ export default function GeneralInput(
     let labelClass = '';
     switch (style) {
         case 'text':
-            defaultClass = 'p-0 w-fit max-w-auto outline-secondary-border hover:outline focus:outline';
+            defaultClass = 'edit-input';
             labelClass = 'sr-only';
             break;
     }
@@ -110,14 +110,17 @@ export default function GeneralInput(
         <label htmlFor={name} className={cn('flex flex-col gap-1', className)}>
             <span className={labelClass}>
             {required ? '*' : null}
-            {label}
+                {label}
             </span>
             {type === 'textarea' ?
-                <textarea id={name} name={name} value={value} className={cn(defaultClass, "min-h-20 max-h-32", inputClassName)}
+                <textarea id={name} name={name} value={value}
+                          className={cn('max-h-32', defaultClass, "min-h-20 p-2", inputClassName)}
                           autoFocus={autoFocus}
+                          onFocus={(e) => e.currentTarget.style.height = String(e.currentTarget.scrollHeight) + 'px'}
                           onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
                               setValue(e.currentTarget.value);
-                              e.currentTarget.style.height = String(e.currentTarget.scrollHeight)+'px';
+                              // TODO fix shrinking not optimal
+                              e.currentTarget.style.height = String(e.currentTarget.scrollHeight) + 'px';
                           }}
                           onBlur={validate}
                           placeholder={placeholder}/>

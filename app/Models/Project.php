@@ -162,4 +162,10 @@ class Project extends Model
         return $member->pivot->role;
     }
 
+    // TODO replace with user authorization
+    public function canEdit(User $user): bool
+    {
+        return $this->userRole($user) === ProjectRole::ADMIN;
+    }
+
 }

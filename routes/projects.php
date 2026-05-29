@@ -15,6 +15,9 @@ Route::get('projects/search', [ProjectController::class, 'indexSearch'])
 Route::get('projects/{slug}', [ProjectController::class, 'show'])
     ->name('projects.show');
 
+Route::get('projects/{slug}/update/appearance', [ProjectController::class, 'updateAppearance'])
+    ->name('projects.update.appearance');
+
 Route::get('tasks', [TaskController::class, 'index'])
     ->name('tasks');
 

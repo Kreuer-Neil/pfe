@@ -1,14 +1,19 @@
-import {type BreadcrumbItem, IProject, IProjectShow} from "@/types";
+import {type BreadcrumbItem, IProject, IProjectShow, IServerResponse} from "@/types";
 import AppLayout from "@/layouts/app-layout";
 import {Head, usePage} from "@inertiajs/react";
 import PageFlowContainer from "@/components/page-flow-container";
 import TaskDisplay from "@/components/tasks/task-display";
 import {instanceOfProject, instanceOfProjectShow} from "@/helpers/type-check";
-import {Bookmark, BookmarkCheck, Flag, LogIn, Share2, UserRoundPlus} from "lucide-react";
+import {Bookmark, BookmarkCheck, Flag, LogIn, PencilLine, Settings, Share2, UserRoundPlus} from "lucide-react";
 import IconButton from "@/components/buttons/icon-button";
 import Button from "@/components/buttons/button";
 import ProjectIcon from "@/components/icons/project-icon";
 import {useTranslation} from "react-i18next";
+import {ReactNode, useState} from "react";
+import GeneralInput from "@/components/form/general-input";
+import {useImageAsset} from "@/hooks/use-image-asset";
+import {RouteQueryOptions} from "@/wayfinder";
+import {updateAppearance as projectUpdate} from "@/actions/App/Http/Controllers/ProjectController";
 
 type pageProps = {
     project: IProject | IProjectShow | null,
@@ -23,17 +28,73 @@ type memberPageProps = {
 }
 
 
+function ProjectHeaderElement({slug, isEditing, className, children}: {
+    slug: string,
+    isEditing: boolean,
+    className: string,
+    children: ReactNode | ReactNode[]
+}): ReactNode {
+    if (isEditing) {
+        return (
+            <form action={projectUpdate(slug).url} method="POST" className={className}>
+                {children}
+            </form>
+        );
+    }
+    return (
+        <div className={className}>
+            {children}
+        </div>
+    );
+}
+
 function ProjectHeader({project}: {
     project: IProject | IProjectShow
 }) {
     const {t} = useTranslation('projects');
+    const [isEditing, setIsEditing] = useState(false);
+
+    const [projectName, setProjectName] = useState(project.name);
+    const [projectDesc, setProjectDesc] = useState(project.description);
+    const [projectIcon, setProjectIcon] = useState(project.icon);
+
+    const [updateResponse, setUpdateResponse] = useState<IServerResponse>({success: false, error: null});
+
+    const updateProject = () => {
+        const update = async () => {
+            try {
+                const queryOptions: RouteQueryOptions = {
+                    query: {
+                        "name": projectName,
+                        "description": projectDesc,
+                        // "icon": projectIcon,
+                    }
+                }
+                const response = await fetch(projectUpdate(project.slug, queryOptions).url);
+                const data: IServerResponse = await response.json();
+                return data;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        update().then((dataReceived) => {
+            setUpdateResponse(dataReceived!);
+            setIsEditing(false);
+        });
+    }
+
+    const ContainerElement = isEditing ? 'form' : 'div';
 
     return (
-        <header className="w-full flex flex-col-reverse gap-2 max-w-xl">
+        <ContainerElement className="w-full flex flex-col-reverse gap-2 max-w-xl">
             <div className="flex flex-col items-center gap-4 px-3">
-                <h1 className="page-title text-center">{project.name}</h1>
+                <h1 className="page-title text-center">{isEditing ?
+                    <GeneralInput name="project-name" label={t('project_form_name')}
+                                  value={projectName} setValue={setProjectName}
+                                  style="text" inputClassName="w-full text-center"/>
+                    : projectName}</h1>
 
-                <div className="w-full">
+                <div className="w-full flex flex-col gap-3">
                     <div className="flex gap-1 w-full">
                         <p className="mr-auto">
                             <span className="font-bold">{project.members_count}</span>
@@ -54,9 +115,28 @@ function ProjectHeader({project}: {
                         <IconButton icon={Share2} textContent={t('button_share')}/>
                         <IconButton icon={Flag} textContent={t('button_report')}/>
                     </div>
-                    <p className="">{project.description}</p>
+                    {isEditing ?
+                        <GeneralInput name="project-description" label={t('project_form_description')}
+                                      value={projectDesc} setValue={setProjectDesc}
+                                      type="textarea" style="text" inputClassName="w-full min-h-32 max-h-none"/>
+                        : <p>
+                            {projectDesc}
+                        </p>
+                    }
                 </div>
 
+                {isEditing ?
+                    <div className="flex flex-col gap-3 w-full items-center">
+                        <Button textContent={t('project_form_update')} onClick={updateProject}/>
+                        {updateResponse.error ? <span
+                            className={updateResponse.success ? 'field-success' : 'field-error' + ' -mt-2'}>{t('errors:' + updateResponse.error.key, updateResponse.error.params)}</span> : null}
+                        <Button textContent={t('project_form_cancel')} color="destructive" onClick={() => {
+                            setProjectName(project.name);
+                            setProjectDesc(project.description);
+                            setIsEditing(false);
+                        }}/>
+                    </div>
+                    : null}
                 {
                     project.news ?
                         <div>
@@ -74,15 +154,27 @@ function ProjectHeader({project}: {
             </div>
 
             <div className="w-full">
-                {
-                    project.banner ?
-                        <img src={undefined} alt={''}
-                             className="aspect-[2.8] w-full bg-container"/> :
-                        <div className="aspect-[2.8] w-full bg-container"/>
-                }
+                <div className="aspect-[2.8] w-full bg-container flex justify-end">
+                    {project.user_role === 'admin' ?
+                        <div className="flex gap-1 m-3 h-fit">
+                            {!isEditing ?
+                                <IconButton icon={PencilLine} textContent={t('project_edit')} showText={true}
+                                            className="bg-tertiary text-tertiary-foreground"
+                                            onClick={() => setIsEditing(true)}/>
+                                : null}
+                            <IconButton icon={Settings} textContent={t('project_settings')}
+                                        className="bg-tertiary text-tertiary-foreground"/>
+                        </div> : null}
+
+                    {project.banner ?
+                        <img src={useImageAsset('project/' + project.banner)} alt={''}
+                             className="aspect-[2.8] w-full bg-container"/>
+                        : null
+                    }
+                </div>
                 <ProjectIcon project={project} size="large" className="bg-secondary -mt-14 mx-auto"/>
             </div>
-        </header>
+        </ContainerElement>
     );
 }
 

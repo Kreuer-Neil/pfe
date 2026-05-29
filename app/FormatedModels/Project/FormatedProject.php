@@ -19,6 +19,8 @@ class FormatedProject extends FormatedProjectContext
     public array $members;
     public string $user_role;
 
+    public bool $isMember;
+
     public int $members_count;
     public array $upcoming_tasks;
 

@@ -9,5 +9,7 @@
     "task_not_found": "Error: Task does not exist.",
     "success_task_created": "Task {{task}} created successfully.",
     "success_task_updated": "Task {{task}} updated successfully.",
-    "participation_error": "Participation rejected."
+    "participation_error": "Participation rejected.",
+    "project_not_found": "Error: project does not exist.",
+    "success_project_updated": "Project {{project}} updated successfully."
 }

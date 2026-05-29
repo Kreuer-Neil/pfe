@@ -8,6 +8,7 @@ use App\FormatedModels\Project\FormatedProject;
 use App\FormatedModels\Project\FormatedProjectMiniature;
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class ProjectController extends Controller
@@ -111,5 +112,82 @@ class ProjectController extends Controller
         // Get user role too
 
         return new FormatedProject($project, $user);
+    }
+
+    public function updateAppearance(string $slug)
+    {
+        if (!(
+            array_key_exists('name', $_REQUEST) &&
+            array_key_exists('description', $_REQUEST)
+        )) {
+            return [
+                'success' => false,
+                'error' => [
+                    'key' => 'missing_parameters',
+                    'params' => [
+                    ],
+                ]
+            ];
+        }
+
+        $project = Project::where('slug', $slug)->first();
+        if (!$project) {
+            return [
+                'success' => false,
+                'error' => [
+                    'key' => 'project_not_found',
+                    'params' => [],
+                ]
+            ];
+        }
+
+        $currentUser = auth()->user();
+
+        try {
+            $validated = request()->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'required|string',
+            ]);
+        } catch (ValidationException) {
+            return [
+                'success' => false,
+                'error' => [
+                    'key' => 'invalid_parameters',
+                    'params' => [
+                    ],
+                ]
+            ];
+        }
+
+        if ($project->canEdit($currentUser)) {
+            return [
+                'success' => false,
+                'error' => [
+                    'key' => 'not_allowed',
+                    'params' => []
+                ],
+            ];
+        }
+
+        $project->name = $validated['name'];
+        $project->description = $validated['description'];
+
+        if (!$project->save()) {
+            return [
+                'success' => false,
+                'error' => [
+                    'key' => 'not_allowed',
+                    'params' => []
+                ],
+            ];
+        }
+
+        return ['success' => true,
+            'error' => ['key' => 'success_project_edited',
+                'params' => [
+                    'project' => $validated['name']
+                ]
+            ]
+        ];
     }
 }

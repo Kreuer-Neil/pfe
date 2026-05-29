@@ -434,6 +434,10 @@
         @apply block w-full p-2 border border-input focus:outline-secondary-border rounded-xs;
     }
 
+    .edit-input {
+        @apply p-0 w-fit border rounded-xs border-secondary-border hover:outline focus:outline;
+    }
+
     .search-box {
         @apply flex gap-1 p-2 border border-border rounded-xs cursor-text items-center;
 
