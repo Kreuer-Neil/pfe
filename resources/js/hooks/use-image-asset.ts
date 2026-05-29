@@ -8,13 +8,13 @@ export function useImageAsset(assetPath: string): string {
     switch (assetPathParts[0]) {
         case 'app':
             if (assetPathParts[1] === 'logo')
-                return 'logo.svg'
+                return '/logo.svg';
             break;
         case 'projects':
-            directoryPath = 'projects/'
+            directoryPath = '/projects/'
             break;
         case 'users':
-            directoryPath = 'users/'
+            directoryPath = '/users/'
             break;
         default:
             directoryPath = '/';
@@ -25,5 +25,5 @@ export function useImageAsset(assetPath: string): string {
         return directoryPath! + (assetPathParts[2] ? assetPathParts[2] + '/' : '') + assetPathParts[1];
 
 
-    return 'not_found.svg';
+    return '/not_found.svg';
 }
