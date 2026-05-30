@@ -15,7 +15,7 @@ class ProjectFactory extends Factory
     {
         return [
             'name' => $name = $this->faker->unique()->name,
-//            'icon'=> Icons::randomIcon->id(),
+            'icon' => 'default_' . random_int(1, 2),
             'description' => $this->faker->text(),
             'slug' => Str::slug($name),
             'lang' => $this->faker->randomElement(Language::cases()),

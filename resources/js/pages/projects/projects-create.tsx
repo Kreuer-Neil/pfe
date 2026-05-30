@@ -9,6 +9,7 @@ import {cn} from "@/lib/utils";
 import Switch from "@/components/form/switch";
 import {RouteQueryOptions} from "@/wayfinder";
 import {IServerResponse} from "@/types";
+import Button from "@/components/buttons/button";
 
 export default function projectsCreate({}) {
 
@@ -18,25 +19,27 @@ export default function projectsCreate({}) {
     const [projectDescription, setProjectDescription] = useState<string>('');
     const [projectIsPrivate, setProjectIsPrivate] = useState(true);
 
-    const [storeResponse, setStoreResponse] = useState<IServerResponse|undefined>({success: false, error: {key: '', params: {}}});
+    const [storeResponse, setStoreResponse] = useState<IServerResponse | undefined>({
+        success: false,
+        error: {key: '', params: {}}
+    });
 
     const store = (e: any) => {
         e.preventDefault();
 
+        console.log('test');
         async function storeProject() {
             try {
                 const queryOptions: RouteQueryOptions = {
                     query: {
                         "name": projectName,
                         "description": projectDescription,
-
                         "is_private": projectIsPrivate,
                     }
                 }
-
                 const response = await fetch(projectStore(queryOptions).url);
                 const data: IServerResponse = await response.json();
-                setStoreResponse(data);
+                console.log(data);
                 return data;
             } catch (error) {
                 console.error(error);
@@ -45,7 +48,7 @@ export default function projectsCreate({}) {
 
         storeProject().then((data) => {
             setStoreResponse(data);
-        })
+        });
     }
     return (
         <Layout>
@@ -72,13 +75,12 @@ export default function projectsCreate({}) {
                         <p className="text-xs">{t('project_form_private_warning')}</p>
                         <Switch label={t('project_form_private')}
                                 isChecked={projectIsPrivate} setValue={setProjectIsPrivate}/>
-
                     </fieldset>
 
-                    <div className="flex flex-col gap-3 px-2 items-center">
-
-                    {storeResponse?.error ? <span
-                        className={storeResponse.success ? 'field-success' : 'field-error' + ' -mt-2'}>{t('errors:' + storeResponse.error.key, storeResponse.error.params)}</span> : null}
+                    <div className="flex flex-col gap-3 px-2 items-center pt-3">
+                        {/*<Button textContent={t('project_form_create')} type="submit"/>*/}
+                        {storeResponse?.error ? <span
+                            className={storeResponse.success ? 'field-success' : 'field-error' + ' -mt-2'}>{t('errors:' + storeResponse.error.key, storeResponse.error.params)}</span> : null}
                     </div>
                 </form>
 

@@ -3,14 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BaseTags;
+use App\Enums\ProjectRole;
 use App\Enums\ProjectsFilters;
 use App\FormatedModels\Project\FormatedDashboardProject;
 use App\FormatedModels\Project\FormatedProject;
 use App\FormatedModels\Project\FormatedProjectMiniature;
+use App\Models\Member;
 use App\Models\Project;
 use App\Models\User;
+use Exception;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Str;
 
 class ProjectController extends Controller
 {
@@ -140,12 +144,22 @@ class ProjectController extends Controller
 
         try {
             $validated = request()->validate([
-                'name' => 'required|string|min:6|max:255',
+                'name' => 'required|string|min:6|max:255|unique:projects',
                 'description' => 'required|min:6|string',
                 'is_private' => 'required|bool',
-            ]);
-        } catch (ValidationException) {
-            return [
+            ], ['name.unique' => 'project_name_exists']
+            );
+        } catch (ValidationException $exception) {
+            // Status if project name already exists
+            return in_array('project_name_exists', $exception->errors()['name']) ? [
+                'success' => false,
+                'error' => [
+                    'key' => 'project_name_exists',
+                    'params' => [
+                        'name' => $_REQUEST['name'],
+                    ],
+                ]
+            ] : [
                 'success' => false,
                 'error' => [
                     'key' => 'invalid_parameters',
@@ -155,9 +169,13 @@ class ProjectController extends Controller
             ];
         }
 
+        $ownerId = auth()->user()->id;
+        $validated['owner_id'] = $ownerId;
+        $validated['slug'] = Str::slug($validated['name']);
+
         try {
-            Project::create($validated);
-        } catch (ValidationException) {
+            $project = Project::factory()->create($validated);
+        } catch (Exception $exception) {
             return [
                 'success' => false,
                 'error' => [
@@ -165,8 +183,13 @@ class ProjectController extends Controller
                     'params' => []
                 ],
             ];
-
         }
+
+        Member::create([
+            'project_id' => $project->id,
+            'user_id' => $ownerId,
+            'role' => ProjectRole::ADMIN->value,
+        ]);
 
         return ['success' => true,
             'error' => ['key' => 'success_project_edited',

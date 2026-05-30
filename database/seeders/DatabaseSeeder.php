@@ -64,6 +64,12 @@ class DatabaseSeeder extends Seeder
                 'description' => 'Luigi’s Garden is about maintaining sir Luigi’s mansion garden, an unofficial park in this choking city, open to anyone respectful enough.',
                 'slug' => Str::slug('Luigi\'s Garden'),
 //                'coordinates' => '50.61126712133781, 5.510050323190294',
+                'owner' => [
+                    'first_name' => 'Luigi',
+                    'last_name' => 'Mario',
+                    'nickname' => 'Sir Luigi',
+                    'email' => 'luigi@mansion.it',
+                ]
             ],
             [
                 'name' => 'Silk Song Band',
@@ -79,6 +85,7 @@ class DatabaseSeeder extends Seeder
                     [
                         'first_name' => 'Hollow',
                         'last_name' => 'Knight',
+                        'nickname' => 'Little guy',
                         'email' => 'hollowknight@teamcherry.com'
                     ]
                 ],
@@ -94,7 +101,7 @@ class DatabaseSeeder extends Seeder
         ];
 
         // TODO finish customized data seeder to replace factories
-        /*foreach ($projectsData as $projectData) {
+        foreach ($projectsData as $projectData) {
             $owner = '';
             if (array_key_exists('owner', $projectData)) {
                 $owner = User::factory()->create($projectData['owner']);
@@ -118,6 +125,6 @@ class DatabaseSeeder extends Seeder
                         'role' => random_int(0, 1) ? ProjectRole::MEMBER : ProjectRole::TASK_MANAGER,
                     ]);
                 }
-        }*/
+        }
     }
 }

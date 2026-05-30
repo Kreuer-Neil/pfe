@@ -15,6 +15,8 @@ export function useImageAsset(assetPath: string): string {
             directoryPath = '/projects/';
             if (isUndefined(assetPathParts[1]))
                 return '/icons/default_1.svg';
+            if (['default_1', 'default_2'].includes(assetPathParts[1]))
+                return `/icons/${assetPathParts[1]}.svg`;
             break;
         case 'users':
             directoryPath = '/users/';
