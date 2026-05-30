@@ -171,7 +171,6 @@ class ProjectController extends Controller
 
         $ownerId = auth()->user()->id;
         $validated['owner_id'] = $ownerId;
-        $validated['slug'] = Str::slug($validated['name']);
 
         try {
             $project = Project::factory()->create($validated);
