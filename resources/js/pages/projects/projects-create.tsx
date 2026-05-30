@@ -39,7 +39,6 @@ export default function projectsCreate({}) {
                 }
                 const response = await fetch(projectStore(queryOptions).url);
                 const data: IServerResponse = await response.json();
-                console.log(data);
                 return data;
             } catch (error) {
                 console.error(error);
