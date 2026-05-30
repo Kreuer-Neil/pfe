@@ -1,6 +1,6 @@
 import {ReactNode} from "react";
 import {useTranslation} from "react-i18next";
-import {Bell, Calendar, Home, LucideIcon, Search, Settings2} from "lucide-react";
+import {Bell, Calendar, ChartGantt, Home, LucideIcon, Search, Settings2} from "lucide-react";
 import ProjectIcon from "@/components/icons/project-icon";
 import {dashboard} from "@/routes";
 import {index as tasksIndex} from "@/actions/App/Http/Controllers/TaskController";
@@ -8,7 +8,7 @@ import {Link, usePage} from "@inertiajs/react";
 import {IProjectContext, type SharedData} from "@/types";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import {show as projectsShow} from "@/routes/projects";
-import {index as projectsIndex} from "@/actions/App/Http/Controllers/ProjectController";
+import {index as projectsIndex, myProjects} from "@/actions/App/Http/Controllers/ProjectController";
 import {show as showProfile} from "@/actions/App/Http/Controllers/UserProfileController";
 import {cn} from "@/lib/utils";
 
@@ -22,7 +22,7 @@ interface INavItemProps {
 function SidebarNavItem({props, className = ''}: { props: INavItemProps, className?: string; }) {
     const Icon = props.icon;
     return (
-        <Link as="li" href={props.href}
+        <Link as="li" href={props.href} tabIndex={0}
               className={cn('nav-item section-title', className)}>
             {Icon ?
                 <Icon className="p-1"/>
@@ -64,8 +64,13 @@ export default function CustomSidebar(
             icon: Settings2,
             title: t('settings'),
             href: ''
-        }
-    ]
+        },
+        {
+            icon: ChartGantt,
+            title: t('manage_projects'),
+            href: myProjects().url
+        },
+    ];
 
     // TODO change auth.user declaration
     const projects: IProjectContext[] = auth.user.projects as IProjectContext[];
@@ -73,14 +78,16 @@ export default function CustomSidebar(
     const searchNavItem: INavItemProps = {
         title: t('search_project'),
         icon: Search,
-        href: projectsIndex().url,
+        href: projectsIndex().url
     };
 
     return (
         <nav className="sidebar" id="sidebar">
             <h2 className="sr-only">{t('title')}</h2>
 
-            <SidebarSwitchIcon className="p-2 mt-4 mr-4 ml-auto cursor-pointer" onClick={switchModalState}/>
+            <SidebarSwitchIcon className="p-2 mt-4 mr-4 ml-auto cursor-pointer" onClick={switchModalState} onKeyDown={(e)=> {
+                if (e.key === '13' || e.key === ' ') switchModalState();
+            }} tabIndex={0} id="sidebar-switch"/>
 
             <div className="sidebar-content">
 

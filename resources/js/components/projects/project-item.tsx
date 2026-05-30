@@ -2,7 +2,7 @@ import ProjectIcon from "@/components/icons/project-icon";
 import {MapPin, UserRoundCheck, UsersRound} from "lucide-react";
 import {IDashboardProject, IProjectMiniature} from "@/types";
 import {Link} from "@inertiajs/react";
-import {projects as projectsIndex} from '@/routes';
+import {show as projectsShow} from '@/actions/App/Http/Controllers/ProjectController';
 
 
 interface ProjectItemsProps {
@@ -13,7 +13,11 @@ export default function ProjectItem({project}: ProjectItemsProps) {
     const place: string | null = project.place;
     const coordinates: string | null = project.coordinates;
     return (
-        <Link as={'article'} tabIndex={0} href={projectsIndex().url + '/' + project.slug} className="thumbnail-item">
+        <Link as={'article'} tabIndex={0} href={projectsShow(project.slug)} className="thumbnail-item"
+              onKeyDown={(e)=>{
+                  // TODO force navigation
+                  if (e.key === '13' || e.key === ' ') (projectsShow(project.slug));
+              }}>
             <div className={'flex gap-1 items-center'}>
                 <ProjectIcon project={project}/>
                 <h3 className="item-title w-full">{project.name}</h3>

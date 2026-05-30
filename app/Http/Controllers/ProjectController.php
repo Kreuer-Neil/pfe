@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\BaseTags;
 use App\Enums\ProjectsFilters;
+use App\FormatedModels\Project\FormatedDashboardProject;
 use App\FormatedModels\Project\FormatedProject;
 use App\FormatedModels\Project\FormatedProjectMiniature;
 use App\Models\Project;
@@ -114,6 +115,68 @@ class ProjectController extends Controller
         return new FormatedProject($project, $user);
     }
 
+    public function create()
+    {
+        auth()->user()->projects;
+        return Inertia::render('projects/projects-create');
+    }
+
+    public function store()
+    {
+        if (!(
+            array_key_exists('name', $_REQUEST) &&
+            array_key_exists('description', $_REQUEST) &&
+            array_key_exists('is_private', $_REQUEST)
+        )) {
+            return [
+                'success' => false,
+                'error' => [
+                    'key' => 'missing_parameters',
+                    'params' => [
+                    ],
+                ]
+            ];
+        }
+
+        try {
+            $validated = request()->validate([
+                'name' => 'required|string|min:6|max:255',
+                'description' => 'required|min:6|string',
+                'is_private' => 'required|bool',
+            ]);
+        } catch (ValidationException) {
+            return [
+                'success' => false,
+                'error' => [
+                    'key' => 'invalid_parameters',
+                    'params' => [
+                    ],
+                ]
+            ];
+        }
+
+        try {
+            Project::create($validated);
+        } catch (ValidationException) {
+            return [
+                'success' => false,
+                'error' => [
+                    'key' => 'not_allowed',
+                    'params' => []
+                ],
+            ];
+
+        }
+
+        return ['success' => true,
+            'error' => ['key' => 'success_project_edited',
+                'params' => [
+                    'project' => $validated['name']
+                ]
+            ]
+        ];
+    }
+
     public function updateAppearance(string $slug)
     {
         if (!(
@@ -189,5 +252,14 @@ class ProjectController extends Controller
                 ]
             ]
         ];
+    }
+
+    public function myProjects()
+    {
+        $projects = [];
+        foreach (auth()->user()->projects as $project) {
+            $projects[] = new FormatedDashboardProject($project);
+        }
+        return Inertia::render('projects/my-projects', compact(['projects']));
     }
 }

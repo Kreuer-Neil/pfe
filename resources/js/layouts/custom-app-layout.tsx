@@ -33,8 +33,10 @@ export default function CustomAppLayout(
             setOpenMobile(!openMobile);
             if (!openMobile) {
                 sidebar!.classList.add('open');
+                document.getElementById('sidebar-switch')!.focus();
             } else {
                 sidebar!.classList.remove('open');
+                document.getElementById('burger-menu')!.focus();
             }
         } else {
             setOpenDesktop(!openDesktop);

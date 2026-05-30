@@ -56,6 +56,7 @@ function ProjectHeader({project}: {
 
     const [projectName, setProjectName] = useState(project.name);
     const [projectDesc, setProjectDesc] = useState(project.description);
+    // TODO update icon (via post?)
     const [projectIcon, setProjectIcon] = useState(project.icon);
 
     const [updateResponse, setUpdateResponse] = useState<IServerResponse>({success: false, error: null});

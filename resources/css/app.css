@@ -497,10 +497,10 @@
 
     /* TODO animate change? */
     .sidebar {
-        @apply h-screen overflow-y-scroll bg-sidebar w-2xs max-w-[85vw] z-20 max-sm:absolute max-sm:-left-80 max-sm:top-0;
+        @apply h-screen overflow-y-scroll bg-sidebar max-w-[85vw] w-full z-20 max-sm:hidden max-sm:absolute max-sm:-left-80 max-sm:top-0;
 
         &.open {
-            @apply max-sm:left-0;
+            @apply max-sm:left-0 max-sm:block;
         }
 
         &.closed {

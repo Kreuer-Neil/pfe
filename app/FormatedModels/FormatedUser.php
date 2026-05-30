@@ -26,5 +26,4 @@ class FormatedUser
         $this->bio = $user->bio;
 
     }
-
 }

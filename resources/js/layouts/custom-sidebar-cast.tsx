@@ -36,8 +36,11 @@ function MobileHeader({appHeaderContext, switchModalState}: {
                 {/*<BellDot className="p-2 cursor-pointer hover:bg-secondary focus:bg-secondary rounded-sm"
                          onClick={() => {
                          }}/>*/}
+                {/* TODO fix key reacting to onKeyDown */}
                 <Menu className="p-2 cursor-pointer hover:bg-secondary focus:bg-secondary rounded-sm"
-                      onClick={switchModalState}/>
+                      onClick={switchModalState} onKeyDown={(e)=> {
+                    if (e.key === '13' || e.key === ' ') switchModalState();
+                }} tabIndex={0} id="burger-menu"/>
             </div>
 
         </div>

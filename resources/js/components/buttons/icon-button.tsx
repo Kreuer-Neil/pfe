@@ -28,7 +28,9 @@ export default function IconButton(
     const textSpanStyle = showText ? '' : 'sr-only';
 
     if (href === '')
-        return <button title={title} className={cn(baseStyle, className)} onClick={onClick}><span
+        return <button title={title} className={cn(baseStyle, className)} onClick={onClick} onKeyDown={(e)=> {
+            if (e.key === '13' || e.key === ' ') onClick(e);
+        }}><span
             className={textSpanStyle}>{textContent}</span><Icon/></button>;
 
     return <Link title={title} href={href} className={cn(baseStyle, className)}><span
