@@ -1,5 +1,3 @@
-{{-- Eager loads projects on auth user, for navbar use --}}
-@php(auth()->user()->projects())
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" @class(['dark' => ($appearance ?? 'system') == 'dark'])>
 <head>
