@@ -100,7 +100,10 @@ class User extends Authenticatable
         return $this
             ->tasks()
             // TODO check for this later, only for non-validated tasks if possible
-            ->where('due_at', '>=', Carbon::now()->addHours(-24));
+            // Add 24h-left tasks from user projects with not enough participations and mix them
+            // ->where('due_at', '<=', Carbon::now()->addHours(-24))
+            // ->where('pivot_participating',true)
+            ;
     }
 
     /**

@@ -23,7 +23,7 @@ type TaskDisplayProps = {
     action?: (() => void) | null;
     isInProjectPage?: boolean;
     project?: IProject | null;
-    maxLength?: bigint | null;
+    maxLength?: bigint;
 }
 
 function TasksList({tasks, projectContext, maxLength, onTapTask}: {
@@ -35,7 +35,7 @@ function TasksList({tasks, projectContext, maxLength, onTapTask}: {
     const {t} = useTranslation(['date', 'projects']);
     const length = tasks.length;
 
-    if (length < 0) {
+    if (length <= 0) {
         return <div className="thumbnails-list-container"><p>{t('projects:task_empty_message')}</p></div>
     }
 
@@ -78,7 +78,7 @@ export default function TaskDisplay(
             setMaxItemsLength(maxLength);
             setShowMoreState(true);
         } else {
-            setMaxItemsLength(maxLength! * 2n);
+            setMaxItemsLength(12n);
             setShowMoreState(false);
         }
     }
@@ -126,22 +126,22 @@ export default function TaskDisplay(
         <section className={cn('items-section max-w-xl', className)} id={pageId}>
             <div className="flex items-center mx-3">
                 <h2 className="section-title w-full">{title ?? (project ? t('tasks_container_title', {project: project.name}) : t('task_upcoming_title'))}</h2>
-                {project ?
+                {project &&
                     <IconButton icon={ClipboardPlus} textContent={t('add_task')}
-                                onClick={() => setShowCreateModal(true)}/>
-                    : null}
+                                onClick={() => setShowCreateModal(true)}/>}
             </div>
             <TasksList tasks={tasks} projectContext={(project != null)} maxLength={maxItemsLength!}
                        onTapTask={onTaskTap}/>
             <div className="flex flex-col gap-4 px-3 items-center">
-                <ShowMore showMore={showMoreState} onClick={onShowMore}/>
+
+                {tasks.length > Number(maxLength) && <ShowMore showMore={showMoreState} onClick={onShowMore}/>}
                 {/*<ButtonText href={agenda().url} textContent={actionText ?? t('task.show_agenda')} icon={LucideCalendarDays}/>*/}
             </div>
             <TaskShowModal task={modalTask} showModal={showTaskModal} setShowModal={setShowTaskModal}/>
-            {project ?
+            {project &&
                 <TaskCreateModal showModal={showCreateModal} setShowModal={setShowCreateModal}
                                  project={project}/>
-                : null}
+                }
         </section>
     );
 }

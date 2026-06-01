@@ -414,7 +414,7 @@
 
     .thumbnail-item {
         @apply flex flex-col gap-1 p-2 px-3 cursor-pointer
-        rounded-sm bg-background drop-shadow-sm max-w-[var(--text-max-w)];
+        rounded-sm border border-border max-w-[var(--text-max-w)];
     }
 
     /* To overwrite style from browsers like Firefox */
