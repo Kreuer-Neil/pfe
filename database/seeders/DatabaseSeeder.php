@@ -74,6 +74,7 @@ class DatabaseSeeder extends Seeder
             $projectArray = [
                 'owner_id' => $owner->id,
                 'name' => $projectData['name'],
+                'slug'=> Str::slug($projectData['name']),
                 'is_private' => $projectData['is_private'],
                 'description' => $projectData['description'],
             ];

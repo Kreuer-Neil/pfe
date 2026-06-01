@@ -22,5 +22,5 @@ Route::get('projects/store', [ProjectController::class, 'store'])
 Route::get('projects/{slug}', [ProjectController::class, 'show'])
     ->name('projects.show');
 
-Route::get('projects/{slug}/update/appearance', [ProjectController::class, 'updateAppearance'])
+Route::post('projects/{slug}/update/appearance', [ProjectController::class, 'updateAppearance'])
     ->name('projects.update.appearance');
