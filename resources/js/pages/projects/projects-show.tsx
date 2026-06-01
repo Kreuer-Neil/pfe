@@ -4,7 +4,7 @@ import {Form, Head, usePage} from "@inertiajs/react";
 import PageFlowContainer from "@/components/page-flow-container";
 import TaskDisplay from "@/components/tasks/task-display";
 import {instanceOfProject, instanceOfProjectShow} from "@/helpers/type-check";
-import {Bookmark, BookmarkCheck, Flag, LogIn, PencilLine, Settings, Share2, UserRoundPlus} from "lucide-react";
+import {Bookmark, BookmarkCheck, Camera, Flag, LogIn, PencilLine, Settings, Share2, UserRoundPlus} from "lucide-react";
 import IconButton from "@/components/buttons/icon-button";
 import Button from "@/components/buttons/button";
 import ProjectIcon from "@/components/icons/project-icon";
@@ -152,24 +152,33 @@ function ProjectHeader({project}: {
 
                     <div className="w-full">
                         <div className="aspect-[2.8] w-full bg-container flex justify-end">
-                            {project.user_role === 'admin' ?
+                            {project.user_role === 'admin' &&
                                 <div className="flex gap-1 m-3 h-fit">
-                                    {!isEditing ?
+                                    {!isEditing &&
                                         <IconButton icon={PencilLine} textContent={t('project_edit')} showText={true}
                                                     className="bg-tertiary text-tertiary-foreground"
                                                     onClick={() => setIsEditing(true)}/>
-                                        : null}
+                                    }
                                     <IconButton icon={Settings} textContent={t('project_settings')}
                                                 className="bg-tertiary text-tertiary-foreground"/>
-                                </div> : null}
+                                </div>}
 
-                            {project.banner ?
+                            {!(!project.banner) &&
                                 <img src={useImageAsset('project/' + project.banner)} alt={''}
-                                     className="aspect-[2.8] w-full bg-container"/>
-                                : null
-                            }
+                                     className="aspect-[2.8] w-full bg-container"/>}
                         </div>
                         <ProjectIcon project={project} size="large" className="bg-secondary -mt-14 mx-auto"/>
+                        {isEditing &&
+                            <label htmlFor="icon"
+                                className="block w-fit p-1 px-2 ml-auto mr-2 -mt-9 mb-1 bg-primary rounded-xs">
+                            <Camera/>
+                            <span className="sr-only">{t('field_icon')}</span>
+                            <input type="file" accept="image/png, image/jpg, image/webp" name="icon" id="icon"
+                                   className="sr-only"/>
+                        </label>}
+                        {errors?.icons &&
+                            <span className="field-error">{errors.icon}</span>}
+
                     </div>
                 </>
             )}
@@ -183,7 +192,6 @@ function ProjectHeader({project}: {
 function VisitorPage() {
     const {project} = usePage<visitorPageProps>().props;
     const {route} = usePage<{ route: string }>().props;
-    const {t} = useTranslation('projects');
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: project.name,
