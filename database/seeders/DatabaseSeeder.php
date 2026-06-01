@@ -22,47 +22,13 @@ class DatabaseSeeder extends Seeder
     {
         TestUserSeeder::run();
 
-        // TODO convert to "real" users
-        /*$randomUsers = User::factory(2)->create();
-
-        foreach ($randomUsers as $user) {
-            $project = Project::factory()->create([
-                'owner_id' => $user->id,
-                'is_private' => false,
-            ]);
-            Member::create([
-                'user_id' => $user->id,
-                'project_id' => $project->id,
-                'role' => ProjectRole::ADMIN,
-            ]);
-
-            $project->addTask(
-                new Task(
-                    [
-                        'title' => 'Task 1',
-                        'description' => 'No one cares',
-                        'min_participations' => 6,
-                        'due_at' => Carbon::create(year: 2026, month: 07, day: 21),
-                    ]
-                ), $user
-            );
-            $project->addTask(new Task([
-                'title' => 'Task 2',
-                'description' => 'No one cares',
-                'min_participations' => 6,
-                'due_at' => Carbon::create(year: 2026, month: 07, day: 21),
-            ]), $user);
-        }*/
-
-
-        // New seeder
 
         $projectsData = [
             [
                 'name' => 'Luigi\'s Garden',
                 'is_private' => false,
                 'description' => 'Luigi’s Garden is about maintaining sir Luigi’s mansion garden, an unofficial park in this choking city, open to anyone respectful enough.',
-//                'coordinates' => '50.61126712133781, 5.510050323190294',
+                'coordinates' => '50.61126712133781, 5.510050323190294',
                 'owner' => [
                     'first_name' => 'Luigi',
                     'last_name' => 'Mario',
