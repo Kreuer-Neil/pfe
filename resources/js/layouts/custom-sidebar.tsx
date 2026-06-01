@@ -22,16 +22,18 @@ interface INavItemProps {
 function SidebarNavItem({props, className = ''}: { props: INavItemProps, className?: string; }) {
     const Icon = props.icon;
     return (
-        <Link as="li" href={props.href} tabIndex={0}
-              className={cn('nav-item section-title', className)}>
-            {Icon ?
-                <Icon className="p-1"/>
-                /* @ts-ignore */
-                : props.project
-                    ? <ProjectIcon project={props.project} className="border border-secondary-border"/>
-                    : null}
-            <span>{props.title}</span>
-        </Link>
+        <li>
+            <Link as="a" href={props.href}
+                  className={cn('nav-item section-title', className)}>
+                {Icon ?
+                    <Icon className="p-1"/>
+                    /* @ts-ignore */
+                    : props.project
+                    && <ProjectIcon project={props.project} className="border border-secondary-border"/>
+                }
+                <span>{props.title}</span>
+            </Link>
+        </li>
     );
 }
 
@@ -85,14 +87,15 @@ export default function CustomSidebar(
         <nav className="sidebar" id="sidebar">
             <h2 className="sr-only">{t('title')}</h2>
 
-            <SidebarSwitchIcon className="p-2 mt-4 mr-4 ml-auto cursor-pointer" onClick={switchModalState} onKeyDown={(e)=> {
-                if (e.key === '13' || e.key === ' ') switchModalState();
-            }} tabIndex={0} id="sidebar-switch"/>
+            <SidebarSwitchIcon className="p-2 mt-4 mr-4 ml-auto cursor-pointer" onClick={switchModalState}
+                               onKeyDown={(e) => {
+                                   if (e.key === '13' || e.key === ' ') switchModalState();
+                               }} tabIndex={0} id="sidebar-switch"/>
 
             <div className="sidebar-content">
 
                 <div>
-                    <Link as="div" href={showProfile(auth.user.id).url}
+                    <Link as="a" href={showProfile(auth.user.id).url}
                           className="nav-profile">
                         <img src={useImageAsset(`users/${auth.user.avatar}/small`)}
                              alt={t('user_profile_picture', {username: auth.user.nickname})}

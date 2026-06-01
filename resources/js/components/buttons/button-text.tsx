@@ -44,10 +44,8 @@ export default function ButtonText(
 
     if (href === '') {
         return (
-            <button onClick={onClick} onKeyDown={(e)=> {
-                if (e.key === '13' || e.key === ' ') onClick(e);
-            }} type={type} className={cn('button-text', style, className)} autoFocus={autoFocus}>
-                {Icon ? <Icon/> : ''}
+            <button onClick={onClick} type={type} className={cn('button-text', style, className)} autoFocus={autoFocus}>
+                {Icon && <Icon/>}
                 {textContent}
             </button>
         );
