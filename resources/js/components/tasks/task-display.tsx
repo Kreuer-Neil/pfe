@@ -23,13 +23,14 @@ type TaskDisplayProps = {
     action?: (() => void) | null;
     isInProjectPage?: boolean;
     project?: IProject | null;
-    maxLength?: bigint;
+    minLength?: number;
+    maxLength?: number
 }
 
 function TasksList({tasks, projectContext, maxLength, onTapTask}: {
     tasks: ITaskMiniature[];
     projectContext: boolean;
-    maxLength: bigint;
+    maxLength: number;
     onTapTask: (id: string) => void;
 }): ReactNode {
     const {t} = useTranslation(['date', 'projects']);
@@ -40,7 +41,7 @@ function TasksList({tasks, projectContext, maxLength, onTapTask}: {
     }
 
     return <ul className="thumbnails-list-container">
-        {tasks.slice(0, Number(maxLength)).map((task: ITaskMiniature, i: number) => {
+        {tasks.slice(0, maxLength).map((task: ITaskMiniature, i: number) => {
             let month: number = laravelDateToJsDate(task.due_at ?? task.created_at).getMonth();
             const precedentMonthCondition: boolean = i + 1 < length
                 && tasks[i - 1]
@@ -65,20 +66,21 @@ export default function TaskDisplay(
         title = null,
         className = '',
         project = null,
-        maxLength = 3n,
+        minLength = 3,
+        maxLength = 12
     }: TaskDisplayProps): ReactNode {
     {/* TODO use flash data for tasks? Needs auto-update */}
 
     const {t} = useTranslation(['projects', 'date']);
-    const [maxItemsLength, setMaxItemsLength] = useState(maxLength);
-    const [showMoreState, setShowMoreState] = useState(true);
+    const [maxItemsLength, setMaxItemsLength] = useState<number>(minLength);
+    const [showMoreState, setShowMoreState] = useState<boolean>(true);
 
     const onShowMore = (): void => {
-        if (maxItemsLength != maxLength) {
-            setMaxItemsLength(maxLength);
+        if (maxItemsLength != minLength) {
+            setMaxItemsLength(minLength);
             setShowMoreState(true);
         } else {
-            setMaxItemsLength(12n);
+            setMaxItemsLength(maxLength);
             setShowMoreState(false);
         }
     }
@@ -134,7 +136,7 @@ export default function TaskDisplay(
                        onTapTask={onTaskTap}/>
             <div className="flex flex-col gap-4 px-3 items-center">
 
-                {tasks.length > Number(maxLength) && <ShowMore showMore={showMoreState} onClick={onShowMore}/>}
+                {tasks.length > Number(minLength) && <ShowMore showMore={showMoreState} onClick={onShowMore}/>}
                 {/*<ButtonText href={agenda().url} textContent={actionText ?? t('task.show_agenda')} icon={LucideCalendarDays}/>*/}
             </div>
             <TaskShowModal task={modalTask} showModal={showTaskModal} setShowModal={setShowTaskModal}/>
