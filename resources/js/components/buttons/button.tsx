@@ -23,6 +23,7 @@ export default function Button(
         type = 'button',
         href = '',
         className = '',
+        // TODO remove later
         onClick = (e) => e.preventDefault(),
     }: ButtonProps
 ): ReactNode {

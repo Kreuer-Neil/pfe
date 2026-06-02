@@ -12,8 +12,13 @@ use App\Models\Member;
 use App\Models\Project;
 use App\Models\User;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Format;
+use Intervention\Image\Image;
+use Intervention\Image\ImageManager;
 use Str;
 
 class ProjectController extends Controller
@@ -97,7 +102,7 @@ class ProjectController extends Controller
 
         auth()->user()->projects;
         return Inertia::render(
-            'projects/show',
+            'projects/projects-show',
             compact('project'));
     }
 
@@ -199,81 +204,79 @@ class ProjectController extends Controller
         ];
     }
 
-    public function updateAppearance(string $slug)
+    public function updateAppearance(string $slug, Request $request)
     {
-        if (!(
-            array_key_exists('name', $_REQUEST) &&
-            array_key_exists('description', $_REQUEST)
+        /*if (!(
+            $request->name &&
+            $request->icon
         )) {
-            return [
+            Inertia::flash([
                 'success' => false,
                 'error' => [
                     'key' => 'missing_parameters',
-                    'params' => [
-                    ],
+                    'params' => [],
                 ]
-            ];
-        }
+            ]);
+        }*/
 
         $project = Project::where('slug', $slug)->first();
         if (!$project) {
-            return [
-                'success' => false,
-                'error' => [
-                    'key' => 'project_not_found',
-                    'params' => [],
-                ]
-            ];
+            Inertia::flash(['error' => [
+                'key' => 'project_not_found',
+                'params' => [],
+            ]]);
+            return redirect(route('projects.show', $slug));
         }
 
         $currentUser = auth()->user();
 
-        try {
-            $validated = request()->validate([
-                'name' => 'required|string|max:255',
-                'description' => 'required|string',
-            ]);
-        } catch (ValidationException) {
-            return [
-                'success' => false,
-                'error' => [
-                    'key' => 'invalid_parameters',
-                    'params' => [
-                    ],
-                ]
-            ];
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'icon' => 'nullable|image'
+        ]);
+
+        if (array_key_exists('icon', $validated)) {
+
+            $path = $request
+                ->file('icon')
+                ->store('images/projects', 'public');
+
+            $iconName = Str::beforeLast(Str::afterLast($path, '/'), '.');
+
+            // TODO queued jobs
+            $imageManager = ImageManager::usingDriver(Driver::class);
+            $scales = ['small' => 32, 'medium' => 64, 'large' => 160];
+
+            foreach ($scales as $key => $scale) {
+                $image = $imageManager->decodePath('../storage/app/public/' . $path);
+                $image->cover($scale, $scale);
+                $encoded = $image->encodeUsingFormat(Format::PNG, quality: 65);
+                $encoded->save("../storage/app/public/images/projects/${key}/${iconName}.png");
+            }
+            $project->icon = $iconName;
         }
 
         if ($project->canEdit($currentUser)) {
-            return [
-                'success' => false,
-                'error' => [
-                    'key' => 'not_allowed',
-                    'params' => []
-                ],
-            ];
+            Inertia::flash(['error' => [
+                'key' => 'not_allowed',
+                'params' => []
+            ]]);
         }
 
         $project->name = $validated['name'];
         $project->description = $validated['description'];
 
+        // TODO remove flash and add error
         if (!$project->save()) {
-            return [
-                'success' => false,
-                'error' => [
-                    'key' => 'not_allowed',
-                    'params' => []
-                ],
-            ];
+            Inertia::flash(['error' => [
+                'key' => 'not_allowed',
+                'params' => []
+            ]]);
         }
 
-        return ['success' => true,
-            'error' => ['key' => 'success_project_edited',
-                'params' => [
-                    'project' => $validated['name']
-                ]
-            ]
-        ];
+        Inertia::flash(['success' => true]);
+        return redirect(route('projects.show', $slug));
     }
 
     public function myProjects()

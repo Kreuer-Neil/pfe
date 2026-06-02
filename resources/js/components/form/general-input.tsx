@@ -13,6 +13,7 @@ interface TextInputProps {
     required?: boolean;
     value: string;
     setValue: any;
+    error?: string|null;
     validation?: ((value: string) => ITranslatableObject | null);
     validationRules?: ValidationRule[];
     hasError?: ((error: boolean) => void);
@@ -65,6 +66,7 @@ export default function GeneralInput(
         required = false,
         value,
         setValue,
+        error = null,
         validationRules = [],
         hasError = (() => null),
         placeholder = '',
@@ -87,14 +89,14 @@ export default function GeneralInput(
         validationRules!.push('number');
     }
 
-    const [error, setError] = useState<ITranslatableObject | null>(null);
+    const [validationError, setValidationError] = useState<ITranslatableObject | null>(null);
 
     const validate = (e: any) => {
         if (type === "number" && Number(e.currentTarget.value) === 0) {
             setValue(null);
         }
-        setError(checkValidationRules(validationRules, value, label) ?? null);
-        hasError(!!error);
+        setValidationError(checkValidationRules(validationRules, value, label) ?? null);
+        hasError(!!validationError);
     }
 
     let defaultClass: string = 'input';
@@ -133,9 +135,8 @@ export default function GeneralInput(
                        onBlur={validate}
                        placeholder={placeholder}/>
             }
-            {error ?
-                <span className="field-error">{t(error.key, error.params)}</span>
-                : null}
+            {(error || validationError) &&
+                <span className="field-error">{error ?? t(validationError!.key, validationError!.params)}</span>}
         </label>
     )
 }

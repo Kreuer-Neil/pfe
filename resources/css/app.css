@@ -187,7 +187,8 @@
 
 }
 
-.dark {
+/* Dark mode not implemented yet. */
+/*.dark {
     --foreground-main: oklch(0.985 0 0);
 
     --background: oklch(0.145 0 0);
@@ -222,7 +223,7 @@
     --sidebar-accent-foreground: var(--foreground-main);
     --sidebar-border: oklch(0.269 0 0);
     --sidebar-ring: oklch(0.439 0 0);
-}
+}*/
 
 @layer base {
 
@@ -438,6 +439,11 @@
         @apply p-0 w-fit border rounded-xs border-secondary-border hover:outline focus:outline;
     }
 
+    /* TODO fix style later */
+    label:has(.image-input:focus) {
+        @apply outline-2 outline-secondary-border;
+    }
+
     .search-box {
         @apply flex gap-1 p-2 border border-border rounded-xs cursor-text items-center;
 
@@ -497,7 +503,7 @@
 
     /* TODO animate change? */
     .sidebar {
-        @apply h-screen overflow-y-scroll bg-sidebar max-w-[85vw] w-full z-20 max-sm:hidden max-sm:absolute max-sm:-left-80 max-sm:top-0;
+        @apply h-screen overflow-y-scroll bg-sidebar max-w-[85vw] w-full z-20 sm:min-w-2xs max-sm:hidden max-sm:absolute max-sm:-left-80 max-sm:top-0;
 
         &.open {
             @apply max-sm:left-0 max-sm:block;
