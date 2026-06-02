@@ -1,6 +1,6 @@
 import {type BreadcrumbItem, IProject, IProjectShow, IServerResponse} from "@/types";
 import AppLayout from "@/layouts/app-layout";
-import {Form, Head, usePage} from "@inertiajs/react";
+import {Form, Head, router, usePage} from "@inertiajs/react";
 import PageFlowContainer from "@/components/page-flow-container";
 import TaskDisplay from "@/components/tasks/task-display";
 import {instanceOfProject, instanceOfProjectShow} from "@/helpers/type-check";
@@ -60,24 +60,92 @@ function HeaderContainer({slug, isEditing, className, children}: {
     );
 }
 
+function ProjectHeaderIcon({isEditing, project, iconError}: {
+    isEditing: boolean,
+    project: IProject | IProjectShow,
+    iconError: string | null
+}) {
+    const {t} = useTranslation('projects');
+
+    const [localFilePath, setLocalFilePath] = useState<string | undefined>(undefined);
+    const iconPath = localFilePath ?? useImageAsset('projects/' + project.icon + '/large');
+
+    if (!isEditing) {
+        return (
+            <ProjectIcon project={project} size="large" className="bg-secondary -mt-14 mx-auto"/>
+        );
+    }
+    return (
+        <>
+            <label htmlFor="icon"
+                   className="-mt-14 mx-auto block relative w-fit ml-auto cursor-pointer rounded-full">
+                <span className="sr-only">{t('field_icon')}</span>
+
+                <img src={iconPath} alt={t('icon_alt', {project: project.name})}
+                     className="size-[7rem] bg-loading rounded-full object-cover"/>
+
+                {/* TODO fix icon positioning */}
+                <Camera className="bg-background text-secondary-border rounded-full ml-auto p-1 -mt-8 -mr-2 z-10"/>
+                <input type="file" accept="image/png, image/jpg, image/webp" name="icon" id="icon"
+                       className="image-input sr-only"
+                       onChange={(e) => {
+                           if (e.target.files && e.target.files[0]) {
+                               setLocalFilePath(URL.createObjectURL(e.target.files[0]));
+                           }
+                       }}/>
+            </label>
+            {iconError &&
+                <span className="field-error">{iconError}</span>}
+        </>
+    );
+
+}
+
 function ProjectHeader({project}: {
     project: IProject | IProjectShow
 }) {
     const {t} = useTranslation('projects');
     const [isEditing, setIsEditing] = useState(false);
+    const {flash} = usePage();
 
     const [projectName, setProjectName] = useState(project.name);
     const [projectDesc, setProjectDesc] = useState(project.description);
-    // TODO update icon (via post?)
-    const [projectIcon, setProjectIcon] = useState(project.icon);
+
+    router.on('flash', (e) => {
+        if (e.detail.flash.success) {
+            setIsEditing(false);
+        }
+    });
+
 
     const [updateResponse, setUpdateResponse] = useState<IServerResponse>({success: false, error: null});
 
     return (
         <HeaderContainer slug={project.slug} isEditing={isEditing}
-                         className="w-full flex flex-col-reverse gap-2 max-w-xl">
+                         className="w-full flex flex-col gap-2 max-w-xl">
             {(errors) => (
                 <>
+                    <div className="w-full">
+                        <div className="aspect-[2.8] w-full bg-container flex justify-end">
+                            {project.user_role === 'admin' &&
+                                <div className="flex gap-1 m-3 h-fit">
+                                    {!isEditing &&
+                                        <IconButton icon={PencilLine} textContent={t('project_edit')} showText={true}
+                                                    className="bg-tertiary text-tertiary-foreground"
+                                                    onClick={() => setIsEditing(true)}/>
+                                    }
+                                    <IconButton icon={Settings} textContent={t('project_settings')}
+                                                className="bg-tertiary text-tertiary-foreground"/>
+                                </div>}
+
+                            {!(!project.banner) &&
+                                <img src={useImageAsset('project/' + project.banner)} alt={''}
+                                     className="aspect-[2.8] w-full bg-container"/>}
+                        </div>
+
+                        <ProjectHeaderIcon isEditing={isEditing} project={project} iconError={errors?.icon}/>
+                    </div>
+
                     <div className="flex flex-col items-center gap-4 px-3">
                         <h1 className="page-title text-center">{isEditing ?
                             <GeneralInput name="name" label={t('project_form_name')}
@@ -147,37 +215,6 @@ function ProjectHeader({project}: {
                                     <Button textContent={t('more_news')}/>
                                 </div> : ''
                         }
-
-                    </div>
-
-                    <div className="w-full">
-                        <div className="aspect-[2.8] w-full bg-container flex justify-end">
-                            {project.user_role === 'admin' &&
-                                <div className="flex gap-1 m-3 h-fit">
-                                    {!isEditing &&
-                                        <IconButton icon={PencilLine} textContent={t('project_edit')} showText={true}
-                                                    className="bg-tertiary text-tertiary-foreground"
-                                                    onClick={() => setIsEditing(true)}/>
-                                    }
-                                    <IconButton icon={Settings} textContent={t('project_settings')}
-                                                className="bg-tertiary text-tertiary-foreground"/>
-                                </div>}
-
-                            {!(!project.banner) &&
-                                <img src={useImageAsset('project/' + project.banner)} alt={''}
-                                     className="aspect-[2.8] w-full bg-container"/>}
-                        </div>
-                        <ProjectIcon project={project} size="large" className="bg-secondary -mt-14 mx-auto"/>
-                        {isEditing &&
-                            <label htmlFor="icon"
-                                className="block w-fit p-1 px-2 ml-auto mr-2 -mt-9 mb-1 bg-primary rounded-xs">
-                            <Camera/>
-                            <span className="sr-only">{t('field_icon')}</span>
-                            <input type="file" accept="image/png, image/jpg, image/webp" name="icon" id="icon"
-                                   className="sr-only"/>
-                        </label>}
-                        {errors?.icons &&
-                            <span className="field-error">{errors.icon}</span>}
 
                     </div>
                 </>

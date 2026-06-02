@@ -236,21 +236,25 @@ class ProjectController extends Controller
             'icon' => 'nullable|image'
         ]);
 
-        $path = $request
-            ->file('icon')
-            ->store('images/projects', 'public');
+        if (array_key_exists('icon', $validated)) {
 
-        $iconName = Str::beforeLast(Str::afterLast($path, '/'), '.');
+            $path = $request
+                ->file('icon')
+                ->store('images/projects', 'public');
 
-        // TODO queued jobs
-        $imageManager = ImageManager::usingDriver(Driver::class);
-        $scales = ['small' => 32, 'medium' => 64, 'large' => 160];
+            $iconName = Str::beforeLast(Str::afterLast($path, '/'), '.');
 
-        foreach ($scales as $key => $scale) {
-            $image = $imageManager->decodePath('../storage/app/public/'.$path);
-            $image->scale($scale, $scale);
-            $encoded = $image->encodeUsingFormat(Format::JPEG, quality: 65);
-            $encoded->save("../storage/app/public/images/projects/${key}/${iconName}.jpg");
+            // TODO queued jobs
+            $imageManager = ImageManager::usingDriver(Driver::class);
+            $scales = ['small' => 32, 'medium' => 64, 'large' => 160];
+
+            foreach ($scales as $key => $scale) {
+                $image = $imageManager->decodePath('../storage/app/public/' . $path);
+                $image->cover($scale, $scale);
+                $encoded = $image->encodeUsingFormat(Format::PNG, quality: 65);
+                $encoded->save("../storage/app/public/images/projects/${key}/${iconName}.png");
+            }
+            $project->icon = $iconName;
         }
 
         if ($project->canEdit($currentUser)) {
@@ -262,8 +266,8 @@ class ProjectController extends Controller
 
         $project->name = $validated['name'];
         $project->description = $validated['description'];
-        $project->icon = $iconName;
 
+        // TODO remove flash and add error
         if (!$project->save()) {
             Inertia::flash(['error' => [
                 'key' => 'not_allowed',
@@ -271,6 +275,7 @@ class ProjectController extends Controller
             ]]);
         }
 
+        Inertia::flash(['success' => true]);
         return redirect(route('projects.show', $slug));
     }
 

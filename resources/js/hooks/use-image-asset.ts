@@ -29,7 +29,7 @@ export function useImageAsset(assetPath: string): string {
     }
     // @ts-ignore
     if (directoryPath)
-        return directoryPath! + (assetPathParts[2] ? assetPathParts[2] + '/' : '') + assetPathParts[1] + '.jpg';
+        return directoryPath! + (assetPathParts[2] ? assetPathParts[2] + '/' : '') + assetPathParts[1] + '.png';
 
 
     return '/icons/default_icon.svg';
