@@ -390,6 +390,7 @@
 
     .page-title {
         @apply font-medium text-[2rem] w-full text-left;
+        line-height: 2rem;
     }
 
     .section-title {
@@ -398,6 +399,10 @@
 
     .item-title {
         @apply font-medium text-xl self-start;
+    }
+
+    .normal-text {
+        @apply font-normal text-[1rem];
     }
 
     .items-section {

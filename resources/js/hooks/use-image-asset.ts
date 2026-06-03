@@ -11,6 +11,7 @@ export function useImageAsset(assetPath: string): string {
             if (assetPathParts[1] === 'logo')
                 return '/logo.svg';
             break;
+        case 'project':
         case 'projects':
             directoryPath = '/storage/images/projects/';
             if (isUndefined(assetPathParts[1]))
@@ -18,6 +19,7 @@ export function useImageAsset(assetPath: string): string {
             if (['default_1', 'default_2'].includes(assetPathParts[1]))
                 return `/icons/${assetPathParts[1]}.svg`;
             break;
+        case 'user':
         case 'users':
             directoryPath = '/storage/images/users/';
             if (isUndefined(assetPathParts[1]))
@@ -29,7 +31,7 @@ export function useImageAsset(assetPath: string): string {
     }
     // @ts-ignore
     if (directoryPath)
-        return directoryPath! + (assetPathParts[2] ? assetPathParts[2] + '/' : '') + assetPathParts[1] + '.png';
+        return directoryPath! + (assetPathParts[2] ? assetPathParts[2] + '/' : 'large/') + assetPathParts[1] + '.png';
 
 
     return '/icons/default_icon.svg';

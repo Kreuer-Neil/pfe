@@ -10,7 +10,8 @@ class FormatedProfile
     public ?string $first_name;
     public ?string $last_name;
     public string $nickname;
-    public ?string $image;
+    public ?string $pronouns;
+    public ?string $avatar;
     public ?string $bio;
 
     public function __construct(
@@ -18,12 +19,11 @@ class FormatedProfile
     )
     {
         $this->id = $user->id;
+        $this->first_name = $user->first_name;
+        $this->last_name = $user->last_name;
         $this->nickname = $user->nickname();
-        if ($user->show_name) {
-            $this->first_name = $user->first_name;
-            $this->last_name = $user->last_name;
-        }
-        $this->image = $user->image;
+        $this->pronouns = $user->pronouns;
+        $this->avatar = $user->avatar;
         $this->bio = $user->bio;
     }
 }

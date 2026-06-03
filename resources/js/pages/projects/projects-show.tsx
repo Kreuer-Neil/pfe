@@ -1,4 +1,4 @@
-import {type BreadcrumbItem, IProject, IProjectShow, IServerResponse} from "@/types";
+import {IAppHeaderContext, IProject, IProjectShow, IServerResponse} from "@/types";
 import AppLayout from "@/layouts/app-layout";
 import {Form, Head, router, usePage} from "@inertiajs/react";
 import PageFlowContainer from "@/components/page-flow-container";
@@ -9,7 +9,7 @@ import IconButton from "@/components/buttons/icon-button";
 import Button from "@/components/buttons/button";
 import ProjectIcon from "@/components/icons/project-icon";
 import {useTranslation} from "react-i18next";
-import {ReactNode, useContext, useState} from "react";
+import {ReactNode, useState} from "react";
 import GeneralInput from "@/components/form/general-input";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import ProjectController from "@/actions/App/Http/Controllers/ProjectController";
@@ -31,7 +31,7 @@ function HeaderContainer({slug, isEditing, className, children}: {
     slug: string,
     isEditing: boolean,
     className: string,
-    children: ReactNode | ReactNode[] | ((errors: Record<string, string>) => ReactNode | ReactNode[])
+    children: ReactNode | ReactNode[] | ((errors: Record<string, string>) => ReactNode | ReactNode[]),
 }): ReactNode {
     if (isEditing) {
         return (
@@ -51,7 +51,6 @@ function HeaderContainer({slug, isEditing, className, children}: {
             </Form>
         );
     }
-    const errors = null;
     return (
         <div className={className}>
             {/* @ts-ignore */}
@@ -78,11 +77,11 @@ function ProjectHeaderIcon({isEditing, project, iconError}: {
     return (
         <>
             <label htmlFor="icon"
-                   className="-mt-14 mx-auto block relative w-fit ml-auto cursor-pointer rounded-full">
+                   className="-mt-14 mx-auto block w-fit ml-auto cursor-pointer rounded-full">
                 <span className="sr-only">{t('field_icon')}</span>
 
                 <img src={iconPath} alt={t('icon_alt', {project: project.name})}
-                     className="size-[7rem] bg-loading rounded-full object-cover"/>
+                     className="size-[7rem] bg-secondary rounded-full object-cover"/>
 
                 {/* TODO fix icon positioning */}
                 <Camera className="bg-background text-secondary-border rounded-full ml-auto p-1 -mt-8 -mr-2 z-10"/>
@@ -104,9 +103,8 @@ function ProjectHeaderIcon({isEditing, project, iconError}: {
 function ProjectHeader({project}: {
     project: IProject | IProjectShow
 }) {
-    const {t} = useTranslation('projects');
+    const {t} = useTranslation(['projects', 'common']);
     const [isEditing, setIsEditing] = useState(false);
-    const {flash} = usePage();
 
     const [projectName, setProjectName] = useState(project.name);
     const [projectDesc, setProjectDesc] = useState(project.description);
@@ -146,7 +144,7 @@ function ProjectHeader({project}: {
                         <ProjectHeaderIcon isEditing={isEditing} project={project} iconError={errors?.icon}/>
                     </div>
 
-                    <div className="flex flex-col items-center gap-4 px-3">
+                    <div className="flex flex-col items-center gap-3 px-3">
                         <h1 className="page-title text-center">{isEditing ?
                             <GeneralInput name="name" label={t('project_form_name')}
                                           value={projectName} setValue={setProjectName}
@@ -172,8 +170,8 @@ function ProjectHeader({project}: {
                                         <IconButton icon={BookmarkCheck} textContent={t('following')}/> :
                                         <IconButton icon={Bookmark} textContent={t('follow')}/>
                                 }
-                                <IconButton icon={Share2} textContent={t('button_share')}/>
-                                <IconButton icon={Flag} textContent={t('button_report')}/>
+                                <IconButton icon={Share2} textContent={t('common:button_share')}/>
+                                <IconButton icon={Flag} textContent={t('common:button_report')}/>
                             </div>
                             {isEditing ?
                                 <GeneralInput name="description" label={t('project_form_description')}
@@ -229,14 +227,13 @@ function ProjectHeader({project}: {
 function VisitorPage() {
     const {project} = usePage<visitorPageProps>().props;
     const {route} = usePage<{ route: string }>().props;
-    const breadcrumbs: BreadcrumbItem[] = [
+    const appHeaderContext: IAppHeaderContext =
         {
-            title: project.name,
-            href: route,
-        },
-    ];
+            contextImageSrc: useImageAsset(`projects/${project.icon}/small`),
+            context: project.name,
+        };
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <AppLayout appHeaderContext={appHeaderContext}>
             <Head title={project.name}/>
             <PageFlowContainer className="pt-0">
                 <ProjectHeader project={project}/>
@@ -258,9 +255,14 @@ function MemberPage() {
     const {project} = usePage<memberPageProps>().props;
     const {route} = usePage<{ route: string }>().props;
     const {t} = useTranslation('projects');
+    const appHeaderContext: IAppHeaderContext =
+        {
+            contextImageSrc: useImageAsset(`projects/${project.icon}/small`),
+            context: project.name,
+        };
 
     return (
-        <AppLayout>
+        <AppLayout appHeaderContext={appHeaderContext}>
             <PageFlowContainer className="pt-0">
                 <ProjectHeader project={project}/>
 

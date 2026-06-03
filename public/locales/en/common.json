@@ -7,5 +7,7 @@
     "my_projects" : "My projects",
     "projects_not_found": "We couldn't find your projects. If you already joined projects, reload the page, check your notifications to see if you got kicked out, or try contacting support. If you didn't join a project yet, you can do it here:",
 
-    "search_project": "Search project"
+    "search_project": "Search project",
+    "button_share": "Share",
+    "button_report": "Report"
 }

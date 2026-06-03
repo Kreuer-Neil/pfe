@@ -13,7 +13,7 @@ type AppLayoutProps = {
 export default function CustomAppLayout(
     {
         children,
-        appHeaderContext = null,
+        appHeaderContext,
         ...props
     }: AppLayoutProps) {
     const isMobile = useIsMobile();

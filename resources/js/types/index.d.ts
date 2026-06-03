@@ -61,9 +61,12 @@ export interface IUser extends IProfile {
 
 export interface IProfile {
     id: string;
+    first_name: string;
+    last_name: string;
     nickname: string;
+    pronouns?: string;
     avatar: string;
-    bio: string;
+    bio?: string;
 
     [key: string]: unknown; // This allows for additional properties...
 }

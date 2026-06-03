@@ -1,0 +1,10 @@
+{
+    "user_edit": "Edit profile",
+    "user_context_profile": "{{user}}'s profile",
+    "pronouns": "Pronouns",
+    "field_nickname": "Change nickname",
+    "field_avatar": "Change your avatar",
+    "field_pronouns": "Your pronouns",
+    "field_bio": "Your bio",
+    "submit_profile_changes": "Confirm changes"
+}

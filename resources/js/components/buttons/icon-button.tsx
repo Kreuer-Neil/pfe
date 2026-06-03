@@ -19,7 +19,7 @@ export default function IconButton(
         textContent,
         showText = false,
         title = '',
-        onClick = () => null,
+        onClick = (e) => e.preventDefault(),
         href = '',
         className = '',
     }: IconButtonProps): ReactNode {

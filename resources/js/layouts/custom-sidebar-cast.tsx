@@ -22,7 +22,7 @@ function MobileHeader({appHeaderContext, switchModalState}: {
         <div className="bg-sidebar min-h-16 p-2 flex items-center sm:hidden">
             <div className="flex gap-2 px-2 items-center">
                 <img src={appHeaderContext?.contextImageSrc ?? useImageAsset('app/logo')}
-                     alt={appHeaderContext?.contextImageAlt ?? 'Come Unite app logo'}
+                     alt={appHeaderContext?.contextImageAlt ?? 'ComeUnite app logo'}
                      className="rounded-sm bg-loading border border-secondary-border size-8"/>
                 <div className="flex flex-col">
                     <span className="section-title">{appHeaderContext?.context ?? defaultTitle}</span>
