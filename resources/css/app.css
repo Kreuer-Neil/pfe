@@ -57,9 +57,11 @@
     --color-edit: var(--edit);
     --color-edit-foreground: var(--edit-foreground);
 
-    --color-tag-valid: var(--tag-valid);
+    /*--color-tag-valid: var(--tag-valid);*/
     --color-tag-neutral: var(--tag-neutral);
+    --color-tag-neutral-border: var(--tag-neutral-border);
     --color-tag-warning: var(--tag-warning);
+    --color-tag-warning-border: var(--tag-warning-border);
 
     --color-muted: var(--muted);
     --color-muted-foreground: var(--muted-foreground);
@@ -116,10 +118,13 @@
     --foreground-main: oklch(0.145 0 0);
     --foreground-light: oklch(0.981 0 0);
 
-    --background: oklch(1 0 0);
+    --background: oklch(0.9821 0 0);
     --foreground: var(--foreground-main);
     --modal-behind: oklch(0.576 0.053 159.319 / 0.5);
     /*--card: oklch(1 0 0);*/
+
+    --thumbnail: oklch(1 0 0);
+    --thumbnail-foreground: oklch(0.145 0 0);
 
     --card: oklch(0.9612 0 0);
     --card-foreground: var(--foreground-main);
@@ -152,9 +157,11 @@
 
     --valid: var(--sprout-green);
 
-    --tag-valid: var(--sprout-green);
-    --tag-neutral: var(--neutral-blue);
-    --tag-warning: var(--atomic-tangerine);
+    /*--tag-valid: var(--sprout-green);*/
+    --tag-neutral: oklch(0.9 0.023 179.301 / 0.3);
+    --tag-neutral-border: var(--neutral-blue);
+    --tag-warning: oklch(0.787 0.1 47.079 / 0.3);
+    --tag-warning-border: var(--atomic-tangerine);
 
     --muted: oklch(0.97 0 0);
     --muted-foreground: oklch(0.5472 0.022 262.93);
@@ -464,7 +471,11 @@
     }
 
     .item-tag {
-        @apply bg-tag-neutral flex gap-1 p-1 px-1.5 rounded-xs items-center;
+        @apply bg-tag-neutral border border-tag-neutral-border flex gap-1 p-1 px-1.5 rounded-xs items-center;
+    }
+
+    .item-tag-warning {
+        @apply bg-tag-warning border border-tag-warning-border flex gap-1 p-1 px-1.5 rounded-xs items-center;
     }
 
     .text-with-icon {

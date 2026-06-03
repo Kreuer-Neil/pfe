@@ -21,7 +21,7 @@ function ParticipatingIcon({participating}: { participating: boolean }): ReactNo
         return (
             <CalendarCheck
                 // title={"You are participating"}
-                className="item-tag bg-tag-valid"/>
+                className="item-tag bg-tag-neutral"/>
         );
     }
 }
@@ -33,11 +33,10 @@ function TaskIconParticipation({participations, min, className = ''}: {
 }) {
     if (min) {
         const colorClass: string = (participations / min > /*recommendedTaskParticipationsRate*/ .8)
-            ? '' : "bg-warning text-warning-foreground";
+            ? 'item-tag' : 'item-tag-warning';
         return (
             <span className={
-                cn("item-tag",
-                    colorClass,
+                cn(colorClass,
                     className)
             }>
                 {participations ?? 0}/{min}<UsersRound/>
