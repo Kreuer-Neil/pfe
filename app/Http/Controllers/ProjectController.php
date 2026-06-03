@@ -12,6 +12,7 @@ use App\Models\Member;
 use App\Models\Project;
 use App\Models\User;
 use Exception;
+use File;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -20,6 +21,8 @@ use Intervention\Image\Format;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use Str;
+use function Laravel\Prompts\error;
+use function Pest\Laravel\delete;
 
 class ProjectController extends Controller
 {
@@ -238,6 +241,8 @@ class ProjectController extends Controller
 
         if (array_key_exists('icon', $validated)) {
 
+            $oldIconName = $project->icon;
+
             $path = $request
                 ->file('icon')
                 ->store('images/projects', 'public');
@@ -253,7 +258,18 @@ class ProjectController extends Controller
                 $image->cover($scale, $scale);
                 $encoded = $image->encodeUsingFormat(Format::PNG, quality: 65);
                 $encoded->save("../storage/app/public/images/projects/${key}/${iconName}.png");
+                if ($oldIconName) {
+                    $oldFilePath = "../storage/app/public/images/projects/${key}/${oldIconName}.png";
+                    if (File::exists($oldFilePath)) {
+                        File::delete($oldFilePath);
+                    }
+                }
             }
+
+            if (File::exists("../storage/app/public/images/projects/${iconName}.png")) {
+                File::delete("../storage/app/public/images/projects/${iconName}.png");
+            }
+
             $project->icon = $iconName;
         }
 
@@ -262,17 +278,15 @@ class ProjectController extends Controller
                 'key' => 'not_allowed',
                 'params' => []
             ]]);
+
+
         }
 
         $project->name = $validated['name'];
         $project->description = $validated['description'];
 
-        // TODO remove flash and add error
         if (!$project->save()) {
-            Inertia::flash(['error' => [
-                'key' => 'not_allowed',
-                'params' => []
-            ]]);
+            // TODO remove flash and add error
         }
 
         Inertia::flash(['success' => true]);
