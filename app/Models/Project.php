@@ -20,7 +20,7 @@ class Project extends Model
     use SoftDeletes;
 
     //TODO: Slug as project identifier
-    protected $fillable = ['owner_id', 'name', 'icon', 'description', 'status', 'slug', 'lang', 'coordinates', 'is_private'];
+    protected $fillable = ['owner_id', 'name', 'icon', 'description', 'slug', 'lang', 'coordinates', 'is_private'];
 
     /**
      * Returns the address where the project takes place
@@ -30,7 +30,7 @@ class Project extends Model
         if (!$this->coordinates) return null;
         $coordinates = explode(', ', $this->coordinates);
         // TODO return real location if possible with Google services? (And add column "address" on projects)
-        return "Place at ${coordinates[0]}, ${coordinates[1]}";
+        return "Place at {$coordinates[0]}, {$coordinates[1]}";
     }
 
     /**
@@ -160,6 +160,12 @@ class Project extends Model
         $member = $this->members->find($user->id);
         if (!$member) return ProjectRole::VIEWER;
         return $member->pivot->role;
+    }
+
+    // TODO replace with user authorization
+    public function canEdit(User $user): bool
+    {
+        return $this->userRole($user) === ProjectRole::ADMIN;
     }
 
 }

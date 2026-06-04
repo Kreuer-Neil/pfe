@@ -61,9 +61,12 @@ export interface IUser extends IProfile {
 
 export interface IProfile {
     id: string;
+    first_name: string;
+    last_name: string;
     nickname: string;
-    image: string;
-    bio: string;
+    pronouns?: string;
+    avatar: string;
+    bio?: string;
 
     [key: string]: unknown; // This allows for additional properties...
 }
@@ -90,7 +93,8 @@ export interface IDashboardProject extends IProjectContext {
 export interface IProjectMiniature extends IProjectContext {
     description: string;
     // featured_members: IUser[];
-    is_member: boolean;
+    user_role: 'viewer' | 'member' | 'taskmaster' | 'moderator' | 'admin';
+    // is_member: boolean;
     members_count: number;
     coordinates: string | null;
     place: string | null;
@@ -187,4 +191,17 @@ export interface IServerResponse {
 export interface ITranslatableObject {
     key: string;
     params: { [key: string]: string };
+}
+
+export interface INavUser extends IProfile {
+    id: number;
+    first_name: string;
+    last_name: string;
+    avatar?: string;
+    created_at: string;
+    updated_at: string;
+
+    projects: IProjectContext[];
+
+    [key: string]: unknown;
 }

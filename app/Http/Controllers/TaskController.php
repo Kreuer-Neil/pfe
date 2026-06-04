@@ -14,6 +14,8 @@ class TaskController extends Controller
 {
     public function index()
     {
+        auth()->user()->toFormatedNavUser();
+
         // AGENDA
         return Inertia::render('tasks/tasks-index');
     }

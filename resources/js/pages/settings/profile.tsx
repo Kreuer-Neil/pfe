@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import { edit } from '@/routes/profile';
+import {useTranslation} from "react-i18next";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -29,6 +30,7 @@ export default function Profile({
     status?: string;
 }) {
     const { auth } = usePage<SharedData>().props;
+    const {t} = useTranslation('auth');
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -38,7 +40,7 @@ export default function Profile({
                 <div className="space-y-6">
                     <HeadingSmall
                         title="Profile information"
-                        description="Update your name and email address"
+                        description={t('update_email')}
                     />
 
                     <Form
@@ -50,27 +52,41 @@ export default function Profile({
                     >
                         {({ processing, recentlySuccessful, errors }) => (
                             <>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="name">Name</Label>
+                                {/*<div className="grid gap-2">
+                                    <Label htmlFor="first_name">{t('field_first_name')}</Label>
 
                                     <Input
                                         id="name"
                                         className="mt-1 block w-full"
-                                        defaultValue={auth.user.name}
-                                        name="name"
+                                        defaultValue={auth.user.first_name}
+                                        name="first_name"
                                         required
-                                        autoComplete="name"
-                                        placeholder="Full name"
+                                        autoComplete="first_name"
+                                        placeholder={t('field_first_name')}
+                                    />
+                                    <InputError
+                                        className="mt-2"
+                                        message={errors.first_name}
+                                    />
+                                    <Label htmlFor="last_name">{t('field_last_name')}</Label>
+                                    <Input
+                                        id="name"
+                                        className="mt-1 block w-full"
+                                        defaultValue={auth.user.last_name}
+                                        name="last_name"
+                                        required
+                                        autoComplete="last_name"
+                                        placeholder={t('field_last_name')}
                                     />
 
                                     <InputError
                                         className="mt-2"
-                                        message={errors.name}
+                                        message={errors.last_name}
                                     />
-                                </div>
+                                </div>*/}
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="email">Email address</Label>
+                                    <Label htmlFor="email">{t('field_email')}</Label>
 
                                     <Input
                                         id="email"
@@ -80,7 +96,7 @@ export default function Profile({
                                         name="email"
                                         required
                                         autoComplete="username"
-                                        placeholder="Email address"
+                                        placeholder={t('field_email')}
                                     />
 
                                     <InputError

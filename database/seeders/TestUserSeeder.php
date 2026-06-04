@@ -25,6 +25,8 @@ class TestUserSeeder
                 'email_verified_at' => now(),
 
                 'nickname' => 'Test User',
+                'avatar' => 'test_user',
+                'bio' => 'Hi! My name is John Doe, I’m literally a user reference for anyone using an app made by a dev with a minimum of culture. I’m the “John Smith” of the internet. This is basically an example profile, so there’s nothing to see here :>'
             ]
         );
 
@@ -37,7 +39,8 @@ class TestUserSeeder
                 'owner_id' => $testUser->id,
                 'name' => 'Sunshine Alley 22b',
                 'description' => 'The group for Building 22b on Sunshine Alley. Our shared garden is soon to become a vegetable garden, and we\'re workin hard on it. So that we could dine together sometimes, nearly for free. Living already costs too much, at least mutual aid is free.',
-                'slug' => 'buil22',
+                'icon' => 'project_default',
+                'slug' => \Str::slug('Sunshine Alley 22b'),
                 'coordinates' => '50.61126712133781, 5.510050323190294',
 
                 'is_private' => true,

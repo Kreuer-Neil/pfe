@@ -16,6 +16,7 @@ class PasswordController extends Controller
      */
     public function edit(): Response
     {
+        \auth()->user()->projects;
         return Inertia::render('settings/password');
     }
 

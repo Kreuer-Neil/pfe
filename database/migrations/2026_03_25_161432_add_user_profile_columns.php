@@ -14,8 +14,10 @@ return new class extends Migration {
 //            $table->boolean('show_name')->default(0);
 
             $table->string('nickname')->nullable();
-            $table->string('image')->nullable();
+            $table->string('avatar')->nullable();
             $table->string('pronouns')->nullable();
+            $table->boolean('is_private')->default(true);
+
             $table->text('bio')->nullable();
 
         });

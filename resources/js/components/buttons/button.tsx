@@ -23,6 +23,7 @@ export default function Button(
         type = 'button',
         href = '',
         className = '',
+        // TODO remove later
         onClick = (e) => e.preventDefault(),
     }: ButtonProps
 ): ReactNode {
@@ -48,7 +49,9 @@ export default function Button(
 
     if (href === '')
         return (
-            <button onClick={onClick} type={type}
+            <button onClick={onClick} onKeyDown={(e)=> {
+                if (e.key === '13' || e.key === ' ') onClick(e);
+            }} type={type}
                     className={cn('text-center p-2 px-4 text-lg font-semibold w-full max-w-md rounded-sm bg-secondary text-secondary-foreground cursor-pointer',
                         style, className)}>
                 {textContent}

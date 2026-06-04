@@ -45,7 +45,7 @@ export default function ButtonText(
     if (href === '') {
         return (
             <button onClick={onClick} type={type} className={cn('button-text', style, className)} autoFocus={autoFocus}>
-                {Icon ? <Icon/> : ''}
+                {Icon && <Icon/>}
                 {textContent}
             </button>
         );

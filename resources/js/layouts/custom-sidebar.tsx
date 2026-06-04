@@ -1,6 +1,6 @@
-import {Dispatch, ReactNode, SetStateAction} from "react";
+import {ReactNode} from "react";
 import {useTranslation} from "react-i18next";
-import {Bell, Calendar, ChevronLeft, Home, LucideIcon, Search, Settings2} from "lucide-react";
+import {Bell, Calendar, ChartGantt, Home, LucideIcon, Search, Settings2} from "lucide-react";
 import ProjectIcon from "@/components/icons/project-icon";
 import {dashboard} from "@/routes";
 import {index as tasksIndex} from "@/actions/App/Http/Controllers/TaskController";
@@ -8,9 +8,10 @@ import {Link, usePage} from "@inertiajs/react";
 import {IProjectContext, type SharedData} from "@/types";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import {show as projectsShow} from "@/routes/projects";
-import {index as projectsIndex} from "@/actions/App/Http/Controllers/ProjectController";
+import {index as projectsIndex, myProjects} from "@/actions/App/Http/Controllers/ProjectController";
 import {show as showProfile} from "@/actions/App/Http/Controllers/UserProfileController";
 import {cn} from "@/lib/utils";
+import {edit as profileEdit} from "@/actions/App/Http/Controllers/Settings/ProfileController";
 
 interface INavItemProps {
     icon?: LucideIcon;
@@ -22,16 +23,18 @@ interface INavItemProps {
 function SidebarNavItem({props, className = ''}: { props: INavItemProps, className?: string; }) {
     const Icon = props.icon;
     return (
-        <Link as="li" href={props.href}
-              className={cn('nav-item section-title', className)}>
-            {Icon ?
-                <Icon className="p-1"/>
-                /* @ts-ignore */
-                : props.project
-                    ? <ProjectIcon project={props.project} className="border border-secondary-border"/>
-                    : null}
-            <span>{props.title}</span>
-        </Link>
+        <li>
+            <Link as="a" href={props.href}
+                  className={cn('nav-item section-title', className)}>
+                {Icon ?
+                    <Icon className="p-1"/>
+                    /* @ts-ignore */
+                    : props.project
+                    && <ProjectIcon project={props.project} className="border border-secondary-border"/>
+                }
+                <span>{props.title}</span>
+            </Link>
+        </li>
     );
 }
 
@@ -50,11 +53,11 @@ export default function CustomSidebar(
             title: t('dashboard'),
             href: dashboard().url
         },
-        {
+        /*{
             icon: Bell,
             title: t('notifications'),
             href: ''
-        },
+        },*/
         {
             icon: Calendar,
             title: t('my_tasks'),
@@ -63,9 +66,14 @@ export default function CustomSidebar(
         {
             icon: Settings2,
             title: t('settings'),
-            href: ''
-        }
-    ]
+            href: profileEdit().url
+        },
+        {
+            icon: ChartGantt,
+            title: t('manage_projects'),
+            href: myProjects().url
+        },
+    ];
 
     // TODO change auth.user declaration
     const projects: IProjectContext[] = auth.user.projects as IProjectContext[];
@@ -73,19 +81,22 @@ export default function CustomSidebar(
     const searchNavItem: INavItemProps = {
         title: t('search_project'),
         icon: Search,
-        href: projectsIndex().url,
+        href: projectsIndex().url
     };
 
     return (
         <nav className="sidebar" id="sidebar">
             <h2 className="sr-only">{t('title')}</h2>
 
-            <SidebarSwitchIcon className="p-2 mt-4 mr-4 ml-auto cursor-pointer" onClick={switchModalState}/>
+            <SidebarSwitchIcon className="p-2 mt-4 mr-4 ml-auto cursor-pointer" onClick={switchModalState}
+                               onKeyDown={(e) => {
+                                   if (e.key === '13' || e.key === ' ') switchModalState();
+                               }} tabIndex={0} id="sidebar-switch"/>
 
             <div className="sidebar-content">
 
                 <div>
-                    <Link as="div" href={showProfile(auth.user.id).url}
+                    <Link as="a" href={showProfile(auth.user.id).url}
                           className="nav-profile">
                         <img src={useImageAsset(`users/${auth.user.avatar}/small`)}
                              alt={t('user_profile_picture', {username: auth.user.nickname})}

@@ -155,7 +155,7 @@ export default function TaskCreateModal({showModal, setShowModal, project}: {
                     }}
                     />
                 </ModalSection>
-                <div className="flex flex-col gap-3 px-2">
+                <div className="flex flex-col gap-3 px-2 items-center">
                     <Button textContent={t('task_create_button')} type="submit" onClick={store}/>
                     {storeResponse.error ? <span
                         className={storeResponse.success ? 'field-success' : 'field-error' + ' -mt-2'}>{t('errors:' + storeResponse.error.key, storeResponse.error.params)}</span> : null}

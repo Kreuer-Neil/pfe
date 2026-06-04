@@ -29,7 +29,9 @@ export default function ModalCast(
                 {title !== '' ?
                     <h2 className="section-title"> {title} </h2> : null
                 }
-                <div onClick={closeModal} tabIndex={0}
+                <div onClick={closeModal} onKeyDown={(e) => {
+                    if (e.key === '13' || e.key === ' ') closeModal();
+                }} tabIndex={0}
                      className="p-2 ml-auto cursor-pointer rounded-full">
                     <X/>
                 </div>

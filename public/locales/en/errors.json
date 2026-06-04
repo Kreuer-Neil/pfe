@@ -7,7 +7,10 @@
     "invalid_parameter": "Please check that you have filled all the required fields.",
     "not_allowed_on_project": "You are not allowed to add tasks to this project.",
     "task_not_found": "Error: Task does not exist.",
+    "project_name_exists": "There is already a project with this name. Please choose another name for your project.",
     "success_task_created": "Task {{task}} created successfully.",
     "success_task_updated": "Task {{task}} updated successfully.",
-    "participation_error": "Participation rejected."
+    "participation_error": "Participation rejected.",
+    "project_not_found": "Error: project does not exist.",
+    "success_project_updated": "Project {{project}} updated successfully."
 }

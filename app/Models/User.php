@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\FormatedModels\FormatedNavUser;
+use App\FormatedModels\FormatedProfile;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -26,7 +28,7 @@ class User extends Authenticatable
         'last_name',
         'email',
         'password',
-
+        'avatar',
         'nickname',
         'bio',
     ];
@@ -98,13 +100,16 @@ class User extends Authenticatable
         return $this
             ->tasks()
             // TODO check for this later, only for non-validated tasks if possible
-            ->where('due_at', '>=', Carbon::now()->addHours(-24));
+            // Add 24h-left tasks from user projects with not enough participations and mix them
+            // ->where('due_at', '<=', Carbon::now()->addHours(-24))
+            // ->where('pivot_participating',true)
+            ;
     }
 
     /**
      * Get the user's projects
      */
-    public function projects():BelongsToMany
+    public function projects(): BelongsToMany
     {
         return $this->belongsToMany(Project::class, Member::class);
     }
@@ -112,10 +117,39 @@ class User extends Authenticatable
     /**
      * Ensures that if user has no nickname, returns the user's name
      */
-    public function nickname():string
+    public function nickname(): string
     {
         return $this->nickname ?? "$this->first_name $this->last_name";
     }
 
+    /**
+     * Returns temporary formated user to make nav work
+     */
+    public function toFormatedNavUser(): FormatedNavUser
+    {
+        return new FormatedNavUser($this);
+    }
 
+    /**
+     * Returns formated user profile
+     */
+    public function toFormatedProfile(): FormatedProfile
+    {
+        return new FormatedProfile($this);
+    }
+
+    public static function canFindUser($userId, User $currentUser): null|User
+    {
+        $user = User::find($userId);
+
+        if (!$user) {
+            return null;
+        }
+
+//        if ($user->is_private) {
+            // Check if user has projects in common or public projects
+//        }
+
+        return $user;
+    }
 }

@@ -22,7 +22,7 @@ function MobileHeader({appHeaderContext, switchModalState}: {
         <div className="bg-sidebar min-h-16 p-2 flex items-center sm:hidden">
             <div className="flex gap-2 px-2 items-center">
                 <img src={appHeaderContext?.contextImageSrc ?? useImageAsset('app/logo')}
-                     alt={appHeaderContext?.contextImageAlt ?? 'Come Unite app logo'}
+                     alt={appHeaderContext?.contextImageAlt ?? 'ComeUnite app logo'}
                      className="rounded-sm bg-loading border border-secondary-border size-8"/>
                 <div className="flex flex-col">
                     <span className="section-title">{appHeaderContext?.context ?? defaultTitle}</span>
@@ -33,11 +33,14 @@ function MobileHeader({appHeaderContext, switchModalState}: {
             </div>
 
             <div className="flex ml-auto">
-                <BellDot className="p-2 cursor-pointer hover:bg-secondary focus:bg-secondary rounded-sm"
+                {/*<BellDot className="p-2 cursor-pointer hover:bg-secondary focus:bg-secondary rounded-sm"
                          onClick={() => {
-                         }}/>
+                         }}/>*/}
+                {/* TODO fix key reacting to onKeyDown */}
                 <Menu className="p-2 cursor-pointer hover:bg-secondary focus:bg-secondary rounded-sm"
-                      onClick={switchModalState}/>
+                      onClick={switchModalState} onKeyDown={(e)=> {
+                    if (e.key === '13' || e.key === ' ') switchModalState();
+                }} tabIndex={0} id="burger-menu"/>
             </div>
 
         </div>
@@ -54,11 +57,11 @@ export default function CustomSidebarCast(
     }: CustomSidebarProps): ReactNode {
 
     return (
-        <header className="z-10">
+        <div className="z-10 max-h-screen sticky top-0">
             <MobileHeader appHeaderContext={appHeaderContext} switchModalState={switchModalState}/>
             <div className="sidebar-cast" onClick={onClickOutsideSidebar}>
                 <CustomSidebar switchModalState={switchModalState} sidebarSwitchIcon={sidebarSwitchIcon}/>
             </div>
-        </header>
+        </div>
     );
 }

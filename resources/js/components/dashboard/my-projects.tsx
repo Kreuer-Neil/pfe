@@ -1,50 +1,46 @@
 import {projects as projectsPage} from '@/routes';
 import {IDashboardProject} from "@/types";
 import {ReactNode} from "react";
-import {ListFilter, LucideSearch} from "lucide-react";
-import ButtonText from "@/components/buttons/button-text";
+import {ListFilter} from "lucide-react";
 import Button from "@/components/buttons/button";
 import IconButton from "@/components/buttons/icon-button";
 import ProjectItem from "@/components/projects/project-item";
 import {useTranslation} from "react-i18next";
-import {projects as projectsIndex} from '@/routes';
 
 
 function ProjectsList({projects}: { projects: IDashboardProject[] }): ReactNode {
-    const {t} = useTranslation(['projects','dashboard']);
-    if (projects.length > 0) {
-        let index = 0;
+    const {t} = useTranslation(['projects', 'dashboard']);
+    if (projects.length <= 0) {
         return (
-            <ol className="px-2 flex flex-col gap-3 items-center">
-                {
-                    projects.map((project: IDashboardProject): ReactNode => {
-                        index++;
-                        return (
-                            <li key={project.id} className="w-full">
-                                <ProjectItem project={project}/>
-                            </li>
-                        );
-                    })
-                }
-            </ol>
+            <div className="thumbnails-list-container">
+                <p>{t("no_projects_joined")}</p>
+                <Button href={projectsPage().url} textContent={t("search_project")} color="cta"/>
+            </div>
         );
     }
-    // Else
+
+    let index = 0;
     return (
-        <div className="empty-warning">
-            <p>{t("no_projects_joined")}</p>
-            {/*TODO fix route*/}
-            <Button href={projectsPage().url} textContent={t("search_project")} color="cta"></Button>
-        </div>
+        <ol className="thumbnails-list-container">
+            {
+                projects.map((project: IDashboardProject): ReactNode => {
+                    index++;
+                    return (
+                        <li key={project.id} className="w-full">
+                            <ProjectItem project={project}/>
+                        </li>
+                    );
+                })
+            }
+        </ol>
     );
 }
 
 export default function MyProjects({projects}: { projects: IDashboardProject[] | null }): ReactNode {
-    const {t} = useTranslation(['dashboard']);
+    const {t} = useTranslation(['dashboard', 'common']);
     if (!projects)
-        // TODO translate no project text
         return (
-            <p>{t('common:no_projects')}</p>
+            <p>{t('common:projects_not_found')}</p>
         );
     return (
         <section className="items-section">

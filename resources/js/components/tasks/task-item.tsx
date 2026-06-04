@@ -72,7 +72,9 @@ export default function TaskItem(
     return (
         <article className={cn("thumbnail-item", className)} tabIndex={0} key={task.id.toString()}
                  onClick={() => onTap(task.id)}
-        >
+                 onKeyDown={(e)=>{
+                     if (e.key === '13' || e.key === ' ') onTap(task.id);
+                 }}>
             <h3 className="item-title w-full">{task.title}</h3>
 
             {!isInProjectPage ?
