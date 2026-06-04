@@ -389,7 +389,7 @@
 
     /** Generic app style **/
     .main-page {
-        @apply w-full max-w-7xl flex flex-col items-center gap-8 py-8;
+        @apply w-full max-w-7xl flex flex-col items-center gap-8 py-8 min-h-screen;
     }
 
     .page-title {
@@ -512,7 +512,7 @@
 
     /* TODO animate change? */
     .sidebar {
-        @apply h-screen overflow-y-scroll bg-sidebar max-w-[85vw] w-full z-20 sm:min-w-2xs max-sm:hidden max-sm:absolute max-sm:-left-80 max-sm:top-0;
+        @apply h-screen overflow-y-scroll bg-sidebar max-w-[85vw] w-full z-20 sm:w-2xs max-sm:hidden max-sm:absolute max-sm:-left-80 max-sm:top-0;
 
         &.open {
             @apply max-sm:left-0 max-sm:block;
@@ -520,6 +520,10 @@
 
         &.closed {
             @apply w-19;
+
+            & p {
+                @apply hidden;
+            }
         }
     }
 
