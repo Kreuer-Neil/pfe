@@ -1,5 +1,6 @@
 {
     "user_edit": "Edit profile",
+    "user_add": "Add friend",
     "user_context_profile": "{{user}}'s profile",
     "pronouns": "Pronouns",
     "field_nickname": "Change nickname",

@@ -126,10 +126,9 @@ export default function profileShow({}) {
                                 <div className="flex gap-1 justify-end -mb-3">
                                     {isCurrentUser ?
                                         <IconButton icon={UserPen} textContent={t('user_edit')}
-                                                    showText={true}
-                                                    onClick={() => setIsEditing(true)}/>
+                                                    showText={true} onClick={() => setIsEditing(true)}/>
                                         : <IconButton icon={UserPlus} textContent={t('user_add')}
-                                        />}
+                                                      showText={true}/>}
                                     <IconButton icon={Share2} textContent={t('common:share')}/>
                                     {!isCurrentUser &&
                                         <IconButton icon={Flag} textContent={t('common:button_report')}/>}
