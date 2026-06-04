@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use function PHPUnit\Framework\isInt;
 
 class Task extends Model
 {
@@ -93,7 +92,7 @@ class Task extends Model
 
     public function isParticipating(User|int $user): bool
     {
-        $userId = isInt($user) ? $user : $user->id;
+        $userId = is_int($user) ? $user : $user->id;
         return !$this->participations->where('user_id', '==', $userId)->isEmpty();
     }
 
