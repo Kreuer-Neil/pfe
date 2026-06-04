@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Language;
 use App\Enums\ProjectRole;
 use App\Models\Member;
 use App\Models\Project;
@@ -42,6 +43,7 @@ class TestUserSeeder
                 'icon' => 'project_default',
                 'slug' => \Str::slug('Sunshine Alley 22b'),
                 'coordinates' => '50.61126712133781, 5.510050323190294',
+                'lang' => Language::ENGLISH,
 
                 'is_private' => true,
             ]
@@ -57,7 +59,7 @@ class TestUserSeeder
             Member::create([
                 'project_id' => $sharedGardenProject->id,
                 'user_id' => $user->id,
-                'role' => (!random_int(0,1)) ? ProjectRole::MEMBER : ProjectRole::TASK_MANAGER,
+                'role' => (!random_int(0, 1)) ? ProjectRole::MEMBER : ProjectRole::TASK_MANAGER,
             ]);
         }
 
