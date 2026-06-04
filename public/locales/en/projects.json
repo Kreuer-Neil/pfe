@@ -48,5 +48,6 @@
     "task_edit_cancel": "Cancel edition",
     "task_delete": "Delete task",
     "task_delete_warning": "You're about to delete a task",
-    "task_delete_warning_message": "Are you sure you want to delete the task \"{{task}}\"? If you do, participations will be cancelled, and notes removed."
+    "task_delete_warning_message": "Are you sure you want to delete the task \"{{task}}\"? If you do, participations will be cancelled, and notes removed.",
+    "create_project": "Create a project"
 }
