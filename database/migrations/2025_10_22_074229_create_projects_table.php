@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->text('description')->nullable();
             // Status is a collection of posts related to the project
             $table->string('slug',/*24*/)->unique();
-            $table->enum('lang', Language::cases()); // Project languages. Default: User lang
+            $table->enum('lang', Language::cases())->default(Language::ENGLISH); // Project languages. Default: User lang/English
             $table->string('coordinates')->nullable();
             $table->boolean('is_private')->default(true);
 
