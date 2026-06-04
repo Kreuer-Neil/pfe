@@ -240,6 +240,10 @@
         @apply border-border;
     }
 
+    html {
+        @apply bg-primary;
+    }
+
     body {
         @apply bg-background text-foreground;
     }
