@@ -79,7 +79,7 @@ class DatabaseSeeder extends Seeder
                 'description' => $projectData['description'],
             ];
 
-            $project = Project::factory()->create($projectArray);
+            $project = Project::create($projectArray);
 
             Member::create([
                 'user_id' => $owner->id,
