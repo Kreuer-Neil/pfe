@@ -301,4 +301,30 @@ class ProjectController extends Controller
         }
         return Inertia::render('projects/my-projects', compact(['projects']));
     }
+
+    public function join(string $slug)
+    {
+        $project = Project::where('slug', $slug)->first();
+        if (!$project) {
+            Inertia::flash(['error' => [
+                'key' => 'project_not_found',
+                'params' => [],
+            ]]);
+            return redirect(route('projects.show', $slug));
+        }
+
+        if ($project->is_private) {
+            return redirect(route('projects'));
+        }
+
+
+        Member::create([
+            'user_id' => auth()->user()->id,
+            'project_id'=>$project->id,
+            'role' => ProjectRole::MEMBER
+        ]);
+
+        Inertia::flash(['join_success' => true]);
+        return redirect(route('projects.show', $slug));
+    }
 }
