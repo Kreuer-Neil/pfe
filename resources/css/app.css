@@ -433,7 +433,7 @@
     }
 
     .modal {
-        @apply m-auto p-2 py-3 bg-background rounded-lg w-full max-w-3xl;
+        @apply m-auto p-2 py-3 bg-background text-foreground rounded-lg w-full max-w-3xl;
 
         &::backdrop {
             @apply bg-modal-behind;
