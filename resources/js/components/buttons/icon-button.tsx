@@ -27,14 +27,15 @@ export default function IconButton(
     const baseStyle = 'bg-button p-1 px-2 rounded-xs cursor-pointer flex gap-1'
     const textSpanStyle = showText ? '' : 'sr-only';
 
-    if (href === '')
-        return <button title={title} className={cn(baseStyle, className)} onClick={onClick} onKeyDown={(e)=> {
+    if (href === '') {
+        return <button title={title} className={cn(baseStyle, className)} onClick={onClick} onKeyDown={(e) => {
             if (e.key === '13' || e.key === ' ') onClick(e);
         }}><span
-            className={textSpanStyle}>{textContent}</span><Icon/></button>;
+            className={textSpanStyle}>{textContent}</span><Icon className="w-5"/></button>;
+    }
 
     return <Link title={title} href={href} className={cn(baseStyle, className)}><span
-        className={textSpanStyle}>{textContent}</span><Icon/></Link>;
+        className={textSpanStyle}>{textContent}</span><Icon className="w-5"/></Link>;
 
 
 }

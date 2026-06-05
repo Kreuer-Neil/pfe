@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
+use Str;
 
 class Project extends Model
 {
@@ -147,9 +148,23 @@ class Project extends Model
         return true;
     }
 
-    public function generateInvitation(string $duration, ?int $uses, User $user)
+    public function generateInvitation(string|null $expires_at, int|null $uses): ProjectInvitation
     {
+        $code = $this->generateInvitationCode();
+        return ProjectInvitation::create([
+            'project_id' => $this->id,
+            'code' => $code,
+            'expires_at' => $expires_at,
+            'uses' => $uses,
+        ]);
+    }
 
+    function generateInvitationCode(): string
+    {
+        $code = Str::random();
+        if (ProjectInvitation::withTrashed()->where('code', $code)->exists())
+            return $this->generateInvitationCode();
+        return $code;
     }
 
     /**
@@ -166,6 +181,11 @@ class Project extends Model
     public function canEdit(User $user): bool
     {
         return $this->userRole($user) === ProjectRole::ADMIN;
+    }
+
+    public function invitations():HasMany
+    {
+        return $this->hasMany(ProjectInvitation::class);
     }
 
 }
