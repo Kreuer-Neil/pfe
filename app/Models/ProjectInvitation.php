@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProjectInvitation extends Model
@@ -15,9 +15,9 @@ class ProjectInvitation extends Model
         'expires_at'
     ];
 
-    public function project():HasOne
+    public function project():BelongsTo
     {
-        return $this->hasOne(Project::class);
+        return $this->BelongsTo(Project::class);
     }
 
     public function isValid():bool

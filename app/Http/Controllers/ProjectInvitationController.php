@@ -11,6 +11,12 @@ use Inertia\Inertia;
 
 class ProjectInvitationController extends Controller
 {
+    function index()
+    {
+        auth()->user()->projects;
+        return Inertia::render('projects/invitation');
+    }
+
     function show(Request $request)
     {
         $slug = $request->project_slug;
@@ -36,8 +42,16 @@ class ProjectInvitationController extends Controller
         return redirect(route('projects.show', $slug));
     }
 
+
+    /**
+     * To use an invitation
+     */
     function use(string $code, Request $request)
     {
+//        $request->validate([
+//            'code'=>'required|string|size:16',
+//            'project_slug'=>''
+//        ]);
         $invitation = ProjectInvitation::where('code', $code)->first();
         if (!$invitation->isValid()) {
             Inertia::flash(['error' => 'invalid_code']);
@@ -45,23 +59,24 @@ class ProjectInvitationController extends Controller
                 ;
         }
 
-        if ($invitation->project()->members()->find((auth()->user()->id))->exists()) {
+        if ($invitation->project()->first()->members()->find((auth()->user()->id))) {
             Inertia::flash(['error' => 'invalid_code']);
-            return back()//->withErrors()
-                ;
+            return back();
         }
 
         if (!$request->confirm) {
             Inertia::flash([
                 'error' => null,
-                'success' => true
+                'confirm' => true,
+                'code'=> $code,
             ]);
-            return back();
+
+            return redirect(route('projects.invitations'));
         }
 
         Member::create([
             'user_id' => auth()->user()->id,
-            'project_id' => $invitation->project()->id,
+            'project_id' => $invitation->project()->first()->id,
             'role' => ProjectRole::MEMBER,
         ]);
 

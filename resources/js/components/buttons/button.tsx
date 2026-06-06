@@ -3,6 +3,8 @@ import {ElementType, ReactNode} from "react";
 import {cn} from "@/lib/utils";
 import {Button as ButtonElement} from "@headlessui/react";
 import {LucideIcon} from "lucide-react";
+// @ts-ignore
+import {UrlMethodPair} from "@inertiajs/core/types/types";
 
 
 interface ButtonProps {
@@ -10,7 +12,7 @@ interface ButtonProps {
     icon?: LucideIcon | null;
     color?: 'default' | 'edit' | 'cta' | 'warning' | 'destructive';
     type?: 'button' | 'submit';
-    href?: string;
+    href?: string | UrlMethodPair;
     onClick?: ((e: any) => void);
     className?: string;
 }
@@ -49,7 +51,7 @@ export default function Button(
 
     if (href === '')
         return (
-            <button onClick={onClick} onKeyDown={(e)=> {
+            <button onClick={onClick} onKeyDown={(e) => {
                 if (e.key === '13' || e.key === ' ') onClick(e);
             }} type={type}
                     className={cn('text-center p-2 px-4 text-lg font-semibold w-full max-w-md rounded-sm bg-secondary text-secondary-foreground cursor-pointer',
@@ -61,7 +63,8 @@ export default function Button(
     return (
         <Link href={href}
               className={cn('text-center p-2 px-4 text-lg font-semibold w-full max-w-md rounded-sm bg-secondary text-secondary-foreground',
-                  style, className)}>
+                  style, className)}
+              onClick={onClick}>
             {textContent}
         </Link>
     );
