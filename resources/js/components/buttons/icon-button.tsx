@@ -29,7 +29,7 @@ export default function IconButton(
 
     if (href === '') {
         return <button title={title} className={cn(baseStyle, className)} onClick={onClick} onKeyDown={(e) => {
-            if (e.key === '13' || e.key === ' ') onClick(e);
+            if (e.key === 'Enter' || e.key === ' ') onClick(e);
         }}><span
             className={textSpanStyle}>{textContent}</span><Icon className="w-5"/></button>;
     }
