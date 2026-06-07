@@ -1,4 +1,4 @@
-import {projects as projectsPage} from '@/routes';
+import {index as projectsIndex} from '@/actions/App/Http/Controllers/ProjectController';
 import {IDashboardProject} from "@/types";
 import {ReactNode} from "react";
 import {ListFilter} from "lucide-react";
@@ -14,7 +14,7 @@ function ProjectsList({projects}: { projects: IDashboardProject[] }): ReactNode 
         return (
             <div className="thumbnails-list-container">
                 <p>{t("no_projects_joined")}</p>
-                <Button href={projectsPage().url} textContent={t("search_project")} color="cta"/>
+                <Button href={projectsIndex().url} textContent={t("search_project")} color="cta"/>
             </div>
         );
     }
@@ -43,12 +43,12 @@ export default function MyProjects({projects}: { projects: IDashboardProject[] |
             <p>{t('common:projects_not_found')}</p>
         );
     return (
-        <section className="items-section">
+        <section className="items-section max-w-3xl w-full">
             <div className="flex flex-wrap items-center mx-3 mb-1">
                 <h2 className="section-title w-fit mr-auto">
                     {t('common:my_projects')}
                 </h2>
-                <IconButton href={projectsPage().url} textContent={t("dashboard:project_filter")} icon={ListFilter}
+                <IconButton href={projectsIndex().url} textContent={t("dashboard:project_filter")} icon={ListFilter}
                             showText={true} className="ml-auto"/>
             </div>
             <ProjectsList projects={projects}/>
