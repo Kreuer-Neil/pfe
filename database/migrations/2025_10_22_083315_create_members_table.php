@@ -19,8 +19,8 @@ return new class extends Migration
             // ALWAYS add owner id there w/role owner
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 
-            // TODO See how to make it work
-            $table->enum('role', ProjectRole::cases())->nullable()->default(ProjectRole::MEMBER);
+            // TODO switch default value back to "Member" when in production.
+            $table->enum('role', ProjectRole::cases())->nullable()->default(ProjectRole::TASK_MANAGER);
 
             $table->boolean('banned')->default(false);
 
