@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\Language;
 use App\Enums\ProjectRole;
 use App\Models\Member;
 use App\Models\Project;
@@ -29,6 +30,7 @@ class DatabaseSeeder extends Seeder
                 'is_private' => false,
                 'description' => 'Luigi’s Garden is about maintaining sir Luigi’s mansion garden, an unofficial park in this choking city, open to anyone respectful enough.',
                 'coordinates' => '50.61126712133781, 5.510050323190294',
+                'lang'=> Language::ENGLISH,
                 'owner' => [
                     'first_name' => 'Luigi',
                     'last_name' => 'Mario',
@@ -38,8 +40,9 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'name' => 'Silk Song Band',
-                'is_private' => true,
+                'is_private' => false,
                 'description' => 'Eh Guarana Adida SHAW',
+                'lang' => Language::JAPANESE,
                 'owner' => [
                     'first_name' => 'Hornet',
                     'last_name' => 'Silk',
@@ -62,6 +65,38 @@ class DatabaseSeeder extends Seeder
                     ]
                 ],
             ],
+            [
+                'name' => 'Planter des arbres à Seraing',
+                'is_private' => 'false',
+                'description' => 'Replantons des arbres, pour un Seraing plus vert !',
+                'lang' => Language::FRENCH,
+
+                'tasks' => [
+                    [
+                        'title' => 'Planter sur le terrain vague',
+                        'description' => 'Aller planter des arbres sur le terrain vague derrière la HEPL Seraing ! Il y a plein de place, et ils ne risquent pas de s’en servir !',
+                        'min_participations' => 3,
+                        'due_at' => Carbon::create(year: 2026, month: 07, day: 21, hour: 17),
+                    ],
+                    [
+                        'title' => 'Planter sur la place',
+                        'description' => 'Planter des arbres sur la place de Seraing',
+                        'due_at' => Carbon::create(year: 2026, month: 06, day: 17, hour: 11)
+                    ],
+                    [
+                        'title' => 'Planter à la gare',
+                        'description' => 'Planter des arbres à la gare de Seraing',
+                        'due_at' => Carbon::create(year: 2026, month: 06, day: 16, hour: 9)
+                    ],
+                    [
+                        'title' => 'Planter dans l\'entrepôt abandonné',
+                        'description' => 'Planter des arbres dans l\'entrepôt qui a brûlé à de Seraing',
+                        'due_at' => Carbon::create(year: 2026, month: 06, day: 21, hour: 9)
+                    ],
+                ],
+            ]
+
+
         ];
 
         foreach ($projectsData as $projectData) {
@@ -119,5 +154,7 @@ class DatabaseSeeder extends Seeder
                 }
             }
         }
+
+        Project::factory(10)->create(['is_private' => false]);
     }
 }

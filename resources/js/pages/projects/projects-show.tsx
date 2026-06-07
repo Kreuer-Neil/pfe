@@ -161,7 +161,7 @@ function InvitationModal({showInvitationModal, setShowInvitationModal, slug}: {
                                 {code &&
                                     <code onClick={() => navigator.clipboard.writeText(code)}
                                           onKeyDown={(e) => {
-                                              if (e.key === ' ' || e.key === '13')
+                                              if (e.key === ' ' || e.key === 'Enter')
                                               navigator.clipboard.writeText(code);
                                           }} tabIndex={0}
                                           className="flex gap-1 bg-gray-200 p-0.5 px-1 rounded-xs items-center hover:outline"

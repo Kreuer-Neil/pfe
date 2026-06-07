@@ -519,10 +519,10 @@
         }
 
         &.closed {
-            @apply w-19;
+            @apply sm:w-19;
 
             & p {
-                @apply hidden;
+                @apply sm:hidden;
             }
         }
     }

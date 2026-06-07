@@ -90,7 +90,7 @@ export default function CustomSidebar(
 
             <SidebarSwitchIcon className="p-2 mt-4 mr-4 ml-auto cursor-pointer" onClick={switchModalState}
                                onKeyDown={(e) => {
-                                   if (e.key === '13' || e.key === ' ') switchModalState();
+                                   if (e.key === 'Enter' || e.key === ' ') switchModalState();
                                }} tabIndex={0} id="sidebar-switch"/>
 
             <div className="sidebar-content">

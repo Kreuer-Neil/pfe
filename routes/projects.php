@@ -29,9 +29,6 @@ Route::get('projects/invitations/show', [ProjectInvitationController::class, 'sh
 Route::get('projects/invitations/{code}', [ProjectInvitationController::class, 'use'])
     ->name('projects.invitations.use');
 
-//Route::post('projects/invitations/{code}', [ProjectInvitationController::class, 'use'])
-//    ->name('projects.invitations.use');
-
 Route::get('projects/{slug}', [ProjectController::class, 'show'])
     ->name('projects.show');
 

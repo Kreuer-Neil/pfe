@@ -7,8 +7,6 @@ import {useState} from "react";
 import Button from "@/components/buttons/button";
 import ProjectInvitationController from "@/actions/App/Http/Controllers/ProjectInvitationController";
 import CustomModal from "@/components/modals/custom-modal";
-import ConfirmModal from "@/components/modals/confirm-modal";
-import {IProjectShow} from "@/types";
 
 
 export default function invitation({}: {}) {
