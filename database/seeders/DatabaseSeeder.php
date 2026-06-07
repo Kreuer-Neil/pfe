@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
                 'is_private' => false,
                 'description' => 'Luigi’s Garden is about maintaining sir Luigi’s mansion garden, an unofficial park in this choking city, open to anyone respectful enough.',
                 'coordinates' => '50.61126712133781, 5.510050323190294',
-                'lang'=> Language::ENGLISH,
+                'lang' => Language::ENGLISH,
                 'owner' => [
                     'first_name' => 'Luigi',
                     'last_name' => 'Mario',
@@ -109,7 +109,7 @@ class DatabaseSeeder extends Seeder
             $projectArray = [
                 'owner_id' => $owner->id,
                 'name' => $projectData['name'],
-                'slug'=> Str::slug($projectData['name']),
+                'slug' => Str::slug($projectData['name']),
                 'is_private' => $projectData['is_private'],
                 'description' => $projectData['description'],
             ];
@@ -131,21 +131,22 @@ class DatabaseSeeder extends Seeder
                 $users = User::factory(5)->create();
             }
 
+            if (array_key_exists('tasks', $projectData)) {
+                $tasks = [];
+                foreach ($projectData['tasks'] as $task) {
+                    $task['project_id'] = $project->id;
+                    $tasks[] = Task::factory()->create($task);
+                }
+            } else {
+                $tasks = Task::factory(5)->create();
+            }
+
             foreach ($users as $user) {
                 Member::create([
                     'user_id' => $user->id,
                     'project_id' => $project->id,
                     'role' => random_int(0, 1) ? ProjectRole::MEMBER : ProjectRole::TASK_MANAGER,
                 ]);
-                if (array_key_exists('tasks', $projectData)) {
-                    $tasks = [];
-                    foreach ($projectData['tasks'] as $task) {
-                        $task['project_id'] = $project->id;
-                        $tasks[] = Task::factory()->create($task);
-                    }
-                } else {
-                    $tasks = Task::factory(5)->create();
-                }
 
                 foreach ($tasks as $task) {
                     foreach ($users->random(3) as $user) {

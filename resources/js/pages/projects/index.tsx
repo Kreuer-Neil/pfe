@@ -45,20 +45,20 @@ function ProjectsContainer({currentPage, projects}: ProjectsContainerProps): Rea
     const {t} = useTranslation(['projects-index', 'projects']);
 
     if (projects.length <= 0) return (
-        <section className="flex flex-col gap-4">
+        <section className="flex flex-col gap-4 w-full">
             <h2 className="section-title px-3">{t('results')}</h2>
             <p>{t('projects:empty')}</p>
         </section>
     );
 
     return (
-        <section className="flex flex-col gap-4">
+        <section className="flex flex-col gap-4 max-w-3xl w-full">
             <h2 className="section-title px-3">{t('results')}</h2>
 
             <ul className="thumbnails-list-container">
                 {/* TODO see if better to load everything then slice or load progressively server-side */}
                 {projects.map((project: IProjectMiniature | IDashboardProject): ReactNode => (
-                    <li key={project.id}>
+                    <li key={project.id} className="w-full">
                         <ProjectItem project={project}/>
                     </li>))
                 }
