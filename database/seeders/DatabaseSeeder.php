@@ -67,7 +67,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'name' => 'Planter des arbres à Seraing',
-                'is_private' => 'false',
+                'is_private' => false,
                 'description' => 'Replantons des arbres, pour un Seraing plus vert !',
                 'lang' => Language::FRENCH,
 
@@ -155,6 +155,6 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        Project::factory(10)->create(['is_private' => false]);
+        Project::factory(10)->create(['is_private' => false, 'owner_id' => 1]);
     }
 }
