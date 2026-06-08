@@ -55,7 +55,7 @@ export default function projectsCreate({}) {
             <PageFlowContainer>
                 <h1 className="page-title w-full px-3">{t('Create a project')}</h1>
 
-                <form action={projectStore().url} method="GET" onSubmit={store} className="w-full max-w-3xl px-3">
+                <form action={projectStore().url} method="GET" onSubmit={store} className="w-full max-w-xl px-3">
 
                     <fieldset className="flex flex-col gap-2 mt-3 pb-3 border-b-2 border-secondary-border">
                         <legend className="sr-only">{t('project_form_main_informations')}</legend>

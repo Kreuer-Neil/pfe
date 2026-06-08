@@ -122,10 +122,10 @@ class DatabaseSeeder extends Seeder
                 'role' => ProjectRole::ADMIN,
             ]);
 
+            $users = [];
             if (array_key_exists('users', $projectData)) {
-                $users = [];
                 foreach ($projectData['users'] as $user) {
-                    User::factory()->create($user);
+                    $users[] = User::factory()->create($user);
                 }
             } else {
                 $users = User::factory(5)->create();
@@ -149,9 +149,7 @@ class DatabaseSeeder extends Seeder
                 ]);
 
                 foreach ($tasks as $task) {
-                    foreach ($users->random(3) as $user) {
-                        $task->participate($user);
-                    }
+                    $task->participate($user);
                 }
             }
         }

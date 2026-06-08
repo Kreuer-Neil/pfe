@@ -52,7 +52,7 @@ function ProjectsContainer({currentPage, projects}: ProjectsContainerProps): Rea
     );
 
     return (
-        <section className="flex flex-col gap-4 max-w-3xl w-full">
+        <section className="flex flex-col gap-4 max-w-xl w-full">
             <h2 className="section-title px-3">{t('results')}</h2>
 
             <ul className="thumbnails-list-container">
