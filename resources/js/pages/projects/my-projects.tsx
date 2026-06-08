@@ -27,7 +27,7 @@ export default function myProjects({}) {
 
                 <MyProjects projects={projects}/>
 
-                <div className="flex flex-col gap-3 px-3 w-full">
+                <div className="flex flex-col gap-3 px-3 w-full items-center">
                     <ButtonText textContent={t('create_project')} icon={Plus} href={projectCreate().url}/>
                 </div>
             </PageFlowContainer>

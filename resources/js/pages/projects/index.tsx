@@ -137,7 +137,7 @@ export default function ProjectsIndex() {
 
                 <h1 className="page-title text-center mx-auto">{t(title ?? 'search_title')}</h1>
 
-                <div className="flex flex-col gap-2 w-full px-3">
+                <div className="flex flex-col gap-2 w-full px-3 max-w-xl">
                     <div className="flex gap-1">
                         <IconButton icon={direction === 'desc' ? ArrowDownWideNarrow : ArrowUpWideNarrow}
                                     textContent={t('pagination:' + direction)}

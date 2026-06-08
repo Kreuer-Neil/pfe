@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\FormatedModels\FormatedTask;
 use App\Models\Project;
 use App\Models\Task;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
@@ -80,7 +81,15 @@ class TaskController extends Controller
             ];
         }
 
-        if ($project->addTask(new Task($validated), $currentUser) === null) {
+        $task = new Task([
+            'title' => $validated['title'],
+            'user_id' => auth()->user()->id,
+            'description' => $validated['description'],
+            'min_participations' => $validated['min_participations'] ?? null,
+            'due_at' => $validated['due_at'],
+        ]);
+
+        if ($project->addTask($task, $currentUser) === null) {
             return [
                 'success' => false,
                 'error' => [

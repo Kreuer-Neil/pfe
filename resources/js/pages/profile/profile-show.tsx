@@ -66,7 +66,6 @@ function ProfileContainer({id, isEditing, className, children}: {
         return (
             <Form
                 {...UserProfileController.update.form(id)}
-                resetOnSuccess={['password', 'password_confirmation']}
                 disableWhileProcessing
                 encType="multipart/form-data"
                 className={className}

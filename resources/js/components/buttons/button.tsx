@@ -1,7 +1,6 @@
 import {Link} from "@inertiajs/react";
-import {ElementType, ReactNode} from "react";
+import {ReactNode} from "react";
 import {cn} from "@/lib/utils";
-import {Button as ButtonElement} from "@headlessui/react";
 import {LucideIcon} from "lucide-react";
 // @ts-ignore
 import {UrlMethodPair} from "@inertiajs/core/types/types";
@@ -20,13 +19,13 @@ interface ButtonProps {
 export default function Button(
     {
         textContent,
-        icon = null,
+        icon: Icon = null,
         color = 'default',
         type = 'button',
         href = '',
         className = '',
         // TODO remove later
-        onClick = (e) => e.preventDefault(),
+        onClick = (e) => null,
     }: ButtonProps
 ): ReactNode {
 
@@ -49,22 +48,25 @@ export default function Button(
             break;
     }
 
-    if (href === '')
+    if (href === '') {
         return (
             <button onClick={onClick} onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') onClick(e);
             }} type={type}
                     className={cn('text-center p-2 px-4 text-lg font-semibold w-full max-w-md rounded-sm bg-secondary text-secondary-foreground cursor-pointer',
                         style, className)}>
+                {Icon && <Icon/>}
                 {textContent}
             </button>
         );
+    }
 
     return (
         <Link href={href}
               className={cn('text-center p-2 px-4 text-lg font-semibold w-full max-w-md rounded-sm bg-secondary text-secondary-foreground',
                   style, className)}
               onClick={onClick}>
+            {Icon && <Icon/>}
             {textContent}
         </Link>
     );
