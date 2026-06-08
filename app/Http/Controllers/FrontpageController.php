@@ -42,17 +42,21 @@ class FrontpageController extends Controller
         return view('home'/*, compact('navbarItems', 'footerItems')*/);
     }
 
+    // TODO re-set to default
     public function policy()
     {
+        return redirect(route('frontpage.index'));
         return view('policy'/*, compact('navbarItems', 'footerItems')*/);
     }
 
     public function contact()
     {
+        return redirect(route('frontpage.index'));
         return view('policy'/*, compact('navbarItems', 'footerItems')*/);
     }
     public function team()
     {
+        return redirect(route('frontpage.index'));
         return view('policy'/*, compact('navbarItems', 'footerItems')*/);
     }
 }

@@ -9,7 +9,6 @@ Route::get('/', [FrontpageController::class, 'index'])
 
 Route::get('/policy', [FrontpageController::class, 'policy'])
     ->name('frontpage.policy');
-
 Route::get('/contact', [FrontpageController::class, 'contact'])
     ->name('frontpage.contact');
 Route::get('/team', [FrontpageController::class, 'team'])

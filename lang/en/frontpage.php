@@ -12,7 +12,11 @@ return [
     //
     'home' => [
         'header' => [
-            'title' => 'ComeUnite, the perfect app to manage your community projects!',
+            'title' => 'ComeUnite',
+            'subtitle' => 'The ultimate community projects management toolbox',
+        ],
+        'sub-header' => [
+            'title' => 'What is ComeUnite?',
             'text1' => "ComeUnite is an app made to easily create and manage community projects, but also join and participate to other's projects. It is a tool to help people organize, work, communicate, so that you can enlighten the world together!",
             'text2' => "Projects are made by people who want to share their ideas, and to find other volunteers to help each other. You want to make a shared garden in your building? Create a group to take care of pets and water plants while one of your neighbors isn't there? Or associate with other people trough the village to feed and give shelter to migratory birds? That's exactly what the projects on this app are made for!",
             'cta' => 'Join us!',
@@ -20,10 +24,15 @@ return [
         //
         'features' => [
             'title' => 'Why use ComeUnite',
-            'organisation' => [
-                'title' => 'Organisation',
-                'text' => 'It\'s the end of the times where you can\'t remember who promised to take care of which task, cancelled, but finally decided to take care of it anyway! You can assign yourself to a task, cancel your participation if you have am impediment (but don\'t think anyone will congratulate you for that), and everyone will see a real-time update of who\'s assigned to what.',
-                'img-alt' => 'A screenshot from the app.',
+            'projects' => [
+                'title' => 'Join projects from within your city!',
+                'text' => 'Search for projects and find them wherever you live, and invite your friends! And if there\'s no project, add one! The trial month is entirely free!',
+                'alt' => 'A picture representing a web page with a project named "Planter des arbres à Seraing".'
+            ],
+            'tasks' => [
+                'title' => 'Use tasks to organize!',
+                'text' => 'Accept tasks from your projects and get informed in real-time about who\'s participating or not! To help you organise better than just your messaging app!',
+                'alt' => 'A picture representing tasks from different projects'
             ],
             'sharing' => [
                 'title' => 'Easy sharing',
