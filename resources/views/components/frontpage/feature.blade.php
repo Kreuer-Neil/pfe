@@ -6,6 +6,6 @@
     </div>
     <img src="{{ asset("/frontpage-content/features/medium/{$name}.png")}}"
          alt="{!! __("frontpage.home.features.{$name}.img-alt") !!}" width="555" height="300"
-         srcset="{{asset("/frontpage-content/features/small/{$name}.png")." 0.5x, ". asset("/frontpage-content/features/medium/{$name}.png").", ". asset("/frontpage-content/features/large/{$name}.png")." 3x"}}"
+         srcset="{{ asset("/frontpage-content/features/medium/{$name}.png").", ".asset("/frontpage-content/features/large/{$name}.png")." 3x"}}"
     >
 </article>

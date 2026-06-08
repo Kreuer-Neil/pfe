@@ -560,12 +560,12 @@
     }
 
     .closed .nav-item {
-        @apply justify-center;
+        @apply sm:justify-center;
 
     }
 
     .closed span {
-        @apply sr-only;
+        @apply sm:sr-only;
     }
 
     .closed .nav-item-container {
