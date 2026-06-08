@@ -41,6 +41,7 @@
     "task_form_description": "Description",
     "task_form_description_placeholder": "Go to the garden, and water the plants",
     "task_form_date": "Date",
+    "task_form_min_participations": "Recommended participations",
     "task_form_due_date": "Due date",
     "task_form_due_time": "Due time",
     "task_create_button": "Add task",
