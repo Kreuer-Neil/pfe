@@ -43,7 +43,7 @@ export default function MyProjects({projects}: { projects: IDashboardProject[] |
             <p>{t('common:projects_not_found')}</p>
         );
     return (
-        <section className="items-section max-w-3xl w-full">
+        <section className="items-section max-w-xl w-full">
             <div className="flex flex-wrap items-center mx-3 mb-1">
                 <h2 className="section-title w-fit mr-auto">
                     {t('common:my_projects')}
