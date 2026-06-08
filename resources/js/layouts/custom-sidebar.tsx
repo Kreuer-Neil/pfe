@@ -58,11 +58,11 @@ export default function CustomSidebar(
             title: t('notifications'),
             href: ''
         },*/
-        {
+        /*{
             icon: Calendar,
             title: t('my_tasks'),
             href: tasksIndex().url
-        },
+        },*/
         {
             icon: Settings2,
             title: t('settings'),

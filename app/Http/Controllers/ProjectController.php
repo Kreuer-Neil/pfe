@@ -133,64 +133,27 @@ class ProjectController extends Controller
         return Inertia::render('projects/projects-create');
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        if (!(
-            array_key_exists('name', $_REQUEST) &&
-            array_key_exists('description', $_REQUEST) &&
-            array_key_exists('is_private', $_REQUEST)
-        )) {
-            return [
-                'success' => false,
-                'error' => [
-                    'key' => 'missing_parameters',
-                    'params' => [
-                    ],
-                ]
-            ];
-        }
+        Inertia::flash([
+            'name' => $request['name'],
+            'description' => $request['description'],
+            'is_private' => $request['is_private'],
+        ]);
 
-        try {
-            $validated = request()->validate([
-                'name' => 'required|string|min:6|max:255|unique:projects',
-                'description' => 'required|min:6|string',
-                'is_private' => 'required|bool',
-            ], ['name.unique' => 'project_name_exists']
-            );
-        } catch (ValidationException $exception) {
-            // Status if project name already exists
-            return in_array('project_name_exists', $exception->errors()['name']) ? [
-                'success' => false,
-                'error' => [
-                    'key' => 'project_name_exists',
-                    'params' => [
-                        'name' => $_REQUEST['name'],
-                    ],
-                ]
-            ] : [
-                'success' => false,
-                'error' => [
-                    'key' => 'invalid_parameters',
-                    'params' => [
-                    ],
-                ]
-            ];
-        }
+        $validated = $request->validate([
+            'name' => 'required|string|min:6|max:255|unique:projects,name',
+            'description' => 'required|min:6|string',
+            'is_private' => 'required',
+        ]);
+        // , ['name.unique' => 'project_name_exists']
 
         $ownerId = auth()->user()->id;
         $validated['owner_id'] = $ownerId;
+        $validated['is_private'] = $validated['is_private'] === 'on';
+        $validated['slug'] = Str::slug($validated['name']);
 
-        try {
-            $project = Project::factory()->create($validated);
-        } catch (Exception $exception) {
-            return [
-                'success' => false,
-                'error' => [
-                    'key' => 'not_allowed',
-                    'params' => []
-                ],
-            ];
-        }
+        $project = Project::create($validated);
 
         Member::create([
             'project_id' => $project->id,
@@ -198,13 +161,7 @@ class ProjectController extends Controller
             'role' => ProjectRole::ADMIN->value,
         ]);
 
-        return ['success' => true,
-            'error' => ['key' => 'success_project_edited',
-                'params' => [
-                    'project' => $validated['name']
-                ]
-            ]
-        ];
+        return redirect(route('projects.show', $project->slug));
     }
 
     public function updateAppearance(string $slug, Request $request)
@@ -320,7 +277,7 @@ class ProjectController extends Controller
 
         Member::create([
             'user_id' => auth()->user()->id,
-            'project_id'=>$project->id,
+            'project_id' => $project->id,
             'role' => ProjectRole::MEMBER
         ]);
 
