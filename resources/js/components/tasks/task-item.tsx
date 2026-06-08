@@ -21,7 +21,7 @@ function ParticipatingIcon({participating}: { participating: boolean }): ReactNo
         return (
             <CalendarCheck
                 // title={"You are participating"}
-                className="item-tag bg-tag-valid"/>
+                className="item-tag"/>
         );
     }
 }
