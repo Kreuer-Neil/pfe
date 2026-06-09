@@ -3,6 +3,7 @@ import {BellDot, LucideIcon, Menu} from "lucide-react";
 import {IAppHeaderContext} from "@/types";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import CustomSidebar from "@/layouts/custom-sidebar";
+import {useTranslation} from "react-i18next";
 
 type CustomSidebarProps = {
     isMobile: boolean,
@@ -17,6 +18,7 @@ function MobileHeader({appHeaderContext, switchModalState}: {
     switchModalState: () => void
 }) {
     const defaultTitle = 'Come Unite';
+    const {t} = useTranslation('common')
 
     return (
         <div className="bg-sidebar min-h-16 p-2 flex items-center sm:hidden">
@@ -37,10 +39,13 @@ function MobileHeader({appHeaderContext, switchModalState}: {
                          onClick={() => {
                          }}/>*/}
                 {/* TODO fix key reacting to onKeyDown */}
-                <Menu className="p-2 cursor-pointer hover:bg-secondary focus:bg-secondary rounded-sm"
-                      onClick={switchModalState} onKeyDown={(e)=> {
+                <button className="p-2 cursor-pointer hover:bg-secondary focus:bg-secondary rounded-sm"
+                     onClick={switchModalState} onKeyDown={(e)=> {
                     if (e.key === 'Enter' || e.key === ' ') switchModalState();
-                }} tabIndex={0} id="burger-menu"/>
+                }} tabIndex={0} id="burger-menu">
+                    <span className="sr-only">{t('open_sidebar')}</span>
+                <Menu/>
+                </button>
             </div>
 
         </div>

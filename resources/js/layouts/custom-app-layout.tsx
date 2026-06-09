@@ -25,7 +25,10 @@ export default function CustomAppLayout(
 
     let sidebar: HTMLElement | null = document.getElementById('sidebar');
 
-    const switchModalState = () => {
+    const switchModalState = (e?: Event) => {
+        if (e) {
+            e.preventDefault();
+        }
         if (!sidebar) {
             sidebar = document.getElementById('sidebar')!;
         }
