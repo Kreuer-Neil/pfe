@@ -1,5 +1,6 @@
 {
     "open_sidebar": "Ouvrir la barre latérale",
+    "nav_title": "Navigation principale",
     "user_profile_picture": "Image de profil de {{user}}",
     "dashboard": "Tableau de bord",
     "notifications": "Notifications",

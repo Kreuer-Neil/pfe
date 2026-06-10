@@ -86,7 +86,7 @@ export default function CustomSidebar(
 
     return (
         <nav className="sidebar" id="sidebar">
-            <h2 className="sr-only">{t('title')}</h2>
+            <h2 className="sr-only">{t('nav_title')}</h2>
 
             <SidebarSwitchIcon className="p-2 mt-4 mr-4 ml-auto cursor-pointer" onClick={switchModalState}
                                onKeyDown={(e) => {
