@@ -1,6 +1,6 @@
 {
     "title": "Dashboard",
-    "welcome_back": "Willkommen zurück, {{name}}&nbsp;!",
+    "welcome_back": "Willkommen zurück, {{name}} !",
     "news": "Das haben Sie verpasst",
     "upcoming_tasks": "Bevorstehende Aufgaben",
     "project_filter": "Meine Projekte filtern",

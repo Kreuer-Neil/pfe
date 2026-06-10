@@ -3,14 +3,14 @@
     "field_min_length": "Le champ \"{{fieldName}}\" doit contenir au moins {{min}} caractères.",
     "field_not_number": "La valeur du champ \"{{fieldName}}\" doit être un nombre.",
     "field_not_date": "La valeur du champ \"{{fieldName}}\" doit être une date du type 2026-01-15. Veuillez utiliser le sélecteur de date et ne pas modifier les valeurs manuellement.",
-    "field_not_time": "La valeur du champ \"{{fieldName}}\" doit être une heure du type 20&nbsp;:56. Veuillez utiliser le sélecteur d'heure et ne pas modifier les valeurs manuellement.",
+    "field_not_time": "La valeur du champ \"{{fieldName}}\" doit être une heure du type 20 :56. Veuillez utiliser le sélecteur d'heure et ne pas modifier les valeurs manuellement.",
     "invalid_parameter": "Veuillez vérifier que vous avez rempli tous les champs obligatoires.",
     "not_allowed_on_project": "Vous n'êtes pas autorisé à ajouter des tâches à ce projet.",
-    "task_not_found": "Erreur&nbsp;: la tâche n'existe pas.",
+    "task_not_found": "Erreur : la tâche n'existe pas.",
     "project_name_exists": "Un projet avec ce nom existe déjà. Veuillez choisir un autre nom pour votre projet.",
     "success_task_created": "Tâche {{task}} créée avec succès.",
     "success_task_updated": "Tâche {{task}} mise à jour avec succès.",
     "participation_error": "Participation refusée.",
-    "project_not_found": "Erreur&nbsp;: le projet n'existe pas.",
+    "project_not_found": "Erreur : le projet n'existe pas.",
     "success_project_updated": "Projet {{project}} mis à jour avec succès."
 }
