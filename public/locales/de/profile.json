@@ -1,0 +1,11 @@
+{
+    "user_edit": "Profil bearbeiten",
+    "user_add": "Als Freund hinzufügen",
+    "user_context_profile": "Profil von {{user}}",
+    "pronouns": "Pronomen",
+    "field_nickname": "Spitznamen ändern",
+    "field_avatar": "Ihr Avatar ändern",
+    "field_pronouns": "Ihre Pronomen",
+    "field_bio": "Ihre Biografie",
+    "submit_profile_changes": "Änderungen bestätigen"
+}

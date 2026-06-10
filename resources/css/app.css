@@ -278,20 +278,25 @@
         & > nav {
             @apply sticky top-0 bg-sidebar text-sidebar-foreground w-screen z-10 flex;
 
+            &>a {
+                @apply border-r-2 border-tertiary p-2 bg-secondary;
+            }
             img {
-                @apply h-14 border-r-2 border-tertiary overflow-hidden;
+                @apply h-10 overflow-hidden border-2 border-primary rounded-md box-border;
             }
 
             div {
-                @apply grow absolute -left-[150vw] md:left-0 md:static;
+                /*@apply grow absolute -left-[150vw] md:left-0 md:static;*/
+                @apply grow;
             }
 
             ul {
-                @apply flex flex-col md:flex-row;
+                /*@apply flex flex-col bg-sidebar md:flex-row;*/
+                @apply flex bg-sidebar;
             }
 
             li {
-                @apply md:grow;
+                @apply grow;
 
                 a {
                     @apply px-3 min-h-14 flex items-center justify-center hover:bg-secondary focus:bg-secondary text-xl;
@@ -314,7 +319,7 @@
         }
 
         .nav-register {
-            @apply bg-tertiary text-tertiary-foreground font-semibold px-12;
+            @apply bg-tertiary text-tertiary-foreground font-semibold px-4 sm:px-12;
         }
 
         footer {

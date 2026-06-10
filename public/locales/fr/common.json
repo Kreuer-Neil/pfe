@@ -1,0 +1,14 @@
+{
+    "open_sidebar": "Ouvrir la barre latérale",
+    "user_profile_picture": "Image de profil de {{user}}",
+    "dashboard": "Tableau de bord",
+    "notifications": "Notifications",
+    "my_tasks": "Mes tâches",
+    "settings": "Paramètres",
+    "manage_projects": "Gérer mes projets",
+    "my_projects": "Mes projets",
+    "projects_not_found": "Nous n'avons pas pu trouver vos projets. Si vous avez déjà rejoint des projets, rechargez la page, vérifiez vos notifications pour voir si vous avez été exclu, ou essayez de contacter le support. Si vous n'avez pas encore rejoint de projet, vous pouvez le faire ici&nbsp;:",
+    "search_project": "Rechercher un projet",
+    "button_share": "Partager",
+    "button_report": "Signaler"
+}

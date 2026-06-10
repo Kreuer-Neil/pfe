@@ -3,46 +3,65 @@ return [
     'nav' => [
         'title' => 'Navigation principale',
         'index' => 'Accueil',
-        'policy' => 'Politique de<br>confidentialité',
+        'policy' => 'Politique de confidentialité',
         'contact' => 'Nous contacter',
-        'register' => 'S’enregistrer',
+        'register' => 'S\'inscrire',
         'login' => 'Se connecter',
-        'app' => 'Ouvrir l’app',
+        'app' => 'Ouvrir l\'application',
     ],
-    //
     'home' => [
         'header' => [
-            'title' => 'ComeUnite, l’application idéale pour gérer vos projets communautaires&nbsp;!',
-            'text1' => 'ComeUnite est une application permettant de facilement créer et gérer des projets communautaires, mais également rejoindre et participer aux projets des autres. C’est un outil pour aider les gens à s’organiser, travailler, communiquer, afin d’améliorer le monde ensemble&nbsp;!',
-            'text2' => 'Les projets sont créés par des personnes souhaitant partager leurs idées, et trouver d’autres engagés pour s’entraider. Vous souhaitez faire un potager partagé dans votre immeuble ? Créer un groupe pour s’occuper des animaux et arroser plantes quand un voisin n’est pas là ? Ou vous associer avec d’autres personnes à travers le village pour nourrir et loger les oiseaux migrateurs ? C’est exactement pour ça que les projets de cette application existent&nbsp;!',
+            'title' => 'ComeUnite',
+            'subtitle' => 'La boîte à outils ultime pour la gestion de projets communautaires',
+        ],
+        'sub-header' => [
+            'title' => 'Qu\'est-ce que ComeUnite&nbsp;?',
+            'text1' => "ComeUnite est une application conçue pour créer et gérer facilement des projets communautaires, mais aussi rejoindre et participer aux projets des autres. C'est un outil pour aider les gens à s'organiser, travailler, communiquer, afin que vous puissiez éclairer le monde ensemble&nbsp;!",
+            'text2' => "Les projets sont créés par des personnes qui souhaitent partager leurs idées et trouver d'autres bénévoles pour s'entraider. Vous voulez créer un jardin partagé dans votre immeuble&nbsp;? Former un groupe pour s'occuper des animaux et arroser les plantes pendant l'absence d'un voisin&nbsp;? Ou vous associer avec d'autres personnes du village pour nourrir et abriter les oiseaux migrateurs&nbsp;? C'est exactement à cela que servent les projets sur cette application&nbsp;!",
             'cta' => 'Rejoignez-nous&nbsp;!',
         ],
-
-        //
         'features' => [
             'title' => 'Pourquoi utiliser ComeUnite',
-            'organisation' => [
-                'title' => 'L’organisation',
-                'text' => 'Fini les moments où vous ne savez plus qui a promis de faire quoi, annulé, puis finalement décidé de s’en occuper quand même&nbsp;! Vous pouvez vous assigner vous-même à une tâche, vous en désister si vous avez un empêchement (mais ne vous attendez pas à ce qu’on vous en félicite), et tout le monde verra en temps réel qui s’occupe de quoi.',
+            'projects' => [
+                'title' => 'Rejoignez des projets dans votre ville&nbsp;!',
+                'text' => 'Recherchez des projets et trouvez-en partout où vous habitez, et invitez vos amis&nbsp;! Et s\'il n\'y a pas de projet, créez-en un&nbsp;! Le mois d\'essai est entièrement gratuit&nbsp;!',
+                'alt' => 'Une image représentant une page web avec un projet nommé "Planter des arbres à Seraing".',
+            ],
+            'tasks' => [
+                'title' => 'Utilisez les tâches pour vous organiser&nbsp;!',
+                'text' => 'Acceptez des tâches de vos projets et soyez informé en temps réel de qui participe ou non&nbsp;! Pour vous aider à vous organiser mieux qu\'avec une simple application de messagerie&nbsp;!',
+                'alt' => 'Une image représentant des tâches de différents projets',
             ],
             'sharing' => [
                 'title' => 'Partage facile',
-                'text' => 'Vous n’aurez également plus le problème de devoir partager des documents à tout le monde tout le temps : L’onglet ressources des projets permet de déposer des documents, images, et fichiers en tout genre, disponibles pour tous les membres du projet, ou uniquement ceux de confiance&nbsp;!',
+                'text' => 'Vous n\'aurez pas non plus à vous soucier du partage de documents&nbsp;: l\'onglet "ressources" de votre projet vous permet de stocker des documents, images et plusieurs types de fichiers, accessibles à tous les membres du projet, ou uniquement aux plus fiables&nbsp;!',
+                'img-alt' => 'Une capture d\'écran de l\'application.',
             ],
             'mobile' => [
                 'title' => 'Application mobile',
-                'text' => 'Pas envie d’accéder à l’app uniquement par navigateur&nbsp? Ne vous inquiétez pas&nbsp! Come Unite sera bientôt disponible en application mobile rien que pour votre confort&nbsp!',
+                'text' => 'Vous ne voulez pas avoir à ouvrir votre navigateur pour utiliser l\'application&nbsp;? Pas de souci&nbsp;! L\'application mobile ComeUnite est en cours de développement, uniquement pour votre confort&nbsp;!',
+                'img-alt' => 'Une capture d\'écran de l\'application.',
             ],
         ],
-        //
         'bottom' => [
             'title' => 'Rejoignez la communauté&nbsp;!',
-            'text' => 'Déjà convaincu&nbsp;? Ou vous préférez essayer d’abord&nbsp;? Vous pouvez rejoindre n’importe quel projet gratuitement quand vous voulez&nbsp;! Et si vous voulez essayer de gérer votre propre projet, le premier mois est gratuit&nbsp;!',
+            'text' => 'Convaincu&nbsp;? Ou vous voulez essayer&nbsp;? Vous pouvez rejoindre n\'importe quel projet gratuitement à tout moment&nbsp;! Et si vous souhaitez essayer de gérer votre propre projet, le premier mois est gratuit&nbsp;!',
             'cta' => 'Commencer maintenant&nbsp;!',
         ],
     ],
-    //
     'footer' => [
-        'title' => 'Navigation en pied de page',
+        'title' => 'Navigation du pied de page',
+        'sections' => [
+            'home' => 'Page d\'accueil',
+            'index' => 'Accueil',
+            'app' => 'Vers l\'application',
+            'about' => 'À propos de nous',
+            'team' => 'L\'équipe',
+            'contact' => 'Nous contacter',
+            'policy' => 'Politique de confidentialité',
+            'support-title' => 'Support',
+            'faq' => 'FAQ de l\'application',
+            'support' => 'Contacter le support',
+        ],
     ],
 ];

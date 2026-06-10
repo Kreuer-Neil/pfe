@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthPageController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LanguageController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -31,3 +32,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 require __DIR__ . '/auth.php';
 require __DIR__ . '/frontpage.php';
 require __DIR__ . '/design.php';
+
+Route::get('lang', [LanguageController::class, 'switchLanguage'])
+    ->name('lang');
