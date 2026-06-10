@@ -133,7 +133,8 @@ export default function GeneralInput(
                        autoFocus={autoFocus}
                        onChange={(e) => {
                            setValue(e.currentTarget.value);
-                       }} autoComplete={canAutocomplete ? name : undefined}
+                       }} /*autoComplete={canAutocomplete ? name : undefined}*/
+                    // TODO add autocomplete setting (or change this component entirely since it's obsolete)
                        onBlur={validate}
                        placeholder={placeholder}/>
             }
