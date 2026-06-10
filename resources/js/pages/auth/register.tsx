@@ -52,7 +52,6 @@ export default function Register() {
                                     id="last_name"
                                     type="text"
                                     required
-                                    autoFocus
                                     autoComplete="last_name"
                                     name="last_name"
                                     placeholder="Doe"
