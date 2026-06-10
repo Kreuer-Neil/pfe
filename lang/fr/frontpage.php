@@ -25,12 +25,12 @@ return [
             'projects' => [
                 'title' => 'Rejoignez des projets dans votre ville&nbsp;!',
                 'text' => 'Recherchez des projets et trouvez-en partout où vous habitez, et invitez vos amis&nbsp;! Et s\'il n\'y a pas de projet, créez-en un&nbsp;! Le mois d\'essai est entièrement gratuit&nbsp;!',
-                'alt' => 'Une image représentant une page web avec un projet nommé "Planter des arbres à Seraing".',
+                'img-alt' => 'Une image représentant une page web avec un projet nommé "Planter des arbres à Seraing".',
             ],
             'tasks' => [
                 'title' => 'Utilisez les tâches pour vous organiser&nbsp;!',
                 'text' => 'Acceptez des tâches de vos projets et soyez informé en temps réel de qui participe ou non&nbsp;! Pour vous aider à vous organiser mieux qu\'avec une simple application de messagerie&nbsp;!',
-                'alt' => 'Une image représentant des tâches de différents projets',
+                'img-alt' => 'Une image représentant des tâches de différents projets',
             ],
             'sharing' => [
                 'title' => 'Partage facile',

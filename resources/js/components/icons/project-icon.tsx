@@ -8,7 +8,6 @@ type projectIconProps = {
     size?: 'small' | 'medium' | 'large',
     className?: string,
 }
-// TODO add auto icon src
 export default function ProjectIcon({project, size = 'small', className = ''}: projectIconProps) {
     const {t} = useTranslation('projects');
 
