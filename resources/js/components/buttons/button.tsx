@@ -53,7 +53,7 @@ export default function Button(
             <button onClick={onClick} onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') onClick(e);
             }} type={type}
-                    className={cn('text-center p-2 px-4 text-lg font-semibold w-full max-w-md rounded-sm bg-secondary text-secondary-foreground cursor-pointer',
+                    className={cn('flex justify-center items-center gap-1 text-center p-2 px-4 text-lg font-semibold w-full max-w-md rounded-sm bg-secondary text-secondary-foreground cursor-pointer',
                         style, className)}>
                 {Icon && <Icon/>}
                 {textContent}
@@ -63,7 +63,7 @@ export default function Button(
 
     return (
         <Link href={href}
-              className={cn('text-center p-2 px-4 text-lg font-semibold w-full max-w-md rounded-sm bg-secondary text-secondary-foreground',
+              className={cn('flex justify-center items-center gap-1 text-center p-2 px-4 text-lg font-semibold w-full max-w-md rounded-sm bg-secondary text-secondary-foreground',
                   style, className)}
               onClick={onClick}>
             {Icon && <Icon/>}
