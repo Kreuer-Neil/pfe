@@ -21,11 +21,16 @@ export default function CustomAppLayout(
     const [openMobile, setOpenMobile] = useState(false);
 
     // TODO get user PC sidebar opened state
+    // document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
     const [openDesktop, setOpenDesktop] = useState(true);
+
 
     let sidebar: HTMLElement | null = document.getElementById('sidebar');
 
-    const switchModalState = () => {
+    const switchModalState = (e?: Event) => {
+        if (e) {
+            e.preventDefault();
+        }
         if (!sidebar) {
             sidebar = document.getElementById('sidebar')!;
         }

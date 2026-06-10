@@ -147,7 +147,7 @@ export default function TaskCreateModal({showModal, setShowModal, project}: {
                         </ul>*/}
                 </ModalSection>
                 <ModalSection as="fieldset">
-                    <GeneralInput name="min_participations" label={t('form_min_participations')}
+                    <GeneralInput name="min_participations" label={t('task_form_min_participations')}
                                   value={minParticipations?.toString() ?? ''} setValue={setMinParticipations}
                                   type="number" validationRules={['int']} hasError={(error) => {
                         formError.min_participations = error;

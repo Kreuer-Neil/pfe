@@ -1,5 +1,6 @@
 <x-layout.app>
     <main>
+{{--        @dd(app()->currentLocale())--}}
 
         <div class="large-section min-h-[80vh]">
             <h1>{!! __('frontpage.home.header.title') !!}</h1>

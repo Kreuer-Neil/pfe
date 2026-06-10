@@ -33,16 +33,17 @@
             {{-- Lang nav --}}
             <nav>
                 <h3>{!! 'Langage' /*__('general.langage.title')*/ !!}</h3>
+                @php($langs = [
+    'FR' => 'Français',
+    'EN' => 'English',
+    'DE' => 'Deutsch'
+])
                 <ul>
+                    @foreach($langs as $key => $lang)
                     <li>
-                        <a href="">Français</a>
+                        <a href="{!! route('lang', ['lang'=> $key]) !!}">{{ $lang }}</a>
                     </li>
-                    <li>
-                        <a href="">English</a>
-                    </li>
-                    <li>
-                        <a href="">Deutsch</a>
-                    </li>
+                    @endforeach
                 </ul>
             </nav>
 

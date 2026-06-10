@@ -21,7 +21,7 @@
     "month_9": "October",
     "month_10": "November",
     "month_11": "December",
-    "translate_date_today": "Today at {time}",
+    "translate_date_today": "Today at {{time}}",
     "translate_date_day": "{{dayOfWeek}} {{day}}, at {{time}}",
     "translate_date_month": "{{dayOfWeek}} {{day}}{{dayType}} {{month}}, at {{time}}",
     "translate_date_year": "{{day}}{{dayType}} {{month}} {{year}}, at {{time}}"

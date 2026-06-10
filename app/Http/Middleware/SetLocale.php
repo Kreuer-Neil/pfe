@@ -4,19 +4,20 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpFoundation\Response;
 
-class HandleAppearance
+class SetLocale
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // View::share('appearance', $request->cookie('appearance') ?? 'system');
+        $locale = $request->cookie('lang') ?? config('app.fallback_locale');
+//        dd($request->cookie('locale'));
+        app()->setLocale($locale);
 
         return $next($request);
     }
