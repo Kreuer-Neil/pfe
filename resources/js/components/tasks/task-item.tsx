@@ -84,7 +84,7 @@ export default function TaskItem(
                 </p>
                 : null}
             <div className="taskinfo mt-1 flex flex-wrap justify-between items-center gap-1">
-                <span className="flex gap-1"><Timer/><time>{dueAt}</time></span>
+                <span className="flex gap-1"><Timer/><time dateTime={task.due_at}>{dueAt}</time></span>
                 <div className="flex gap-1 ml-auto">
                     { /* TODO add PFPs of participating people */}
                     {/*<RelatedUsers/>*/}

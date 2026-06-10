@@ -8,7 +8,7 @@ type ValidationRule = 'required' | 'min-6' | 'number' | 'int' | 'date' | 'time';
 interface TextInputProps {
     name: string;
     label: string;
-    type?: 'text' | 'number' | 'textarea' | 'date' | 'time';
+    type?: 'text' |'email'| 'number' | 'textarea' | 'date' | 'time';
     style?: 'default' | 'no-label' | 'text';
     required?: boolean;
     value: string;
@@ -69,7 +69,7 @@ export default function GeneralInput(
         error = null,
         validationRules = [],
         hasError = (() => null),
-        placeholder = '',
+        placeholder,
         autoFocus = false,
         className = '',
         inputClassName = '',
@@ -108,6 +108,8 @@ export default function GeneralInput(
             break;
     }
 
+    const canAutocomplete = ['email', 'number', 'password', 'search', 'tel', 'text', 'textarea', 'url'].includes(type);
+
     return (
         <label htmlFor={name} className={cn('flex flex-col gap-1', className)}>
             <span className={labelClass}>
@@ -131,7 +133,7 @@ export default function GeneralInput(
                        autoFocus={autoFocus}
                        onChange={(e) => {
                            setValue(e.currentTarget.value);
-                       }} autoComplete={name}
+                       }} autoComplete={canAutocomplete ? name : undefined}
                        onBlur={validate}
                        placeholder={placeholder}/>
             }
