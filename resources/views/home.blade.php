@@ -19,7 +19,7 @@
 
             <x-frontpage.feature name="tasks"/>
             <x-frontpage.feature name="projects"/>
-            <x-frontpage.feature name="sharing"/>
+{{--            <x-frontpage.feature name="sharing"/>--}}
             <x-frontpage.feature name="mobile"/>
         </section>
 

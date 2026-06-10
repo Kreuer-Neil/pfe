@@ -27,7 +27,7 @@ return [
             'projects' => [
                 'title' => 'Join projects from within your city!',
                 'text' => 'Search for projects and find them wherever you live, and invite your friends! And if there\'s no project, add one! The trial month is entirely free!',
-                'img-alt' => 'A picture representing a web page with a project named "Planter des arbres à Seraing".'
+                'img-alt' => 'A picture representing a web page with a project named "Planter des arbres à Seraing" and other projects.'
             ],
             'tasks' => [
                 'title' => 'Use tasks to organize!',
@@ -42,7 +42,7 @@ return [
             'mobile' => [
                 'title' => 'Mobile app',
                 'text' => 'You don\'t want to have to open your browser to use the app? No worries! The ComeUnite mobile app is on the way, only for your comfort!',
-                'img-alt' => 'A screenshot from the app.',
+                'img-alt' => 'The ComeUnite app on multiple devices.',
             ],
         ],
         //

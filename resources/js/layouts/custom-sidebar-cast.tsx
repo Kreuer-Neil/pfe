@@ -17,7 +17,7 @@ function MobileHeader({appHeaderContext, switchModalState}: {
     appHeaderContext: IAppHeaderContext | null,
     switchModalState: () => void
 }) {
-    const defaultTitle = 'Come Unite';
+    const defaultTitle = 'ComeUnite';
     const {t} = useTranslation('common')
 
     return (

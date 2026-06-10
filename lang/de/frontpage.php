@@ -25,7 +25,7 @@ return [
             'projects' => [
                 'title' => 'Treten Sie Projekten in Ihrer Stadt bei&nbsp;!',
                 'text' => 'Suchen Sie nach Projekten und finden Sie sie überall dort, wo Sie leben, und laden Sie Ihre Freunde ein&nbsp;! Und wenn es kein Projekt gibt, erstellen Sie eines&nbsp;! Der Probemonat ist völlig kostenlos&nbsp;!',
-                'img-alt' => 'Ein Bild einer Webseite mit einem Projekt namens "Planter des arbres à Seraing".',
+                'img-alt' => 'Ein Bild einer Webseite mit einem Projekt namens "Planter des arbres à Seraing" und andere Projekte.',
             ],
             'tasks' => [
                 'title' => 'Nutzen Sie Aufgaben zur Organisation&nbsp;!',
@@ -40,7 +40,7 @@ return [
             'mobile' => [
                 'title' => 'Mobile App',
                 'text' => 'Sie möchten nicht Ihren Browser öffnen müssen, um die App zu nutzen&nbsp;? Kein Problem&nbsp;! Die mobile ComeUnite-App ist in Entwicklung, nur für Ihren Komfort&nbsp;!',
-                'img-alt' => 'Ein Screenshot der App.',
+                'img-alt' => 'Die ComeUnite-App auf mehreren Geräten.',
             ],
         ],
         'bottom' => [
