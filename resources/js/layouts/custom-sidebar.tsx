@@ -98,7 +98,13 @@ export default function CustomSidebar(
                 <div>
                     <Link as="a" href={showProfile(auth.user.id).url}
                           className="nav-profile">
+                        {/* TODO replace with userIcon fn please */}
                         <img src={useImageAsset(`users/${auth.user.avatar}/small`)}
+                             srcSet={
+                            useImageAsset(`users/${auth.user.avatar}/small`) + ' 1x, '+
+                            useImageAsset(`users/${auth.user.avatar}/medium`) + ' 2x, ' +
+                            useImageAsset(`users/${auth.user.avatar}/large`) + ' 3x, '
+                        }
                              alt={t('user_profile_picture', {username: auth.user.nickname})}
                              className="nav-pfp"/>
                         <span className="page-title">{auth.user.nickname}</span>

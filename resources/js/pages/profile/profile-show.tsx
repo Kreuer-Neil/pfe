@@ -105,7 +105,7 @@ export default function profileShow({}) {
     });
 
     const appHeaderContext: IAppHeaderContext = {
-        contextImageSrc: useImageAsset(`users/${user.avatar}/small`),
+        contextImageSrc: useImageAsset(`users/${user.avatar}/medium`),
         context: t('user_context_profile', {user: user.nickname}),
     }
 
