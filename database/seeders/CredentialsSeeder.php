@@ -24,12 +24,14 @@ class CredentialsSeeder
                 'first_name' => 'Maude',
                 'email' => 'maude.wera@example.test',
                 'password' => '123password4',
+                'nickname' => 'Wera Maude'
             ]),
             'schreurs' => User::create([
                 'last_name' => 'Schreurs',
                 'first_name' => 'Daniel',
                 'email' => 'schreurs.daniel@example.test',
                 'password' => '123password4',
+                'nickname' => 'Schreurs Daniel'
             ]),
         ];
 
