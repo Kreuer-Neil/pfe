@@ -34,6 +34,8 @@ return new class extends Migration {
             // If task has an action timespan (ex. only during one weekend)
             $table->dateTime('starting_at')->nullable();
 
+            $table->dateTime('validated_at')->nullable();
+
             $table->softDeletes();
             $table->timestamps();
         });

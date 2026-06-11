@@ -14,7 +14,7 @@ class ProjectFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $name = $this->faker->unique()->name,
+            'name' => $name = $this->faker->unique()->company,
             'icon' => 'default_' . random_int(1, 2),
             'description' => $this->faker->text(),
             'slug' => Str::slug($name),

@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         TestUserSeeder::run();
-
+        CredentialsSeeder::run();
 
         $projectsData = [
             [
@@ -94,9 +94,7 @@ class DatabaseSeeder extends Seeder
                         'due_at' => Carbon::create(year: 2026, month: 06, day: 21, hour: 9)
                     ],
                 ],
-            ]
-
-
+            ],
         ];
 
         foreach ($projectsData as $projectData) {

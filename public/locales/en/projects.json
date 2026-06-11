@@ -30,6 +30,7 @@
     "task_self_participating": "You joined this task.",
     "task_due_soon": "This task is soon due!",
     "task_participate": "Participate",
+    "task_cancel_participate": "Cancel participation",
     "task_add": "Add task",
     "task_edit": "Edit task",
     "task_note_title": "Notes",

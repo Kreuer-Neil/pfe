@@ -13,7 +13,8 @@ import Button from "@/components/buttons/button";
 import {
     participate as taskParticipate,
     update as taskUpdate,
-    destroy as taskDestroy
+    destroy as taskDestroy,
+    cancelParticipation as taskCancelParticipation,
 } from "@/actions/App/Http/Controllers/TaskController";
 import GeneralInput from "@/components/form/general-input";
 import {RouteQueryOptions} from "@/wayfinder";
@@ -65,7 +66,7 @@ function Show({task, onCloseModal, startEdit, deleteTask}: {
     startEdit: (task: ITask) => void,
     deleteTask: (task: ITask) => void
 }) {
-    const {t} = useTranslation(['projects', 'date']);
+    const {t} = useTranslation(['projects', 'date', 'errors']);
 
     const [participationResponse, setParticipationResponse] = useState<IServerResponse>({success: false, error: null})
 
@@ -82,10 +83,30 @@ function Show({task, onCloseModal, startEdit, deleteTask}: {
         askParticipation().then((value) => {
             if (value?.success) {
                 // TODO success modal toast + item reload + page items reload on task-display
+                task!.self_participating = true;
             }
             setParticipationResponse(value!)
         });
     }
+
+    const cancelParticipate = () => {
+        const removeParticipation = async () => {
+            try {
+                const response = await fetch(taskCancelParticipation(task!.id).url);
+                const data: IServerResponse = await response.json();
+                return data;
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        removeParticipation().then((value) => {
+            if (value!.success) {
+                task!.self_participating = false;
+            }
+            setParticipationResponse(value!);
+        });
+    }
+
     return (
         <ModalCast title={task?.title ?? ''} closeModal={onCloseModal}>
             <ModalSection className="border-none">
@@ -124,11 +145,11 @@ function Show({task, onCloseModal, startEdit, deleteTask}: {
                         {t('task_self_participating')}
                     </p> : null}
                 {/*modalTask.due_at > Date.now()*/}
-                {task?.due_at && false ?
+                {task?.due_at && false &&
                     <p className="flex gap-1">
                         <ClockAlert className="item-tag bg-tag-warning"/>
                         {t('task_due_soon')}
-                    </p> : null}
+                    </p>}
             </ModalSection>
             <ModalSection title={t('task_note_title')} icon={Notebook}>
                 <NotesList task={task}/>
@@ -139,9 +160,13 @@ function Show({task, onCloseModal, startEdit, deleteTask}: {
             </ModalSection>
             <div className="flex flex-col gap-3 px-2 items-center">
                 {/* TODO restyle this corner */}
-                <Button textContent={t('task_participate')} onClick={participate}/>
-                {participationResponse.error ? <span
-                    className={participationResponse.success ? 'field-success' : 'field-error' + ' -mt-2'}>{t('errors:' + participationResponse.error.key, participationResponse.error.params)}</span> : null}
+                {task?.self_participating ?
+                    <Button textContent={t('task_cancel_participate')} onClick={cancelParticipate}
+                            color="destructive"/> :
+                    <Button textContent={t('task_participate')} onClick={participate}/>
+                }
+                {participationResponse.error && <span
+                    className={participationResponse.success ? 'field-success' : 'field-error' + ' -mt-2'}>{t('errors:' + participationResponse.error.key, participationResponse.error.params)}</span>}
                 {task?.isOwner ?
                     <Button textContent={t('task_edit')} color="edit" onClick={() => startEdit(task)}/>
                     : null}
@@ -353,7 +378,8 @@ export default function TaskShowModal({task, showModal, setShowModal}: {
                 />
             }
         </CustomModal>,
-        <ConfirmModal title={t('task_delete_warning')} message={t('task_delete_warning_message', {task:task?.title ?? ''})}
+        <ConfirmModal title={t('task_delete_warning')}
+                      message={t('task_delete_warning_message', {task: task?.title ?? ''})}
                       showModal={showConfirmationModal} onClose={() => {
             setShowConfirmationModal(false);
         }}

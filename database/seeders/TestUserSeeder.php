@@ -22,7 +22,7 @@ class TestUserSeeder
             [
                 'first_name' => 'John',
                 'last_name' => 'Doe',
-                'password' => 'password',
+                'password' => 'drowssap',
                 'email_verified_at' => now(),
 
                 'nickname' => 'Test User',

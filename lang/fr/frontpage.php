@@ -10,6 +10,7 @@ return [
         'app' => 'Ouvrir l’application',
     ],
     'home' => [
+        'title' => 'Accueil',
         'header' => [
             'title' => 'ComeUnite',
             'subtitle' => 'La boîte à outils ultime pour la gestion de projets communautaires',

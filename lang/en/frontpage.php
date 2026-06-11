@@ -11,6 +11,7 @@ return [
     ],
     //
     'home' => [
+        'title' => 'Home',
         'header' => [
             'title' => 'ComeUnite',
             'subtitle' => 'The ultimate community projects management toolbox',

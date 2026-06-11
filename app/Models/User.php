@@ -115,14 +115,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Ensures that if user has no nickname, returns the user's name
-     */
-    public function nickname(): string
-    {
-        return $this->nickname ?? "$this->first_name $this->last_name";
-    }
-
-    /**
      * Returns temporary formated user to make nav work
      */
     public function toFormatedNavUser(): FormatedNavUser
