@@ -146,6 +146,40 @@ class TaskController extends Controller
         ];
     }
 
+    public function validate($id)
+    {
+        $task = null;
+        try {
+            $task = Task::findOrFail($id);
+        } catch (QueryException) {
+            return [
+                'success' => false,
+                'error' => [
+                    'key' => 'task_validation_error',
+                    'params' => [],
+                ]
+            ];
+        }
+        $task->validated_at = Carbon::now();
+        if ($task->save()) {
+            return [
+                'success' => true,
+                'error' => [
+                    'key' => 'task_validation_success',
+                    'params' => [],
+                ]
+            ];
+        }
+
+        return [
+            'success' => false,
+            'error' => [
+                'key' => 'task_validation_error',
+                'params' => [],
+            ]
+        ];
+    }
+
     public function cancelParticipation(int $id)
     {
 

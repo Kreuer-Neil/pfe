@@ -99,6 +99,8 @@ class User extends Authenticatable
     {
         return $this
             ->tasks()
+            ->where('due_at', '>=', Carbon::now())
+            ->where('validated_at', null)
             // TODO check for this later, only for non-validated tasks if possible
             // Add 24h-left tasks from user projects with not enough participations and mix them
             // ->where('due_at', '<=', Carbon::now()->addHours(-24))
@@ -139,7 +141,7 @@ class User extends Authenticatable
         }
 
 //        if ($user->is_private) {
-            // Check if user has projects in common or public projects
+        // Check if user has projects in common or public projects
 //        }
 
         return $user;

@@ -18,6 +18,9 @@ Route::get('tasks/{id}/participate', [TaskController::class, 'participate'])
 Route::get('tasks/{id}/cancel', [TaskController::class, 'cancelParticipation'])
     ->name('tasks.participate.destroy');
 
+Route::get('tasks/{id}/validate', [TaskController::class, 'validate'])
+    ->name('tasks.validate');
+
 Route::get('tasks/{id}/edit', [TaskController::class, 'update'])
     ->name('tasks.update');
 

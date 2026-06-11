@@ -32,6 +32,7 @@
     "task_participate": "Participate",
     "task_cancel_participate": "Cancel participation",
     "task_add": "Add task",
+    "task_validate": "Validate task",
     "task_edit": "Edit task",
     "task_note_title": "Notes",
     "task_note_empty": "No notes were found on this task. If you want to add a note, you can do it here:",

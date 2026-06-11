@@ -32,6 +32,7 @@
     "task_participate": "Participer",
     "task_cancel_participate": "Cancel participation",
     "task_add": "Ajouter une tâche",
+    "task_validate": "Valider la tâche",
     "task_edit": "Modifier la tâche",
     "task_note_title": "Notes",
     "task_note_empty": "Aucune note trouvée sur cette tâche. Si vous souhaitez en ajouter une, vous pouvez le faire ici :",

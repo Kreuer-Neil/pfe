@@ -15,6 +15,7 @@ import {
     update as taskUpdate,
     destroy as taskDestroy,
     cancelParticipation as taskCancelParticipation,
+    validate as taskValidation,
 } from "@/actions/App/Http/Controllers/TaskController";
 import GeneralInput from "@/components/form/general-input";
 import {RouteQueryOptions} from "@/wayfinder";
@@ -107,6 +108,26 @@ function Show({task, onCloseModal, startEdit, deleteTask}: {
         });
     }
 
+    const validate = () => {
+        const confirmValidation = async () => {
+            try {
+                const response = await fetch(taskValidation(task!.id).url);
+                const data: IServerResponse = await response.json();
+                return data;
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        confirmValidation().then((value) => {
+            if (value?.success) {
+                // TODO success modal toast + item reload + page items reload on task-display
+                task!.self_participating = true;
+            }
+            setParticipationResponse(value!)
+        });
+    }
+
+
     return (
         <ModalCast title={task?.title ?? ''} closeModal={onCloseModal}>
             <ModalSection className="border-none">
@@ -164,6 +185,9 @@ function Show({task, onCloseModal, startEdit, deleteTask}: {
                     <Button textContent={t('task_cancel_participate')} onClick={cancelParticipate}
                             color="destructive"/> :
                     <Button textContent={t('task_participate')} onClick={participate}/>
+                }
+                {task?.self_participating &&
+                    <Button textContent={t('task_validate')} onClick={validate}/>
                 }
                 {participationResponse.error && <span
                     className={participationResponse.success ? 'field-success' : 'field-error' + ' -mt-2'}>{t('errors:' + participationResponse.error.key, participationResponse.error.params)}</span>}

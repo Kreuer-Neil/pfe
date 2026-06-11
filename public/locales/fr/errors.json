@@ -10,6 +10,7 @@
     "project_name_exists": "Un projet avec ce nom existe déjà. Veuillez choisir un autre nom pour votre projet.",
     "success_task_created": "Tâche {{task}} créée avec succès.",
     "success_task_updated": "Tâche {{task}} mise à jour avec succès.",
+    "task_validation_success": "Tâche validée avec succès !",
     "participation_error": "Participation refusée.",
     "participation_cancel_success": "Participation annulée avec succès.",
     "project_not_found": "Erreur : le projet n'existe pas.",

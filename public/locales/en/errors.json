@@ -12,6 +12,8 @@
     "success_task_updated": "Task {{task}} updated successfully.",
     "participation_error": "Participation rejected.",
     "participation_cancel_success": "Participation cancelled successfully.",
+    "task_validation_error": "Could not validate this task.",
+    "task_validation_success": "Task validated successfully!",
     "project_not_found": "Error: project does not exist.",
     "success_project_updated": "Project {{project}} updated successfully."
 }
