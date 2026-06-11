@@ -6,7 +6,7 @@ import ModalCast from "@/components/modals/modal-cast";
 import ModalSection from "@/components/modals/modal-section";
 import ProjectIcon from "@/components/icons/project-icon";
 import {cn} from "@/lib/utils";
-import {CalendarCheck, CalendarClock, ClockAlert, Notebook, NotebookPen, UsersRound} from "lucide-react";
+import {CalendarCheck, CalendarClock, ClockAlert, Notebook, NotebookPen, Timer, UsersRound} from "lucide-react";
 import PostedBy from "@/components/general-posts/posted-by";
 import ButtonText from "@/components/buttons/button-text";
 import Button from "@/components/buttons/button";
@@ -138,10 +138,11 @@ function Show({task, onCloseModal, startEdit, deleteTask}: {
                     {task?.project.name ?? null}
                 </p>
                 {/* TODO fix date */}
-                {task?.due_at ?
+                {task?.due_at &&
                     <p className={cn("flex gap-1", task?.due_at ? '' : 'hidden')}>
-                        <CalendarClock/>{task.due_at}
-                    </p> : null
+                        <CalendarClock/>
+                        <time dateTime={task.due_at}>{task.due_at}</time>
+                    </p>
                 }
                 <p className="mt-1">
                     {task?.description ?? null}
@@ -162,7 +163,7 @@ function Show({task, onCloseModal, startEdit, deleteTask}: {
                 </div>
                 {task?.self_participating ?
                     <p className="text-with-icon">
-                        <CalendarCheck className="item-tag bg-tag-valid"/>
+                        <CalendarCheck className="item-tag bg-tag"/>
                         {t('task_self_participating')}
                     </p> : null}
                 {/*modalTask.due_at > Date.now()*/}
@@ -172,13 +173,13 @@ function Show({task, onCloseModal, startEdit, deleteTask}: {
                         {t('task_due_soon')}
                     </p>}
             </ModalSection>
-            <ModalSection title={t('task_note_title')} icon={Notebook}>
+            {/*<ModalSection title={t('task_note_title')} icon={Notebook}>
                 <NotesList task={task}/>
                 <ButtonText textContent={t('task_note_add')} icon={NotebookPen} className="self-center"
                             onClick={() => {
                                 // TODO note creation logic
                             }} autoFocus={true}/>
-            </ModalSection>
+            </ModalSection>*/}
             <div className="flex flex-col gap-3 px-2 items-center">
                 {/* TODO restyle this corner */}
                 {task?.self_participating ?
@@ -191,12 +192,12 @@ function Show({task, onCloseModal, startEdit, deleteTask}: {
                 }
                 {participationResponse.error && <span
                     className={participationResponse.success ? 'field-success' : 'field-error' + ' -mt-2'}>{t('errors:' + participationResponse.error.key, participationResponse.error.params)}</span>}
-                {task?.isOwner ?
-                    <Button textContent={t('task_edit')} color="edit" onClick={() => startEdit(task)}/>
-                    : null}
-                {task?.isOwner ?
-                    <Button textContent={t('task_delete')} color="destructive" onClick={() => deleteTask(task)}/>
-                    : null}
+                {task?.isOwner &&
+                    <div className="grid md:grid-cols-2 gap-1 justify-center w-full max-w-md">
+                        <Button textContent={t('task_edit')} color="edit" onClick={() => startEdit(task)}/>
+                        <Button textContent={t('task_delete')} color="destructive" onClick={() => deleteTask(task)}/>
+                    </div>
+                }
             </div>
         </ModalCast>
     );
@@ -298,7 +299,7 @@ function Edit(
                 </div>
                 {task?.self_participating ?
                     <p className="text-with-icon">
-                        <CalendarCheck className="item-tag bg-tag-valid"/>
+                        <CalendarCheck className="item-tag bg-tag"/>
                         {t('task_self_participating')}
                     </p> : null}
                 {/*modalTask.due_at > Date.now()*/}
