@@ -1,5 +1,9 @@
 # Neil Kreuer - PFE 2025-2026&nbsp;: Application ComeUnite
 
+## Liens externes
+* [Site de documentation technique](https://github.com/Kreuer-Neil/neil-kreuer-doc-PFE/deployments/github-pages)
+* [Fichier Figma](https://www.figma.com/design/FKS2nRA0CgPv6EcUjuYYSG/PFE-%22Come-Unite%22?node-id=1839-27476&t=430owWGHzpv4bQ0c-1)
+
 ## Comment l’installer
 1. Si ce n’est pas déjà fait, installez [Composer](https://getcomposer.org/) et [Node](https://nodejs.org/en/download) sur votre machine.
 2. Clonez le repo du projet sur votre machine. 
@@ -10,7 +14,7 @@
 
 ## Cahier des charges de ComeUnite
 Projets communautaires collaboratifs (et donc gestion de ceux-ci)
-Un outil pour coordonner des projets locaux ou communautaires, avec des fonctionnalités de collaboration et de suivi des progrès.
+Un outil pour coordonner des projets locaux et communautaires, avec des fonctionnalités de collaboration et de suivi des progrès.
 
 ### Contexte et Objectif
 

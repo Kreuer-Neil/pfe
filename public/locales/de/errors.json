@@ -3,14 +3,14 @@
     "field_min_length": "Das Feld \"{{fieldName}}\" muss mindestens {{min}} Zeichen enthalten.",
     "field_not_number": "Der Wert im Feld \"{{fieldName}}\" muss eine Zahl sein.",
     "field_not_date": "Der Wert im Feld \"{{fieldName}}\" muss ein Datum wie 2026-01-15 sein. Bitte verwenden Sie die Datumsauswahl und versuchen Sie nicht, die Werte manuell zu ändern.",
-    "field_not_time": "Der Wert im Feld \"{{fieldName}}\" muss eine Uhrzeit wie 20&nbsp;:56 sein. Bitte verwenden Sie die Zeitauswahl und versuchen Sie nicht, die Werte manuell zu ändern.",
+    "field_not_time": "Der Wert im Feld \"{{fieldName}}\" muss eine Uhrzeit wie 20 :56 sein. Bitte verwenden Sie die Zeitauswahl und versuchen Sie nicht, die Werte manuell zu ändern.",
     "invalid_parameter": "Bitte stellen Sie sicher, dass Sie alle Pflichtfelder ausgefüllt haben.",
     "not_allowed_on_project": "Sie sind nicht berechtigt, diesem Projekt Aufgaben hinzuzufügen.",
-    "task_not_found": "Fehler&nbsp;: Aufgabe existiert nicht.",
+    "task_not_found": "Fehler : Aufgabe existiert nicht.",
     "project_name_exists": "Es gibt bereits ein Projekt mit diesem Namen. Bitte wählen Sie einen anderen Namen für Ihr Projekt.",
     "success_task_created": "Aufgabe {{task}} erfolgreich erstellt.",
     "success_task_updated": "Aufgabe {{task}} erfolgreich aktualisiert.",
     "participation_error": "Teilnahme abgelehnt.",
-    "project_not_found": "Fehler&nbsp;: Projekt existiert nicht.",
+    "project_not_found": "Fehler : Projekt existiert nicht.",
     "success_project_updated": "Projekt {{project}} erfolgreich aktualisiert."
 }

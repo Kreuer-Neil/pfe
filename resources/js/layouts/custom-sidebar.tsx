@@ -86,7 +86,7 @@ export default function CustomSidebar(
 
     return (
         <nav className="sidebar" id="sidebar">
-            <h2 className="sr-only">{t('title')}</h2>
+            <h2 className="sr-only">{t('nav_title')}</h2>
 
             <SidebarSwitchIcon className="p-2 mt-4 mr-4 ml-auto cursor-pointer" onClick={switchModalState}
                                onKeyDown={(e) => {
@@ -98,7 +98,13 @@ export default function CustomSidebar(
                 <div>
                     <Link as="a" href={showProfile(auth.user.id).url}
                           className="nav-profile">
+                        {/* TODO replace with userIcon fn please */}
                         <img src={useImageAsset(`users/${auth.user.avatar}/small`)}
+                             srcSet={
+                            useImageAsset(`users/${auth.user.avatar}/small`) + ' 1x, '+
+                            useImageAsset(`users/${auth.user.avatar}/medium`) + ' 2x, ' +
+                            useImageAsset(`users/${auth.user.avatar}/large`) + ' 3x, '
+                        }
                              alt={t('user_profile_picture', {username: auth.user.nickname})}
                              className="nav-pfp"/>
                         <span className="page-title">{auth.user.nickname}</span>

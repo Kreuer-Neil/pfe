@@ -11,6 +11,7 @@ return [
     ],
     //
     'home' => [
+        'title' => 'Home',
         'header' => [
             'title' => 'ComeUnite',
             'subtitle' => 'The ultimate community projects management toolbox',
@@ -27,12 +28,12 @@ return [
             'projects' => [
                 'title' => 'Join projects from within your city!',
                 'text' => 'Search for projects and find them wherever you live, and invite your friends! And if there\'s no project, add one! The trial month is entirely free!',
-                'alt' => 'A picture representing a web page with a project named "Planter des arbres à Seraing".'
+                'img-alt' => 'A picture representing a web page with a project named "Planter des arbres à Seraing" and other projects.'
             ],
             'tasks' => [
                 'title' => 'Use tasks to organize!',
                 'text' => 'Accept tasks from your projects and get informed in real-time about who\'s participating or not! To help you organise better than just your messaging app!',
-                'alt' => 'A picture representing tasks from different projects'
+                'img-alt' => 'A picture representing tasks from different projects'
             ],
             'sharing' => [
                 'title' => 'Easy sharing',
@@ -42,7 +43,7 @@ return [
             'mobile' => [
                 'title' => 'Mobile app',
                 'text' => 'You don\'t want to have to open your browser to use the app? No worries! The ComeUnite mobile app is on the way, only for your comfort!',
-                'img-alt' => 'A screenshot from the app.',
+                'img-alt' => 'The ComeUnite app on multiple devices.',
             ],
         ],
         //

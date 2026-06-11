@@ -16,7 +16,7 @@ import SettingsLayout from '@/layouts/settings/layout';
 import {edit} from '@/routes/profile';
 import {useTranslation} from "react-i18next";
 import {LogOut} from "lucide-react";
-import {logout} from '@/routes';
+import {lang, logout} from '@/routes';
 import {useMobileNavigation} from "@/hooks/use-mobile-navigation";
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -167,9 +167,16 @@ export default function Profile({
                     </Form>
                 </div>
 
-                <DeleteUser/>
+                <div className="flex flex-col gap-0.5">
+                    Lang
+                    {/* TODO fix with config data later */}
+                    <Link className="text-link" href={lang({query:{lang:'en'}}).url}>English</Link>
+                    <Link className="text-link" href={lang({query:{lang:'fr'}}).url}>Français</Link>
+                    <Link className="text-link" href={lang({query:{lang:'de'}}).url}>Deutsch</Link>
+                </div>
                 <Button color="destructive" textContent={t('logout')} icon={LogOut}
                         href={logout()} onClick={handleLogout}/>
+                <DeleteUser/>
             </SettingsLayout>
         </AppLayout>
     );

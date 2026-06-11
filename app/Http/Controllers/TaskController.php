@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\FormatedModels\FormatedTask;
+use App\Models\Participation;
 use App\Models\Project;
 use App\Models\Task;
 use Carbon\Carbon;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Throwable;
 
 class TaskController extends Controller
 {
@@ -139,6 +141,67 @@ class TaskController extends Controller
             'success' => false,
             'error' => [
                 'key' => 'participation_error',
+                'params' => [],
+            ]
+        ];
+    }
+
+    public function validate($id)
+    {
+        $task = null;
+        try {
+            $task = Task::findOrFail($id);
+        } catch (QueryException) {
+            return [
+                'success' => false,
+                'error' => [
+                    'key' => 'task_validation_error',
+                    'params' => [],
+                ]
+            ];
+        }
+        $task->validated_at = Carbon::now();
+        if ($task->save()) {
+            return [
+                'success' => true,
+                'error' => [
+                    'key' => 'task_validation_success',
+                    'params' => [],
+                ]
+            ];
+        }
+
+        return [
+            'success' => false,
+            'error' => [
+                'key' => 'task_validation_error',
+                'params' => [],
+            ]
+        ];
+    }
+
+    public function cancelParticipation(int $id)
+    {
+
+        try {
+            Participation::where('user_id', auth()->user()->id)
+                ->where('task_id', $id)
+                ->first()
+                ->deleteOrFail();
+        } catch (Throwable) {
+            return [
+                'success' => false,
+                'error' => [
+                    'key' => 'participation_error',
+                    'params' => [],
+                ]
+            ];
+        }
+
+        return [
+            'success' => true,
+            'error' => [
+                'key' => 'participation_cancel_success',
                 'params' => [],
             ]
         ];

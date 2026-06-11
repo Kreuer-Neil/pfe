@@ -1,5 +1,6 @@
 {
     "open_sidebar": "Seitenleiste öffnen",
+    "nav_title": "Hauptnavigation",
     "user_profile_picture": "{{user}}",
     "dashboard": "Dashboard",
     "notifications": "Benachrichtigungen",
@@ -7,7 +8,7 @@
     "settings": "Einstellungen",
     "manage_projects": "Meine Projekte verwalten",
     "my_projects": "Meine Projekte",
-    "projects_not_found": "Wir konnten Ihre Projekte nicht finden. Wenn Sie bereits Projekten beigetreten sind, laden Sie die Seite neu, überprüfen Sie Ihre Benachrichtigungen, um zu sehen, ob Sie ausgeschlossen wurden, oder wenden Sie sich an den Support. Wenn Sie noch keinem Projekt beigetreten sind, können Sie das hier tun&nbsp;:",
+    "projects_not_found": "Wir konnten Ihre Projekte nicht finden. Wenn Sie bereits Projekten beigetreten sind, laden Sie die Seite neu, überprüfen Sie Ihre Benachrichtigungen, um zu sehen, ob Sie ausgeschlossen wurden, oder wenden Sie sich an den Support. Wenn Sie noch keinem Projekt beigetreten sind, können Sie das hier tun :",
     "search_project": "Projekt suchen",
     "button_share": "Teilen",
     "button_report": "Melden"

@@ -17,12 +17,13 @@ function MobileHeader({appHeaderContext, switchModalState}: {
     appHeaderContext: IAppHeaderContext | null,
     switchModalState: () => void
 }) {
-    const defaultTitle = 'Come Unite';
+    const defaultTitle = 'ComeUnite';
     const {t} = useTranslation('common')
 
     return (
         <div className="bg-sidebar min-h-16 p-2 flex items-center sm:hidden">
             <div className="flex gap-2 px-2 items-center">
+                {/* TODO replace with <Icon/> type param instead of image asset */}
                 <img src={appHeaderContext?.contextImageSrc ?? useImageAsset('app/logo')}
                      alt={appHeaderContext?.contextImageAlt ?? 'ComeUnite app logo'}
                      className="rounded-sm bg-loading border border-secondary-border size-8"/>

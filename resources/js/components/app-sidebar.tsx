@@ -85,7 +85,7 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <SidebarGroup className="px-2 py-0">
-                    <SidebarGroupLabel>Come Unite</SidebarGroupLabel>
+                    <SidebarGroupLabel>ComeUnite</SidebarGroupLabel>
                     <SidebarMenu>
                         <SidebarMenuItem key={"projects"}>
                             <SidebarMenuButton
