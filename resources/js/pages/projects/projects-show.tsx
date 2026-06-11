@@ -219,8 +219,8 @@ function ProjectHeader({project}: {
                                                         showText={true}
                                                         className="bg-tertiary text-tertiary-foreground"
                                                         onClick={() => setIsEditing(true)}/>}
-                                        <IconButton icon={Settings} textContent={t('project_settings')}
-                                                    className="bg-tertiary text-tertiary-foreground"/>
+                                        {/*<IconButton icon={Settings} textContent={t('project_settings')}
+                                                    className="bg-tertiary text-tertiary-foreground"/>*/}
                                     </div>}
 
                                 {!(!project.banner) &&
@@ -252,11 +252,11 @@ function ProjectHeader({project}: {
                                                     href={joinProject(project.slug).url}/> :
                                         <IconButton textContent={t('button_invite')} icon={UserRoundPlus}
                                                     showText={true} onClick={() => openInvitationModal()}/>}
-                                    {project.user_following ?
+                                    {/*{project.user_following ?
                                         <IconButton icon={BookmarkCheck} textContent={t('following')}/> :
                                         <IconButton icon={Bookmark} textContent={t('follow')}/>}
                                     <IconButton icon={Share2} textContent={t('common:button_share')}/>
-                                    <IconButton icon={Flag} textContent={t('common:button_report')}/>
+                                    <IconButton icon={Flag} textContent={t('common:button_report')}/>*/}
                                 </div>
                                 {isEditing ?
                                     <GeneralInput name="description" label={t('project_form_description')}

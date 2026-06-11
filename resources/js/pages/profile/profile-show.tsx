@@ -123,14 +123,15 @@ export default function profileShow({}) {
                         <div className="px-3 flex flex-col gap-3">
                             {!isEditing &&
                                 <div className="flex gap-1 justify-end -mb-3">
+                                    {/* TODO add user as contact & other features */}
                                     {isCurrentUser ?
                                         <IconButton icon={UserPen} textContent={t('user_edit')}
                                                     showText={true} onClick={() => setIsEditing(true)}/>
-                                        : <IconButton icon={UserPlus} textContent={t('user_add')}
-                                                      showText={true}/>}
-                                    <IconButton icon={Share2} textContent={t('common:share')}/>
-                                    {!isCurrentUser &&
-                                        <IconButton icon={Flag} textContent={t('common:button_report')}/>}
+                                        : /*<IconButton icon={UserPlus} textContent={t('user_add')}
+                                                      showText={true}/>*/ null}
+                                    {/*<IconButton icon={Share2} textContent={t('common:share')}/>*/}
+                                    {/*{!isCurrentUser &&
+                                        <IconButton icon={Flag} textContent={t('common:button_report')}/>}*/}
                                 </div>}
                             <div className="mt-4">
                                 <h1 className="page-title">{isEditing ?
