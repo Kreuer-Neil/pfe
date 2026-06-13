@@ -40,7 +40,7 @@ class TaskController extends Controller
         ];
 //        dd(new FormatedTask($task, $currentUser->id));
         return [
-            'task' => new FormatedTask($task, $currentUser->id)
+            'task' => new FormatedTask($task, $currentUser)
         ];
     }
 

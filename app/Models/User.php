@@ -132,6 +132,11 @@ class User extends Authenticatable
         return new FormatedProfile($this);
     }
 
+    public function follows():BelongsToMany
+    {
+        return $this->belongsToMany(User::class, UserFollow::class);
+    }
+
     public static function canFindUser($userId, User $currentUser): null|User
     {
         $user = User::find($userId);

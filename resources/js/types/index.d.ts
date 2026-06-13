@@ -128,6 +128,7 @@ export interface ITaskMiniature {
     project: IProjectContext;
     min_participations: ?number;
     participations_count: number;
+    related_users: IProfile[];
     // if self is participating
     self_participating: boolean;
     starting_at: ?string;

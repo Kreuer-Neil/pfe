@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 class Task extends Model
 {
@@ -60,7 +61,7 @@ class Task extends Model
     /**
      * Returns a list of participating users.
      */
-    public function participatingUsers(int $currentUserId): BelongsToMany
+    public function participatingUsers(): BelongsToMany
     {
         // TODO order by contacts with currentUser
         return $this->belongsToMany(User::class, Participation::class);
@@ -101,5 +102,15 @@ class Task extends Model
         // TODO check if user can see task
         $this->project;
         return true;
+    }
+
+
+    /**
+     * See related users
+     */
+    public function relatedUsers(User $user)
+    {
+        return
+            $this->participatingUsers->whereIn('user_id',$user->follows());
     }
 }

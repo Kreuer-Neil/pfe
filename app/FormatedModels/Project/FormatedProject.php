@@ -37,7 +37,7 @@ class FormatedProject extends FormatedProjectContext
 
         $this->upcoming_tasks = [];
         foreach ($project->upcomingTasks as $task) {
-            $this->upcoming_tasks[] = new FormatedTaskMiniature($task, $user->id);
+            $this->upcoming_tasks[] = new FormatedTaskMiniature($task, $user);
         }
 
         $this->user_role = $project->userRole($user);

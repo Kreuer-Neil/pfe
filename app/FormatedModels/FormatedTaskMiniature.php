@@ -17,32 +17,32 @@ class FormatedTaskMiniature
     public int|null $min_participations;
 
     public int $participations_count;
-    public array $participating_users;
+    public array $related_users;
     public bool $self_participating;
     public ?string $starting_at;
     public ?string $due_at;
     public bool $hasNotes;
 
-    public function __construct(Task $task, int $currentUserId)
+    public function __construct(Task $task, User $currentUser)
     {
         $this->id = $task->id;
         $this->owner = new FormatedProfile($task->owner);
-        $this->isOwner = ($ownerId = $task->owner->id) ? $ownerId === $currentUserId : null;
+        $this->isOwner = ($ownerId = $task->owner->id) ? $ownerId === $currentUser->id : null;
         $this->title = $task->title;
 //        $this->description = $task->description;
         $this->project = new FormatedProjectContext($task->project()->first(['id', 'name', 'icon', 'slug']));
 
         $this->min_participations = $task->min_participations;
         // Turns users model collection into profile data
-//        $this->participating_users = [];
-//        foreach($task->participatingUsers($currentUserId)->get() as $user) {
-//            $this->participating_users[] = new FormatedProfile($user);
-//        }
 
-        $this->participations_count = $task->participatingUsers($currentUserId)->count();
-//        $this->participations_count = $task->loadCount('participatingUsers');
+        foreach($task->relatedUsers($currentUser) as $user) {
+            $this->related_users[] = $user->toFormatedProfile();
+        }
 
-        $this->self_participating = $task->isParticipating($currentUserId);
+        $this->participations_count = $task->participations()->count();
+// $this->participations_count = $task->loadCount('participatingUsers');
+
+        $this->self_participating = $task->isParticipating($currentUser);
         $this->starting_at = $task->starting_at;
         $this->due_at = $task->due_at;
 //        $this->created_at = $task->created_at;
