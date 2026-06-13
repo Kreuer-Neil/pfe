@@ -110,7 +110,15 @@ class Task extends Model
      */
     public function relatedUsers(User $user)
     {
+        $relatedUsers = $user->follows()->get(['followed_user_id'])->toArray();
+        $userIds = [];
+        foreach ($relatedUsers as $relatedUser) {
+            $userIds[] = $relatedUser['followed_user_id'];
+        }
+
         return
-            $this->participatingUsers->whereIn('user_id', $user->follows());
+            $this->participatingUsers
+                ->where('id', '!==', $user->id)
+                ->whereIn('id', $userIds);
     }
 }
