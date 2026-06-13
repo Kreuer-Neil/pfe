@@ -111,6 +111,6 @@ class Task extends Model
     public function relatedUsers(User $user)
     {
         return
-            $this->participatingUsers->whereIn('user_id',$user->follows());
+            $this->participatingUsers->whereIn('user_id', $user->follows());
     }
 }

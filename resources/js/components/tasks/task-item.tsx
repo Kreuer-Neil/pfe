@@ -5,6 +5,7 @@ import {laravelDateToJsDate, upcomingDateToString} from "@/helpers/date";
 import ProjectIcon from "@/components/icons/project-icon";
 import {useTranslation} from "react-i18next";
 import {ReactNode} from "react";
+import RelatedUsers from "@/components/users/related-users";
 
 
 interface TaskItemProps {
@@ -86,8 +87,7 @@ export default function TaskItem(
             <div className="taskinfo mt-1 flex flex-wrap justify-between items-center gap-1">
                 <span className="flex gap-1"><Timer/><time dateTime={task.due_at}>{dueAt}</time></span>
                 <div className="flex gap-1 ml-auto">
-                    { /* TODO add PFPs of participating people */}
-                    {/*<RelatedUsers/>*/}
+                    <RelatedUsers profiles={task.related_users}/>
                     <TaskIconParticipation participations={task.participations_count}
                                            min={task.min_participations}/>
                     <ParticipatingIcon participating={task.self_participating}/>
