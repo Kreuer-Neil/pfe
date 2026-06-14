@@ -26,7 +26,7 @@ class FormatedTaskMiniature
     public function __construct(Task $task, User $currentUser)
     {
         $this->id = $task->id;
-        $this->owner = new FormatedProfile($task->owner);
+        $this->owner = new FormatedProfile($task->owner, $currentUser);
         $this->isOwner = ($ownerId = $task->owner->id) ? $ownerId === $currentUser->id : null;
         $this->title = $task->title;
 //        $this->description = $task->description;
@@ -36,7 +36,7 @@ class FormatedTaskMiniature
         // Turns users model collection into profile data
 
         foreach($task->relatedUsers($currentUser) as $user) {
-            $this->related_users[] = $user->toFormatedProfile();
+            $this->related_users[] = $user->toFormatedProfile(auth()->user());
         }
 
         $this->participations_count = $task->participations()->count();
