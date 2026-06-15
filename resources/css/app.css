@@ -504,7 +504,7 @@
 
     /* APP SIDEBAR STYLE */
     .app-container {
-        @apply relative flex flex-col sm:flex-row;
+        @apply relative flex flex-col sm:flex-row min-h-screen;
     }
 
     .sidebar-cast {
