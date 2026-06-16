@@ -105,7 +105,7 @@ export default function CustomSidebar(
                             useImageAsset(`users/${auth.user.avatar}/medium`) + ' 2x, ' +
                             useImageAsset(`users/${auth.user.avatar}/large`) + ' 3x, '
                         }
-                             alt={t('user_profile_picture', {username: auth.user.nickname})}
+                             alt={t('user_profile_picture', {user: auth.user.nickname})}
                              className="nav-pfp"/>
                         <span className="page-title">{auth.user.nickname}</span>
                     </Link>
