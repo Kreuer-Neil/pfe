@@ -191,10 +191,10 @@ function MembersModal({showModal, setShowModal, onCloseModal, project}: {
     project: IProject | IProjectShow
 }) {
 
-    const {t} = useTranslation('project')
+    const {t} = useTranslation('projects')
     return (
         <CustomModal showModal={showModal} onClose={() => setShowModal(false)} id="members-show">
-            <ModalCast closeModal={() => setShowModal(false)} title={t('project_members')}>
+            <ModalCast closeModal={() => setShowModal(false)} title={t('project_members_title')}>
                 <ul className="flex flex-col gap-1">
                     {project.members.map((member, index) => {
                         return (
