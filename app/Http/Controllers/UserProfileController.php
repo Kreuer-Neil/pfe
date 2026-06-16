@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\FormatedModels\FormatedProfile;
 use App\FormatedModels\FormatedUser;
+use App\Jobs\HandleProfileImageUploads;
 use App\Models\User;
 use File;
 use Illuminate\Http\Request;
@@ -58,26 +59,7 @@ class UserProfileController extends Controller
             // TODO refactor
             $avatarName = Str::beforeLast(Str::afterLast($path, '/'), '.');
 
-            // TODO queued jobs
-            $imageManager = ImageManager::usingDriver(Driver::class);
-            $scales = ['small' => 32, 'medium' => 64, 'large' => 160];
-
-            foreach ($scales as $key => $scale) {
-                $image = $imageManager->decodePath('../storage/app/public/' . $path);
-                $image->cover($scale, $scale);
-                $encoded = $image->encodeUsingFormat(Format::PNG, quality: 65);
-                $encoded->save("../storage/app/public/images/users/${key}/${avatarName}.png");
-                if ($oldAvatarName) {
-                    $oldFilePath = "../storage/app/public/images/users/${key}/${oldAvatarName}.png";
-                    if (File::exists($oldFilePath)) {
-                        File::delete($oldFilePath);
-                    }
-                }
-            }
-
-            if (File::exists("../storage/app/public/images/users/${avatarName}.png")) {
-                File::delete("../storage/app/public/images/users/${avatarName}.png");
-            }
+            HandleProfileImageUploads::dispatch($avatarName, $oldAvatarName, $path, 'users');
 
             $user->avatar = $avatarName;
         }
