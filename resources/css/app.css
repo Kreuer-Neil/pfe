@@ -118,15 +118,13 @@
     --foreground-main: oklch(0.145 0 0);
     --foreground-light: oklch(0.981 0 0);
 
-    --background: oklch(0.9821 0 0);
+    --background: oklch(0.9856 0 0);
     --foreground: var(--foreground-main);
     --modal-behind: oklch(0.576 0.053 159.319 / 0.5);
     /*--card: oklch(1 0 0);*/
 
-    --thumbnail: oklch(1 0 0);
-    --thumbnail-foreground: oklch(0.145 0 0);
 
-    --card: oklch(0.9612 0 0);
+    --card: oklch(1 0 0);
     --card-foreground: var(--foreground-main);
 
     --button: var(--tea-green);
@@ -265,7 +263,10 @@
     }
 
     .icon-btn {
-        @apply p-1 cursor-pointer;
+        @apply bg-card text-link p-1 px-2 rounded-xs border border-border cursor-pointer flex gap-1;
+    }
+    .icon-btn-alt {
+        @apply bg-tertiary text-tertiary-foreground p-1 px-2 rounded-xs cursor-pointer flex gap-1;
     }
 
     /** Frontpage specific style **/
@@ -422,7 +423,7 @@
     }
 
     .items-section {
-        @apply w-full max-w-xl /*rounded-lg bg-card*/
+        @apply w-full max-w-xl
         flex flex-col gap-4;
     }
 
@@ -436,7 +437,7 @@
 
     .thumbnail-item {
         @apply flex flex-col gap-1 p-2 px-3 cursor-pointer
-        rounded-sm border border-border max-w-[var(--text-max-w)];
+        rounded-sm border border-border max-w-[var(--text-max-w)] bg-card;
     }
 
     /* To overwrite style from browsers like Firefox */
@@ -512,6 +513,8 @@
             background: var(--color-muted-foreground);
         }
     }
+
+    .icon-btn
 
     /* APP SIDEBAR STYLE */
     .app-container {

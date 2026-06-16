@@ -133,11 +133,11 @@ export default function ProjectsIndex() {
     return (
         <AppLayout>
             <Head title={t('title')}/>
-            <PageFlowContainer>
+            <PageFlowContainer className="pt-0">
 
-                <h1 className="page-title text-center mx-auto">{t(title ?? 'search_title')}</h1>
+                <div className="flex flex-col gap-2 w-full px-3 max-w-xl bg-card border-b border-border pb-4 -mb-4">
+                <h1 className="page-title text-center mx-auto my-6">{t(title ?? 'search_title')}</h1>
 
-                <div className="flex flex-col gap-2 w-full px-3 max-w-xl">
                     <div className="flex gap-1">
                         <IconButton icon={direction === 'desc' ? ArrowDownWideNarrow : ArrowUpWideNarrow}
                                     textContent={t('pagination:' + direction)}

@@ -113,7 +113,7 @@ export default function profileShow({}) {
         <AppLayout appHeaderContext={appHeaderContext}>
             <Head title="show"/>
             <ProfileContainer id={user.id} isEditing={isEditing}
-                              className="w-full flex flex-col gap-3 max-w-xl">
+                              className="w-full flex flex-col gap-3 max-w-xl bg-card pb-4 -mb-4 border-b border-border">
                 {(errors) => (
                     <>
                         <div className="w-full">

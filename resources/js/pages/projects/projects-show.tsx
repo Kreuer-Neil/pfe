@@ -251,7 +251,7 @@ function ProjectHeader({project}: {
     return (
         <>
             <HeaderContainer slug={project.slug} isEditing={isEditing}
-                             className="w-full flex flex-col gap-2 max-w-xl">
+                             className="w-full flex flex-col gap-2 max-w-xl bg-card border-b border-border pb-4 -mb-4">
                 {(errors) => (
                     <>
                         <div className="w-full">
@@ -260,11 +260,10 @@ function ProjectHeader({project}: {
                                     <div className="flex gap-1 m-3 h-fit">
                                         {!isEditing &&
                                             <IconButton icon={PencilLine} textContent={t('project_edit')}
-                                                        showText={true}
-                                                        className="bg-tertiary text-tertiary-foreground"
+                                                        showText={true} alt
                                                         onClick={() => setIsEditing(true)}/>}
                                         {/*<IconButton icon={Settings} textContent={t('project_settings')}
-                                                    className="bg-tertiary text-tertiary-foreground"/>*/}
+                                                    alt/>*/}
                                     </div>}
 
                                 {!(!project.banner) &&
