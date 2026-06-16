@@ -32,6 +32,7 @@ import ProjectInvitationController from "@/actions/App/Http/Controllers/ProjectI
 import UserAvatar from "@/components/users/user-avatar";
 import {show as showProfile} from "@/actions/App/Http/Controllers/UserProfileController";
 import InputError from "@/components/input-error";
+import {cn} from "@/lib/utils";
 
 type pageProps = {
     project: IProject | IProjectShow | null,
@@ -246,7 +247,9 @@ function ProjectHeader({project}: {
     const [showMembersModal, setShowMembersModal] = useState<boolean>(false);
     const openMembersModal = (e: any) => {
         e.preventDefault();
-        setShowMembersModal(true);
+        if (project.members.length > 0) {
+            setShowMembersModal(true);
+        }
     }
     return (
         <>
@@ -285,9 +288,10 @@ function ProjectHeader({project}: {
                             <div className="w-full flex flex-col gap-3">
                                 <div className="flex gap-1 w-full">
                                     <p className="mr-auto block">
-                                        <button className="p-1 cursor-pointer rounded-xs" onClick={openMembersModal} onKeyDown={(e)=> {
-                                            if(e.key === 'Enter') openMembersModal(e);
-                                        }}>
+                                        <button className={cn("p-1 rounded-xs", project.members_count>0 ? 'cursor-pointer':'')} onClick={openMembersModal}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter') openMembersModal(e);
+                                                }}>
                                             <span className="font-bold">{project.members_count}</span>
                                             &nbsp;{t('members_count')}
                                         </button>
