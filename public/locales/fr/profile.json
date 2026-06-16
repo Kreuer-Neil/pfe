@@ -1,6 +1,7 @@
 {
     "user_edit": "Modifier le profil",
-    "user_add": "Ajouter en ami",
+    "user_add": "Ajouter contact",
+    "user_remove": "Retirer contact",
     "user_context_profile": "Profil de {{user}}",
     "pronouns": "Pronoms",
     "field_nickname": "Changer de pseudonyme",

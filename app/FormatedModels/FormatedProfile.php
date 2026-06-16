@@ -13,9 +13,11 @@ class FormatedProfile
     public ?string $pronouns;
     public ?string $avatar;
     public ?string $bio;
+    public bool $is_following;
 
     public function __construct(
-        User $user
+        User $user,
+        User $currentUser,
     )
     {
         $this->id = $user->id;
@@ -25,5 +27,6 @@ class FormatedProfile
         $this->pronouns = $user->pronouns;
         $this->avatar = $user->avatar;
         $this->bio = $user->bio;
+        $this->is_following = $currentUser->follows()->where('followed_user_id', $user->id)->exists();
     }
 }

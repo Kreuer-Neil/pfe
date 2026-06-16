@@ -6,7 +6,7 @@ import {ReactNode, useState} from "react";
 import AppLayout from "@/layouts/app-layout";
 import {useTranslation} from "react-i18next";
 import IconButton from "@/components/buttons/icon-button";
-import {Camera, Dot, Flag, Share2, UserPen, UserPlus} from "lucide-react";
+import {Camera, Dot, UserMinus, UserPen, UserPlus} from "lucide-react";
 import UserProfileController from "@/actions/App/Http/Controllers/UserProfileController";
 import GeneralInput from "@/components/form/general-input";
 import Button from "@/components/buttons/button";
@@ -127,8 +127,21 @@ export default function profileShow({}) {
                                     {isCurrentUser ?
                                         <IconButton icon={UserPen} textContent={t('user_edit')}
                                                     showText={true} onClick={() => setIsEditing(true)}/>
-                                        : /*<IconButton icon={UserPlus} textContent={t('user_add')}
-                                                      showText={true}/>*/ null}
+                                        :
+                                        user?.is_following ?
+                                            <Form
+                                                {...UserProfileController.unfollow.form(user.id)}
+                                            >
+                                                <IconButton icon={UserMinus} textContent={t('user_remove')}
+                                                            showText={true} onClick={() => null}/>
+                                            </Form> :
+                                            <Form
+                                                {...UserProfileController.follow.form(user.id)}
+                                            >
+                                                <IconButton icon={UserPlus} textContent={t('user_add')}
+                                                            showText={true} onClick={() => null}/>
+                                            </Form>
+                                    }
                                     {/*<IconButton icon={Share2} textContent={t('common:share')}/>*/}
                                     {/*{!isCurrentUser &&
                                         <IconButton icon={Flag} textContent={t('common:button_report')}/>}*/}

@@ -20,6 +20,7 @@ import {
 import GeneralInput from "@/components/form/general-input";
 import {RouteQueryOptions} from "@/wayfinder";
 import ConfirmModal from "@/components/modals/confirm-modal";
+import RelatedUsers from "@/components/users/related-users";
 
 type EditProps = {
     task: ITask | undefined;
@@ -150,28 +151,38 @@ function Show({task, onCloseModal, startEdit, deleteTask}: {
             </ModalSection>
             <ModalSection>
                 <div className="flex wrap">
-                    <p className="text-with-icon mr-auto">
-                        {/*<RelatedUsers />*/}
-                        {task?.participations_count ? t('task_participations_count', {count: task.participations_count}) : t('task_no_participations')}
-                    </p>
+                    <div className="text-with-icon mr-auto">
+                        {task?.related_users &&
+                            <RelatedUsers profiles={task.related_users} isWithLinks/>
+                        }
+                        <p>
+                            {task?.participations_count ? t('task_participations_count', {count: task.participations_count}) : t('task_no_participations')}
+                        </p>
+                    </div>
                     {task?.min_participations ?
-                        <p className="text-with-icon">
+                        <div className="text-with-icon">
                             <UsersRound className="item-tag"/>
-                            {t('task_recommended_participations_count', {count: task.min_participations})}
-                        </p> : null
+                            <p>
+                                {t('task_recommended_participations_count', {count: task.min_participations})}
+                            </p>
+                        </div> : null
                     }
                 </div>
                 {task?.self_participating ?
-                    <p className="text-with-icon">
+                    <div className="text-with-icon">
                         <CalendarCheck className="item-tag bg-tag"/>
-                        {t('task_self_participating')}
-                    </p> : null}
+                        <p>
+                            {t('task_self_participating')}
+                        </p>
+                    </div> : null}
                 {/*modalTask.due_at > Date.now()*/}
                 {task?.due_at && false &&
-                    <p className="flex gap-1">
+                    <div className="flex gap-1">
                         <ClockAlert className="item-tag bg-tag-warning"/>
-                        {t('task_due_soon')}
-                    </p>}
+                        <p>
+                            {t('task_due_soon')}
+                        </p>
+                    </div>}
             </ModalSection>
             {/*<ModalSection title={t('task_note_title')} icon={Notebook}>
                 <NotesList task={task}/>

@@ -21,13 +21,13 @@ class UserProfileController extends Controller
         $user = User::find($id);
 
         // TODO add check if not contact or project in common + if account private
-        if (!($user->exists()
+        if (!($user
             /*&& ((!$user->is_private) || $user->hasProjectsInCommonWith(auth()->user()))*/
         )) {
             abort(404);
         }
 
-        $user = new FormatedProfile($user);
+        $user = $user->toFormatedProfile(auth()->user());
         auth()->user()->projects;
         return Inertia::render('profile/profile-show', compact('user'));
     }
@@ -72,6 +72,44 @@ class UserProfileController extends Controller
         $user->save();
 
         Inertia::flash(['success' => true]);
+        return redirect(route('user-profile.show', $id));
+    }
+
+
+    // Other methods
+    public function follow(int $id)
+    {
+        if (!User::find($id)) {
+            abort(404);
+        }
+
+        $currentUser = auth()->user();
+        if ($id === $currentUser->id) {
+            Inertia::flash(['follow_success' => false]);
+        } else {
+            $user = User::find($id);
+
+            Inertia::flash(['follow_success' => $user->followAs($currentUser)]);
+        }
+
+        return redirect(route('user-profile.show', $id));
+    }
+
+    public function unfollow(int $id)
+    {
+        if (!User::find($id)) {
+            abort(404);
+        }
+
+        $currentUser = auth()->user();
+        if ($id === $currentUser->id) {
+            Inertia::flash(['follow_success' => false]);
+        } else {
+            $user = User::find($id);
+
+            Inertia::flash(['follow_success' => $user->unfollowAs($currentUser)]);
+        }
+
         return redirect(route('user-profile.show', $id));
     }
 }

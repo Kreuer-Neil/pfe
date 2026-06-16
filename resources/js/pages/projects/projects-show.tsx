@@ -1,6 +1,6 @@
-import {IAppHeaderContext, IProject, IProjectShow, IServerResponse} from "@/types";
+import {IAppHeaderContext, IProfile, IProject, IProjectShow, IServerResponse} from "@/types";
 import AppLayout from "@/layouts/app-layout";
-import {Form, Head, router, usePage} from "@inertiajs/react";
+import {Form, Head, Link, router, usePage} from "@inertiajs/react";
 import PageFlowContainer from "@/components/page-flow-container";
 import TaskDisplay from "@/components/tasks/task-display";
 import {instanceOfProject, instanceOfProjectShow} from "@/helpers/type-check";
@@ -29,6 +29,8 @@ import ModalCast from "@/components/modals/modal-cast";
 import CustomModal from "@/components/modals/custom-modal";
 import ModalSection from "@/components/modals/modal-section";
 import ProjectInvitationController from "@/actions/App/Http/Controllers/ProjectInvitationController";
+import UserAvatar from "@/components/users/user-avatar";
+import {show as showProfile} from "@/actions/App/Http/Controllers/UserProfileController";
 import InputError from "@/components/input-error";
 
 type pageProps = {
@@ -182,6 +184,41 @@ function InvitationModal({showInvitationModal, setShowInvitationModal, slug}: {
     );
 }
 
+function MembersModal({showModal, setShowModal, onCloseModal, project}: {
+    showModal: boolean,
+    setShowModal: Dispatch<SetStateAction<boolean>>,
+    onCloseModal: () => void,
+    project: IProject | IProjectShow
+}) {
+
+    const {t} = useTranslation('project')
+    return (
+        <CustomModal showModal={showModal} onClose={() => setShowModal(false)} id="members-show">
+            <ModalCast closeModal={() => setShowModal(false)} title={t('project_members')}>
+                <ul className="flex flex-col gap-1">
+                    {project.members.map((member, index) => {
+                        return (
+                            <li key={index}>
+                                <Link href={showProfile(member.id)} className="thumbnail-item flex-row items-center">
+                                    <UserAvatar user={member}/>
+                                    <div className="flex flex-col">
+                                        <p>
+                                            {member.nickname}
+                                        </p>
+                                        <p className="text-xs">
+                                            {member.first_name + ' ' + member.last_name}
+                                        </p>
+                                    </div>
+                                </Link>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </ModalCast>
+        </CustomModal>
+    );
+}
+
 function ProjectHeader({project}: {
     project: IProject | IProjectShow
 }): ReactNode | ReactNode[] {
@@ -206,6 +243,11 @@ function ProjectHeader({project}: {
 
     const [updateResponse, setUpdateResponse] = useState<IServerResponse>({success: false, error: null});
 
+    const [showMembersModal, setShowMembersModal] = useState<boolean>(false);
+    const openMembersModal = (e: any) => {
+        e.preventDefault();
+        setShowMembersModal(true);
+    }
     return (
         <>
             <HeaderContainer slug={project.slug} isEditing={isEditing}
@@ -243,9 +285,13 @@ function ProjectHeader({project}: {
 
                             <div className="w-full flex flex-col gap-3">
                                 <div className="flex gap-1 w-full">
-                                    <p className="mr-auto">
-                                        <span className="font-bold">{project.members_count}</span>
-                                        &nbsp;{t('members_count')}
+                                    <p className="mr-auto block">
+                                        <button className="p-1 cursor-pointer rounded-xs" onClick={openMembersModal} onKeyDown={(e)=> {
+                                            if(e.key === 'Enter') openMembersModal(e);
+                                        }}>
+                                            <span className="font-bold">{project.members_count}</span>
+                                            &nbsp;{t('members_count')}
+                                        </button>
                                     </p>
                                     {/* TODO add condition with permission for inviting people to project, as well as sharing */}
                                     {project.user_role === 'viewer' ?
@@ -302,6 +348,8 @@ function ProjectHeader({project}: {
             </HeaderContainer>
             <InvitationModal showInvitationModal={showInvitationModal} setShowInvitationModal={setShowInvitationModal}
                              slug={project.slug}/>
+            <MembersModal showModal={showMembersModal} setShowModal={setShowMembersModal}
+                          onCloseModal={() => setShowMembersModal(false)} project={project}/>
         </>
     );
 }

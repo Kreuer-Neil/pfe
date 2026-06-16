@@ -38,9 +38,9 @@ class TaskController extends Controller
                 'params' => [],
             ]
         ];
-//        dd(new FormatedTask($task, $currentUser->id));
+        // dd(new FormatedTask($task, $currentUser->id));
         return [
-            'task' => new FormatedTask($task, $currentUser->id)
+            'task' => new FormatedTask($task, $currentUser)
         ];
     }
 

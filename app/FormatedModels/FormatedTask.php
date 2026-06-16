@@ -14,7 +14,7 @@ class FormatedTask extends FormatedTaskMiniature
     public FormatedProjectContext $project;
     public int|null $min_participations;
     public int $participations_count;
-    public array $participating_users;
+    public array $related_users;
     public array $notes;
     public bool $self_participating;
     public ?string $starting_at;
@@ -22,17 +22,14 @@ class FormatedTask extends FormatedTaskMiniature
     public string $created_at;
     public string $updated_at;
 
-    public function __construct(Task $task, int $currentUserId)
+    public function __construct(Task $task, User $currentUser)
     {
-        parent::__construct($task, $currentUserId);
+        parent::__construct($task, $currentUser);
         $this->description = $task->description;
         $this->project = new FormatedProjectContext($task->project()->first(['id', 'name', 'icon', 'slug']));
 
         // Turns users model collection into profile data
-        $this->participating_users = [];
-        foreach ($task->participatingUsers($currentUserId)->get() as $user) {
-            $this->participating_users[] = new FormatedProfile($user);
-        }
+
 
         // TODO eager load related users and notes and proj
         $this->notes = [];
@@ -40,9 +37,10 @@ class FormatedTask extends FormatedTaskMiniature
             $this->notes[] = new FormatedNote($note);
         }*/
 
-        $this->participations_count = $task->participatingUsers($currentUserId)->count();
+        $this->participations_count = $task->participations()->count();
+// $this->participations_count = $task->loadCount('participatingUsers');
 
-        $this->self_participating = $task->isParticipating($currentUserId);
+        $this->self_participating = $task->isParticipating($currentUser);
         $this->starting_at = $task->starting_at;
         $this->due_at = $task->due_at;
         $this->created_at = $task->created_at;
