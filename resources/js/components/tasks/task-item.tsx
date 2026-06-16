@@ -5,7 +5,6 @@ import {laravelDateToJsDate, upcomingDateToString} from "@/helpers/date";
 import ProjectIcon from "@/components/icons/project-icon";
 import {useTranslation} from "react-i18next";
 import {ReactNode} from "react";
-import RelatedUsers from "@/components/users/related-users";
 
 
 interface TaskItemProps {
@@ -34,11 +33,10 @@ function TaskIconParticipation({participations, min, className = ''}: {
 }) {
     if (min) {
         const colorClass: string = (participations / min > /*recommendedTaskParticipationsRate*/ .8)
-            ? '' : "bg-warning text-warning-foreground";
+            ? 'item-tag' : 'item-tag-warning';
         return (
             <span className={
-                cn("item-tag",
-                    colorClass,
+                cn(colorClass,
                     className)
             }>
                 {participations ?? 0}/{min}<UsersRound/>
@@ -74,7 +72,7 @@ export default function TaskItem(
         <article className={cn("thumbnail-item", className)} tabIndex={0} key={task.id.toString()}
                  onClick={() => onTap(task.id)}
                  onKeyDown={(e)=>{
-                     if (e.key === 'Enter' || e.key === ' ') onTap(task.id);
+                     if (e.key === '13' || e.key === ' ') onTap(task.id);
                  }}>
             <h3 className="item-title w-full">{task.title}</h3>
 
@@ -85,9 +83,11 @@ export default function TaskItem(
                 </p>
                 : null}
             <div className="taskinfo mt-1 flex flex-wrap justify-between items-center gap-1">
-                <span className="flex gap-1"><Timer/><time dateTime={task.due_at}>{dueAt}</time></span>
+                <time className="flex gap-1"><Timer/><span>{dueAt}</span>
+                </time>
                 <div className="flex gap-1 ml-auto">
-                    <RelatedUsers profiles={task.related_users}/>
+                    { /* TODO add PFPs of participating people */}
+                    {/*<RelatedUsers/>*/}
                     <TaskIconParticipation participations={task.participations_count}
                                            min={task.min_participations}/>
                     <ParticipatingIcon participating={task.self_participating}/>
