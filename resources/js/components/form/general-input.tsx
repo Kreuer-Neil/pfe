@@ -124,9 +124,11 @@ export default function GeneralInput(
                           autoFocus={autoFocus}
                           onFocus={(e) => e.currentTarget.style.height = String(e.currentTarget.scrollHeight) + 'px'}
                           onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
-                              setValue(e.currentTarget.value);
-                              // TODO fix shrinking not optimal
-                              e.currentTarget.style.height = String(e.currentTarget.scrollHeight) + 'px';
+                              if (value !== undefined) {
+                                  setValue(e.currentTarget.value);
+                                  // TODO fix shrinking not optimal
+                                  e.currentTarget.style.height = String(e.currentTarget.scrollHeight) + 'px';
+                              }
                           }}
                           onBlur={validate}
                           placeholder={placeholder}/>

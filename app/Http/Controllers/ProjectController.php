@@ -135,12 +135,6 @@ class ProjectController extends Controller
 
     public function store(Request $request)
     {
-        Inertia::flash([
-            'name' => $request['name'],
-            'description' => $request['description'],
-            'is_private' => $request['is_private'],
-        ]);
-
         $validated = $request->validate([
             'name' => 'required|string|min:6|max:255|unique:projects,name',
             'description' => 'required|min:6|string',

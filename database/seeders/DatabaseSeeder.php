@@ -46,6 +46,7 @@ class DatabaseSeeder extends Seeder
                 'owner' => [
                     'first_name' => 'Hornet',
                     'last_name' => 'Silk',
+                    'nickname' => 'Hornet',
                     'email' => 'hornet@teamcherry.com'
                 ],
                 'users' => [
@@ -82,17 +83,17 @@ class DatabaseSeeder extends Seeder
                     [
                         'title' => 'Planter sur la place',
                         'description' => 'Planter des arbres sur la place de Seraing',
-                        'due_at' => Carbon::create(year: 2026, month: 06, day: 17, hour: 11)
+                        'due_at' => Carbon::create(year: 2026, month: 06, day: 20, hour: 11)
                     ],
                     [
                         'title' => 'Planter à la gare',
                         'description' => 'Planter des arbres à la gare de Seraing',
-                        'due_at' => Carbon::create(year: 2026, month: 06, day: 16, hour: 9)
+                        'due_at' => Carbon::create(year: 2026, month: 06, day: 21, hour: 9)
                     ],
                     [
                         'title' => 'Planter dans l\'entrepôt abandonné',
                         'description' => 'Planter des arbres dans l\'entrepôt qui a brûlé à de Seraing',
-                        'due_at' => Carbon::create(year: 2026, month: 06, day: 21, hour: 9)
+                        'due_at' => Carbon::create(year: 2026, month: 06, day: 23, hour: 9)
                     ],
                 ],
             ],
