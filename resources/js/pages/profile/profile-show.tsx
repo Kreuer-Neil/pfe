@@ -10,6 +10,7 @@ import {Camera, Dot, Flag, Share2, UserPen, UserPlus} from "lucide-react";
 import UserProfileController from "@/actions/App/Http/Controllers/UserProfileController";
 import GeneralInput from "@/components/form/general-input";
 import Button from "@/components/buttons/button";
+import InputError from "@/components/input-error";
 
 type PageProps = {
     user: IProfile;
@@ -50,8 +51,7 @@ function ProfileIcon({isEditing, user, avatarError}: {
                            }
                        }}/>
             </label>
-            {avatarError &&
-                <span className="field-error">{avatarError}</span>}
+            <InputError className="mt-6 mx-3" message={avatarError} />
         </>
     );
 }
