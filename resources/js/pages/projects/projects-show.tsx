@@ -29,6 +29,7 @@ import ModalCast from "@/components/modals/modal-cast";
 import CustomModal from "@/components/modals/custom-modal";
 import ModalSection from "@/components/modals/modal-section";
 import ProjectInvitationController from "@/actions/App/Http/Controllers/ProjectInvitationController";
+import InputError from "@/components/input-error";
 
 type pageProps = {
     project: IProject | IProjectShow | null,
@@ -78,7 +79,7 @@ function HeaderContainer({slug, isEditing, className, children}: {
 function ProjectHeaderIcon({isEditing, project, iconError}: {
     isEditing: boolean,
     project: IProject | IProjectShow,
-    iconError: string | null
+    iconError?: string
 }) {
     const {t} = useTranslation('projects');
 
@@ -101,7 +102,8 @@ function ProjectHeaderIcon({isEditing, project, iconError}: {
 
                 {/* TODO fix icon positioning */}
                 <Camera className="bg-background text-secondary-border rounded-full ml-auto p-1 -mt-8 -mr-2 z-10"/>
-                <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp, image/gif" name="icon" id="icon"
+                <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp, image/gif" name="icon"
+                       id="icon"
                        className="image-input sr-only"
                        onChange={(e) => {
                            if (e.target.files && e.target.files[0]) {
@@ -109,8 +111,8 @@ function ProjectHeaderIcon({isEditing, project, iconError}: {
                            }
                        }}/>
             </label>
-            {iconError &&
-                <span className="field-error">{iconError}</span>}
+            <InputError className="mt-6 mx-3" message={iconError}/>
+
         </>
     );
 
@@ -162,7 +164,7 @@ function InvitationModal({showInvitationModal, setShowInvitationModal, slug}: {
                                     <code onClick={() => navigator.clipboard.writeText(code)}
                                           onKeyDown={(e) => {
                                               if (e.key === ' ' || e.key === 'Enter')
-                                              navigator.clipboard.writeText(code);
+                                                  navigator.clipboard.writeText(code);
                                           }} tabIndex={0}
                                           className="flex gap-1 bg-gray-200 p-0.5 px-1 rounded-xs items-center hover:outline"
                                           title={"copy"}

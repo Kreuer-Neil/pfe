@@ -45,23 +45,24 @@ class UserProfileController extends Controller
             'nickname' => 'required|string|min:3|max:32',
             'pronouns' => 'nullable|string|max:24',
             'bio' => 'nullable|min:3|max:255',
-            'avatar' => 'nullable|image|extensions:jpg,jpeg,png,gif,webp|max:2048'
+            'avatar' => 'nullable|image|extensions:jpg,jpeg,png,gif,webp|max:2048|dimensions:max_width=2000,max_height=2000'
         ]);
 
         if (array_key_exists('avatar', $validated)) {
 
-            $oldAvatarName = $user->avatar;
+            $oldImageName = $user->avatar;
 
-            $path = $request
+            $imagePath = $request
                 ->file('avatar')
                 ->store('images/users', 'public');
 
             // TODO refactor
-            $avatarName = Str::beforeLast(Str::afterLast($path, '/'), '.');
+            $imageName = Str::beforeLast(Str::afterLast($imagePath, '/'), '.');
 
-            HandleProfileImageUploads::dispatch($avatarName, $oldAvatarName, $path, 'users');
+            $directory = 'users';
+            HandleProfileImageUploads::dispatch($imageName, $oldImageName, $imagePath, $directory);
 
-            $user->avatar = $avatarName;
+            $user->avatar = $imageName;
         }
 
         $user->nickname = $validated['nickname'];
