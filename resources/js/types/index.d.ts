@@ -118,6 +118,7 @@ export interface IProjectShow extends IProjectMiniature {
 
     // is_private: boolean;
     user_role: 'viewer';
+    members: IProfile[];
 }
 
 export interface IProject extends IProjectShow {
