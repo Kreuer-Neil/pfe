@@ -1,15 +1,16 @@
 import RegisteredUserController from '@/actions/App/Http/Controllers/Auth/RegisteredUserController';
-import { login } from '@/routes';
-import { Form, Head } from '@inertiajs/react';
+import {login} from '@/routes';
+import {Form, Head} from '@inertiajs/react';
 
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
+import Button from '@/components/buttons/button';
+import {Input} from '@/components/ui/input';
+import {Label} from '@/components/ui/label';
+import {Spinner} from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/auth-layout';
 import {useTranslation} from "react-i18next";
+import GeneralInput from "@/components/form/general-input";
 
 export default function Register() {
     const {t} = useTranslation('auth');
@@ -19,100 +20,38 @@ export default function Register() {
             title="Create an account"
             description="Enter your details below to create your account"
         >
-            <Head title="Register" />
+            <Head title="Register"/>
             <Form
                 {...RegisteredUserController.store.form()}
                 resetOnSuccess={['password', 'password_confirmation']}
                 disableWhileProcessing
                 className="flex flex-col gap-6"
             >
-                {({ processing, errors }) => (
+                {({processing, errors}) => (
                     <>
                         <div className="grid gap-6">
-                            {/*<GeneralInput name="first_name" label={t('first_name')} value={firstName} setValue={setFirstName} />*/}
-                            <div className="grid gap-2">
-                                <Label htmlFor="first_name">{t('field_first_name')}</Label>
-                                <Input
-                                    id="first_name"
-                                    type="text"
-                                    required
-                                    autoFocus
-                                    autoComplete="first_name"
-                                    name="first_name"
-                                    placeholder="John"
-                                />
-                                <InputError
-                                    message={errors.first_name}
-                                    className="mt-2"
-                                />
-                            </div>
-                            <div className="grid gap-2">
-                                <Label htmlFor="last_name">{t('field_last_name')}</Label>
-                                <Input
-                                    id="last_name"
-                                    type="text"
-                                    required
-                                    autoComplete="last_name"
-                                    name="last_name"
-                                    placeholder="Doe"
-                                />
-                                <InputError
-                                    message={errors.last_name}
-                                    className="mt-2"
-                                />
-                            </div>
+                            <GeneralInput name="first_name" label={t('field_first_name')} required autoFocus
+                            placeholder="John"/>
+                            <InputError message={errors.first_name}/>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">{t('field_email')}</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    required
-                                    autoComplete="email"
-                                    name="email"
-                                    placeholder="email@example.com"
-                                />
-                                <InputError message={errors.email} />
-                            </div>
+                            <GeneralInput name="last_name" label={t('field_last_name')} required
+                            placeholder="Doe"/>
+                            <InputError message={errors.last_name}/>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="password">{t('field_password')}</Label>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    required
-                                    autoComplete="new-password"
-                                    name="password"
-                                    placeholder={t('field_password_placeholder')}
-                                />
-                                <InputError message={errors.password} />
-                            </div>
+                            <GeneralInput name="email" label={t('field_email')} type="email" required
+                            placeholder="john.doe@example.com"/>
+                            <InputError message={errors.email}/>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="password_confirmation">
-                                    {t('field_password_confirmation')}
-                                </Label>
-                                <Input
-                                    id="password_confirmation"
-                                    type="password"
-                                    required
-                                    autoComplete="new-password"
-                                    name="password_confirmation"
-                                    placeholder={t('field_password_confirmation_placeholder')}
-                                />
-                                <InputError
-                                    message={errors.password_confirmation}
-                                />
-                            </div>
+                            <GeneralInput name="password" label={t('field_password')} required
+                            placeholder={t('field_password_placeholder')}/>
+                            <InputError message={errors.password}/>
 
-                            <Button
-                                type="submit"
-                                className="mt-2 w-full"
-                                data-test="register-user-button"
-                            >
-                                {processing && <Spinner />}
-                                {t('create_account')}
-                            </Button>
+                            <GeneralInput name="password_confirmation" label={t('field_password_confirmation')}
+                                          type="password" required placeholder={t('field_password_confirmation_placeholder')}/>
+                            <InputError message={errors.password_confirmation}/>
+
+                            <Button type="submit"
+                                textContent={t('create_account')}/>
                         </div>
 
                         <div className="text-center text-sm text-muted-foreground">

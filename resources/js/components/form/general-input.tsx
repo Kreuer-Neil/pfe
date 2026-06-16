@@ -8,12 +8,12 @@ type ValidationRule = 'required' | 'min-6' | 'number' | 'int' | 'date' | 'time';
 interface TextInputProps {
     name: string;
     label: string;
-    type?: 'text' |'email'| 'number' | 'textarea' | 'date' | 'time';
+    type?: 'text' | 'email' | 'password' | 'number' | 'textarea' | 'date' | 'time';
     style?: 'default' | 'no-label' | 'text';
     required?: boolean;
-    value: string;
-    setValue: any;
-    error?: string|null;
+    value?: string;
+    setValue?: any;
+    error?: string | null;
     validation?: ((value: string) => ITranslatableObject | null);
     validationRules?: ValidationRule[];
     hasError?: ((error: boolean) => void);
@@ -95,8 +95,10 @@ export default function GeneralInput(
         if (type === "number" && Number(e.currentTarget.value) === 0) {
             setValue(null);
         }
-        setValidationError(checkValidationRules(validationRules, value, label) ?? null);
-        hasError(!!validationError);
+        if (value !== undefined) {
+            setValidationError(checkValidationRules(validationRules, value, label) ?? null);
+            hasError(!!validationError);
+        }
     }
 
     let defaultClass: string = 'input';
@@ -132,7 +134,9 @@ export default function GeneralInput(
                 <input id={name} name={name} type={type} value={value} className={cn(defaultClass, inputClassName)}
                        autoFocus={autoFocus}
                        onChange={(e) => {
-                           setValue(e.currentTarget.value);
+                           if (value !== undefined) {
+                               setValue(e.currentTarget.value);
+                           }
                        }} /*autoComplete={canAutocomplete ? name : undefined}*/
                     // TODO add autocomplete setting (or change this component entirely since it's obsolete)
                        onBlur={validate}
