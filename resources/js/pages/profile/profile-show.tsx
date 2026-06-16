@@ -10,6 +10,7 @@ import {Camera, Dot, UserMinus, UserPen, UserPlus} from "lucide-react";
 import UserProfileController from "@/actions/App/Http/Controllers/UserProfileController";
 import GeneralInput from "@/components/form/general-input";
 import Button from "@/components/buttons/button";
+import InputError from "@/components/input-error";
 
 type PageProps = {
     user: IProfile;
@@ -42,7 +43,7 @@ function ProfileIcon({isEditing, user, avatarError}: {
                      className="size-[7rem] rounded-full object-cover"/>
 
                 <Camera className="bg-background text-secondary-border rounded-full ml-auto p-1 -mt-8 -mr-2 z-10"/>
-                <input type="file" accept="image/png, image/jpg, image/webp" name="avatar" id="avatar"
+                <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp, image/gif" name="avatar" id="avatar"
                        className="image-input sr-only"
                        onChange={(e) => {
                            if (e.target.files && e.target.files[0]) {
@@ -50,8 +51,7 @@ function ProfileIcon({isEditing, user, avatarError}: {
                            }
                        }}/>
             </label>
-            {avatarError &&
-                <span className="field-error">{avatarError}</span>}
+            <InputError className="mt-6 mx-3" message={avatarError} />
         </>
     );
 }

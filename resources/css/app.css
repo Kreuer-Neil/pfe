@@ -438,7 +438,7 @@
     }
 
     .modal {
-        @apply m-auto p-2 py-3 bg-background rounded-lg w-full max-w-3xl;
+        @apply m-auto p-2 py-3 bg-background text-foreground rounded-lg w-full max-w-3xl;
 
         &::backdrop {
             @apply bg-modal-behind;
@@ -504,7 +504,7 @@
 
     /* APP SIDEBAR STYLE */
     .app-container {
-        @apply relative flex flex-col sm:flex-row;
+        @apply relative flex flex-col sm:flex-row min-h-screen;
     }
 
     .sidebar-cast {

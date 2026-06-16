@@ -193,7 +193,7 @@ class ProjectController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'icon' => 'nullable|image'
+            'icon' => 'nullable|image|extensions:jpg,jpeg,png,gif,webp|max:2048'
         ]);
 
         if (array_key_exists('icon', $validated)) {
