@@ -68,6 +68,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Planter des arbres à Seraing',
                 'is_private' => false,
+                'icon'=> 'project_default',
                 'description' => 'Replantons des arbres, pour un Seraing plus vert !',
                 'lang' => Language::FRENCH,
 

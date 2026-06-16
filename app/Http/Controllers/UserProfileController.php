@@ -44,7 +44,7 @@ class UserProfileController extends Controller
             'nickname' => 'required|string|min:3|max:32',
             'pronouns' => 'nullable|string|max:24',
             'bio' => 'nullable|min:3|max:255',
-            'avatar' => 'nullable|image'
+            'avatar' => 'nullable|image|extensions:jpg,jpeg,png,gif,webp|max:2048'
         ]);
 
         if (array_key_exists('avatar', $validated)) {

@@ -42,7 +42,7 @@ function ProfileIcon({isEditing, user, avatarError}: {
                      className="size-[7rem] rounded-full object-cover"/>
 
                 <Camera className="bg-background text-secondary-border rounded-full ml-auto p-1 -mt-8 -mr-2 z-10"/>
-                <input type="file" accept="image/png, image/jpg, image/webp" name="avatar" id="avatar"
+                <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp, image/gif" name="avatar" id="avatar"
                        className="image-input sr-only"
                        onChange={(e) => {
                            if (e.target.files && e.target.files[0]) {

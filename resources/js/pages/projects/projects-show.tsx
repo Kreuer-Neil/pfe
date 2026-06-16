@@ -101,7 +101,7 @@ function ProjectHeaderIcon({isEditing, project, iconError}: {
 
                 {/* TODO fix icon positioning */}
                 <Camera className="bg-background text-secondary-border rounded-full ml-auto p-1 -mt-8 -mr-2 z-10"/>
-                <input type="file" accept="image/png, image/jpg, image/webp" name="icon" id="icon"
+                <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp, image/gif" name="icon" id="icon"
                        className="image-input sr-only"
                        onChange={(e) => {
                            if (e.target.files && e.target.files[0]) {
