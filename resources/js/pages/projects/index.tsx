@@ -43,26 +43,23 @@ interface IPaginatedProjects {
 
 function ProjectsContainer({currentPage, projects}: ProjectsContainerProps): ReactNode {
     const {t} = useTranslation(['projects-index', 'projects']);
-
-    if (projects.length <= 0) return (
-        <section className="flex flex-col gap-4 w-full">
-            <h2 className="section-title px-3">{t('results')}</h2>
-            <p>{t('projects:empty')}</p>
-        </section>
-    );
+    
 
     return (
         <section className="flex flex-col gap-4 max-w-xl w-full">
             <h2 className="section-title px-3">{t('results')}</h2>
 
-            <ul className="thumbnails-list-container">
-                {/* TODO see if better to load everything then slice or load progressively server-side */}
-                {projects.map((project: IProjectMiniature | IDashboardProject): ReactNode => (
-                    <li key={project.id} className="w-full">
-                        <ProjectItem project={project}/>
-                    </li>))
-                }
-            </ul>
+            {projects.length <= 0 ?
+                <p>{t('projects:empty')}</p> :
+                <ul className="thumbnails-list-container">
+                    {/* TODO see if better to load everything then slice or load progressively server-side */}
+                    {projects.map((project: IProjectMiniature | IDashboardProject): ReactNode => (
+                        <li key={project.id} className="w-full">
+                            <ProjectItem project={project}/>
+                        </li>))
+                    }
+                </ul>
+            }
         </section>
     );
 }
@@ -136,7 +133,7 @@ export default function ProjectsIndex() {
             <PageFlowContainer className="pt-0">
 
                 <div className="flex flex-col gap-2 w-full px-3 max-w-xl bg-card border-b border-border pb-4 -mb-4">
-                <h1 className="page-title text-center mx-auto my-6">{t(title ?? 'search_title')}</h1>
+                    <h1 className="page-title text-center mx-auto my-6">{t(title ?? 'search_title')}</h1>
 
                     <div className="flex gap-1">
                         <IconButton icon={direction === 'desc' ? ArrowDownWideNarrow : ArrowUpWideNarrow}
