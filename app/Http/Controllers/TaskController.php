@@ -9,6 +9,7 @@ use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Throwable;
@@ -208,87 +209,40 @@ class TaskController extends Controller
     }
 
     // TODO refactor functions
-    public function update($id)
+    public function update(int $id, Request $request)
     {
-        if (!(
-            array_key_exists('title', $_REQUEST) &&
-            array_key_exists('description', $_REQUEST) &&
-            array_key_exists('due_at', $_REQUEST))
-        ) {
-            return [
-                'success' => false,
-                'error' => [
-                    'key' => 'missing_parameters',
-                    'params' => [
-                    ],
-                ]
-            ];
+        $validated = $request->validate([
+            'title' => 'required|string|min:3|max:255',
+            'description' => 'required|string',
+            'due_at_date' => 'required|date',
+            'due_at_time' => 'required|date_format:H:i:s',
+            'min_participations' => 'nullable|integer|min:1',
+        ]);
+
+        $task = Task::find($id);
+        if (!$task) {
+            Inertia::flash(['edit_error' => 'invalid_task']);
+            return redirect()->back();
         }
 
-        try {
-            $task = Task::findOrFail($id);
-        } catch (ModelNotFoundException) {
-            return [
-                'success' => false,
-                'error' => [
-                    'key' => 'task_not_found',
-                    'params' => [
-                    ],
-                ]
-            ];
-        }
         $currentUser = auth()->user();
 
-        try {
-            $validated = request()->validate([
-                'title' => 'required|string|max:255',
-                'description' => 'required|string',
-                'due_at' => 'required|date',
-                'min_participations' => 'nullable|integer|min:0',
-            ]);
-        } catch (ValidationException) {
-            return [
-                'success' => false,
-                'error' => [
-                    'key' => 'invalid_parameters',
-                    'params' => [
-                    ],
-                ]
-            ];
-        }
-
-        if (!($task->owner->id === $currentUser->id)) {
-            return [
-                'success' => false,
-                'error' => [
-                    'key' => 'not_allowed',
-                    'params' => []
-                ],
-            ];
+        if ($task->owner->id !== $currentUser->id) {
+            Inertia::flash(['edit_error' => 'not_allowed']);
+            return redirect()->back();
         }
 
         $task->title = $validated['title'];
         $task->description = $validated['description'];
-        $task->due_at = ($validated['due_at']);
+        $task->due_at = ($validated['due_at_date'] . ' ' . $validated['due_at_time']);
         $task->min_participations = $validated['min_participations'] ?? null;
 
         if (!$task->save()) {
-            return [
-                'success' => false,
-                'error' => [
-                    'key' => 'not_allowed',
-                    'params' => []
-                ],
-            ];
+            Inertia::flash(['edit_error' => 'invalid_parameter']);
         }
 
-        return ['success' => true,
-            'error' => ['key' => 'success_task_edited',
-                'params' => [
-                    'task' => $validated['title']
-                ]
-            ]
-        ];
+        Inertia::flash(['edit_error'=> 'task_edit_success']);
+        return redirect()->back();
     }
 
     public function destroy(string $id)

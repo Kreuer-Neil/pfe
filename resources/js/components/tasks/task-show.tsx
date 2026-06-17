@@ -9,7 +9,7 @@ import {cn} from "@/lib/utils";
 import {CalendarCheck, CalendarClock, ClockAlert, Notebook, UsersRound} from "lucide-react";
 import PostedBy from "@/components/general-posts/posted-by";
 import Button from "@/components/buttons/button";
-import {
+import TaskController, {
     participate as taskParticipate,
     update as taskUpdate,
     destroy as taskDestroy,
@@ -20,8 +20,10 @@ import GeneralInput from "@/components/form/general-input";
 import {RouteQueryOptions} from "@/wayfinder";
 import ConfirmModal from "@/components/modals/confirm-modal";
 import RelatedUsers from "@/components/users/related-users";
-import {Link} from "@inertiajs/react";
+import {Form, Link, router} from "@inertiajs/react";
 import {show as projectsShow} from '@/actions/App/Http/Controllers/ProjectController';
+import {update as tasksUpdate} from '@/actions/App/Http/Controllers/TaskController';
+import InputError from "@/components/input-error";
 
 type EditProps = {
     task: ITask | undefined;
@@ -38,6 +40,7 @@ type EditProps = {
     setEditRecommendedParticipations: Dispatch<SetStateAction<number | null>>;
     resetTask: () => void;
     setIsEditing: Dispatch<SetStateAction<boolean>>;
+    onTaskTap: (id: string, force?: boolean) => void;
 }
 
 
@@ -135,7 +138,8 @@ function Show({task, onCloseModal, startEdit, deleteTask, hasProjectContext}: {
         <ModalCast title={task?.title ?? ''} closeModal={onCloseModal}>
             <ModalSection className="border-none">
                 {hasProjectContext &&
-                    <Link className="item-title text-with-icon w-full" href={task?.project ? projectsShow(task.project.slug):undefined}>
+                    <Link className="item-title text-with-icon w-full"
+                          href={task?.project ? projectsShow(task.project.slug) : undefined}>
                         <ProjectIcon
                             project={task?.project ?? {name: '', icon: '', slug: '', id: ''}}
                             size="small"/>
@@ -223,129 +227,120 @@ function Edit(
         task,
         onCloseModal,
         editTitle,
-        setEditTitle,
         editDescription,
-        setEditDescription,
         editDueAtDate,
-        setEditDueAtDate,
         editDueAtTime,
-        setEditDueAtTime,
         editRecommendedParticipations,
-        setEditRecommendedParticipations,
-        resetTask,
-        setIsEditing
+        setIsEditing,
+        onTaskTap
     }: EditProps): ReactNode {
     const {t} = useTranslation(['projects', 'date']);
 
     const [updateResponse, setUpdateResponse] = useState<IServerResponse>({success: false, error: null});
 
-    async function update(e: Event) {
-        e.preventDefault();
-        // TODO check if fields still have errors
-        // if (!(formError.title || formError.description || formError.due_date || formError.due_time || formError.min_participations)) {
-        const sendUpdateData = async () => {
-            try {
-                const queryOptions: RouteQueryOptions = {
-                    query: {
-                        "title": editTitle,
-                        "description": editDescription,
-                        "due_at": `${editDueAtDate} ${editDueAtTime}`,
-                        "min_participations": editRecommendedParticipations?.toString() ?? null
-                    }
-                }
-
-                const response = await fetch(taskUpdate(task!.id, queryOptions).url);
-                const data: IServerResponse = await response.json();
-                setUpdateResponse(data);
-                return data;
-            } catch (e) {
-                console.error(e);
-            }
+    router.on('flash', (e) => {
+        if (e.detail.flash.edit_error) {
+            setIsEditing(false);
+            onTaskTap(task!.id, true);
         }
-        sendUpdateData().then(() => {
-            // if (value?.success) {
-            // TODO Toast ?
-            // }
-        });
-        // }
-    }
+    });
 
-    const title =
-        <GeneralInput name="task_title" label={t('task_title')} required={true} value={editTitle}
-                      setValue={setEditTitle} style="text"/>
+    const title = (
+        <>
+            <GeneralInput name="title" label={t('task_title')} required={true} value={editTitle} style="text"/>
+        </>
+    );
     return (
-        <ModalCast title={title} closeModal={onCloseModal}>
-            <ModalSection className="border-none">
-                <p className="item-title text-with-icon">
-                    <ProjectIcon
-                        project={task?.project ?? {name: '', icon: '', slug: '', id: ''}}
-                        size="small"/>
-                    {task?.project.name ?? null}
-                </p>
-                {/* TODO fix date */}
-                <p className="flex gap-1">
-                    <CalendarClock/>
-                    <GeneralInput name="due_at_date" label={t('due_at_date')} style="text" type="date"
-                                  value={editDueAtDate} setValue={setEditDueAtDate} required={true}/>
-                    <GeneralInput name="due_at_time" label={t('due_at_time')} style="text" type="time"
-                                  value={editDueAtTime ?? ''} setValue={setEditDueAtTime}/>
-                </p>
+        <Form
+            {...TaskController.update.form(task!.id)}
+            className="flex flex-col gap-4"
+        >
+            {({processing, errors}) => (
+                <>
+                    <ModalCast title={title} closeModal={onCloseModal}>
+                        <ModalSection className="border-none">
+                            <p className="item-title text-with-icon">
+                                <ProjectIcon
+                                    project={task?.project ?? {name: '', icon: '', slug: '', id: ''}}
+                                    size="small"/>
+                                {task?.project.name ?? null}
+                            </p>
+                            {/* TODO fix date */}
+                            <p className="flex gap-1">
+                                <CalendarClock/>
+                                <GeneralInput name="due_at_date" label={t('due_at_date')} style="text" type="date"
+                                              required={true} value={editDueAtDate ?? undefined}/>
+                                <InputError message={errors.due_at_date}/>
+                                <GeneralInput name="due_at_time" label={t('due_at_time')} style="text" type="time"
+                                              value={editDueAtTime ?? undefined}
+                                />
+                                <InputError message={errors.due_at_time}/>
+                            </p>
 
-                <p className="mt-1">
-                    <GeneralInput name="task_description" label={t('task_description')} value={editDescription}
-                                  setValue={setEditDescription} type="textarea" style="text"
-                                  inputClassName="w-full min-h-0"/>
-                </p>
-            </ModalSection>
-            <ModalSection>
-                <div className="flex wrap">
-                    <p className="text-with-icon mr-auto">
-                        {/*<RelatedUsers />*/}
-                        {task?.participations_count ? t('task_participations_count', {count: task.participations_count}) : t('task_no_participations')}
-                    </p>
-                    <p className="text-with-icon">
-                        <UsersRound className="item-tag"/>
-                        <GeneralInput name="task_recomended_participations" type="number"
-                                      style="text" inputClassName="w-fit max-w-[40vw]"
-                                      label={t('task_recommended_participations_count', {count: '0'})}
-                                      value={editRecommendedParticipations?.toString() ?? ''}
-                                      setValue={setEditRecommendedParticipations}/>
-                    </p>
-                </div>
-                {task?.self_participating ?
-                    <p className="text-with-icon">
-                        <CalendarCheck className="item-tag bg-tag"/>
-                        {t('task_self_participating')}
-                    </p> : null}
-                {/*modalTask.due_at > Date.now()*/}
-                {task?.due_at && false ?
-                    <p className="flex gap-1">
-                        <ClockAlert className="item-tag bg-tag-warning"/>
-                        {t('task_due_soon')}
-                    </p> : null}
-            </ModalSection>
-            <ModalSection title={t('task_note_title')} icon={Notebook}>
-                <NotesList task={task}/>
+                            <p className="mt-1">
+                                <GeneralInput name="description" label={t('task_description')}
+                                              type="textarea" style="text"
+                                              inputClassName="w-full min-h-0"
+                                              value={editDescription}
+                                />
+                                <InputError message={errors.description}/>
+                            </p>
+                        </ModalSection>
+                        <ModalSection>
+                            <div className="flex wrap">
+                                <p className="text-with-icon mr-auto">
+                                    {/*<RelatedUsers />*/}
+                                    {task?.participations_count ? t('task_participations_count', {count: task.participations_count}) : t('task_no_participations')}
+                                </p>
+                                <p className="text-with-icon">
+                                    <UsersRound className="item-tag"/>
+                                    <GeneralInput name="min_participations" type="number"
+                                                  style="text" inputClassName="w-fit max-w-[40vw]"
+                                                  label={t('task_recommended_participations_count', {count: '0'})}
+                                                  value={editRecommendedParticipations?.toString() ?? undefined}
+                                    />
+                                    <InputError message={errors.recommended_participations}/>
+                                </p>
+                            </div>
+                            {task?.self_participating &&
+                                <p className="text-with-icon">
+                                    <CalendarCheck className="item-tag bg-tag"/>
+                                    {t('task_self_participating')}
+                                </p>}
+                            {/*modalTask.due_at > Date.now()*/}
+                            {(task?.due_at && false) &&
+                                <p className="flex gap-1">
+                                    <ClockAlert className="item-tag bg-tag-warning"/>
+                                    {t('task_due_soon')}
+                                </p>}
+                        </ModalSection>
+                        {/*<ModalSection title={t('task_note_title')} icon={Notebook}>
+                            <NotesList task={task}/>
 
-            </ModalSection>
-            <div className="flex flex-col gap-3 px-2">
-                <Button color="edit" textContent={t('task_confirm_changes')} onClick={update}/>
-                {updateResponse.error ? <span
-                    className={updateResponse.success ? 'field-success' : 'field-error' + ' -mt-2'}>{t('errors:' + updateResponse.error.key, updateResponse.error.params)}</span> : null}
-                <Button textContent={t('task_edit_cancel')} color="destructive" onClick={() => {
-                    setIsEditing(false);
-                    resetTask();
-                }}/>
-            </div>
-        </ModalCast>
+                        </ModalSection>*/}
+                        <div className="flex flex-col gap-3 px-2">
+                            <Button color="edit" textContent={t('task_confirm_changes')} onClick={() => null}
+                                    type="submit"/>
+                            {updateResponse.error ? <span
+                                className={updateResponse.success ? 'field-success' : 'field-error' + ' -mt-2'}>{t('errors:' + updateResponse.error.key, updateResponse.error.params)}</span> : null}
+                            <Button textContent={t('task_edit_cancel')} color="destructive" onClick={() => {
+                                setIsEditing(false);
+                            }} type="reset"/>
+
+                        </div>
+                    </ModalCast>
+                </>
+            )}
+        </Form>
     );
 }
 
-export default function TaskShowModal({task, showModal, setShowModal, isInProjectPage}: {
+export default function TaskShowModal({task, showModal, setShowModal, isInProjectPage, onTaskTap}: {
     task?: ITask,
     showModal: boolean,
     setShowModal: Dispatch<SetStateAction<boolean>>,
-    isInProjectPage: boolean
+    isInProjectPage: boolean,
+    onTaskTap: (id: string, force?: boolean) => void
 }): [ReactNode, ReactNode] {
     const {t} = useTranslation('projects');
 
@@ -416,6 +411,7 @@ export default function TaskShowModal({task, showModal, setShowModal, isInProjec
                       editRecommendedParticipations={editRecommendedParticipations}
                       setEditRecommendedParticipations={setEditRecommendedParticipations}
                       resetTask={resetTask} setIsEditing={setIsEditing}
+                      onTaskTap={onTaskTap}
                 />
             }
         </CustomModal>,

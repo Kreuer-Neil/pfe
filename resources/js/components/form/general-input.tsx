@@ -92,10 +92,10 @@ export default function GeneralInput(
     const [validationError, setValidationError] = useState<ITranslatableObject | null>(null);
 
     const validate = (e: any) => {
-        if (type === "number" && Number(e.currentTarget.value) === 0) {
-            setValue(null);
-        }
         if (value !== undefined) {
+            if (type === "number" && Number(e.currentTarget.value) === 0) {
+                setValue(null);
+            }
             setValidationError(checkValidationRules(validationRules, value, label) ?? null);
             hasError(!!validationError);
         }
@@ -119,33 +119,40 @@ export default function GeneralInput(
                 {label}
             </span>
             {type === 'textarea' ?
-                <textarea id={name} name={name} value={value}
+                <textarea id={name} name={name} value={setValue ? value : undefined}
                           className={cn('max-h-32', defaultClass, "min-h-20 p-2", inputClassName)}
                           autoFocus={autoFocus}
                           onFocus={(e) => e.currentTarget.style.height = String(e.currentTarget.scrollHeight) + 'px'}
                           onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
-                              if (value !== undefined) {
+                              if (setValue !== undefined) {
                                   setValue(e.currentTarget.value);
                                   // TODO fix shrinking not optimal
                                   e.currentTarget.style.height = String(e.currentTarget.scrollHeight) + 'px';
                               }
                           }}
                           onBlur={validate}
-                          placeholder={placeholder}/>
+                          placeholder={placeholder}
+                          defaultValue={value}
+                />
                 :
-                <input id={name} name={name} type={type} value={value} className={cn(defaultClass, inputClassName)}
+                <input id={name} name={name} type={type} value={setValue ? value : undefined}
+                       className={cn(defaultClass, inputClassName)}
                        autoFocus={autoFocus}
                        onChange={(e) => {
-                           if (value !== undefined) {
+                           if (setValue !== undefined) {
                                setValue(e.currentTarget.value);
                            }
                        }} /*autoComplete={canAutocomplete ? name : undefined}*/
                     // TODO add autocomplete setting (or change this component entirely since it's obsolete)
                        onBlur={validate}
-                       placeholder={placeholder}/>
+                       placeholder={placeholder}
+                       defaultValue={value}
+                       step={type === 'time' ? 1 : undefined}
+                />
             }
             {(error || validationError) &&
-                <span className="field-error">{error ?? t(validationError!.key, validationError!.params)}</span>}
+                <span
+                    className="field-error">{error ?? t(validationError!.key, validationError!.params)}</span>}
         </label>
     )
 }

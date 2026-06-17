@@ -90,9 +90,9 @@ export default function TaskDisplay(
     const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
     const [savedTasks, setSavedTasks] = useState<ITask[]>([]);
 
-    function onTaskTap(id: string) {
+    function onTaskTap(id: string, force:boolean = false) {
         const idNumber = Number(id);
-        if (!savedTasks[idNumber]) {
+        if (force || !savedTasks[idNumber]) {
             const fetchTask = async (): Promise<ITask | undefined> => {
                 try {
                     const params: RouteQueryOptions = {query: {'task_id': id}};
@@ -139,7 +139,7 @@ export default function TaskDisplay(
                 {tasks.length > Number(minLength) && <ShowMore showMore={showMoreState} onClick={onShowMore}/>}
                 {/*<ButtonText href={agenda().url} textContent={actionText ?? t('task.show_agenda')} icon={LucideCalendarDays}/>*/}
             </div>
-            <TaskShowModal task={modalTask} showModal={showTaskModal} setShowModal={setShowTaskModal} isInProjectPage={(project === null)}/>
+            <TaskShowModal task={modalTask} showModal={showTaskModal} setShowModal={setShowTaskModal} isInProjectPage={(project === null)} onTaskTap={onTaskTap}/>
             {project &&
                 <TaskCreateModal showModal={showCreateModal} setShowModal={setShowCreateModal}
                                  project={project}/>

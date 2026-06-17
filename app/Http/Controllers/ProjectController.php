@@ -11,18 +11,13 @@ use App\FormatedModels\Project\FormatedProjectMiniature;
 use App\Models\Member;
 use App\Models\Project;
 use App\Models\User;
-use Exception;
 use File;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Format;
-use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use Str;
-use function Laravel\Prompts\error;
-use function Pest\Laravel\delete;
 
 class ProjectController extends Controller
 {

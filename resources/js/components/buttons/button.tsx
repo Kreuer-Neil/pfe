@@ -10,7 +10,7 @@ interface ButtonProps {
     textContent: string;
     icon?: LucideIcon | null;
     color?: 'default' | 'edit' | 'cta' | 'warning' | 'destructive';
-    type?: 'button' | 'submit';
+    type?: 'button' | 'submit' | 'reset';
     href?: string | UrlMethodPair;
     onClick?: ((e: any) => void);
     className?: string;
