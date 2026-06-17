@@ -75,44 +75,17 @@ function Show({task, onCloseModal, startEdit, deleteTask, hasProjectContext}: {
 }) {
     const {t} = useTranslation(['projects', 'date', 'errors']);
 
-    const [participationResponse, setParticipationResponse] = useState<IServerResponse>({success: false, error: null})
+    const [participationStatus, setParticipationStatus] = useState<boolean>(task?.self_participating ?? false);
+    const [participationError, setParticipationError] = useState<string | undefined>();
 
-    const participate = () => {
-        const askParticipation = async () => {
-            try {
-                const response = await fetch(taskParticipate(task!.id).url);
-                const data: IServerResponse = await response.json();
-                return data;
-            } catch (e) {
-                console.error(e);
-            }
-        }
-        askParticipation().then((value) => {
-            if (value?.success) {
-                // TODO success modal toast + item reload + page items reload on task-display
-                task!.self_participating = true;
-            }
-            setParticipationResponse(value!)
-        });
-    }
-
-    const cancelParticipate = () => {
-        const removeParticipation = async () => {
-            try {
-                const response = await fetch(taskCancelParticipation(task!.id).url);
-                const data: IServerResponse = await response.json();
-                return data;
-            } catch (e) {
-                console.error(e);
-            }
-        }
-        removeParticipation().then((value) => {
-            if (value!.success) {
-                task!.self_participating = false;
-            }
-            setParticipationResponse(value!);
-        });
-    }
+    router.on('flash', (e) => {
+        if (e.detail.flash?.participation_error)
+            // @ts-ignore
+            setParticipationError(e.detail.flash.participation_error);
+        if (e.detail.flash?.participating)
+            //@ts-ignore
+            setParticipationStatus(e.detail.flash.participating === 'true');
+    });
 
     const validate = () => {
         const confirmValidation = async () => {
@@ -129,7 +102,7 @@ function Show({task, onCloseModal, startEdit, deleteTask, hasProjectContext}: {
                 // TODO success modal toast + item reload + page items reload on task-display
                 task!.self_participating = true;
             }
-            setParticipationResponse(value!)
+            // setParticipationStatus(value!)
         });
     }
 
@@ -167,16 +140,16 @@ function Show({task, onCloseModal, startEdit, deleteTask, hasProjectContext}: {
                             {task?.participations_count ? t('task_participations_count', {count: task.participations_count}) : t('task_no_participations')}
                         </p>
                     </div>
-                    {task?.min_participations ?
+                    {task?.min_participations &&
                         <div className="text-with-icon">
                             <UsersRound className="item-tag"/>
                             <p>
                                 {t('task_recommended_participations_count', {count: task.min_participations})}
                             </p>
-                        </div> : null
+                        </div>
                     }
                 </div>
-                {task?.self_participating ?
+                {participationStatus ?
                     <div className="text-with-icon">
                         <CalendarCheck className="item-tag bg-tag"/>
                         <p>
@@ -201,16 +174,27 @@ function Show({task, onCloseModal, startEdit, deleteTask, hasProjectContext}: {
             </ModalSection>*/}
             <div className="flex flex-col gap-3 px-2 items-center">
                 {/* TODO restyle this corner */}
-                {task?.self_participating ?
-                    <Button textContent={t('task_cancel_participate')} onClick={cancelParticipate}
-                            color="destructive"/> :
-                    <Button textContent={t('task_participate')} onClick={participate}/>
+                {participationStatus ?
+                    <Form className="w-full max-w-md"
+                          {...TaskController.cancelParticipation.form(task?.id ?? 0)}
+                    >
+                        {({processing, errors}) => (
+                            <Button textContent={t('task_cancel_participate')} type="submit"
+                                    color="destructive"/>
+                        )}
+                    </Form> :
+                    <Form className="w-full max-w-md"
+                          {...TaskController.participate.form(task?.id ?? 0)}
+                    >
+                        {({processing, errors}) => (
+                            <Button textContent={t('task_participate')} type="submit"/>
+                        )}
+                    </Form>
                 }
-                {task?.self_participating &&
+                {participationStatus &&
                     <Button textContent={t('task_validate')} onClick={validate}/>
                 }
-                {participationResponse.error && <span
-                    className={participationResponse.success ? 'field-success' : 'field-error' + ' -mt-2'}>{t('errors:' + participationResponse.error.key, participationResponse.error.params)}</span>}
+                <InputError message={participationError ? t('errors:' + participationError) : undefined}/>
                 {task?.isOwner &&
                     <div className="grid md:grid-cols-2 gap-1 sm:justify-center w-full max-w-md">
                         <Button textContent={t('task_edit')} color="edit" onClick={() => startEdit(task)}/>

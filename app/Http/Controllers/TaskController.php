@@ -116,35 +116,16 @@ class TaskController extends Controller
 
     public function participate($id)
     {
-        $task = null;
-        try {
-            $task = Task::findOrFail($id);
-        } catch (QueryException) {
-            return [
-                'success' => false,
-                'error' => [
-                    'key' => 'participation_error',
-                    'params' => [],
-                ]
-            ];
+        $task = Task::find($id);
+        if (!$task) {
+            Inertia::flash(['participation_error' => 'participation_error']);
         }
-        if ($task->participate(auth()->user())) {
-            return [
-                'success' => true,
-                'error' => [
-                    'key' => 'participation_success',
-                    'params' => [],
-                ]
-            ];
+        if (!$task->participate(auth()->user())) {
+            Inertia::flash(['participation_error' => 'participation_error']);
+        } else {
+            Inertia::flash(['participating' => 'true']);
         }
-
-        return [
-            'success' => false,
-            'error' => [
-                'key' => 'participation_error',
-                'params' => [],
-            ]
-        ];
+        return redirect()->back();
     }
 
     public function validate($id)
@@ -183,29 +164,18 @@ class TaskController extends Controller
 
     public function cancelParticipation(int $id)
     {
-
         try {
             Participation::where('user_id', auth()->user()->id)
                 ->where('task_id', $id)
                 ->first()
                 ->deleteOrFail();
         } catch (Throwable) {
-            return [
-                'success' => false,
-                'error' => [
-                    'key' => 'participation_error',
-                    'params' => [],
-                ]
-            ];
+            Inertia::flash(['participation_error' => 'participation_cancel_error']);
+            return redirect()->back();
         }
+        Inertia::flash(['participating' => 'false']);
 
-        return [
-            'success' => true,
-            'error' => [
-                'key' => 'participation_cancel_success',
-                'params' => [],
-            ]
-        ];
+        return redirect()->back();
     }
 
     // TODO refactor functions
@@ -241,7 +211,7 @@ class TaskController extends Controller
             Inertia::flash(['edit_error' => 'invalid_parameter']);
         }
 
-        Inertia::flash(['edit_error'=> 'task_edit_success']);
+        Inertia::flash(['edit_error' => 'task_edit_success']);
         return redirect()->back();
     }
 
