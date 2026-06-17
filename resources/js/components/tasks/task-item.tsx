@@ -5,6 +5,7 @@ import {laravelDateToJsDate, upcomingDateToString} from "@/helpers/date";
 import ProjectIcon from "@/components/icons/project-icon";
 import {useTranslation} from "react-i18next";
 import {ReactNode} from "react";
+import RelatedUsers from "@/components/users/related-users";
 
 
 interface TaskItemProps {
@@ -72,7 +73,7 @@ export default function TaskItem(
         <article className={cn("thumbnail-item", className)} tabIndex={0} key={task.id.toString()}
                  onClick={() => onTap(task.id)}
                  onKeyDown={(e)=>{
-                     if (e.key === '13' || e.key === ' ') onTap(task.id);
+                     if (e.key === 'Enter' || e.key === ' ') onTap(task.id);
                  }}>
             <h3 className="item-title w-full">{task.title}</h3>
 
@@ -83,11 +84,9 @@ export default function TaskItem(
                 </p>
                 : null}
             <div className="taskinfo mt-1 flex flex-wrap justify-between items-center gap-1">
-                <time className="flex gap-1"><Timer/><span>{dueAt}</span>
-                </time>
+                <span className="flex gap-1"><Timer/><time dateTime={task.due_at}>{dueAt}</time></span>
                 <div className="flex gap-1 ml-auto">
-                    { /* TODO add PFPs of participating people */}
-                    {/*<RelatedUsers/>*/}
+                    <RelatedUsers profiles={task.related_users}/>
                     <TaskIconParticipation participations={task.participations_count}
                                            min={task.min_participations}/>
                     <ParticipatingIcon participating={task.self_participating}/>

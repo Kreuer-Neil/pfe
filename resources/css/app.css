@@ -514,8 +514,6 @@
         }
     }
 
-    .icon-btn
-
     /* APP SIDEBAR STYLE */
     .app-container {
         @apply relative flex flex-col sm:flex-row min-h-screen;
