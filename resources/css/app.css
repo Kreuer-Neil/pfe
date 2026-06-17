@@ -402,7 +402,7 @@
 
     /** Generic app style **/
     .main-page {
-        @apply w-full max-w-7xl flex flex-col items-center gap-8 py-8 min-h-screen bg-background md:rounded-md md:m-2 overflow-hidden;
+        @apply w-full max-w-7xl flex flex-col items-center gap-8 py-8 min-h-[100vh-1rem] bg-background md:rounded-md md:m-2 overflow-hidden;
     }
 
     .page-title {
