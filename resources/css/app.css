@@ -151,7 +151,7 @@
     /*--warning-light: var(--pine-green-transparent);*/
 
     --edit: var(--verdigris);
-    --edit-foreground: var(--foreground-main);
+    --edit-foreground: var(--foreground-light);
 
     --valid: var(--sprout-green);
 
@@ -402,7 +402,7 @@
 
     /** Generic app style **/
     .main-page {
-        @apply w-full max-w-7xl flex flex-col items-center gap-8 py-8 min-h-screen;
+        @apply w-full max-w-7xl flex flex-col items-center gap-8 py-8 min-h-screen bg-background md:rounded-md md:m-2 overflow-hidden;
     }
 
     .page-title {
@@ -516,7 +516,7 @@
 
     /* APP SIDEBAR STYLE */
     .app-container {
-        @apply relative flex flex-col sm:flex-row min-h-screen;
+        @apply relative flex flex-col sm:flex-row min-h-screen bg-sidebar;
     }
 
     .sidebar-cast {

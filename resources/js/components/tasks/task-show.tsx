@@ -204,7 +204,7 @@ function Show({task, onCloseModal, startEdit, deleteTask}: {
                 {participationResponse.error && <span
                     className={participationResponse.success ? 'field-success' : 'field-error' + ' -mt-2'}>{t('errors:' + participationResponse.error.key, participationResponse.error.params)}</span>}
                 {task?.isOwner &&
-                    <div className="grid md:grid-cols-2 gap-1 justify-center w-full max-w-md">
+                    <div className="grid md:grid-cols-2 gap-1 sm:justify-center w-full max-w-md">
                         <Button textContent={t('task_edit')} color="edit" onClick={() => startEdit(task)}/>
                         <Button textContent={t('task_delete')} color="destructive" onClick={() => deleteTask(task)}/>
                     </div>
