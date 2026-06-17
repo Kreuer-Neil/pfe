@@ -25,6 +25,6 @@ class DatabaseSeeder extends Seeder
 
         TestUserSeeder::run();
 
-        CredentialsSeeder::run();
+//        CredentialsSeeder::run();
     }
 }

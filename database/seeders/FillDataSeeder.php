@@ -167,11 +167,11 @@ class FillDataSeeder extends Seeder
             ]);
 
             foreach ($users->random(random_int(2, 15)) as $user) {
-                if (!$project->members()->where('user_id',$user->id)) {
-                Member::create([
-                    'user_id' => $user->id,
-                    'project_id' => $project->id,
-                ]);
+                if (!$project->members()->where('user_id', $user->id)->exists()) {
+                    Member::create([
+                        'user_id' => $user->id,
+                        'project_id' => $project->id,
+                    ]);
                 }
             }
         }
