@@ -132,7 +132,7 @@ export default function GeneralInput(
                           }}
                           onBlur={validate}
                           placeholder={placeholder}
-                          defaultValue={value}
+                          defaultValue={setValue ? undefined : value}
                 />
                 :
                 <input id={name} name={name} type={type} value={setValue ? value : undefined}
@@ -146,7 +146,7 @@ export default function GeneralInput(
                     // TODO add autocomplete setting (or change this component entirely since it's obsolete)
                        onBlur={validate}
                        placeholder={placeholder}
-                       defaultValue={value}
+                       defaultValue={setValue ? undefined : value}
                        step={type === 'time' ? 1 : undefined}
                 />
             }

@@ -110,6 +110,7 @@ class FillDataSeeder extends Seeder
                 'slug' => Str::slug($projectData['name']),
                 'is_private' => $projectData['is_private'],
                 'description' => $projectData['description'],
+                'icon' => $projectData['icon'] ?? 'default_'.random_int(1,2),
             ];
 
             $project = Project::create($projectArray);
@@ -166,7 +167,7 @@ class FillDataSeeder extends Seeder
                 'role' => ProjectRole::ADMIN,
             ]);
 
-            foreach ($users->random(random_int(2, 15)) as $user) {
+            foreach ($users->random(random_int(2, 10)) as $user) {
                 if (!$project->members()->where('user_id', $user->id)->exists()) {
                     Member::create([
                         'user_id' => $user->id,
