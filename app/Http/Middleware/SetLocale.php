@@ -19,11 +19,11 @@ class SetLocale
         // TODO add user locale check before cookie + setting
         $locale =
             // auth()->user()->locale ??
-                $request->cookie('lang') ??
-            in_array(
+            $request->cookie('lang') ??
+            (in_array(
                 $preferredLang = Str::beforeLast($request->getPreferredLanguage(), '_'),
                 config('app.locales')
-            ) ? $preferredLang ?? null : null ??
+            ) ? $preferredLang ?? null : null) ??
             config('app.fallback_locale');
 //        dd($request->cookie('locale'));
         app()->setLocale($locale);

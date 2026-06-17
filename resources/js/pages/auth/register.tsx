@@ -42,7 +42,7 @@ export default function Register() {
                             placeholder="john.doe@example.com"/>
                             <InputError message={errors.email}/>
 
-                            <GeneralInput name="password" label={t('field_password')} required
+                            <GeneralInput name="password" label={t('field_password')} type="password" required
                             placeholder={t('field_password_placeholder')}/>
                             <InputError message={errors.password}/>
 
