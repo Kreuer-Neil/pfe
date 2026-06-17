@@ -1,12 +1,11 @@
 import {cn} from "@/lib/utils";
-import {Dispatch} from "react";
 
 interface SwitchProps {
     label: string;
     name: string;
     isChecked?: boolean;
     // setValue:Dispatch<State>
-    setValue?: any;
+    setValue: any;
     className?: string;
 }
 
@@ -15,13 +14,11 @@ export default function Switch({name, label, isChecked, setValue, className = ''
         <label className={cn('flex items-center w-full cursor-pointer', className)}>
             {label}
             {/* TODO style as mobile switch */}
-            <input type="checkbox" name={name}
+            <input type="checkbox" name={name} value={isChecked ? 1 : 0}
                    className="ml-auto"
                    checked={isChecked}
-                   onChange={(e) => {
-                       if (setValue) {
+                   onChange={() => {
                            setValue(!isChecked)
-                       }
                    }}
             />
         </label>

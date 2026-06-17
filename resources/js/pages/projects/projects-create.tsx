@@ -1,20 +1,19 @@
 import Layout from '@/layouts/app-layout'
-import {Form, Head, router} from '@inertiajs/react'
+import {Form, Head} from '@inertiajs/react'
 import PageFlowContainer from "@/components/page-flow-container";
 import {useTranslation} from "react-i18next";
-import ProjectController, {store as projectStore} from "@/actions/App/Http/Controllers/ProjectController";
+import ProjectController from "@/actions/App/Http/Controllers/ProjectController";
 import GeneralInput from "@/components/form/general-input";
 import {useState} from "react";
-import {cn} from "@/lib/utils";
 import Switch from "@/components/form/switch";
-import {RouteQueryOptions} from "@/wayfinder";
-import {IServerResponse} from "@/types";
 import Button from "@/components/buttons/button";
 import InputError from "@/components/input-error";
 
 export default function projectsCreate({}) {
 
     const {t} = useTranslation(['projects']);
+
+    const [checked, setChecked] = useState<boolean>(false);
 
     return (
         <Layout>
@@ -27,7 +26,7 @@ export default function projectsCreate({}) {
                     disableWhileProcessing
                     className="w-full max-w-xl px-3"
                 >
-                    {({processing, errors,}) => (
+                    {({ errors,}) => (
                         <>
                             <div className="flex flex-col gap-2 mt-3 pb-3 border-b-2 border-secondary-border">
                                 <legend className="sr-only">{t('project_form_main_informations')}</legend>
@@ -47,7 +46,7 @@ export default function projectsCreate({}) {
 
                                 <p className="text-xs">{t('project_form_private_warning')}</p>
                                 <Switch name="is_private" label={t('project_form_private')}
-                                />
+                                        isChecked={checked} setValue={setChecked}/>
                             </div>
 
                             <div className="flex flex-col gap-3 px-2 items-center pt-3">
