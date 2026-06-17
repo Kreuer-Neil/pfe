@@ -13,7 +13,7 @@ export function laravelDateToJsDate(date: string): Date {
     ]
     return new Date(Date.UTC(
         Number(dateItem[0][0]),
-        Number(dateItem[0][1]),
+        Number(dateItem[0][1]) -1,
         Number(dateItem[0][2]),
 
         Number(dateItem[1][0]),
