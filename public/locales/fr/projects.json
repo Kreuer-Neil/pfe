@@ -1,6 +1,6 @@
 {
     "project": "Projet",
-    "no_projects_joined": "Il semblerait que vous n'ayez pas encore rejoint de projet. Vous pouvez essayer de scanner un QR code, ou rechercher un projet ici :",
+    "no_projects_joined": "Il semblerait que vous n'ayez pas encore rejoint de projet. Vous pouvez rechercher un projet ici :",
     "search_project": "Rechercher un projet",
     "show_project": "Voir ce projet",
     "get_absent": "Me marquer absent",
