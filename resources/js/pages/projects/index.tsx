@@ -143,8 +143,8 @@ export default function ProjectsIndex() {
                                     textContent={t('pagination:' + direction)}
                                     onClick={changeDirection}/>
                         <p className="section-title mx-1">{t('filter_' + filter)}</p>
-                        <IconButton className="ml-auto" icon={ListFilter} textContent={t('filter')} onClick={() => {
-                        }}/>
+                        {/*<IconButton className="ml-auto" icon={ListFilter} textContent={t('filter')}
+                                    onClick={() => {}}/>*/}
                     </div>
                     <TagsContainer tags={currentTags}/>
                     {/* Tags container (only if tags.) */}
