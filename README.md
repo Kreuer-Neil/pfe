@@ -1,6 +1,7 @@
 # Neil Kreuer - PFE 2025-2026&nbsp;: Application ComeUnite
 
 ## Liens externes
+* [Application déployée en ligne](https://pfe-main-ugnwyn.laravel.cloud/)
 * [Site de documentation technique](https://github.com/Kreuer-Neil/neil-kreuer-doc-PFE/deployments/github-pages)
 * [Fichier Figma](https://www.figma.com/design/FKS2nRA0CgPv6EcUjuYYSG/PFE-%22Come-Unite%22?node-id=1839-27476&t=430owWGHzpv4bQ0c-1)
 
