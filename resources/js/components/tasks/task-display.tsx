@@ -27,9 +27,9 @@ type TaskDisplayProps = {
     maxLength?: number
 }
 
-function TasksList({tasks, projectContext, maxLength, onTapTask}: {
+function TasksList({tasks, isInProjectPage, maxLength, onTapTask}: {
     tasks: ITaskMiniature[];
-    projectContext: boolean;
+    isInProjectPage: boolean;
     maxLength: number;
     onTapTask: (id: string) => void;
 }): ReactNode {
@@ -49,7 +49,7 @@ function TasksList({tasks, projectContext, maxLength, onTapTask}: {
             return (
                 <li className="w-full flex flex-col gap-4" key={task.id}>
                     {precedentMonthCondition ? <span className="month-divider">{t('month_' + month)}</span> : ''}
-                    <TaskItem task={task} isInProjectPage={projectContext}
+                    <TaskItem task={task} isInProjectPage={isInProjectPage}
                               onTap={onTapTask}
                     />
                 </li>
@@ -132,14 +132,14 @@ export default function TaskDisplay(
                     <IconButton icon={ClipboardPlus} textContent={t('task_add')}
                                 onClick={() => setShowCreateModal(true)}/>}
             </div>
-            <TasksList tasks={tasks} projectContext={(project != null)} maxLength={maxItemsLength!}
+            <TasksList tasks={tasks} isInProjectPage={(project === null)} maxLength={maxItemsLength!}
                        onTapTask={onTaskTap}/>
             <div className="flex flex-col gap-4 px-3 items-center">
 
                 {tasks.length > Number(minLength) && <ShowMore showMore={showMoreState} onClick={onShowMore}/>}
                 {/*<ButtonText href={agenda().url} textContent={actionText ?? t('task.show_agenda')} icon={LucideCalendarDays}/>*/}
             </div>
-            <TaskShowModal task={modalTask} showModal={showTaskModal} setShowModal={setShowTaskModal}/>
+            <TaskShowModal task={modalTask} showModal={showTaskModal} setShowModal={setShowTaskModal} isInProjectPage={(project === null)}/>
             {project &&
                 <TaskCreateModal showModal={showCreateModal} setShowModal={setShowCreateModal}
                                  project={project}/>

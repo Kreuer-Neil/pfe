@@ -77,12 +77,11 @@ export default function TaskItem(
                  }}>
             <h3 className="item-title w-full">{task.title}</h3>
 
-            {!isInProjectPage ?
+            {isInProjectPage &&
                 <p className="flex gap-1">
                     <ProjectIcon project={task.project} className="size-6"/>
                     {t('task_from_project', {project: task.project.name})}
-                </p>
-                : null}
+                </p>}
             <div className="taskinfo mt-1 flex flex-wrap justify-between items-center gap-1">
                 <span className="flex gap-1"><Timer/><time dateTime={task.due_at}>{dueAt}</time></span>
                 <div className="flex gap-1 ml-auto">

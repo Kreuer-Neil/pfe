@@ -1,14 +1,13 @@
 import {INote, IServerResponse, ITask} from "@/types";
-import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from "react";
+import {Dispatch, ReactNode, SetStateAction, useState} from "react";
 import {useTranslation} from "react-i18next";
 import CustomModal from "@/components/modals/custom-modal";
 import ModalCast from "@/components/modals/modal-cast";
 import ModalSection from "@/components/modals/modal-section";
 import ProjectIcon from "@/components/icons/project-icon";
 import {cn} from "@/lib/utils";
-import {CalendarCheck, CalendarClock, ClockAlert, Notebook, NotebookPen, Timer, UsersRound} from "lucide-react";
+import {CalendarCheck, CalendarClock, ClockAlert, Notebook, UsersRound} from "lucide-react";
 import PostedBy from "@/components/general-posts/posted-by";
-import ButtonText from "@/components/buttons/button-text";
 import Button from "@/components/buttons/button";
 import {
     participate as taskParticipate,
@@ -21,6 +20,8 @@ import GeneralInput from "@/components/form/general-input";
 import {RouteQueryOptions} from "@/wayfinder";
 import ConfirmModal from "@/components/modals/confirm-modal";
 import RelatedUsers from "@/components/users/related-users";
+import {Link} from "@inertiajs/react";
+import {show as projectsShow} from '@/actions/App/Http/Controllers/ProjectController';
 
 type EditProps = {
     task: ITask | undefined;
@@ -62,11 +63,12 @@ function NotesList({task}: { task: ITask | undefined }) {
     );
 }
 
-function Show({task, onCloseModal, startEdit, deleteTask}: {
+function Show({task, onCloseModal, startEdit, deleteTask, hasProjectContext}: {
     task: ITask | undefined,
     onCloseModal: () => void,
     startEdit: (task: ITask) => void,
-    deleteTask: (task: ITask) => void
+    deleteTask: (task: ITask) => void,
+    hasProjectContext: boolean
 }) {
     const {t} = useTranslation(['projects', 'date', 'errors']);
 
@@ -132,12 +134,14 @@ function Show({task, onCloseModal, startEdit, deleteTask}: {
     return (
         <ModalCast title={task?.title ?? ''} closeModal={onCloseModal}>
             <ModalSection className="border-none">
-                <p className="item-title text-with-icon">
-                    <ProjectIcon
-                        project={task?.project ?? {name: '', icon: '', slug: '', id: ''}}
-                        size="small"/>
-                    {task?.project.name ?? null}
-                </p>
+                {hasProjectContext &&
+                    <Link className="item-title text-with-icon w-full" href={task?.project ? projectsShow(task.project.slug):undefined}>
+                        <ProjectIcon
+                            project={task?.project ?? {name: '', icon: '', slug: '', id: ''}}
+                            size="small"/>
+                        {task?.project.name ?? null}
+                    </Link>
+                }
                 {/* TODO fix date */}
                 {task?.due_at &&
                     <p className={cn("flex gap-1", task?.due_at ? '' : 'hidden')}>
@@ -258,7 +262,7 @@ function Edit(
                 console.error(e);
             }
         }
-        sendUpdateData().then((value) => {
+        sendUpdateData().then(() => {
             // if (value?.success) {
             // TODO Toast ?
             // }
@@ -337,10 +341,11 @@ function Edit(
     );
 }
 
-export default function TaskShowModal({task, showModal, setShowModal}: {
+export default function TaskShowModal({task, showModal, setShowModal, isInProjectPage}: {
     task?: ITask,
     showModal: boolean,
-    setShowModal: Dispatch<SetStateAction<boolean>>
+    setShowModal: Dispatch<SetStateAction<boolean>>,
+    isInProjectPage: boolean
 }): [ReactNode, ReactNode] {
     const {t} = useTranslation('projects');
 
@@ -388,7 +393,7 @@ export default function TaskShowModal({task, showModal, setShowModal}: {
                 console.error(e);
             }
         }
-        destroy().then((value) => {
+        destroy().then(() => {
         });
     }
 
@@ -401,7 +406,7 @@ export default function TaskShowModal({task, showModal, setShowModal}: {
         <CustomModal showModal={showModal} onClose={closeModal} id="task-show" key="show">
             {!isEditing ?
                 <Show task={task} onCloseModal={closeModal} startEdit={startEdit}
-                      deleteTask={() => setShowConfirmationModal(true)}/>
+                      deleteTask={() => setShowConfirmationModal(true)} hasProjectContext={isInProjectPage}/>
                 :
                 <Edit task={task} onCloseModal={closeModal}
                       editTitle={editTitle} setEditTitle={setEditTitle}
