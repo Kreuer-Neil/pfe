@@ -6,14 +6,11 @@ import ModalCast from "@/components/modals/modal-cast";
 import ModalSection from "@/components/modals/modal-section";
 import ProjectIcon from "@/components/icons/project-icon";
 import {cn} from "@/lib/utils";
-import {CalendarCheck, CalendarClock, ClockAlert, Notebook, UsersRound} from "lucide-react";
+import {CalendarCheck, CalendarClock, Check, ClockAlert, Notebook, UsersRound} from "lucide-react";
 import PostedBy from "@/components/general-posts/posted-by";
 import Button from "@/components/buttons/button";
 import TaskController, {
-    participate as taskParticipate,
-    update as taskUpdate,
     destroy as taskDestroy,
-    cancelParticipation as taskCancelParticipation,
     validate as taskValidation,
 } from "@/actions/App/Http/Controllers/TaskController";
 import GeneralInput from "@/components/form/general-input";
@@ -75,7 +72,6 @@ function Show({task, onCloseModal, startEdit, deleteTask, hasProjectContext}: {
 }) {
     const {t} = useTranslation(['projects', 'date', 'errors']);
 
-    const [participationStatus, setParticipationStatus] = useState<boolean>(task?.self_participating ?? false);
     const [participationError, setParticipationError] = useState<string | undefined>();
 
     router.on('flash', (e) => {
@@ -98,11 +94,8 @@ function Show({task, onCloseModal, startEdit, deleteTask, hasProjectContext}: {
             }
         }
         confirmValidation().then((value) => {
-            if (value?.success) {
-                // TODO success modal toast + item reload + page items reload on task-display
-                task!.self_participating = true;
-            }
             // setParticipationStatus(value!)
+            task!.validated = true;
         });
     }
 
@@ -149,19 +142,26 @@ function Show({task, onCloseModal, startEdit, deleteTask, hasProjectContext}: {
                         </div>
                     }
                 </div>
-                {participationStatus ?
+                {task?.self_participating &&
                     <div className="text-with-icon">
                         <CalendarCheck className="item-tag bg-tag"/>
                         <p>
                             {t('task_self_participating')}
                         </p>
-                    </div> : null}
+                    </div>}
                 {/*modalTask.due_at > Date.now()*/}
                 {task?.due_at && false &&
-                    <div className="flex gap-1">
-                        <ClockAlert className="item-tag bg-tag-warning"/>
+                    <div className="text-with-icon">
+                        <ClockAlert className="item-tag-warning"/>
                         <p>
                             {t('task_due_soon')}
+                        </p>
+                    </div>}
+                {task?.validated &&
+                    <div className="text-with-icon">
+                        <Check className="item-tag"/>
+                        <p>
+                            {t('task_valid')}
                         </p>
                     </div>}
             </ModalSection>
@@ -174,7 +174,7 @@ function Show({task, onCloseModal, startEdit, deleteTask, hasProjectContext}: {
             </ModalSection>*/}
             <div className="flex flex-col gap-3 px-2 items-center">
                 {/* TODO restyle this corner */}
-                {participationStatus ?
+                {(task?.self_participating && !task?.validated) ?
                     <Form className="w-full max-w-md"
                           {...TaskController.cancelParticipation.form(task?.id ?? 0)}
                     >
@@ -183,6 +183,7 @@ function Show({task, onCloseModal, startEdit, deleteTask, hasProjectContext}: {
                                     color="destructive"/>
                         )}
                     </Form> :
+                    !task?.validated &&
                     <Form className="w-full max-w-md"
                           {...TaskController.participate.form(task?.id ?? 0)}
                     >
@@ -191,7 +192,7 @@ function Show({task, onCloseModal, startEdit, deleteTask, hasProjectContext}: {
                         )}
                     </Form>
                 }
-                {participationStatus &&
+                {(task?.self_participating && !task?.validated) &&
                     <Button textContent={t('task_validate')} onClick={validate}/>
                 }
                 <InputError message={participationError ? t('errors:' + participationError) : undefined}/>
@@ -302,7 +303,7 @@ function Edit(
                             <NotesList task={task}/>
 
                         </ModalSection>*/}
-                        <div className="flex flex-col gap-3 px-2">
+                        <div className="flex flex-col gap-3 px-2 items-center">
                             <Button color="edit" textContent={t('task_confirm_changes')} onClick={() => null}
                                     type="submit"/>
                             {updateResponse.error ? <span

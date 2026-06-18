@@ -52,6 +52,7 @@
     "task_edit_cancel": "Bearbeitung abbrechen",
     "task_delete": "Aufgabe löschen",
     "task_delete_warning": "Sie sind dabei, eine Aufgabe zu löschen",
+    "task_valid": "Aufgabe erledigt!",
     "task_delete_warning_message": "Sind Sie sicher, dass Sie die Aufgabe '{{task}}' löschen möchten ? Wenn ja, werden die Teilnahmen abgebrochen und die Notizen entfernt.",
     "invitation_modal": "Einladungslink erstellen",
     "invitation_generate": "Einladung generieren",

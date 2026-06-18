@@ -52,6 +52,7 @@
     "task_create_fill": "Remplir avec un modèle de tâche",
     "task_confirm_changes": "Confirmer les modifications",
     "task_edit_cancel": "Annuler la modification",
+    "task_valid": "Tâche finie !",
     "task_delete": "Supprimer la tâche",
     "task_delete_warning": "Vous êtes sur le point de supprimer une tâche",
     "task_delete_warning_message": "Êtes-vous sûr de vouloir supprimer la tâche « {{task}} » ? Si vous confirmez, les participations seront annulées et les notes supprimées.",

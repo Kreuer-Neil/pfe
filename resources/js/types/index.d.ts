@@ -151,6 +151,7 @@ export interface ITaskMiniature {
     // created_at: string;
     owner?: IProfile;
     isOwner: boolean | null;
+    validated: boolean;
 
     [key: string]: unknown;
 }

@@ -22,6 +22,7 @@ class FormatedTaskMiniature
     public ?string $starting_at;
     public ?string $due_at;
     public bool $hasNotes;
+    public bool $validated;
 
     public function __construct(Task $task, User $currentUser)
     {
@@ -49,6 +50,7 @@ class FormatedTaskMiniature
 //        $this->updated_at = $task->updated_at;
 
         $this->hasNotes = $task->notes()->count() >= 0;
+        $this->validated = $task->validated_at !== null;
     }
 
 }

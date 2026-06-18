@@ -21,6 +21,7 @@ class FormatedTask extends FormatedTaskMiniature
     public ?string $due_at;
     public string $created_at;
     public string $updated_at;
+    public bool $validated;
 
     public function __construct(Task $task, User $currentUser)
     {
@@ -45,5 +46,6 @@ class FormatedTask extends FormatedTaskMiniature
         $this->due_at = $task->due_at;
         $this->created_at = $task->created_at;
         $this->updated_at = $task->updated_at;
+        $this->validated = $task->validated_at !== null;
     }
 }

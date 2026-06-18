@@ -1,4 +1,4 @@
-import {CalendarCheck, Timer, UsersRound} from "lucide-react";
+import {CalendarCheck, Check, Timer, UsersRound} from "lucide-react";
 import {ITask, ITaskMiniature} from "@/types";
 import {cn} from "@/lib/utils";
 import {laravelDateToJsDate, upcomingDateToString} from "@/helpers/date";
@@ -55,6 +55,7 @@ function TaskIconParticipation({participations, min, className = ''}: {
     }
 }
 
+
 // TODO find where to put the link
 export default function TaskItem(
     {
@@ -89,6 +90,8 @@ export default function TaskItem(
                     <TaskIconParticipation participations={task.participations_count}
                                            min={task.min_participations}/>
                     <ParticipatingIcon participating={task.self_participating}/>
+                    {task.validated &&
+                        <Check className="item-tag"/>}
                 </div>
             </div>
             {/*

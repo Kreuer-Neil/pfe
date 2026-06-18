@@ -130,7 +130,6 @@ class TaskController extends Controller
 
     public function validate($id)
     {
-        $task = null;
         try {
             $task = Task::findOrFail($id);
         } catch (QueryException) {
