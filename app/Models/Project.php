@@ -92,7 +92,7 @@ class Project extends Model
                 case ProjectAction::MANAGE_TASK;
                     if (in_array($memberRole, [ProjectRole::TASK_MANAGER->value, ProjectRole::MODERATOR->value, ProjectRole::ADMIN->value,
                         // TODO remove later
-                        ProjectRole::MEMBER->value
+//                        ProjectRole::MEMBER->value
                     ]))
                         $returnValue = true;
                     break;

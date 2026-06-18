@@ -1,4 +1,4 @@
-import {IProject, ITask, ITaskMiniature} from "@/types";
+import {IProject, ITask, ITaskMiniature, SharedData} from "@/types";
 // import {agenda} from '@/routes';
 import TaskItem from "@/components/tasks/task-item";
 import {ReactNode, useState} from "react";
@@ -14,6 +14,8 @@ import {show as tasksShow} from "@/actions/App/Http/Controllers/TaskController";
 import TaskCreateModal from "@/components/tasks/task-create";
 import TaskShowModal from "@/components/tasks/task-show";
 import {RouteQueryOptions} from "@/wayfinder";
+import auth from "@/actions/App/Http/Controllers/Auth";
+import {usePage} from "@inertiajs/react";
 
 
 type TaskDisplayProps = {
@@ -69,6 +71,9 @@ export default function TaskDisplay(
         minLength = 3,
         maxLength = 12
     }: TaskDisplayProps): ReactNode {
+    const {auth} = usePage<SharedData>().props;
+    const currentUser = auth.user;
+
     {/* TODO use flash data for tasks? Needs auto-update */}
 
     const {t} = useTranslation(['projects', 'date']);
@@ -128,7 +133,7 @@ export default function TaskDisplay(
         <section className={cn('items-section max-w-xl', className)} id={pageId}>
             <div className="flex items-center mx-3">
                 <h2 className="section-title w-full">{title ?? (project ? t('tasks_container_title', {project: project.name}) : t('task_upcoming_title'))}</h2>
-                {project && // TODO fix if user
+                {project?.owner.id === currentUser.id && // TODO fix if user
                     <IconButton icon={ClipboardPlus} textContent={t('task_add')}
                                 onClick={() => setShowCreateModal(true)}/>}
             </div>

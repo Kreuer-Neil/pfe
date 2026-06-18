@@ -28,7 +28,7 @@ export default function ConfirmModal(
                     <p>{message}</p>
                     : null}
                 <div className="grid grid-cols-2 gap-1">
-                    <Button textContent={t('confirm')} onClick={onConfirm}/>
+                    <Button textContent={t('confirm')} onClick={onConfirm} color="destructive"/>
                     <Button textContent={t('cancel')} onClick={onClose}/>
                 </div>
             </ModalCast>
