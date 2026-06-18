@@ -62,5 +62,6 @@
     "invitation_expires_at_time": "Invitation expiration time",
     "invitation_use": "Use invitation",
     "invitation_index" : "Invitations",
-    "invitation_code": "Invitation code"
+    "invitation_code": "Invitation code",
+    "invitation_confirm": "Join the project"
 }

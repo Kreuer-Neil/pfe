@@ -50,6 +50,7 @@ class ProjectInvitationController extends Controller
     {
         $validated = $request->validate([
             'code'=>'required|string|size:16',
+            'confirm' => 'nullable|int'
         ]);
         $code = $validated['code'];
         $invitation = ProjectInvitation::where('code', $code)->first();
@@ -62,14 +63,14 @@ class ProjectInvitationController extends Controller
             return redirect()->back()->withErrors(['code' => 'Already member']);
         }
 
-        if (!$request->confirm) {
+        if (!array_key_exists('confirm',$validated)) {
             Inertia::flash([
                 'error' => null,
                 'confirm' => true,
                 'code'=> $code,
             ]);
 
-            return redirect(route('projects.invitations'));
+            return redirect()->back();
         }
 
         Member::create([

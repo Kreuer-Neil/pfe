@@ -62,7 +62,6 @@
     "invitation_expires_at_time": "Heure d'expiration de l'invitation",
     "invitation_use": "Utiliser l’invitation",
     "invitation_index" : "Invitations",
-    "invitation_code": "Code d’invitation"
-
-
+    "invitation_code": "Code d’invitation",
+    "invitation_confirm": "Rejoindre le projet"
 }

@@ -63,6 +63,7 @@ export default function invitation({}: {}) {
                     {({processing, errors}) => (
                         <>
                             <input type="hidden" name="confirm" value={1}/>
+                            <input type="hidden" name="code" value={code}/>
                             <Button textContent={t('invitation_confirm')} type="submit" onClick={() => null}/>
                         </>
                     )}
