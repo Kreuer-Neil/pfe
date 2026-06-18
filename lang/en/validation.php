@@ -46,7 +46,7 @@ return [
     'different' => 'The :attribute field and :other must be different.',
     'digits' => 'The :attribute field must be :digits digits.',
     'digits_between' => 'The :attribute field must be between :min and :max digits.',
-    'dimensions' => 'The :attribute field has invalid image dimensions.',
+    'dimensions' => 'The :attribute field has invalid image dimensions. Maximum 2000x2000',
     'distinct' => 'The :attribute field has a duplicate value.',
     'doesnt_contain' => 'The :attribute field must not contain any of the following: :values.',
     'doesnt_end_with' => 'The :attribute field must not end with one of the following: :values.',

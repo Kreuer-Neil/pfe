@@ -35,7 +35,7 @@ return [
     'different' => 'Das Feld :attribute und :other müssen unterschiedlich sein.',
     'digits' => 'Das Feld :attribute muss :digits Ziffern enthalten.',
     'digits_between' => 'Das Feld :attribute muss zwischen :min und :max Ziffern enthalten.',
-    'dimensions' => 'Das Feld :attribute hat ungültige Bildabmessungen.',
+//    'dimensions' => 'Das Feld :attribute hat ungültige Bildabmessungen.',
     'distinct' => 'Das Feld :attribute hat einen doppelten Wert.',
     'doesnt_contain' => 'Das Feld :attribute darf keinen der folgenden Werte enthalten: :values.',
     'doesnt_end_with' => 'Das Feld :attribute darf nicht mit einem der folgenden Werte enden: :values.',
