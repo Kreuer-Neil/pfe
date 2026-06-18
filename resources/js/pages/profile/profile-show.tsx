@@ -112,6 +112,8 @@ export default function profileShow({}) {
     return (
         <AppLayout appHeaderContext={appHeaderContext}>
             <Head title="show"/>
+            <PageFlowContainer className="py-0">
+
             <ProfileContainer id={user.id} isEditing={isEditing}
                               className="w-full flex flex-col gap-3 max-w-xl bg-card pb-4 -mb-4 border-b border-border">
                 {(errors) => (
@@ -174,11 +176,13 @@ export default function profileShow({}) {
                                 <p>{user.bio}</p>
                             }
                             {isEditing &&
-                                <Button textContent={t('submit_profile_changes')} type="submit" onClick={() => null}/>}
+                                <Button textContent={t('submit_profile_changes')} type="submit" onClick={() => null}
+                                className="self-center"/>}
                         </div>
                     </>
                 )}
             </ProfileContainer>
+            </PageFlowContainer>
             {/*<div className="flex flex-col-reverse items-center">
 
                     <h1 className="page-title">{user.nickname}</h1>
