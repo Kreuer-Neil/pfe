@@ -15,7 +15,7 @@ export default function invitation({}: {}) {
 
     const [error, setError] = useState('');
 
-    const [code, setCode] = useState<string>('');
+    const [code, setCode] = useState<string>(document.documentURI.split('?code=')[1] ?? '');
 
     const [showConfirmation, setShowConfirmation] = useState(false);
 
@@ -36,16 +36,15 @@ export default function invitation({}: {}) {
                     <h1 className="page-title">{t('invitation_index')}</h1>
 
                     <Form
-                        {...ProjectInvitationController.use.form(code)}
+                        {...ProjectInvitationController.use.form()}
                     >
                         {({processing, errors}) => (
                             <>
                                 <div className="modal">
 
-                                    <GeneralInput name="invitation_code" label={t('invitation_code')} value={code}
-                                                  setValue={setCode} required={true}/>
-                                    {error &&
-                                        <span className="field-error">{error}</span>}
+                                    <GeneralInput name="code" label={t('invitation_code')} value={code} required={true}/>
+                                    {errors.code &&
+                                        <span className="field-error">{errors.code}</span>}
                                 </div>
 
                                 <Button textContent={t('invitation_use')} type="submit" onClick={() => null}/>
@@ -59,11 +58,12 @@ export default function invitation({}: {}) {
                 <h1 className="page-title">{t('invitation_index')}</h1>
 
                 <Form
-                    {...ProjectInvitationController.use.form(code)}
+                    {...ProjectInvitationController.use.form()}
                 >
                     {({processing, errors}) => (
                         <>
                             <input type="hidden" name="confirm" value={1}/>
+                            <input type="hidden" name="code" value={code}/>
                             <Button textContent={t('invitation_confirm')} type="submit" onClick={() => null}/>
                         </>
                     )}

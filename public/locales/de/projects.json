@@ -1,6 +1,6 @@
 {
     "project": "Projekt",
-    "no_projects_joined": "Es scheint, als wären Sie noch keinem Projekt beigetreten. Sie können versuchen, einen QR-Code zu scannen, oder hier nach einem Projekt suchen :",
+    "no_projects_joined": "Es scheint, als wären Sie noch keinem Projekt beigetreten. Sie können hier nach einem Projekt suchen :",
     "search_project": "Ein Projekt suchen",
     "show_project": "Dieses Projekt anzeigen",
     "get_absent": "Mich als abwesend markieren",
@@ -11,6 +11,7 @@
     "posted_by": "Gepostet von :",
     "project_edit": "Bearbeiten",
     "project_settings": "Einstellungen",
+    "project_members_title": "Projektmitglieder",
     "project_form_update": "Änderungen speichern",
     "project_form_create": "Projekt erstellen",
     "project_form_cancel": "Abbrechen",
@@ -51,9 +52,16 @@
     "task_edit_cancel": "Bearbeitung abbrechen",
     "task_delete": "Aufgabe löschen",
     "task_delete_warning": "Sie sind dabei, eine Aufgabe zu löschen",
+    "task_valid": "Aufgabe erledigt!",
     "task_delete_warning_message": "Sind Sie sicher, dass Sie die Aufgabe '{{task}}' löschen möchten ? Wenn ja, werden die Teilnahmen abgebrochen und die Notizen entfernt.",
     "invitation_modal": "Einladungslink erstellen",
     "invitation_generate": "Einladung generieren",
     "invitation_expires_at_date": "Ablaufdatum der Einladung",
-    "invitation_expires_at_time": "Ablaufzeit der Einladung"
+    "invitation_expires_at_time": "Ablaufzeit der Einladung",
+    "invitation_use": "Einladung benutzen",
+    "invitation_index" : "Einladungen",
+    "invitation_code": "Einladung code",
+    "invitation_confirm": "Join the project"
+
+
 }

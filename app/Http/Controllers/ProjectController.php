@@ -8,21 +8,17 @@ use App\Enums\ProjectsFilters;
 use App\FormatedModels\Project\FormatedDashboardProject;
 use App\FormatedModels\Project\FormatedProject;
 use App\FormatedModels\Project\FormatedProjectMiniature;
+use App\Jobs\HandleProfileImageUploads;
 use App\Models\Member;
 use App\Models\Project;
 use App\Models\User;
-use Exception;
 use File;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Format;
-use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use Str;
-use function Laravel\Prompts\error;
-use function Pest\Laravel\delete;
 
 class ProjectController extends Controller
 {
@@ -135,22 +131,16 @@ class ProjectController extends Controller
 
     public function store(Request $request)
     {
-        Inertia::flash([
-            'name' => $request['name'],
-            'description' => $request['description'],
-            'is_private' => $request['is_private'],
-        ]);
-
         $validated = $request->validate([
             'name' => 'required|string|min:6|max:255|unique:projects,name',
             'description' => 'required|min:6|string',
-            'is_private' => 'required',
+            'is_private' => 'boolean',
         ]);
         // , ['name.unique' => 'project_name_exists']
 
         $ownerId = auth()->user()->id;
         $validated['owner_id'] = $ownerId;
-        $validated['is_private'] = $validated['is_private'] === 'on';
+        $validated['is_private'] = array_key_exists('is_private', $validated);
         $validated['slug'] = Str::slug($validated['name']);
 
         $project = Project::create($validated);
@@ -193,7 +183,7 @@ class ProjectController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'icon' => 'nullable|image'
+            'icon' => 'nullable|image|extensions:jpg,jpeg,png,gif,webp|max:2048'
         ]);
 
         if (array_key_exists('icon', $validated)) {
@@ -206,26 +196,7 @@ class ProjectController extends Controller
 
             $iconName = Str::beforeLast(Str::afterLast($path, '/'), '.');
 
-            // TODO queued jobs
-            $imageManager = ImageManager::usingDriver(Driver::class);
-            $scales = ['small' => 32, 'medium' => 64, 'large' => 160];
-
-            foreach ($scales as $key => $scale) {
-                $image = $imageManager->decodePath('../storage/app/public/' . $path);
-                $image->cover($scale, $scale);
-                $encoded = $image->encodeUsingFormat(Format::PNG, quality: 65);
-                $encoded->save("../storage/app/public/images/projects/${key}/${iconName}.png");
-                if ($oldIconName) {
-                    $oldFilePath = "../storage/app/public/images/projects/${key}/${oldIconName}.png";
-                    if (File::exists($oldFilePath)) {
-                        File::delete($oldFilePath);
-                    }
-                }
-            }
-
-            if (File::exists("../storage/app/public/images/projects/${iconName}.png")) {
-                File::delete("../storage/app/public/images/projects/${iconName}.png");
-            }
+            HandleProfileImageUploads::dispatch($iconName, $oldIconName, $path, 'projects');
 
             $project->icon = $iconName;
         }

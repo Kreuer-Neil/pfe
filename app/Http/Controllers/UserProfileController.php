@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\FormatedModels\FormatedProfile;
 use App\FormatedModels\FormatedUser;
+use App\Jobs\HandleProfileImageUploads;
 use App\Models\User;
 use File;
 use Illuminate\Http\Request;
@@ -20,13 +21,13 @@ class UserProfileController extends Controller
         $user = User::find($id);
 
         // TODO add check if not contact or project in common + if account private
-        if (!($user->exists()
+        if (!($user
             /*&& ((!$user->is_private) || $user->hasProjectsInCommonWith(auth()->user()))*/
         )) {
             abort(404);
         }
 
-        $user = new FormatedProfile($user);
+        $user = $user->toFormatedProfile(auth()->user());
         auth()->user()->projects;
         return Inertia::render('profile/profile-show', compact('user'));
     }
@@ -44,42 +45,24 @@ class UserProfileController extends Controller
             'nickname' => 'required|string|min:3|max:32',
             'pronouns' => 'nullable|string|max:24',
             'bio' => 'nullable|min:3|max:255',
-            'avatar' => 'nullable|image'
+            'avatar' => 'nullable|image|extensions:jpg,jpeg,png,gif,webp|max:2048|dimensions:max_width=2000,max_height=2000'
         ]);
 
         if (array_key_exists('avatar', $validated)) {
 
-            $oldAvatarName = $user->avatar;
+            $oldImageName = $user->avatar;
 
-            $path = $request
+            $imagePath = $request
                 ->file('avatar')
                 ->store('images/users', 'public');
 
             // TODO refactor
-            $avatarName = Str::beforeLast(Str::afterLast($path, '/'), '.');
+            $imageName = Str::beforeLast(Str::afterLast($imagePath, '/'), '.');
 
-            // TODO queued jobs
-            $imageManager = ImageManager::usingDriver(Driver::class);
-            $scales = ['small' => 32, 'medium' => 64, 'large' => 160];
+            $directory = 'users';
+            HandleProfileImageUploads::dispatch($imageName, $oldImageName, $imagePath, $directory);
 
-            foreach ($scales as $key => $scale) {
-                $image = $imageManager->decodePath('../storage/app/public/' . $path);
-                $image->cover($scale, $scale);
-                $encoded = $image->encodeUsingFormat(Format::PNG, quality: 65);
-                $encoded->save("../storage/app/public/images/users/${key}/${avatarName}.png");
-                if ($oldAvatarName) {
-                    $oldFilePath = "../storage/app/public/images/users/${key}/${oldAvatarName}.png";
-                    if (File::exists($oldFilePath)) {
-                        File::delete($oldFilePath);
-                    }
-                }
-            }
-
-            if (File::exists("../storage/app/public/images/users/${avatarName}.png")) {
-                File::delete("../storage/app/public/images/users/${avatarName}.png");
-            }
-
-            $user->avatar = $avatarName;
+            $user->avatar = $imageName;
         }
 
         $user->nickname = $validated['nickname'];
@@ -89,6 +72,44 @@ class UserProfileController extends Controller
         $user->save();
 
         Inertia::flash(['success' => true]);
+        return redirect(route('user-profile.show', $id));
+    }
+
+
+    // Other methods
+    public function follow(int $id)
+    {
+        if (!User::find($id)) {
+            abort(404);
+        }
+
+        $currentUser = auth()->user();
+        if ($id === $currentUser->id) {
+            Inertia::flash(['follow_success' => false]);
+        } else {
+            $user = User::find($id);
+
+            Inertia::flash(['follow_success' => $user->followAs($currentUser)]);
+        }
+
+        return redirect(route('user-profile.show', $id));
+    }
+
+    public function unfollow(int $id)
+    {
+        if (!User::find($id)) {
+            abort(404);
+        }
+
+        $currentUser = auth()->user();
+        if ($id === $currentUser->id) {
+            Inertia::flash(['follow_success' => false]);
+        } else {
+            $user = User::find($id);
+
+            Inertia::flash(['follow_success' => $user->unfollowAs($currentUser)]);
+        }
+
         return redirect(route('user-profile.show', $id));
     }
 }

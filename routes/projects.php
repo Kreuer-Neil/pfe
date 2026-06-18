@@ -17,7 +17,7 @@ Route::get('projects/my-projects', [ProjectController::class, 'myProjects'])
 Route::get('projects/create', [ProjectController::class, 'create'])
     ->name('projects.create');
 
-Route::get('projects/store', [ProjectController::class, 'store'])
+Route::post('projects/store', [ProjectController::class, 'store'])
     ->name('projects.store');
 
 Route::get('projects/invitations', [ProjectInvitationController::class, 'index'])
@@ -26,7 +26,7 @@ Route::get('projects/invitations', [ProjectInvitationController::class, 'index']
 Route::get('projects/invitations/show', [ProjectInvitationController::class, 'show'])
     ->name('projects.invitations.show');
 
-Route::get('projects/invitations/{code}', [ProjectInvitationController::class, 'use'])
+Route::post('projects/invitations/', [ProjectInvitationController::class, 'use'])
     ->name('projects.invitations.use');
 
 Route::get('projects/{slug}', [ProjectController::class, 'show'])

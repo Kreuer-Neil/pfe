@@ -17,6 +17,8 @@ class TestUserSeeder
      */
     public static function run(): void
     {
+        info('Seeding test user data...');
+
         $testUser = User::firstOrCreate(
             ['email' => 'test@example.com'],
             [
@@ -80,5 +82,7 @@ class TestUserSeeder
             $task->participate($projectUsers->random(1)->first());
             $task->participate($projectUsers->random(1)->first());
         }
+
+        info('Test user data seeded.');
     }
 }

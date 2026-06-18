@@ -23,7 +23,7 @@ export default function myProjects({}) {
         <Layout>
             <Head title="my-projects"/>
             <PageFlowContainer>
-                <h1 className="page-title px-3">{t('common:my_projects')}</h1>
+                <h1 className="page-title px-3 mx-auto max-w-xl">{t('common:my_projects')}</h1>
 
                 <MyProjects projects={projects}/>
 

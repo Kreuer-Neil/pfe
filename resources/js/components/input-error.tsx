@@ -9,7 +9,7 @@ export default function InputError({
     return message ? (
         <p
             {...props}
-            className={cn('text-sm text-red-600 dark:text-red-400', className)}
+            className={cn('field-error -mt-2', className)}
         >
             {message}
         </p>

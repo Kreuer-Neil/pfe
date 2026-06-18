@@ -17,14 +17,15 @@ class CredentialsSeeder
      */
     public static function run(): void
     {
+        info('Seeding credential users data...');
 
         $users = [
             'wera' => User::create([
                 'last_name' => 'Wera',
-                'first_name' => 'Maude',
-                'email' => 'maude.wera@example.test',
+                'first_name' => 'Maud',
+                'email' => 'maud.wera@example.test',
                 'password' => '123password4',
-                'nickname' => 'Wera Maude'
+                'nickname' => 'Wera Maud'
             ]),
             'schreurs' => User::create([
                 'last_name' => 'Schreurs',
@@ -79,5 +80,6 @@ class CredentialsSeeder
             }
         }
 
+        info('Credential users seeded.');
     }
 }

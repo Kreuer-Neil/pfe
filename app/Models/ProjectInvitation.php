@@ -24,4 +24,9 @@ class ProjectInvitation extends Model
     {
         return $this->exists() && (!$this->expires_at || $this->expires_at > now()) && $this->uses !== 0;
     }
+
+    public function getLink()
+    {
+        return route('projects.invitations.use',($this->code));
+    }
 }

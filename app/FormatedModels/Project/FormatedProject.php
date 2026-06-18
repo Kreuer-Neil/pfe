@@ -32,12 +32,12 @@ class FormatedProject extends FormatedProjectContext
         $this->owner = User::find($project->owner_id);
         $this->members = [];
         foreach ($project->members as $member) {
-            $this->members[] = new FormatedProfile($member);
+            $this->members[] = new FormatedProfile($member, $user);
         }
 
         $this->upcoming_tasks = [];
         foreach ($project->upcomingTasks as $task) {
-            $this->upcoming_tasks[] = new FormatedTaskMiniature($task, $user->id);
+            $this->upcoming_tasks[] = new FormatedTaskMiniature($task, $user);
         }
 
         $this->user_role = $project->userRole($user);
