@@ -1,6 +1,6 @@
 {
     "project": "Projet",
-    "no_projects_joined": "Il semblerait que vous n'ayez pas encore rejoint de projet. Vous pouvez essayer de scanner un QR code, ou rechercher un projet ici :",
+    "no_projects_joined": "Il semblerait que vous n'ayez pas encore rejoint de projet. Vous pouvez rechercher un projet ici :",
     "search_project": "Rechercher un projet",
     "show_project": "Voir ce projet",
     "get_absent": "Me marquer absent",
@@ -10,6 +10,7 @@
     "button_invite": "Inviter",
     "posted_by": "Publié par :",
     "project_edit": "Modifier",
+    "project_members_title": "Membres du projet",
     "project_settings": "Paramètres",
     "project_form_update": "Enregistrer les modifications",
     "project_form_create": "Créer le projet",
@@ -30,7 +31,7 @@
     "task_self_participating": "Vous avez rejoint cette tâche.",
     "task_due_soon": "Cette tâche arrive bientôt à échéance !",
     "task_participate": "Participer",
-    "task_cancel_participate": "Cancel participation",
+    "task_cancel_participate": "Annuler ma participation",
     "task_add": "Ajouter une tâche",
     "task_validate": "Valider la tâche",
     "task_edit": "Modifier la tâche",
@@ -51,11 +52,16 @@
     "task_create_fill": "Remplir avec un modèle de tâche",
     "task_confirm_changes": "Confirmer les modifications",
     "task_edit_cancel": "Annuler la modification",
+    "task_valid": "Tâche finie !",
     "task_delete": "Supprimer la tâche",
     "task_delete_warning": "Vous êtes sur le point de supprimer une tâche",
     "task_delete_warning_message": "Êtes-vous sûr de vouloir supprimer la tâche « {{task}} » ? Si vous confirmez, les participations seront annulées et les notes supprimées.",
     "invitation_modal": "Créer un lien d'invitation",
     "invitation_generate": "Générer une invitation",
     "invitation_expires_at_date": "Date d'expiration de l'invitation",
-    "invitation_expires_at_time": "Heure d'expiration de l'invitation"
+    "invitation_expires_at_time": "Heure d'expiration de l'invitation",
+    "invitation_use": "Utiliser l’invitation",
+    "invitation_index" : "Invitations",
+    "invitation_code": "Code d’invitation",
+    "invitation_confirm": "Rejoindre le projet"
 }

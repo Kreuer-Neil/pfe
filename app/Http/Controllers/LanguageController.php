@@ -14,8 +14,9 @@ class LanguageController extends Controller
         ]);
         $lang = Str::lower($validated['lang']);
         if (in_array($lang, config('app.locales'))) {
-            $cookie = cookie('lang', $lang, 60 * 24 * 31);
+            $cookie = cookie('lang', $lang, 60 * 24 * 31 * 12);
+            return redirect()->back()->cookie($cookie);
         }
-        return redirect()->back()->cookie($cookie);
+        return redirect()->back();
     }
 }

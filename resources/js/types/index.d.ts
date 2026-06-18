@@ -59,6 +59,17 @@ export interface IUser extends IProfile {
     [key: string]: unknown; // This allows for additional properties...
 }
 
+export interface IProfileMiniature {
+    id: string;
+    first_name: string;
+    last_name: string;
+    nickname: string;
+    pronouns?: string;
+    avatar: string;
+
+    [key: string]: unknown; // This allows for additional properties...
+}
+
 export interface IProfile {
     id: string;
     first_name: string;
@@ -67,6 +78,7 @@ export interface IProfile {
     pronouns?: string;
     avatar: string;
     bio?: string;
+    is_following?: boolean;
 
     [key: string]: unknown; // This allows for additional properties...
 }
@@ -106,6 +118,7 @@ export interface IProjectShow extends IProjectMiniature {
 
     // is_private: boolean;
     user_role: 'viewer';
+    members: IProfile[];
 }
 
 export interface IProject extends IProjectShow {
@@ -128,6 +141,7 @@ export interface ITaskMiniature {
     project: IProjectContext;
     min_participations: ?number;
     participations_count: number;
+    related_users: IProfile[];
     // if self is participating
     self_participating: boolean;
     starting_at: ?string;
@@ -137,6 +151,7 @@ export interface ITaskMiniature {
     // created_at: string;
     owner?: IProfile;
     isOwner: boolean | null;
+    validated: boolean;
 
     [key: string]: unknown;
 }

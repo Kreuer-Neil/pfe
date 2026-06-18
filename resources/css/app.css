@@ -57,9 +57,11 @@
     --color-edit: var(--edit);
     --color-edit-foreground: var(--edit-foreground);
 
-    --color-tag-valid: var(--tag-valid);
+    /*--color-tag-valid: var(--tag-valid);*/
     --color-tag-neutral: var(--tag-neutral);
+    --color-tag-neutral-border: var(--tag-neutral-border);
     --color-tag-warning: var(--tag-warning);
+    --color-tag-warning-border: var(--tag-warning-border);
 
     --color-muted: var(--muted);
     --color-muted-foreground: var(--muted-foreground);
@@ -116,12 +118,13 @@
     --foreground-main: oklch(0.145 0 0);
     --foreground-light: oklch(0.981 0 0);
 
-    --background: oklch(1 0 0);
+    --background: oklch(0.9856 0 0);
     --foreground: var(--foreground-main);
     --modal-behind: oklch(0.576 0.053 159.319 / 0.5);
     /*--card: oklch(1 0 0);*/
 
-    --card: oklch(0.9612 0 0);
+
+    --card: oklch(1 0 0);
     --card-foreground: var(--foreground-main);
 
     --button: var(--tea-green);
@@ -148,13 +151,15 @@
     /*--warning-light: var(--pine-green-transparent);*/
 
     --edit: var(--verdigris);
-    --edit-foreground: var(--foreground-main);
+    --edit-foreground: var(--foreground-light);
 
     --valid: var(--sprout-green);
 
-    --tag-valid: var(--sprout-green);
-    --tag-neutral: var(--neutral-blue);
-    --tag-warning: var(--atomic-tangerine);
+    /*--tag-valid: var(--sprout-green);*/
+    --tag-neutral: oklch(0.9 0.023 179.301 / 0.3);
+    --tag-neutral-border: var(--neutral-blue);
+    --tag-warning: oklch(0.787 0.1 47.079 / 0.3);
+    --tag-warning-border: var(--atomic-tangerine);
 
     --muted: oklch(0.97 0 0);
     --muted-foreground: oklch(0.5472 0.022 262.93);
@@ -258,7 +263,10 @@
     }
 
     .icon-btn {
-        @apply p-1 cursor-pointer;
+        @apply bg-card text-link p-1 px-2 rounded-xs border border-border cursor-pointer flex gap-1;
+    }
+    .icon-btn-alt {
+        @apply bg-tertiary text-tertiary-foreground p-1 px-2 rounded-xs cursor-pointer flex gap-1;
     }
 
     /** Frontpage specific style **/
@@ -394,7 +402,7 @@
 
     /** Generic app style **/
     .main-page {
-        @apply w-full max-w-7xl flex flex-col items-center gap-8 py-8 min-h-screen;
+        @apply w-full max-w-7xl flex flex-col items-center gap-8 py-8 min-h-[100vh-1rem] bg-background sm:rounded-md sm:m-2 sm:ml-0 overflow-hidden;
     }
 
     .page-title {
@@ -415,7 +423,7 @@
     }
 
     .items-section {
-        @apply w-full max-w-xl /*rounded-lg bg-card*/
+        @apply w-full max-w-xl
         flex flex-col gap-4;
     }
 
@@ -429,7 +437,7 @@
 
     .thumbnail-item {
         @apply flex flex-col gap-1 p-2 px-3 cursor-pointer
-        rounded-sm border border-border max-w-[var(--text-max-w)];
+        rounded-sm border border-border max-w-[var(--text-max-w)] bg-card;
     }
 
     /* To overwrite style from browsers like Firefox */
@@ -438,7 +446,7 @@
     }
 
     .modal {
-        @apply m-auto p-2 py-3 bg-background rounded-lg w-full max-w-3xl;
+        @apply m-auto p-2 py-3 bg-background text-foreground rounded-lg w-full max-w-3xl;
 
         &::backdrop {
             @apply bg-modal-behind;
@@ -484,7 +492,11 @@
     }
 
     .item-tag {
-        @apply bg-tag-neutral flex gap-1 p-1 px-1.5 rounded-xs items-center;
+        @apply bg-tag-neutral border border-tag-neutral-border flex gap-1 p-1 px-1.5 rounded-xs items-center;
+    }
+
+    .item-tag-warning {
+        @apply bg-tag-warning border border-tag-warning-border flex gap-1 p-1 px-1.5 rounded-xs items-center;
     }
 
     .text-with-icon {
@@ -504,7 +516,7 @@
 
     /* APP SIDEBAR STYLE */
     .app-container {
-        @apply relative flex flex-col sm:flex-row;
+        @apply relative flex flex-col sm:flex-row min-h-screen bg-sidebar;
     }
 
     .sidebar-cast {

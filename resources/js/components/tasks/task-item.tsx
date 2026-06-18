@@ -1,10 +1,11 @@
-import {CalendarCheck, Timer, UsersRound} from "lucide-react";
+import {CalendarCheck, Check, Timer, UsersRound} from "lucide-react";
 import {ITask, ITaskMiniature} from "@/types";
 import {cn} from "@/lib/utils";
 import {laravelDateToJsDate, upcomingDateToString} from "@/helpers/date";
 import ProjectIcon from "@/components/icons/project-icon";
 import {useTranslation} from "react-i18next";
 import {ReactNode} from "react";
+import RelatedUsers from "@/components/users/related-users";
 
 
 interface TaskItemProps {
@@ -33,11 +34,10 @@ function TaskIconParticipation({participations, min, className = ''}: {
 }) {
     if (min) {
         const colorClass: string = (participations / min > /*recommendedTaskParticipationsRate*/ .8)
-            ? '' : "bg-warning text-warning-foreground";
+            ? 'item-tag' : 'item-tag-warning';
         return (
             <span className={
-                cn("item-tag",
-                    colorClass,
+                cn(colorClass,
                     className)
             }>
                 {participations ?? 0}/{min}<UsersRound/>
@@ -54,6 +54,7 @@ function TaskIconParticipation({participations, min, className = ''}: {
         );
     }
 }
+
 
 // TODO find where to put the link
 export default function TaskItem(
@@ -77,20 +78,20 @@ export default function TaskItem(
                  }}>
             <h3 className="item-title w-full">{task.title}</h3>
 
-            {!isInProjectPage ?
+            {isInProjectPage &&
                 <p className="flex gap-1">
                     <ProjectIcon project={task.project} className="size-6"/>
                     {t('task_from_project', {project: task.project.name})}
-                </p>
-                : null}
+                </p>}
             <div className="taskinfo mt-1 flex flex-wrap justify-between items-center gap-1">
                 <span className="flex gap-1"><Timer/><time dateTime={task.due_at}>{dueAt}</time></span>
                 <div className="flex gap-1 ml-auto">
-                    { /* TODO add PFPs of participating people */}
-                    {/*<RelatedUsers/>*/}
+                    <RelatedUsers profiles={task.related_users}/>
                     <TaskIconParticipation participations={task.participations_count}
                                            min={task.min_participations}/>
                     <ParticipatingIcon participating={task.self_participating}/>
+                    {task.validated &&
+                        <Check className="item-tag"/>}
                 </div>
             </div>
             {/*

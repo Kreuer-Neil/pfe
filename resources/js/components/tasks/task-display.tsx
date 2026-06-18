@@ -27,9 +27,9 @@ type TaskDisplayProps = {
     maxLength?: number
 }
 
-function TasksList({tasks, projectContext, maxLength, onTapTask}: {
+function TasksList({tasks, isInProjectPage, maxLength, onTapTask}: {
     tasks: ITaskMiniature[];
-    projectContext: boolean;
+    isInProjectPage: boolean;
     maxLength: number;
     onTapTask: (id: string) => void;
 }): ReactNode {
@@ -49,7 +49,7 @@ function TasksList({tasks, projectContext, maxLength, onTapTask}: {
             return (
                 <li className="w-full flex flex-col gap-4" key={task.id}>
                     {precedentMonthCondition ? <span className="month-divider">{t('month_' + month)}</span> : ''}
-                    <TaskItem task={task} isInProjectPage={projectContext}
+                    <TaskItem task={task} isInProjectPage={isInProjectPage}
                               onTap={onTapTask}
                     />
                 </li>
@@ -90,9 +90,9 @@ export default function TaskDisplay(
     const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
     const [savedTasks, setSavedTasks] = useState<ITask[]>([]);
 
-    function onTaskTap(id: string) {
+    function onTaskTap(id: string, force:boolean = false) {
         const idNumber = Number(id);
-        if (!savedTasks[idNumber]) {
+        if (force || !savedTasks[idNumber]) {
             const fetchTask = async (): Promise<ITask | undefined> => {
                 try {
                     const params: RouteQueryOptions = {query: {'task_id': id}};
@@ -128,18 +128,18 @@ export default function TaskDisplay(
         <section className={cn('items-section max-w-xl', className)} id={pageId}>
             <div className="flex items-center mx-3">
                 <h2 className="section-title w-full">{title ?? (project ? t('tasks_container_title', {project: project.name}) : t('task_upcoming_title'))}</h2>
-                {project &&
+                {project && // TODO fix if user
                     <IconButton icon={ClipboardPlus} textContent={t('task_add')}
                                 onClick={() => setShowCreateModal(true)}/>}
             </div>
-            <TasksList tasks={tasks} projectContext={(project != null)} maxLength={maxItemsLength!}
+            <TasksList tasks={tasks} isInProjectPage={(project === null)} maxLength={maxItemsLength!}
                        onTapTask={onTaskTap}/>
             <div className="flex flex-col gap-4 px-3 items-center">
 
                 {tasks.length > Number(minLength) && <ShowMore showMore={showMoreState} onClick={onShowMore}/>}
                 {/*<ButtonText href={agenda().url} textContent={actionText ?? t('task.show_agenda')} icon={LucideCalendarDays}/>*/}
             </div>
-            <TaskShowModal task={modalTask} showModal={showTaskModal} setShowModal={setShowTaskModal}/>
+            <TaskShowModal task={modalTask} showModal={showTaskModal} setShowModal={setShowTaskModal} isInProjectPage={(project === null)} onTaskTap={onTaskTap}/>
             {project &&
                 <TaskCreateModal showModal={showCreateModal} setShowModal={setShowCreateModal}
                                  project={project}/>

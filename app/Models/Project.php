@@ -9,6 +9,7 @@ use App\Enums\ProjectRole;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -43,6 +44,11 @@ class Project extends Model
             ->belongsToMany(User::class, Member::class)
             ->withPivot('role')
             ->where('banned', false);
+    }
+
+    public function owner():BelongsTo
+    {
+        return  $this->belongsTo(User::class, 'owner_id');
     }
 
     public function memberships(): HasMany
@@ -84,7 +90,10 @@ class Project extends Model
                     $returnValue = true;
                     break;
                 case ProjectAction::MANAGE_TASK;
-                    if (in_array($memberRole, [ProjectRole::TASK_MANAGER->value, ProjectRole::MODERATOR->value, ProjectRole::ADMIN->value,]))
+                    if (in_array($memberRole, [ProjectRole::TASK_MANAGER->value, ProjectRole::MODERATOR->value, ProjectRole::ADMIN->value,
+                        // TODO remove later
+                        ProjectRole::MEMBER->value
+                    ]))
                         $returnValue = true;
                     break;
                 case ProjectAction::EDIT_SETTINGS;

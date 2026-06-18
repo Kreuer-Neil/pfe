@@ -6,10 +6,11 @@ import {ReactNode, useState} from "react";
 import AppLayout from "@/layouts/app-layout";
 import {useTranslation} from "react-i18next";
 import IconButton from "@/components/buttons/icon-button";
-import {Camera, Dot, Flag, Share2, UserPen, UserPlus} from "lucide-react";
+import {Camera, Dot, UserMinus, UserPen, UserPlus} from "lucide-react";
 import UserProfileController from "@/actions/App/Http/Controllers/UserProfileController";
 import GeneralInput from "@/components/form/general-input";
 import Button from "@/components/buttons/button";
+import InputError from "@/components/input-error";
 
 type PageProps = {
     user: IProfile;
@@ -42,7 +43,7 @@ function ProfileIcon({isEditing, user, avatarError}: {
                      className="size-[7rem] rounded-full object-cover"/>
 
                 <Camera className="bg-background text-secondary-border rounded-full ml-auto p-1 -mt-8 -mr-2 z-10"/>
-                <input type="file" accept="image/png, image/jpg, image/webp" name="avatar" id="avatar"
+                <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp, image/gif" name="avatar" id="avatar"
                        className="image-input sr-only"
                        onChange={(e) => {
                            if (e.target.files && e.target.files[0]) {
@@ -50,8 +51,7 @@ function ProfileIcon({isEditing, user, avatarError}: {
                            }
                        }}/>
             </label>
-            {avatarError &&
-                <span className="field-error">{avatarError}</span>}
+            <InputError className="mt-6 mx-3" message={avatarError} />
         </>
     );
 }
@@ -112,8 +112,10 @@ export default function profileShow({}) {
     return (
         <AppLayout appHeaderContext={appHeaderContext}>
             <Head title="show"/>
+            <PageFlowContainer className="py-0">
+
             <ProfileContainer id={user.id} isEditing={isEditing}
-                              className="w-full flex flex-col gap-3 max-w-xl">
+                              className="w-full flex flex-col gap-3 max-w-xl bg-card pb-4 -mb-4 border-b border-border">
                 {(errors) => (
                     <>
                         <div className="w-full">
@@ -127,8 +129,21 @@ export default function profileShow({}) {
                                     {isCurrentUser ?
                                         <IconButton icon={UserPen} textContent={t('user_edit')}
                                                     showText={true} onClick={() => setIsEditing(true)}/>
-                                        : /*<IconButton icon={UserPlus} textContent={t('user_add')}
-                                                      showText={true}/>*/ null}
+                                        :
+                                        user?.is_following ?
+                                            <Form
+                                                {...UserProfileController.unfollow.form(user.id)}
+                                            >
+                                                <IconButton icon={UserMinus} textContent={t('user_remove')}
+                                                            showText={true} onClick={() => null}/>
+                                            </Form> :
+                                            <Form
+                                                {...UserProfileController.follow.form(user.id)}
+                                            >
+                                                <IconButton icon={UserPlus} textContent={t('user_add')}
+                                                            showText={true} onClick={() => null}/>
+                                            </Form>
+                                    }
                                     {/*<IconButton icon={Share2} textContent={t('common:share')}/>*/}
                                     {/*{!isCurrentUser &&
                                         <IconButton icon={Flag} textContent={t('common:button_report')}/>}*/}
@@ -161,11 +176,13 @@ export default function profileShow({}) {
                                 <p>{user.bio}</p>
                             }
                             {isEditing &&
-                                <Button textContent={t('submit_profile_changes')} type="submit" onClick={() => null}/>}
+                                <Button textContent={t('submit_profile_changes')} type="submit" onClick={() => null}
+                                className="self-center"/>}
                         </div>
                     </>
                 )}
             </ProfileContainer>
+            </PageFlowContainer>
             {/*<div className="flex flex-col-reverse items-center">
 
                     <h1 className="page-title">{user.nickname}</h1>

@@ -26,7 +26,7 @@
         <section class="bottom-section large-section">
             <h2>{!! __('frontpage.home.bottom.title') !!}</h2>
             <p>{!! __('frontpage.home.bottom.text') !!}</p>
-            <a href="" class="btn">{!! __('frontpage.home.bottom.cta') !!}</a>
+            <a href="{{ route('register') }}" class="btn">{!! __('frontpage.home.bottom.cta') !!}</a>
         </section>
 
     </main>

@@ -8,6 +8,7 @@ interface IconButtonProps {
     textContent: string,
     showText?: boolean,
     title?: string,
+    alt?: boolean,
     className?: string,
     onClick?: ((e: any) => void),
     href?: string,
@@ -20,22 +21,26 @@ export default function IconButton(
         showText = false,
         title = '',
         onClick = (e) => e.preventDefault(),
+        alt,
         href = '',
         className = '',
     }: IconButtonProps): ReactNode {
     // TODO show it's clickable !!!
-    const baseStyle = 'bg-button p-1 px-2 rounded-xs cursor-pointer flex gap-1'
+    const baseStyle = alt ? 'icon-btn-alt' : 'icon-btn';
+
     const textSpanStyle = showText ? '' : 'sr-only';
+
+    const iconStyle = showText ? 'w-4' : 'w-5';
 
     if (href === '') {
         return <button title={title} className={cn(baseStyle, className)} onClick={onClick} onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') onClick(e);
         }}><span
-            className={textSpanStyle}>{textContent}</span><Icon className="w-5"/></button>;
+            className={textSpanStyle}>{textContent}</span><Icon className={iconStyle}/></button>;
     }
 
     return <Link title={title} href={href} className={cn(baseStyle, className)}><span
-        className={textSpanStyle}>{textContent}</span><Icon className="w-5"/></Link>;
+        className={textSpanStyle}>{textContent}</span><Icon className={iconStyle}/></Link>;
 
 
 }

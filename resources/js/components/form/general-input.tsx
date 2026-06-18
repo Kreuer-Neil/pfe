@@ -8,12 +8,12 @@ type ValidationRule = 'required' | 'min-6' | 'number' | 'int' | 'date' | 'time';
 interface TextInputProps {
     name: string;
     label: string;
-    type?: 'text' |'email'| 'number' | 'textarea' | 'date' | 'time';
+    type?: 'text' | 'email' | 'password' | 'number' | 'textarea' | 'date' | 'time';
     style?: 'default' | 'no-label' | 'text';
     required?: boolean;
-    value: string;
-    setValue: any;
-    error?: string|null;
+    value?: string;
+    setValue?: any;
+    error?: string | null;
     validation?: ((value: string) => ITranslatableObject | null);
     validationRules?: ValidationRule[];
     hasError?: ((error: boolean) => void);
@@ -92,11 +92,13 @@ export default function GeneralInput(
     const [validationError, setValidationError] = useState<ITranslatableObject | null>(null);
 
     const validate = (e: any) => {
-        if (type === "number" && Number(e.currentTarget.value) === 0) {
-            setValue(null);
+        if (value !== undefined) {
+            if (type === "number" && Number(e.currentTarget.value) === 0) {
+                setValue(null);
+            }
+            setValidationError(checkValidationRules(validationRules, value, label) ?? null);
+            hasError(!!validationError);
         }
-        setValidationError(checkValidationRules(validationRules, value, label) ?? null);
-        hasError(!!validationError);
     }
 
     let defaultClass: string = 'input';
@@ -117,29 +119,40 @@ export default function GeneralInput(
                 {label}
             </span>
             {type === 'textarea' ?
-                <textarea id={name} name={name} value={value}
+                <textarea id={name} name={name} value={setValue ? value : undefined}
                           className={cn('max-h-32', defaultClass, "min-h-20 p-2", inputClassName)}
                           autoFocus={autoFocus}
                           onFocus={(e) => e.currentTarget.style.height = String(e.currentTarget.scrollHeight) + 'px'}
                           onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
-                              setValue(e.currentTarget.value);
-                              // TODO fix shrinking not optimal
-                              e.currentTarget.style.height = String(e.currentTarget.scrollHeight) + 'px';
+                              if (setValue !== undefined) {
+                                  setValue(e.currentTarget.value);
+                                  // TODO fix shrinking not optimal
+                                  e.currentTarget.style.height = String(e.currentTarget.scrollHeight) + 'px';
+                              }
                           }}
                           onBlur={validate}
-                          placeholder={placeholder}/>
+                          placeholder={placeholder}
+                          defaultValue={setValue ? undefined : value}
+                />
                 :
-                <input id={name} name={name} type={type} value={value} className={cn(defaultClass, inputClassName)}
+                <input id={name} name={name} type={type} value={setValue ? value : undefined}
+                       className={cn(defaultClass, inputClassName)}
                        autoFocus={autoFocus}
                        onChange={(e) => {
-                           setValue(e.currentTarget.value);
+                           if (setValue !== undefined) {
+                               setValue(e.currentTarget.value);
+                           }
                        }} /*autoComplete={canAutocomplete ? name : undefined}*/
                     // TODO add autocomplete setting (or change this component entirely since it's obsolete)
                        onBlur={validate}
-                       placeholder={placeholder}/>
+                       placeholder={placeholder}
+                       defaultValue={setValue ? undefined : value}
+                       step={type === 'time' ? 1 : undefined}
+                />
             }
-            {(error || validationError) &&
-                <span className="field-error">{error ?? t(validationError!.key, validationError!.params)}</span>}
+            {/*{(error || validationError) &&
+                <span
+                    className="field-error">{error ?? t(validationError!.key, validationError!.params)}</span>}*/}
         </label>
     )
 }

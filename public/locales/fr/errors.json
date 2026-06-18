@@ -7,6 +7,7 @@
     "invalid_parameter": "Veuillez vérifier que vous avez rempli tous les champs obligatoires.",
     "not_allowed_on_project": "Vous n'êtes pas autorisé à ajouter des tâches à ce projet.",
     "task_not_found": "Erreur : la tâche n'existe pas.",
+    "task_edit_success": "Tâche modifiée.",
     "project_name_exists": "Un projet avec ce nom existe déjà. Veuillez choisir un autre nom pour votre projet.",
     "success_task_created": "Tâche {{task}} créée avec succès.",
     "success_task_updated": "Tâche {{task}} mise à jour avec succès.",

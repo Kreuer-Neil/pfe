@@ -17,6 +17,7 @@ class CredentialsSeeder
      */
     public static function run(): void
     {
+        info('Seeding credential users data...');
 
         $users = [
             'wera' => User::create([
@@ -79,5 +80,6 @@ class CredentialsSeeder
             }
         }
 
+        info('Credential users seeded.');
     }
 }

@@ -43,26 +43,23 @@ interface IPaginatedProjects {
 
 function ProjectsContainer({currentPage, projects}: ProjectsContainerProps): ReactNode {
     const {t} = useTranslation(['projects-index', 'projects']);
-
-    if (projects.length <= 0) return (
-        <section className="flex flex-col gap-4 w-full">
-            <h2 className="section-title px-3">{t('results')}</h2>
-            <p>{t('projects:empty')}</p>
-        </section>
-    );
+    
 
     return (
         <section className="flex flex-col gap-4 max-w-xl w-full">
             <h2 className="section-title px-3">{t('results')}</h2>
 
-            <ul className="thumbnails-list-container">
-                {/* TODO see if better to load everything then slice or load progressively server-side */}
-                {projects.map((project: IProjectMiniature | IDashboardProject): ReactNode => (
-                    <li key={project.id} className="w-full">
-                        <ProjectItem project={project}/>
-                    </li>))
-                }
-            </ul>
+            {projects.length <= 0 ?
+                <p>{t('projects:empty')}</p> :
+                <ul className="thumbnails-list-container">
+                    {/* TODO see if better to load everything then slice or load progressively server-side */}
+                    {projects.map((project: IProjectMiniature | IDashboardProject): ReactNode => (
+                        <li key={project.id} className="w-full">
+                            <ProjectItem project={project}/>
+                        </li>))
+                    }
+                </ul>
+            }
         </section>
     );
 }
@@ -133,18 +130,18 @@ export default function ProjectsIndex() {
     return (
         <AppLayout>
             <Head title={t('title')}/>
-            <PageFlowContainer>
+            <PageFlowContainer className="pt-0">
 
-                <h1 className="page-title text-center mx-auto">{t(title ?? 'search_title')}</h1>
+                <div className="flex flex-col gap-2 w-full px-3 max-w-xl bg-card border-b border-border pb-4 -mb-4">
+                    <h1 className="page-title text-center mx-auto my-6">{t(title ?? 'search_title')}</h1>
 
-                <div className="flex flex-col gap-2 w-full px-3 max-w-xl">
                     <div className="flex gap-1">
                         <IconButton icon={direction === 'desc' ? ArrowDownWideNarrow : ArrowUpWideNarrow}
                                     textContent={t('pagination:' + direction)}
                                     onClick={changeDirection}/>
                         <p className="section-title mx-1">{t('filter_' + filter)}</p>
-                        <IconButton className="ml-auto" icon={ListFilter} textContent={t('filter')} onClick={() => {
-                        }}/>
+                        {/*<IconButton className="ml-auto" icon={ListFilter} textContent={t('filter')}
+                                    onClick={() => {}}/>*/}
                     </div>
                     <TagsContainer tags={currentTags}/>
                     {/* Tags container (only if tags.) */}

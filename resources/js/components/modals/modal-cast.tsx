@@ -9,7 +9,7 @@ interface ModalCastProps {
     className?: string;
     element?: 'div' | 'form';
     action?: string;
-    method?: string;
+    method?: 'GET' | 'POST' | '';
 }
 
 export default function ModalCast(

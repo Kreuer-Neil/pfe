@@ -1,4 +1,4 @@
-import {ReactNode, useState} from "react";
+import {ReactNode, useEffect, useState} from "react";
 import CustomSidebarCast from "@/layouts/custom-sidebar-cast";
 import {useIsMobile} from "@/hooks/use-mobile";
 import {cn} from "@/lib/utils";
@@ -20,12 +20,18 @@ export default function CustomAppLayout(
 
     const [openMobile, setOpenMobile] = useState(false);
 
-    // TODO get user PC sidebar opened state
-    // document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
-    const [openDesktop, setOpenDesktop] = useState(true);
-
+    // Regex expression and match to get sidebar cookie
+    const match = document.cookie.match(new RegExp('(^| )' + 'sidebar' + '=([^;]+)'));
+    const [openDesktop, setOpenDesktop] = useState<boolean>(match ? match[2] === 'true' : true);
 
     let sidebar: HTMLElement | null = document.getElementById('sidebar');
+    useEffect(() => {
+        sidebar = document.getElementById('sidebar');
+        if (!openDesktop) {
+            sidebar!.classList.add('closed');
+        }
+
+    }, []);
 
     const switchModalState = (e?: Event) => {
         if (e) {
@@ -44,6 +50,7 @@ export default function CustomAppLayout(
                 document.getElementById('burger-menu')!.focus();
             }
         } else {
+            document.cookie = `sidebar=${!openDesktop}; path=/; max-age=${60 * 60 * 24 * 7}`;
             setOpenDesktop(!openDesktop);
             if (openDesktop) sidebar!.classList.add('closed');
             else sidebar!.classList.remove('closed');

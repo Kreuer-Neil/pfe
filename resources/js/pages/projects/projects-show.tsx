@@ -1,6 +1,6 @@
-import {IAppHeaderContext, IProject, IProjectShow, IServerResponse} from "@/types";
+import {IAppHeaderContext, IProfile, IProject, IProjectShow, IServerResponse} from "@/types";
 import AppLayout from "@/layouts/app-layout";
-import {Form, Head, router, usePage} from "@inertiajs/react";
+import {Form, Head, Link, router, usePage} from "@inertiajs/react";
 import PageFlowContainer from "@/components/page-flow-container";
 import TaskDisplay from "@/components/tasks/task-display";
 import {instanceOfProject, instanceOfProjectShow} from "@/helpers/type-check";
@@ -29,6 +29,10 @@ import ModalCast from "@/components/modals/modal-cast";
 import CustomModal from "@/components/modals/custom-modal";
 import ModalSection from "@/components/modals/modal-section";
 import ProjectInvitationController from "@/actions/App/Http/Controllers/ProjectInvitationController";
+import UserAvatar from "@/components/users/user-avatar";
+import {show as showProfile} from "@/actions/App/Http/Controllers/UserProfileController";
+import InputError from "@/components/input-error";
+import {cn} from "@/lib/utils";
 
 type pageProps = {
     project: IProject | IProjectShow | null,
@@ -78,7 +82,7 @@ function HeaderContainer({slug, isEditing, className, children}: {
 function ProjectHeaderIcon({isEditing, project, iconError}: {
     isEditing: boolean,
     project: IProject | IProjectShow,
-    iconError: string | null
+    iconError?: string
 }) {
     const {t} = useTranslation('projects');
 
@@ -101,7 +105,8 @@ function ProjectHeaderIcon({isEditing, project, iconError}: {
 
                 {/* TODO fix icon positioning */}
                 <Camera className="bg-background text-secondary-border rounded-full ml-auto p-1 -mt-8 -mr-2 z-10"/>
-                <input type="file" accept="image/png, image/jpg, image/webp" name="icon" id="icon"
+                <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp, image/gif" name="icon"
+                       id="icon"
                        className="image-input sr-only"
                        onChange={(e) => {
                            if (e.target.files && e.target.files[0]) {
@@ -109,8 +114,8 @@ function ProjectHeaderIcon({isEditing, project, iconError}: {
                            }
                        }}/>
             </label>
-            {iconError &&
-                <span className="field-error">{iconError}</span>}
+            <InputError className="mt-6 mx-3" message={iconError}/>
+
         </>
     );
 
@@ -162,7 +167,7 @@ function InvitationModal({showInvitationModal, setShowInvitationModal, slug}: {
                                     <code onClick={() => navigator.clipboard.writeText(code)}
                                           onKeyDown={(e) => {
                                               if (e.key === ' ' || e.key === 'Enter')
-                                              navigator.clipboard.writeText(code);
+                                                  navigator.clipboard.writeText(code);
                                           }} tabIndex={0}
                                           className="flex gap-1 bg-gray-200 p-0.5 px-1 rounded-xs items-center hover:outline"
                                           title={"copy"}
@@ -175,6 +180,41 @@ function InvitationModal({showInvitationModal, setShowInvitationModal, slug}: {
                         </>
                     )}
                 </Form>
+            </ModalCast>
+        </CustomModal>
+    );
+}
+
+function MembersModal({showModal, setShowModal, onCloseModal, project}: {
+    showModal: boolean,
+    setShowModal: Dispatch<SetStateAction<boolean>>,
+    onCloseModal: () => void,
+    project: IProject | IProjectShow
+}) {
+
+    const {t} = useTranslation('projects')
+    return (
+        <CustomModal showModal={showModal} onClose={() => setShowModal(false)} id="members-show">
+            <ModalCast closeModal={() => setShowModal(false)} title={t('project_members_title')}>
+                <ul className="flex flex-col gap-1">
+                    {project.members.map((member, index) => {
+                        return (
+                            <li key={index}>
+                                <Link href={showProfile(member.id)} className="thumbnail-item flex-row items-center">
+                                    <UserAvatar user={member}/>
+                                    <div className="flex flex-col">
+                                        <p>
+                                            {member.nickname}
+                                        </p>
+                                        <p className="text-xs">
+                                            {member.first_name + ' ' + member.last_name}
+                                        </p>
+                                    </div>
+                                </Link>
+                            </li>
+                        );
+                    })}
+                </ul>
             </ModalCast>
         </CustomModal>
     );
@@ -204,10 +244,17 @@ function ProjectHeader({project}: {
 
     const [updateResponse, setUpdateResponse] = useState<IServerResponse>({success: false, error: null});
 
+    const [showMembersModal, setShowMembersModal] = useState<boolean>(false);
+    const openMembersModal = (e: any) => {
+        e.preventDefault();
+        if (project.members.length > 0) {
+            setShowMembersModal(true);
+        }
+    }
     return (
         <>
             <HeaderContainer slug={project.slug} isEditing={isEditing}
-                             className="w-full flex flex-col gap-2 max-w-xl">
+                             className="w-full flex flex-col gap-2 max-w-xl bg-card border-b border-border pb-4 -mb-4">
                 {(errors) => (
                     <>
                         <div className="w-full">
@@ -216,11 +263,10 @@ function ProjectHeader({project}: {
                                     <div className="flex gap-1 m-3 h-fit">
                                         {!isEditing &&
                                             <IconButton icon={PencilLine} textContent={t('project_edit')}
-                                                        showText={true}
-                                                        className="bg-tertiary text-tertiary-foreground"
+                                                        showText={true} alt
                                                         onClick={() => setIsEditing(true)}/>}
                                         {/*<IconButton icon={Settings} textContent={t('project_settings')}
-                                                    className="bg-tertiary text-tertiary-foreground"/>*/}
+                                                    alt/>*/}
                                     </div>}
 
                                 {!(!project.banner) &&
@@ -241,9 +287,14 @@ function ProjectHeader({project}: {
 
                             <div className="w-full flex flex-col gap-3">
                                 <div className="flex gap-1 w-full">
-                                    <p className="mr-auto">
-                                        <span className="font-bold">{project.members_count}</span>
-                                        &nbsp;{t('members_count')}
+                                    <p className="mr-auto block">
+                                        <button className={cn("p-1 rounded-xs", project.members_count>0 ? 'cursor-pointer':'')} onClick={openMembersModal}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter') openMembersModal(e);
+                                                }}>
+                                            <span className="font-bold">{project.members_count}</span>
+                                            &nbsp;{t('members_count')}
+                                        </button>
                                     </p>
                                     {/* TODO add condition with permission for inviting people to project, as well as sharing */}
                                     {project.user_role === 'viewer' ?
@@ -300,6 +351,8 @@ function ProjectHeader({project}: {
             </HeaderContainer>
             <InvitationModal showInvitationModal={showInvitationModal} setShowInvitationModal={setShowInvitationModal}
                              slug={project.slug}/>
+            <MembersModal showModal={showMembersModal} setShowModal={setShowMembersModal}
+                          onCloseModal={() => setShowMembersModal(false)} project={project}/>
         </>
     );
 }

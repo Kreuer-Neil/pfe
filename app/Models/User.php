@@ -127,9 +127,14 @@ class User extends Authenticatable
     /**
      * Returns formated user profile
      */
-    public function toFormatedProfile(): FormatedProfile
+    public function toFormatedProfile(User $currentUser): FormatedProfile
     {
-        return new FormatedProfile($this);
+        return new FormatedProfile($this, $currentUser);
+    }
+
+    public function follows(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, UserFollow::class);
     }
 
     public static function canFindUser($userId, User $currentUser): null|User
@@ -145,5 +150,30 @@ class User extends Authenticatable
 //        }
 
         return $user;
+    }
+
+    public function followAs(User $user)
+    {
+        // Space for blocked users rules
+        if (false) {
+            return false;
+        }
+        if (UserFollow::where('user_id', $user->id)->where('followed_user_id', $this->id)->exists()) {
+            return false;
+        }
+
+        UserFollow::create([
+            'user_id' => $user->id,
+            'followed_user_id' => $this->id,
+        ]);
+    }
+
+    public function unfollowAs(User $user)
+    {
+        if (($userFollow = UserFollow::where('user_id', $user->id)->where('followed_user_id', $this->id))->exists()) {
+            $userFollow->delete();
+            return true;
+        }
+        return false;
     }
 }

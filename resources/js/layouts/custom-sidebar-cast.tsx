@@ -62,10 +62,16 @@ export default function CustomSidebarCast(
         onClickOutsideSidebar
     }: CustomSidebarProps): ReactNode {
 
+    // TODO refactor onClick function
     return (
         <div className="z-10 max-h-screen sticky top-0">
             <MobileHeader appHeaderContext={appHeaderContext} switchModalState={switchModalState}/>
-            <div className="sidebar-cast" onClick={onClickOutsideSidebar}>
+            <div className="sidebar-cast" onClick={(e)=>{
+                if (e.clientX > document.getElementById('sidebar')!.scrollWidth) {
+                    onClickOutsideSidebar();
+                }
+
+            }}>
                 <CustomSidebar switchModalState={switchModalState} sidebarSwitchIcon={sidebarSwitchIcon}/>
             </div>
         </div>

@@ -1,6 +1,7 @@
 {
     "user_edit": "Edit profile",
-    "user_add": "Add friend",
+    "user_add": "Add contact",
+    "user_remove": "Remove contact",
     "user_context_profile": "{{user}}'s profile",
     "pronouns": "Pronouns",
     "field_nickname": "Change nickname",
