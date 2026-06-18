@@ -37,7 +37,7 @@ class ProjectInvitationController extends Controller
                 $invitation = $project->generateInvitation($request->expires_at ?? null, $request->uses ?? null);
             }
 
-            Inertia::flash(['invitation' => route('projects.invitations', $invitation->first()->code)]);
+            Inertia::flash(['invitation' => route('projects.invitations', ['code' => $invitation->first()->code])]);
         }
         return redirect(route('projects.show', $slug));
     }
@@ -46,21 +46,20 @@ class ProjectInvitationController extends Controller
     /**
      * To use an invitation
      */
-    function use(string $code, Request $request)
+    function use(Request $request)
     {
-//        $request->validate([
-//            'code'=>'required|string|size:16',
-//            'project_slug'=>''
-//        ]);
+        $validated = $request->validate([
+            'code'=>'required|string|size:16',
+        ]);
+        $code = $validated['code'];
         $invitation = ProjectInvitation::where('code', $code)->first();
         if (!($invitation && $invitation->isValid())) {
-            Inertia::flash(['error' => 'invalid_code']);
-            return redirect()->back()->withErrors(['error' => 'invalid_code']);
+            // TODO translations
+            return redirect()->back()->withErrors(['code' => 'invalid code']);
         }
 
         if ($invitation->project()->first()->members()->find((auth()->user()->id))) {
-            Inertia::flash(['error' => 'invalid_code']);
-            return redirect()->back();
+            return redirect()->back()->withErrors(['code' => 'Already member']);
         }
 
         if (!$request->confirm) {

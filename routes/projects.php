@@ -26,7 +26,7 @@ Route::get('projects/invitations', [ProjectInvitationController::class, 'index']
 Route::get('projects/invitations/show', [ProjectInvitationController::class, 'show'])
     ->name('projects.invitations.show');
 
-Route::post('projects/invitations/{code}', [ProjectInvitationController::class, 'use'])
+Route::post('projects/invitations/', [ProjectInvitationController::class, 'use'])
     ->name('projects.invitations.use');
 
 Route::get('projects/{slug}', [ProjectController::class, 'show'])

@@ -150,9 +150,9 @@ export default function GeneralInput(
                        step={type === 'time' ? 1 : undefined}
                 />
             }
-            {(error || validationError) &&
+            {/*{(error || validationError) &&
                 <span
-                    className="field-error">{error ?? t(validationError!.key, validationError!.params)}</span>}
+                    className="field-error">{error ?? t(validationError!.key, validationError!.params)}</span>}*/}
         </label>
     )
 }

@@ -59,5 +59,8 @@
     "invitation_modal": "Create invitation link",
     "invitation_generate": "Generate invitation",
     "invitation_expires_at_date": "Invitation expiration date",
-    "invitation_expires_at_time": "Invitation expiration time"
+    "invitation_expires_at_time": "Invitation expiration time",
+    "invitation_use": "Use invitation",
+    "invitation_index" : "Invitations",
+    "invitation_code": "Invitation code"
 }
