@@ -53,15 +53,14 @@ class ProjectInvitationController extends Controller
 //            'project_slug'=>''
 //        ]);
         $invitation = ProjectInvitation::where('code', $code)->first();
-        if (!$invitation->isValid()) {
+        if (!($invitation && $invitation->isValid())) {
             Inertia::flash(['error' => 'invalid_code']);
-            return back()//->withErrors()
-                ;
+            return redirect()->back()->withErrors(['error' => 'invalid_code']);
         }
 
         if ($invitation->project()->first()->members()->find((auth()->user()->id))) {
             Inertia::flash(['error' => 'invalid_code']);
-            return back();
+            return redirect()->back();
         }
 
         if (!$request->confirm) {
