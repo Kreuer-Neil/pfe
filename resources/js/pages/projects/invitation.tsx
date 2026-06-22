@@ -1,4 +1,4 @@
-import {Form, Head, router, usePage} from '@inertiajs/react'
+import {Form, Head, router} from '@inertiajs/react'
 import AppLayout from "@/layouts/app-layout";
 import PageFlowContainer from "@/components/page-flow-container";
 import {useTranslation} from "react-i18next";

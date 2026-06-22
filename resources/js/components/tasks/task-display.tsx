@@ -14,7 +14,6 @@ import {show as tasksShow} from "@/actions/App/Http/Controllers/TaskController";
 import TaskCreateModal from "@/components/tasks/task-create";
 import TaskShowModal from "@/components/tasks/task-show";
 import {RouteQueryOptions} from "@/wayfinder";
-import auth from "@/actions/App/Http/Controllers/Auth";
 import {usePage} from "@inertiajs/react";
 
 

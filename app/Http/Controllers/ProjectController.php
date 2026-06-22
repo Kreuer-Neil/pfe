@@ -5,19 +5,14 @@ namespace App\Http\Controllers;
 use App\Enums\BaseTags;
 use App\Enums\ProjectRole;
 use App\Enums\ProjectsFilters;
-use App\FormatedModels\Project\FormatedDashboardProject;
-use App\FormatedModels\Project\FormatedProject;
-use App\FormatedModels\Project\FormatedProjectMiniature;
+use App\Http\Resources\Project\ProjectMiniatureResource;
+use App\Http\Resources\Project\ProjectResource;
 use App\Jobs\HandleProfileImageUploads;
 use App\Models\Member;
 use App\Models\Project;
 use App\Models\User;
-use File;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\Format;
-use Intervention\Image\ImageManager;
 use Str;
 
 class ProjectController extends Controller
@@ -30,8 +25,6 @@ class ProjectController extends Controller
         // TODO create
         $tags = BaseTags::cases();
 
-        // TODO fix this for nav
-//        auth()->user()->toFormatedNavUser();
         auth()->user()->projects;
         return Inertia::render('projects/index', compact(['filters', 'tags']));
     }
@@ -75,7 +68,7 @@ class ProjectController extends Controller
 
         $projects = [];
         foreach ($queriedProjects as $project) {
-            $projects[] = new FormatedProjectMiniature($project, auth()->user());
+            $projects[] = (new ProjectMiniatureResource($project))->toArray(request());
         }
 
 
@@ -120,7 +113,7 @@ class ProjectController extends Controller
         }
         // Get user role too
 
-        return new FormatedProject($project, $user);
+        return (new ProjectResource($project))->toArray(request());
     }
 
     public function create()

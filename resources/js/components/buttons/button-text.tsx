@@ -1,4 +1,4 @@
-import {LucideArrowRight, LucideIcon} from "lucide-react";
+import {LucideIcon} from "lucide-react";
 import {Link} from "@inertiajs/react";
 import React, {ReactNode} from "react";
 import {cn} from "@/lib/utils";

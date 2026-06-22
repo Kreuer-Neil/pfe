@@ -1,7 +1,6 @@
 import {ReactNode, useEffect, useState} from "react";
 import CustomSidebarCast from "@/layouts/custom-sidebar-cast";
 import {useIsMobile} from "@/hooks/use-mobile";
-import {cn} from "@/lib/utils";
 import {IAppHeaderContext} from "@/types";
 import {ChevronLeft, ChevronRight, LucideIcon} from "lucide-react";
 

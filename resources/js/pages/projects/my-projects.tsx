@@ -4,7 +4,6 @@ import PageFlowContainer from "@/components/page-flow-container";
 import {useTranslation} from "react-i18next";
 import MyProjects from "@/components/dashboard/my-projects";
 import {IDashboardProject} from "@/types";
-import Button from "@/components/buttons/button";
 import ButtonText from "@/components/buttons/button-text";
 import {Plus} from "lucide-react";
 import {create as projectCreate} from "@/actions/App/Http/Controllers/ProjectController";

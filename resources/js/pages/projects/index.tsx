@@ -1,15 +1,13 @@
-import type {BreadcrumbItem, IDashboardProject, IPaginationLink, IProject, IProjectMiniature} from "@/types";
+import type {IDashboardProject, IPaginationLink, IProjectMiniature} from "@/types";
 import AppLayout from "@/layouts/app-layout";
 import {Head, usePage} from "@inertiajs/react";
-import {ReactNode, useEffect, useState} from "react";
+import {ReactNode, useState} from "react";
 import ProjectItem from "@/components/projects/project-item";
 import PageFlowContainer from "@/components/page-flow-container";
 import IconButton from "@/components/buttons/icon-button";
-import {ArrowDownWideNarrow, ArrowUpWideNarrow, ListFilter} from "lucide-react";
+import {ArrowDownWideNarrow, ArrowUpWideNarrow} from "lucide-react";
 import SearchBar from "@/components/filtering/search-bar";
-import {index as projectsIndex, indexSearch as projectsSearch} from '@/actions/App/Http/Controllers/ProjectController';
 import {useTranslation} from "react-i18next";
-import {RouteQueryOptions} from "@/wayfinder";
 
 /*const breadcrumbs: BreadcrumbItem[] = [
     {

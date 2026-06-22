@@ -1,6 +1,5 @@
 import {Form, Head, usePage} from "@inertiajs/react";
 import ProjectInvitationController from "@/actions/App/Http/Controllers/ProjectInvitationController";
-import GeneralInput from "@/components/form/general-input";
 import Button from "@/components/buttons/button";
 import {useTranslation} from "react-i18next";
 import {IProjectShow} from "@/types";

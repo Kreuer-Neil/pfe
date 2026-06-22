@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\FormatedModels\FormatedTaskMiniature;
-use App\FormatedModels\Project\FormatedDashboardProject;
-use App\Models\Project;
-use App\Models\Task;
-use Illuminate\Http\Request;
+use App\Http\Resources\Project\ProjectDashboardResource;
+use App\Http\Resources\TaskResource;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -17,15 +14,18 @@ class DashboardController extends Controller
 
         $projects = [];
         foreach ($currentUser->projects as $project) {
-            $projects[] = new FormatedDashboardProject($project);
+            $projects[] = (new ProjectDashboardResource($project))->toArray(request());
         }
 
-        $tasks = [];
         // TODO do the same with users & profiles
-        foreach ($currentUser->upcomingTasks->take(10) as $upcomingTask) {
-            $formatedUpcomingTask = new FormatedTaskMiniature($upcomingTask, $currentUser);
-            $tasks[] = $formatedUpcomingTask;
-        }
+        $tasks = TaskResource::collection(
+            $currentUser
+                ->upcomingTasks
+//                    ->with(['owner', 'project', 'participations'])
+                ->take(10)
+//                    ->get()
+            ,
+        )->toArray(request());
 
 //        syncLangFiles(['main-nav', 'dashboard', 'project', 'date', 'pagination']);
         return Inertia::render(

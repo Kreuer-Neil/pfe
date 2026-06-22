@@ -1,5 +1,5 @@
 import {ReactNode} from "react";
-import {BellDot, LucideIcon, Menu} from "lucide-react";
+import {LucideIcon, Menu} from "lucide-react";
 import {IAppHeaderContext} from "@/types";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import CustomSidebar from "@/layouts/custom-sidebar";

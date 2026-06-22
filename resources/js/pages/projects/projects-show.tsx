@@ -1,19 +1,14 @@
-import {IAppHeaderContext, IProfile, IProject, IProjectShow, IServerResponse} from "@/types";
+import {IAppHeaderContext, IProject, IProjectShow, IServerResponse} from "@/types";
 import AppLayout from "@/layouts/app-layout";
 import {Form, Head, Link, router, usePage} from "@inertiajs/react";
 import PageFlowContainer from "@/components/page-flow-container";
 import TaskDisplay from "@/components/tasks/task-display";
 import {instanceOfProject, instanceOfProjectShow} from "@/helpers/type-check";
 import {
-    Bookmark,
-    BookmarkCheck,
     Camera,
     Copy,
-    Flag,
     LogIn,
     PencilLine,
-    Settings,
-    Share2,
     UserRoundPlus
 } from "lucide-react";
 import IconButton from "@/components/buttons/icon-button";

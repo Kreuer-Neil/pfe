@@ -6,7 +6,7 @@ import ModalCast from "@/components/modals/modal-cast";
 import ModalSection from "@/components/modals/modal-section";
 import ProjectIcon from "@/components/icons/project-icon";
 import {cn} from "@/lib/utils";
-import {CalendarCheck, CalendarClock, Check, ClockAlert, Notebook, UsersRound} from "lucide-react";
+import {CalendarCheck, CalendarClock, Check, ClockAlert, UsersRound} from "lucide-react";
 import PostedBy from "@/components/general-posts/posted-by";
 import Button from "@/components/buttons/button";
 import TaskController, {
@@ -14,12 +14,10 @@ import TaskController, {
     validate as taskValidation,
 } from "@/actions/App/Http/Controllers/TaskController";
 import GeneralInput from "@/components/form/general-input";
-import {RouteQueryOptions} from "@/wayfinder";
 import ConfirmModal from "@/components/modals/confirm-modal";
 import RelatedUsers from "@/components/users/related-users";
 import {Form, Link, router} from "@inertiajs/react";
 import {show as projectsShow} from '@/actions/App/Http/Controllers/ProjectController';
-import {update as tasksUpdate} from '@/actions/App/Http/Controllers/TaskController';
 import InputError from "@/components/input-error";
 
 type EditProps = {

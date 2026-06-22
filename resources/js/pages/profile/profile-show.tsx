@@ -1,5 +1,5 @@
 import {Form, Head, router, usePage} from '@inertiajs/react'
-import {IAppHeaderContext, IProfile, IUser, SharedData} from "@/types";
+import {IAppHeaderContext, IProfile, SharedData} from "@/types";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import PageFlowContainer from "@/components/page-flow-container";
 import {ReactNode, useState} from "react";

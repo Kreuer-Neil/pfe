@@ -2,17 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\FormatedModels\FormatedProfile;
-use App\FormatedModels\FormatedUser;
 use App\Jobs\HandleProfileImageUploads;
 use App\Models\User;
-use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\Format;
-use Intervention\Image\ImageManager;
 
 class UserProfileController extends Controller
 {
@@ -27,7 +21,7 @@ class UserProfileController extends Controller
             abort(404);
         }
 
-        $user = $user->toFormatedProfile(auth()->user());
+        $user = $user->toProfileResource()->toArray(request());
         auth()->user()->projects;
         return Inertia::render('profile/profile-show', compact('user'));
     }

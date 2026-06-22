@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\FormatedModels\FormatedTask;
+use App\Http\Resources\TaskResource;
 use App\Models\Participation;
 use App\Models\Project;
 use App\Models\Task;
@@ -18,8 +18,6 @@ class TaskController extends Controller
 {
     public function index()
     {
-        auth()->user()->toFormatedNavUser();
-
         // AGENDA
         return Inertia::render('tasks/tasks-index');
     }
@@ -39,9 +37,8 @@ class TaskController extends Controller
                 'params' => [],
             ]
         ];
-        // dd(new FormatedTask($task, $currentUser->id));
         return [
-            'task' => new FormatedTask($task, $currentUser)
+            'task' => (new TaskResource($task))->toArray(request())
         ];
     }
 
