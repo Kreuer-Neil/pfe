@@ -18,15 +18,23 @@ use Str;
 class ProjectController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-
-        $filters = null;
+        // use Pagination
+        $filtersList = ProjectsFilters::cases();
         // TODO create
-        $tags = BaseTags::cases();
+        $tagsList = BaseTags::cases();
+
+        $currentFilter = $request['filters'] ?? ProjectsFilters::RecentProjects;
+
+        $currentTags = $request['tags'] ?? [];
+
+        $projects = $this->searchProjects($request);
 
         auth()->user()->projects;
-        return Inertia::render('projects/index', compact(['filters', 'tags']));
+        return Inertia::render('projects/index',
+            compact(['filtersList', 'tagsList', 'currentFilter', 'currentTags', 'projects'])
+        );
     }
 
     public function indexPersonnal()
@@ -40,20 +48,19 @@ class ProjectController extends Controller
         return Inertia::render('projects/index', compact(['filters', 'queryFilters', 'tags', 'title']));
     }
 
-    public function indexSearch()
+    public function searchProjects(
+        Request $request
+    )
     {
-        // TODO find a better way to do this
-        if (!(array_key_exists('user_request', $_REQUEST) && $_REQUEST['user_request'] === '1')) {
-            return redirect(route('projects'));
-        }
+        $query = $request['query'] ?? null;
+
         $order = ProjectsFilters::RecentProjects->value;
         $direction = (array_key_exists('direction', $_REQUEST) && $_REQUEST['direction'] === 'asc')
             ? 'asc' : 'desc';
 
         $queriedProjects = Project::where('is_private', false);
 
-        if (array_key_exists('query', $_REQUEST)) {
-            $query = $_REQUEST['query'];
+        if ($query) {
             // TODO use advanced queries to not cancel is_private clause
             $queriedProjects = $queriedProjects
                 ->whereLike('name', '%' . $query . '%')
@@ -62,26 +69,10 @@ class ProjectController extends Controller
         }
 
         // TODO add filtering for data
-        $queriedProjects = $queriedProjects
-            ->orderBy($order, $direction)
-            ->get();
-
-        $projects = [];
-        foreach ($queriedProjects as $project) {
-            $projects[] = (new ProjectMiniatureResource($project))->toArray(request());
-        }
-
-
-        return [
-            'links' => [
-                [
-                    'url' => route('projects') . '/1',
-                    'label' => 'label',
-                    'active' => false
-                ]
-            ],
-            'data' => $projects
-        ];
+        return ProjectMiniatureResource::collection(
+            $queriedProjects->orderBy($order, $direction)
+            ->get()
+        )->toArray(request());
     }
 
     public function show(string $slug)

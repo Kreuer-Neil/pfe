@@ -24,7 +24,7 @@ export default function AcceptInvitation() {
                         <h1 className="page-title">{t('invitation_index')}</h1>
 
                         <Form
-                            {...ProjectInvitationController.use.form(code ?? '')}
+                            {...ProjectInvitationController.use.form()}
                         >
                             {({processing, errors}) => (
                                 <>

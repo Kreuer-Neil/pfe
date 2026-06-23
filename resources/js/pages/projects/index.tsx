@@ -1,13 +1,18 @@
 import type {IDashboardProject, IPaginationLink, IProjectMiniature} from "@/types";
 import AppLayout from "@/layouts/app-layout";
-import {Head, usePage} from "@inertiajs/react";
-import {ReactNode, useState} from "react";
+import {Form, Head, router, usePage} from "@inertiajs/react";
+import {ReactNode, useEffect, useState} from "react";
 import ProjectItem from "@/components/projects/project-item";
 import PageFlowContainer from "@/components/page-flow-container";
 import IconButton from "@/components/buttons/icon-button";
 import {ArrowDownWideNarrow, ArrowUpWideNarrow} from "lucide-react";
 import SearchBar from "@/components/filtering/search-bar";
 import {useTranslation} from "react-i18next";
+import {Input} from "@/components/ui/input";
+import ProjectController from "@/actions/App/Http/Controllers/ProjectController";
+import {index as projectsIndex} from "@/actions/App/Http/Controllers/ProjectController";
+import redirectController from "@/actions/Illuminate/Routing/RedirectController";
+import {RouteQueryOptions} from "@/wayfinder";
 
 /*const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -17,31 +22,34 @@ import {useTranslation} from "react-i18next";
 ];*/
 
 type PageProps = {
-    Orders: string[],
-    // TODO rename queryFilters and filters?
-    queryFilters?: IFilter | null,
-    tags: string[],
-    title: string | null,
+    filtersList: string[],
+    queryFilters: IFilter;
+    tagsList: string[];
+    currentFilter: string;
+    currentTags: string[];
+    title: string | null;
+    projects: IProjectMiniature[];
 }
 
 interface IFilter {
-    filter: string,
-    tags: string[],
+    name: string;
+    direction: 'asc' | 'desc';
+    tags?: string[];
 }
 
 interface ProjectsContainerProps {
-    projects: IProjectMiniature[] | IDashboardProject[],
-    currentPage: number,
+    projects: IProjectMiniature[] | IDashboardProject[];
+    // currentPage: number,
 }
 
 interface IPaginatedProjects {
-    data: IProjectMiniature[] | IDashboardProject[],
-    links: IPaginationLink[],
+    data: IProjectMiniature[] | IDashboardProject[];
+    links: IPaginationLink[];
 }
 
-function ProjectsContainer({currentPage, projects}: ProjectsContainerProps): ReactNode {
+function ProjectsContainer({projects}: ProjectsContainerProps): ReactNode {
     const {t} = useTranslation(['projects-index', 'projects']);
-    
+
 
     return (
         <section className="flex flex-col gap-4 max-w-xl w-full">
@@ -63,67 +71,55 @@ function ProjectsContainer({currentPage, projects}: ProjectsContainerProps): Rea
 }
 
 function TagsContainer({tags}: { tags: string[] }) {
-    const {t} = useTranslation('projects');
+    const {t} = useTranslation('project_tags');
 
     if (tags.length > 0) return (
         <ul className="flex flex-wrap gap-1">
             {tags.map((tag: string, i: number) => {
-                return <li key={i}>{t('tag_' + tag)}</li>
+                return <li key={i}>
+                    {t(tag)}
+                </li>
             })}
         </ul>
     );
 }
 
 export default function ProjectsIndex() {
-    const {title, filters, tags, queryFilters} = usePage<PageProps>().props;
+    const {title, filtersList, tags, queryFilters, projects} = usePage<PageProps>().props;
 
     const {t} = useTranslation(['projects-index', 'projects']);
 
-    const [currentPage, setCurrentPage] = useState<number>(0);
+    // const [projects, setProjects] = useState<IPaginatedProjects>({data: [], links: []});
 
-    const [projects, setProjects] = useState<IPaginatedProjects>({data: [], links: []});
-
-    const [filter, setFilter] = useState<string>('recent');
     const [direction, setDirection] = useState<string>('desc');
     const [currentTags, setCurrentTags] = useState<string[]>([]);
-
-    if (queryFilters) {
-        queryFilters.filter ? setFilter(queryFilters.filter) : '';
-        queryFilters.tags.length > 0 ? setCurrentTags(queryFilters.tags) : '';
-    }
-
     const [query, setQuery] = useState<string>('');
 
-    useEffect(() => {
-        const fetchProjects = async (): Promise<void> => {
-            try {
-                const options: RouteQueryOptions = {
-                    query: {
-                        user_request: 1,
-                        query: query,
-                        direction: direction,
-                        filter: filter,
-                        tags: currentTags.toString(),
-                    }
-                }
+    // if (queryFilters) {
+    //     queryFilters.filter ? setFilter(queryFilters.filter) : '';
+    //     queryFilters.tags.length > 0 ? setCurrentTags(queryFilters.tags) : '';
+    // }
 
-                const response = await fetch(projectsSearch(options).url);
-                // console.log(await response.json());
-                const data: IPaginatedProjects = await response.json();
-                setProjects(data);
-            } catch (error) {
-                console.error(error);
-            }
-        }
-        fetchProjects().then();
-    }, [query, direction]);
-
-    const search = (e: any): any => {
-        setQuery(e.target!.value);
-    }
     const changeDirection = (): any => {
         setDirection(direction === 'desc' ? 'asc' : 'desc');
     }
+
+    useEffect(()=> {
+        const queryOptions: RouteQueryOptions = {
+            query: {
+                query: query,
+                direction: direction,
+                currentTags: currentTags,
+            },
+        };
+        router.get(
+            projectsIndex.url(queryOptions),
+            {},
+            {
+                preserveState: true,
+            }
+        );
+    }, [query, direction, currentTags])
 
     return (
         <AppLayout>
@@ -137,17 +133,33 @@ export default function ProjectsIndex() {
                         <IconButton icon={direction === 'desc' ? ArrowDownWideNarrow : ArrowUpWideNarrow}
                                     textContent={t('pagination:' + direction)}
                                     onClick={changeDirection}/>
-                        <p className="section-title mx-1">{t('filter_' + filter)}</p>
+                        {/*<p className="section-title mx-1">{t('filter_' + filter)}</p>*/}
                         {/*<IconButton className="ml-auto" icon={ListFilter} textContent={t('filter')}
                                     onClick={() => {}}/>*/}
                     </div>
                     <TagsContainer tags={currentTags}/>
                     {/* Tags container (only if tags.) */}
                     {/* Search bar */}
-                    <SearchBar onChange={search} data={query}/>
+                    <Form
+                        {...ProjectController.indexSearch.form()}
+
+                    >
+                        <Input
+                            id="search"
+                            name="search"
+                            autoFocus
+                            onChange={(e) => {
+                                setQuery(e.currentTarget.value);
+                            }}
+                        />
+                        {/* TODO use Shadcn style on this */}
+                        {/*<SearchBar onChange={search} data={query}/>*/}
+                    </Form>
                 </div>
 
-                <ProjectsContainer currentPage={currentPage} projects={projects.data}/>
+                <ProjectsContainer
+                    // currentPage={currentPage}
+                    projects={projects}/>
 
             </PageFlowContainer>
         </AppLayout>
