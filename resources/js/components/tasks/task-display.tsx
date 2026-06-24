@@ -15,6 +15,8 @@ import TaskCreateModal from "@/components/tasks/task-create";
 import TaskShowModal from "@/components/tasks/task-show";
 import {RouteQueryOptions} from "@/wayfinder";
 import {usePage} from "@inertiajs/react";
+import {ItemGroup} from "@/components/ui/item";
+import {Separator} from "@/components/ui/separator";
 
 
 type TaskDisplayProps = {
@@ -44,16 +46,20 @@ function TasksList({tasks, isInProjectPage, maxLength, onTapTask}: {
     return <ul className="thumbnails-list-container">
         {tasks.slice(0, maxLength).map((task: ITaskMiniature, i: number) => {
             let month: number = laravelDateToJsDate(task.due_at ?? task.created_at).getMonth();
-            const precedentMonthCondition: boolean = i + 1 < length
-                && tasks[i - 1]
-                && (month > laravelDateToJsDate(tasks[i - 1].due_at ?? tasks[i - 1].created_at).getMonth());
+            const precedentMonthCondition: boolean = i > 0
+                && month !== laravelDateToJsDate(tasks[i - 1].due_at).getMonth();
             return (
-                <li className="w-full flex flex-col gap-4" key={task.id}>
-                    {precedentMonthCondition ? <span className="month-divider">{t('month_' + month)}</span> : ''}
-                    <TaskItem task={task} isInProjectPage={isInProjectPage}
-                              onTap={onTapTask}
+                // <li className="w-full flex flex-col gap-4" key={task.id}>
+                <li key={task.id} className="w-full flex flex-col gap-4">
+                    {precedentMonthCondition && <span className="month-divider" key={i}>{t('month_' + month)}</span> }
+                    {/*{precedentMonthCondition && <Separator/>}*/}
+                    <TaskItem
+                        task={task}
+                        isNotInProjectPage={isInProjectPage}
+                        onTap={onTapTask}
                     />
                 </li>
+                // </li>
             );
         })}
     </ul>
@@ -73,7 +79,8 @@ export default function TaskDisplay(
     const {auth} = usePage<SharedData>().props;
     const currentUser = auth.user;
 
-    {/* TODO use flash data for tasks? Needs auto-update */}
+    {/* TODO use flash data for tasks? Needs auto-update */
+    }
 
     const {t} = useTranslation(['projects', 'date']);
     const [maxItemsLength, setMaxItemsLength] = useState<number>(minLength);
@@ -94,7 +101,7 @@ export default function TaskDisplay(
     const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
     const [savedTasks, setSavedTasks] = useState<ITask[]>([]);
 
-    function onTaskTap(id: string, force:boolean = false) {
+    function onTaskTap(id: string, force: boolean = false) {
         const idNumber = Number(id);
         if (force || !savedTasks[idNumber]) {
             const fetchTask = async (): Promise<ITask | undefined> => {
@@ -143,11 +150,12 @@ export default function TaskDisplay(
                 {tasks.length > Number(minLength) && <ShowMore showMore={showMoreState} onClick={onShowMore}/>}
                 {/*<ButtonText href={agenda().url} textContent={actionText ?? t('task.show_agenda')} icon={LucideCalendarDays}/>*/}
             </div>
-            <TaskShowModal task={modalTask} showModal={showTaskModal} setShowModal={setShowTaskModal} isInProjectPage={(project === null)} onTaskTap={onTaskTap}/>
+            <TaskShowModal task={modalTask} showModal={showTaskModal} setShowModal={setShowTaskModal}
+                           isInProjectPage={(project === null)} onTaskTap={onTaskTap}/>
             {project &&
                 <TaskCreateModal showModal={showCreateModal} setShowModal={setShowCreateModal}
                                  project={project}/>
-                }
+            }
         </section>
     );
 }

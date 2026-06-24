@@ -265,6 +265,7 @@
     .icon-btn {
         @apply bg-card text-link p-1 px-2 rounded-xs border border-border cursor-pointer flex gap-1;
     }
+
     .icon-btn-alt {
         @apply bg-tertiary text-tertiary-foreground p-1 px-2 rounded-xs cursor-pointer flex gap-1;
     }
@@ -286,9 +287,10 @@
         & > nav {
             @apply sticky top-0 bg-sidebar text-sidebar-foreground w-screen z-10 flex;
 
-            &>a {
+            & > a {
                 @apply border-r-2 border-tertiary p-2 bg-secondary;
             }
+
             img {
                 @apply h-10 overflow-hidden border-2 border-primary rounded-md box-border;
             }
@@ -376,7 +378,8 @@
             }
 
             img {
-                @apply m-auto aspect-video w-full max-w-lg /*bg-gray-200*/ rounded-xl;
+                @apply m-auto aspect-video w-full max-w-lg /*bg-gray-200*/
+                rounded-xl;
             }
 
         }
@@ -488,15 +491,15 @@
 
     /* Overwrites default Lucide icons style*/
     .lucide {
-        @apply size-6 box-content;
+        @apply size-5 box-content;
     }
 
     .item-tag {
-        @apply bg-tag-neutral border border-tag-neutral-border flex gap-1 p-1 px-1.5 rounded-xs items-center;
+        @apply bg-tag-neutral border border-tag-neutral-border flex gap-0.5 p-0.5 px-1 rounded-xs items-center;
     }
 
     .item-tag-warning {
-        @apply bg-tag-warning border border-tag-warning-border flex gap-1 p-1 px-1.5 rounded-xs items-center;
+        @apply bg-tag-warning border border-tag-warning-border flex gap-0.5 p-0.5 px-1 rounded-xs items-center;
     }
 
     .text-with-icon {
@@ -504,13 +507,13 @@
     }
 
     .month-divider {
-        @apply flex items-center gap-1 p-1 py-0.5 text-muted-foreground text-xs -mx-1;
+        @apply flex items-center gap-1 p-1 py-0.5 text-border text-xs -mx-1;
 
         &:before, &:after {
             flex-grow: 1;
             content: '';
             height: 0.0625rem;
-            background: var(--color-muted-foreground);
+            @apply bg-border;
         }
     }
 
