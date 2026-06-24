@@ -446,7 +446,7 @@
     }
 
     .modal {
-        @apply m-auto p-2 py-3 bg-background text-foreground rounded-lg w-full max-w-3xl;
+        @apply m-auto w-full max-w-[calc(100%-2rem)] sm:max-w-lg bg-background rounded-lg border p-6 shadow-lg;
 
         &::backdrop {
             @apply bg-modal-behind;

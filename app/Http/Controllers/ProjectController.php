@@ -25,7 +25,7 @@ class ProjectController extends Controller
         // TODO create
         $tagsList = BaseTags::cases();
 
-        $currentFilter = $request['filters'] ?? ProjectsFilters::RecentProjects;
+        $currentFilter = $request['filters'] ?? (Str::lower(ProjectsFilters::RECENT_PROJECTS->name));
 
         $currentTags = $request['tags'] ?? [];
 
@@ -37,24 +37,13 @@ class ProjectController extends Controller
         );
     }
 
-    public function indexPersonnal()
-    {
-        $filters = [ProjectsFilters::MyProjects, ProjectsFilters::RecentProjects];
-        $queryFilters = ['filter' => ProjectsFilters::MyProjects];
-
-        $tags = BaseTags::cases();
-        $title = 'my_projects';
-
-        return Inertia::render('projects/index', compact(['filters', 'queryFilters', 'tags', 'title']));
-    }
-
     public function searchProjects(
         Request $request
     )
     {
         $query = $request['query'] ?? null;
 
-        $order = ProjectsFilters::RecentProjects->value;
+        $order = $request['filter'] ?? ProjectsFilters::RECENT_PROJECTS->value;
         $direction = (array_key_exists('direction', $_REQUEST) && $_REQUEST['direction'] === 'asc')
             ? 'asc' : 'desc';
 

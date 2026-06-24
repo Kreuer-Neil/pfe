@@ -1,11 +1,11 @@
 import type {IDashboardProject, IPaginationLink, IProjectMiniature} from "@/types";
 import AppLayout from "@/layouts/app-layout";
 import {Form, Head, router, usePage} from "@inertiajs/react";
-import {ReactNode, useEffect, useState} from "react";
+import {Dispatch, Fragment, ReactNode, SetStateAction, useEffect, useState} from "react";
 import ProjectItem from "@/components/projects/project-item";
 import PageFlowContainer from "@/components/page-flow-container";
 import IconButton from "@/components/buttons/icon-button";
-import {ArrowDownWideNarrow, ArrowUpWideNarrow} from "lucide-react";
+import {ArrowDownWideNarrow, ArrowUpWideNarrow, ListFilter, LucideIcon} from "lucide-react";
 import SearchBar from "@/components/filtering/search-bar";
 import {useTranslation} from "react-i18next";
 import {Input} from "@/components/ui/input";
@@ -13,6 +13,23 @@ import ProjectController from "@/actions/App/Http/Controllers/ProjectController"
 import {index as projectsIndex} from "@/actions/App/Http/Controllers/ProjectController";
 import redirectController from "@/actions/Illuminate/Routing/RedirectController";
 import {RouteQueryOptions} from "@/wayfinder";
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription, DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger
+} from "@/components/ui/dialog";
+import {Button} from "@/components/ui/button";
+import {Field, FieldGroup} from "@/components/ui/field";
+import {Label} from "@/components/ui/label";
+import CustomModal, {ModalContent} from "@/components/modals/custom-modal";
+import {
+    Combobox, ComboboxChip, ComboboxChips, ComboboxChipsInput, ComboboxContent, ComboboxEmpty, ComboboxItem,
+    ComboboxList, ComboboxValue, useComboboxAnchor
+} from "@/components/ui/combobox";
 
 /*const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -71,7 +88,7 @@ function ProjectsContainer({projects}: ProjectsContainerProps): ReactNode {
 }
 
 function TagsContainer({tags}: { tags: string[] }) {
-    const {t} = useTranslation('project_tags');
+    const {t} = useTranslation('projects-tags');
 
     if (tags.length > 0) return (
         <ul className="flex flex-wrap gap-1">
@@ -84,32 +101,103 @@ function TagsContainer({tags}: { tags: string[] }) {
     );
 }
 
+// {showModal, setShowModal}: {
+//     showModal: boolean,
+//     setShowModal: Dispatch<SetStateAction<boolean>>
+// }
+function Filtering({showModal, setShowModal, tags, setTags}: {
+    showModal: boolean,
+    setShowModal: Dispatch<SetStateAction<boolean>>
+    tags: Array<string>,
+    setTags: Dispatch<SetStateAction<string[]>>
+}) {
+    const {tagsList} = usePage<PageProps>().props;
+    const {t} = useTranslation(['projects-index', 'projects', 'projects-tags']);
+    const anchor = useComboboxAnchor();
+
+
+    useEffect(() => {
+
+    }, [tags])
+
+    const modalId = 'filters';
+    return (
+        // TODO use custom modal to use real dialog instead of this?
+        <CustomModal showModal={showModal} onClose={() => {
+            setShowModal(false)
+        }} id={modalId}>
+            <ModalContent>
+
+                <FieldGroup>
+                    <Field>
+                        <Label htmlFor="tags">
+                            {t('tags_title')}
+                        </Label>
+                        <Combobox
+                            name="tags"
+                            multiple
+                            autoHighlight
+                            items={tagsList}
+                            value={tags}
+                            onInputValueChange={(inputValue) => {
+                                console.log(inputValue);
+                                // setTags(inputValue);
+                            }}
+                            // defaultValue={[frameworks[0]]}
+                        >
+                            <ComboboxChips ref={anchor} className="w-full max-w-xs">
+                                <ComboboxValue>
+                                    {(values) => (
+                                        <Fragment>
+                                            {values.map((value: string) => (
+                                                <ComboboxChip key={value}>{t('tags:' + value)}</ComboboxChip>
+                                            ))}
+                                            <ComboboxChipsInput/>
+                                        </Fragment>
+                                    )}
+                                </ComboboxValue>
+                            </ComboboxChips>
+                            <ComboboxContent anchor={anchor} id={modalId}>
+                                <ComboboxEmpty>No items found.</ComboboxEmpty>
+                                <ComboboxList>
+                                    {(item) => (
+                                        <ComboboxItem key={item} value={item}>
+                                            {item}
+                                        </ComboboxItem>
+                                    )}
+                                </ComboboxList>
+                            </ComboboxContent>
+                        </Combobox>
+                    </Field>
+                </FieldGroup>
+            </ModalContent>
+        </CustomModal>
+    );
+}
+
 export default function ProjectsIndex() {
-    const {title, filtersList, tags, queryFilters, projects} = usePage<PageProps>().props;
+    const {title, filtersList, tagsList, currentFilter, currentTags, projects} = usePage<PageProps>().props;
 
     const {t} = useTranslation(['projects-index', 'projects']);
 
     // const [projects, setProjects] = useState<IPaginatedProjects>({data: [], links: []});
 
     const [direction, setDirection] = useState<string>('desc');
-    const [currentTags, setCurrentTags] = useState<string[]>([]);
+    const [tags, setTags] = useState<string[]>(currentTags);
     const [query, setQuery] = useState<string>('');
 
-    // if (queryFilters) {
-    //     queryFilters.filter ? setFilter(queryFilters.filter) : '';
-    //     queryFilters.tags.length > 0 ? setCurrentTags(queryFilters.tags) : '';
-    // }
+    const [showFiltering, setShowFiltering] = useState<boolean>(false);
 
     const changeDirection = (): any => {
         setDirection(direction === 'desc' ? 'asc' : 'desc');
     }
 
-    useEffect(()=> {
+    useEffect(() => {
         const queryOptions: RouteQueryOptions = {
             query: {
                 query: query,
                 direction: direction,
-                currentTags: currentTags,
+                currentTags: tags,
             },
         };
         router.get(
@@ -119,7 +207,9 @@ export default function ProjectsIndex() {
                 preserveState: true,
             }
         );
-    }, [query, direction, currentTags])
+    }, [query, direction, tags]);
+
+    const DirectionIcon: LucideIcon = direction === 'desc' ? ArrowDownWideNarrow : ArrowUpWideNarrow;
 
     return (
         <AppLayout>
@@ -130,14 +220,29 @@ export default function ProjectsIndex() {
                     <h1 className="page-title text-center mx-auto my-6">{t(title ?? 'search_title')}</h1>
 
                     <div className="flex gap-1">
-                        <IconButton icon={direction === 'desc' ? ArrowDownWideNarrow : ArrowUpWideNarrow}
-                                    textContent={t('pagination:' + direction)}
-                                    onClick={changeDirection}/>
-                        {/*<p className="section-title mx-1">{t('filter_' + filter)}</p>*/}
-                        {/*<IconButton className="ml-auto" icon={ListFilter} textContent={t('filter')}
-                                    onClick={() => {}}/>*/}
+                        <Button variant="outline" size="icon" onClick={changeDirection}>
+                            <span className="sr-only">
+                                {t('pagination:' + direction)}
+                            </span>
+                            <DirectionIcon className="text-link"/>
+                        </Button>
+                        <p className="section-title mx-1">{t('filter_' + currentFilter)}</p>
+                        {/* TODO use real dialog instead of this */}
+                        <Button variant="outline" size="icon"
+                        onClick={()=>setShowFiltering(true)}>
+                                        <span className="sr-only">
+                                        {t('filter')}
+                                        </span>
+                            <ListFilter className="text-link"/>
+                        </Button>
+                        {/*<Button variant="outline" size="icon">
+                                        <span className="sr-only">
+                                        {t('filter')}
+                                        </span>
+                            <ListFilter className="text-link"/>
+                        </Button>*/}
                     </div>
-                    <TagsContainer tags={currentTags}/>
+                    <TagsContainer tags={tags}/>
                     {/* Tags container (only if tags.) */}
                     {/* Search bar */}
                     <Form
@@ -162,6 +267,7 @@ export default function ProjectsIndex() {
                     projects={projects}/>
 
             </PageFlowContainer>
+            <Filtering showModal={showFiltering} setShowModal={setShowFiltering} tags={tags} setTags={setTags}/>
         </AppLayout>
     );
 }
