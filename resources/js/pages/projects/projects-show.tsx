@@ -283,10 +283,12 @@ function ProjectHeader({project}: {
                             <div className="w-full flex flex-col gap-3">
                                 <div className="flex gap-1 w-full">
                                     <p className="mr-auto block">
-                                        <button className={cn("p-1 rounded-xs", project.members_count>0 ? 'cursor-pointer':'')} onClick={openMembersModal}
-                                                onKeyDown={(e) => {
-                                                    if (e.key === 'Enter') openMembersModal(e);
-                                                }}>
+                                        <button
+                                            className={cn("p-1 rounded-xs", project.members_count > 0 ? 'cursor-pointer' : '')}
+                                            onClick={openMembersModal}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') openMembersModal(e);
+                                            }}>
                                             <span className="font-bold">{project.members_count}</span>
                                             &nbsp;{t('members_count')}
                                         </button>
@@ -305,14 +307,18 @@ function ProjectHeader({project}: {
                                     <IconButton icon={Flag} textContent={t('common:button_report')}/>*/}
                                 </div>
                                 {isEditing ?
-                                    <GeneralInput name="description" label={t('project_form_description')}
-                                                  value={projectDesc} setValue={setProjectDesc}
-                                                  type="textarea" style="text"
-                                                  inputClassName="w-full min-h-32 max-h-none"
-                                                  error={errors.description}/>
+                                    <>
+                                        <GeneralInput name="description" label={t('project_form_description')}
+                                                      value={projectDesc} setValue={setProjectDesc}
+                                                      type="textarea" style="text"
+                                                      inputClassName="w-full min-h-32 max-h-none"
+                                                      error={errors.description}/>
+                                        <InputError message={errors.description}/>
+                                    </>
                                     : <p>
                                         {projectDesc}
-                                    </p>}
+                                    </p>
+                                }
                             </div>
 
                             {isEditing &&
@@ -320,14 +326,14 @@ function ProjectHeader({project}: {
                                     <Button textContent={t('project_form_update')} type="submit"
                                             onClick={() => {
                                             }}/>
-                                    {updateResponse.error && <span
-                                        className={updateResponse.success ? 'field-success' : 'field-error' + ' -mt-2'}>{t('errors:' + updateResponse.error.key, updateResponse.error.params)}</span>}
                                     <Button textContent={t('project_form_cancel')} color="destructive" onClick={() => {
                                         setProjectName(project.name);
                                         setProjectDesc(project.description);
                                         setIsEditing(false);
                                     }}/>
-                                </div>}
+                                    <InputError message={errors.update}/>
+                                </div>
+                            }
                             {project.news ?
                                 <div>
                                     <article>

@@ -20,7 +20,7 @@ class FillDataSeeder extends Seeder
      */
     public static function run(): void
     {
-        info('Seeding fill data...');
+        echo 'Seeding fill data...';
 
         $projectsData = [
             [
@@ -197,6 +197,6 @@ class FillDataSeeder extends Seeder
             }
         }
 
-        info('Fill data seeded.');
+        echo 'Fill data seeded.';
     }
 }

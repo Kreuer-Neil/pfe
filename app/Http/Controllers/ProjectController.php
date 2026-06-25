@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\BaseTags;
 use App\Enums\ProjectRole;
 use App\Enums\ProjectsFilters;
+use App\Http\Resources\Project\ProjectDashboardResource;
 use App\Http\Resources\Project\ProjectMiniatureResource;
 use App\Http\Resources\Project\ProjectResource;
 use App\Jobs\HandleProfileImageUploads;
@@ -25,9 +26,9 @@ class ProjectController extends Controller
         // TODO create
         $tagsList = BaseTags::cases();
 
-        $currentFilter = $request['filters'] ?? (Str::lower(ProjectsFilters::RECENT_PROJECTS->name));
+        $currentFilter = $request->input('filters') ?? (Str::lower(ProjectsFilters::RECENT_PROJECTS->name));
 
-        $currentTags = $request['tags'] ?? [];
+        $currentTags = $request->input('tags') ?? [];
 
         $projects = $this->searchProjects($request);
 
@@ -37,30 +38,34 @@ class ProjectController extends Controller
         );
     }
 
-    public function searchProjects(
+    private function searchProjects(
         Request $request
     )
     {
-        $query = $request['query'] ?? null;
+        $query = $request->input('query') ?? null;
+        $tags = $request->input('tags') ?? null;
 
-        $order = $request['filter'] ?? ProjectsFilters::RECENT_PROJECTS->value;
-        $direction = (array_key_exists('direction', $_REQUEST) && $_REQUEST['direction'] === 'asc')
-            ? 'asc' : 'desc';
+        $order = $request->input('filter') ?? ProjectsFilters::RECENT_PROJECTS->value;
+        $direction = $request->input('direction') === 'asc' ? 'asc' : 'desc';
 
-        $queriedProjects = Project::where('is_private', false);
+        $queriedProjects = Project::where('is_private', false)->with(['tags']);
 
         if ($query) {
             // TODO use advanced queries to not cancel is_private clause
-            $queriedProjects = $queriedProjects
-                ->whereLike('name', '%' . $query . '%')
-                ->orWhere('is_private', false)
-                ->whereLike('description', '%' . $query . '%');
+            $queriedProjects = $queriedProjects->where(function ($q) use ($query) {
+                $q->whereLike('name', '%' . $query . '%')
+                    ->orWhereLike('description', '%' . $query . '%');
+            });
+        }
+
+        if ($tags) {
+            $queriedProjects = $queriedProjects->whereHas('tags', fn($q) => $q->whereIn('name', $tags));
         }
 
         // TODO add filtering for data
         return ProjectMiniatureResource::collection(
             $queriedProjects->orderBy($order, $direction)
-            ->get()
+                ->get()
         )->toArray(request());
     }
 
@@ -174,31 +179,32 @@ class ProjectController extends Controller
             $project->icon = $iconName;
         }
 
-        if ($project->canEdit($currentUser)) {
-            Inertia::flash(['error' => [
-                'key' => 'not_allowed',
-                'params' => []
-            ]]);
-
-
+        if (!$project->canEdit($currentUser)) {
+            return redirect()
+                ->back()
+                // Use php translation for this error
+                ->withErrors(['update' => 'validation.not_allowed']);
         }
 
         $project->name = $validated['name'];
         $project->description = $validated['description'];
 
         if (!$project->save()) {
-            // TODO remove flash and add error
+            return redirect()
+                ->back()
+                // Error: Could not update project with given data.
+                ->withErrors(['update'=> 'validation.undefined_error']);
         }
 
         Inertia::flash(['success' => true]);
         return redirect(route('projects.show', $slug));
     }
 
-    public function myProjects()
+    public function myProjects(Request $request)
     {
         $projects = [];
         foreach (auth()->user()->projects as $project) {
-            $projects[] = new FormatedDashboardProject($project);
+            $projects[] = (new ProjectDashboardResource($project))->toArray($request);
         }
         return Inertia::render('projects/my-projects', compact(['projects']));
     }

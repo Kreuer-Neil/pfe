@@ -5,7 +5,7 @@ import {Dispatch, Fragment, ReactNode, SetStateAction, useEffect, useState} from
 import ProjectItem from "@/components/projects/project-item";
 import PageFlowContainer from "@/components/page-flow-container";
 import IconButton from "@/components/buttons/icon-button";
-import {ArrowDownWideNarrow, ArrowUpWideNarrow, ListFilter, LucideIcon} from "lucide-react";
+import {ArrowDownWideNarrow, ArrowUpWideNarrow, ListFilter, LucideIcon, Search} from "lucide-react";
 import SearchBar from "@/components/filtering/search-bar";
 import {useTranslation} from "react-i18next";
 import {Input} from "@/components/ui/input";
@@ -25,11 +25,12 @@ import {
 import {Button} from "@/components/ui/button";
 import {Field, FieldGroup} from "@/components/ui/field";
 import {Label} from "@/components/ui/label";
-import CustomModal, {ModalContent} from "@/components/modals/custom-modal";
+import CustomModal, {ModalContent, ModalDescription, ModalHeader, ModalTitle} from "@/components/modals/custom-modal";
 import {
     Combobox, ComboboxChip, ComboboxChips, ComboboxChipsInput, ComboboxContent, ComboboxEmpty, ComboboxItem,
     ComboboxList, ComboboxValue, useComboboxAnchor
 } from "@/components/ui/combobox";
+import {ButtonGroup} from "@/components/ui/button-group";
 
 /*const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -94,6 +95,7 @@ function TagsContainer({tags}: { tags: string[] }) {
         <ul className="flex flex-wrap gap-1">
             {tags.map((tag: string, i: number) => {
                 return <li key={i}>
+
                     {t(tag)}
                 </li>
             })}
@@ -127,23 +129,30 @@ function Filtering({showModal, setShowModal, tags, setTags}: {
             setShowModal(false)
         }} id={modalId}>
             <ModalContent>
-
+                <ModalHeader>
+                    <ModalTitle>
+                        {t('filters_title')}
+                    </ModalTitle>
+                    <ModalDescription>
+                        {t('filters_description')}
+                    </ModalDescription>
+                </ModalHeader>
                 <FieldGroup>
                     <Field>
-                        <Label htmlFor="tags">
-                            {t('tags_title')}
+                        <Label htmlFor="tags-container">
+                            {t('tags_select_label')}
                         </Label>
                         <Combobox
                             name="tags"
+                            id="tags-container"
                             multiple
                             autoHighlight
                             items={tagsList}
                             value={tags}
-                            onInputValueChange={(inputValue) => {
-                                console.log(inputValue);
-                                // setTags(inputValue);
+                            // value={tags}
+                            onValueChange={(values:Array<string>)=> {
+                                setTags(values ?? [])
                             }}
-                            // defaultValue={[frameworks[0]]}
                         >
                             <ComboboxChips ref={anchor} className="w-full max-w-xs">
                                 <ComboboxValue>
@@ -182,10 +191,10 @@ export default function ProjectsIndex() {
 
     // const [projects, setProjects] = useState<IPaginatedProjects>({data: [], links: []});
 
-    const [direction, setDirection] = useState<string>('desc');
+    const uri = document.documentURI;
+    const [direction, setDirection] = useState<string>(uri?.split('direction=')[1]?.split('&')[0] ?? 'desc');
     const [tags, setTags] = useState<string[]>(currentTags);
-    const [query, setQuery] = useState<string>('');
-
+    const [query, setQuery] = useState<string>(uri?.split('query=')[1]?.split('&')[0] ?? '');
     const [showFiltering, setShowFiltering] = useState<boolean>(false);
 
     const changeDirection = (): any => {
@@ -197,7 +206,7 @@ export default function ProjectsIndex() {
             query: {
                 query: query,
                 direction: direction,
-                currentTags: tags,
+                tags: tags,
             },
         };
         router.get(
@@ -205,6 +214,8 @@ export default function ProjectsIndex() {
             {},
             {
                 preserveState: true,
+                preserveScroll: true,
+                preserveUrl:true
             }
         );
     }, [query, direction, tags]);
@@ -249,22 +260,31 @@ export default function ProjectsIndex() {
                         {...ProjectController.indexSearch.form()}
 
                     >
+                        <Field>
+                            {/*<ButtonGroup>*/}
+                                {/*<Button type="submit">
+                                    <span className="sr-only">{t('search')}</span>
+                                    <Search/>
+                                </Button>*/}
                         <Input
                             id="search"
                             name="search"
                             autoFocus
+                            placeholder={t('search')}
                             onChange={(e) => {
                                 setQuery(e.currentTarget.value);
                             }}
+                            defaultValue={uri?.split('query=')[1]?.split('&')[0] ?? ''}
                         />
-                        {/* TODO use Shadcn style on this */}
-                        {/*<SearchBar onChange={search} data={query}/>*/}
+                            {/*</ButtonGroup>*/}
+                        </Field>
                     </Form>
                 </div>
 
                 <ProjectsContainer
                     // currentPage={currentPage}
-                    projects={projects}/>
+                    projects={projects}
+                />
 
             </PageFlowContainer>
             <Filtering showModal={showFiltering} setShowModal={setShowFiltering} tags={tags} setTags={setTags}/>

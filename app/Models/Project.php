@@ -197,4 +197,8 @@ class Project extends Model
         return $this->hasMany(ProjectInvitation::class);
     }
 
+    public function tags():BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class, ProjectTag::class);
+    }
 }

@@ -15,7 +15,7 @@ export default function invitation({}: {}) {
 
     const [error, setError] = useState('');
 
-    const [code, setCode] = useState<string>(document.documentURI.split('?code=')[1] ?? '');
+    const [code, setCode] = useState<string>(document.documentURI.split('code=')[1] ?? '');
 
     const [showConfirmation, setShowConfirmation] = useState(false);
 

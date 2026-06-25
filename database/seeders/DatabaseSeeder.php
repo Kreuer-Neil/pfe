@@ -21,6 +21,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Seed tags
+        TagsSeeder::run();
+
         FillDataSeeder::run();
 
         TestUserSeeder::run();
