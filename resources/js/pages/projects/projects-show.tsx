@@ -11,12 +11,11 @@ import {
     PencilLine,
     UserRoundPlus
 } from "lucide-react";
-import IconButton from "@/components/buttons/icon-button";
-import Button from "@/components/buttons/button";
+import {Button} from "@/components/ui/button";
 import ProjectIcon from "@/components/icons/project-icon";
 import {useTranslation} from "react-i18next";
 import {Dispatch, ReactNode, SetStateAction, useState} from "react";
-import GeneralInput from "@/components/form/general-input";
+import {Input} from "@/components/ui/input";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import ProjectController from "@/actions/App/Http/Controllers/ProjectController";
 import {join as joinProject} from "@/actions/App/Http/Controllers/ProjectController";
@@ -28,6 +27,9 @@ import UserAvatar from "@/components/users/user-avatar";
 import {show as showProfile} from "@/actions/App/Http/Controllers/UserProfileController";
 import InputError from "@/components/input-error";
 import {cn} from "@/lib/utils";
+import {Field, FieldGroup} from "@/components/ui/field";
+import {Label} from "@/components/ui/label";
+import {Textarea} from "@/components/ui/textarea";
 
 type pageProps = {
     project: IProject | IProjectShow | null,
@@ -170,7 +172,9 @@ function InvitationModal({showInvitationModal, setShowInvitationModal, slug}: {
                                 }
                             </ModalSection>
                             <div className="flex flex-col gap-3 items-center">
-                                <Button textContent={t('invitation_generate')} type="submit" onClick={() => null}/>
+                                <Button type="submit">
+                                    {t('invitation_generate')}
+                                </Button>
                             </div>
                         </>
                     )}
@@ -257,9 +261,14 @@ function ProjectHeader({project}: {
                                 {project.user_role === 'admin' &&
                                     <div className="flex gap-1 m-3 h-fit">
                                         {!isEditing &&
-                                            <IconButton icon={PencilLine} textContent={t('project_edit')}
-                                                        showText={true} alt
-                                                        onClick={() => setIsEditing(true)}/>}
+                                            <Button size="sm" variant="secondary"
+                                                    onClick={() => setIsEditing(true)}
+                                            >
+                                                <span>
+                                                    {t('project_edit')}
+                                                </span>
+                                                <PencilLine/>
+                                            </Button>}
                                         {/*<IconButton icon={Settings} textContent={t('project_settings')}
                                                     alt/>*/}
                                     </div>}
@@ -274,32 +283,51 @@ function ProjectHeader({project}: {
 
                         <div className="flex flex-col items-center gap-3 px-3">
                             <h1 className="page-title text-center">{isEditing ?
-                                <GeneralInput name="name" label={t('project_form_name')}
-                                              value={projectName} setValue={setProjectName}
-                                              style="text" inputClassName="w-full text-center"
-                                              error={errors.name}/>
+                                <Field>
+                                    <Label>
+                                        {t('project_form_name')}
+                                    </Label>
+                                    <Input name="name"
+                                           value={projectName}
+                                           onChange={(e) => setProjectName(e.target.value)}
+                                           className="w-full text-center"
+                                    />
+                                    <InputError message={errors.name}/>
+                                </Field>
                                 : projectName}</h1>
 
                             <div className="w-full flex flex-col gap-3">
                                 <div className="flex gap-1 w-full">
                                     <p className="mr-auto block">
-                                        <button
-                                            className={cn("p-1 rounded-xs", project.members_count > 0 ? 'cursor-pointer' : '')}
-                                            onClick={openMembersModal}
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter') openMembersModal(e);
-                                            }}>
-                                            <span className="font-bold">{project.members_count}</span>
+                                        <Button variant="ghost"
+                                                size="sm"
+                                                onClick={openMembersModal}
+                                                className="gap-0"
+                                        >
+                                            <span className="font-bold">
+                                                {project.members_count}
+                                            </span>
                                             &nbsp;{t('members_count')}
-                                        </button>
+                                        </Button>
                                     </p>
                                     {/* TODO add condition with permission for inviting people to project, as well as sharing */}
                                     {project.user_role === 'viewer' ?
                                         // Add more conditions on project
-                                        <IconButton icon={LogIn} textContent={t('join')} showText={true}
-                                                    href={joinProject(project.slug).url}/> :
-                                        <IconButton textContent={t('button_invite')} icon={UserRoundPlus}
-                                                    showText={true} onClick={() => openInvitationModal()}/>}
+                                        <Button size="sm" variant="outline" asChild>
+                                            <Link href={joinProject(project.slug).url}>
+                                                <span>
+                                                    {t('join')}
+                                                </span>
+                                                <LogIn/>
+                                            </Link>
+                                        </Button> :
+                                        <Button size="sm" variant="outline" onClick={() => openInvitationModal()}>
+                                            <span>
+                                                {t('button_invite')}
+                                            </span>
+                                            <UserRoundPlus/>
+                                        </Button>
+                                    }
                                     {/*{project.user_following ?
                                         <IconButton icon={BookmarkCheck} textContent={t('following')}/> :
                                         <IconButton icon={Bookmark} textContent={t('follow')}/>}
@@ -307,14 +335,17 @@ function ProjectHeader({project}: {
                                     <IconButton icon={Flag} textContent={t('common:button_report')}/>*/}
                                 </div>
                                 {isEditing ?
-                                    <>
-                                        <GeneralInput name="description" label={t('project_form_description')}
-                                                      value={projectDesc} setValue={setProjectDesc}
-                                                      type="textarea" style="text"
-                                                      inputClassName="w-full min-h-32 max-h-none"
-                                                      error={errors.description}/>
+                                    <Field>
+                                        <Label>
+                                            {t('project_form_description')}
+                                        </Label>
+                                        <Textarea
+                                            name="description"
+                                            value={projectDesc}
+                                            onChange={(e) => setProjectDesc(e.target.value)}
+                                        />
                                         <InputError message={errors.description}/>
-                                    </>
+                                    </Field>
                                     : <p>
                                         {projectDesc}
                                     </p>
@@ -322,17 +353,19 @@ function ProjectHeader({project}: {
                             </div>
 
                             {isEditing &&
-                                <div className="flex flex-col gap-3 w-full items-center">
-                                    <Button textContent={t('project_form_update')} type="submit"
-                                            onClick={() => {
-                                            }}/>
-                                    <Button textContent={t('project_form_cancel')} color="destructive" onClick={() => {
+                                <Field>
+                                    <Button type="submit">
+                                        {t('project_form_update')}
+                                    </Button>
+                                    <Button variant="destructive" onClick={() => {
                                         setProjectName(project.name);
                                         setProjectDesc(project.description);
                                         setIsEditing(false);
-                                    }}/>
+                                    }}>
+                                        {t('project_form_cancel')}
+                                    </Button>
                                     <InputError message={errors.update}/>
-                                </div>
+                                </Field>
                             }
                             {project.news ?
                                 <div>
@@ -343,7 +376,9 @@ function ProjectHeader({project}: {
                                         </h2>
                                         <p>{/*{project.news.first.text_content}*/}</p>
                                     </article>
-                                    <Button textContent={t('more_news')}/>
+                                    <Button variant="ghost">
+                                        {t('more_news')}
+                                    </Button>
                                 </div> : ''}
 
                         </div>

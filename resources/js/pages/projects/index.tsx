@@ -89,7 +89,7 @@ function ProjectsContainer({projects}: ProjectsContainerProps): ReactNode {
 }
 
 function TagsContainer({tags}: { tags: string[] }) {
-    const {t} = useTranslation('projects-tags');
+    const {t} = useTranslation('tags');
 
     if (tags.length > 0) return (
         <ul className="flex flex-wrap gap-1">
@@ -114,7 +114,7 @@ function Filtering({showModal, setShowModal, tags, setTags}: {
     setTags: Dispatch<SetStateAction<string[]>>
 }) {
     const {tagsList} = usePage<PageProps>().props;
-    const {t} = useTranslation(['projects-index', 'projects', 'projects-tags']);
+    const {t} = useTranslation(['projects-index', 'projects', 'tags']);
     const anchor = useComboboxAnchor();
 
 
@@ -144,13 +144,12 @@ function Filtering({showModal, setShowModal, tags, setTags}: {
                         </Label>
                         <Combobox
                             name="tags"
-                            id="tags-container"
+                            id="tags-select"
                             multiple
                             autoHighlight
                             items={tagsList}
                             value={tags}
-                            // value={tags}
-                            onValueChange={(values:Array<string>)=> {
+                            onValueChange={(values: Array<string>) => {
                                 setTags(values ?? [])
                             }}
                         >
@@ -171,7 +170,7 @@ function Filtering({showModal, setShowModal, tags, setTags}: {
                                 <ComboboxList>
                                     {(item) => (
                                         <ComboboxItem key={item} value={item}>
-                                            {item}
+                                            {t('tags:' + item)}
                                         </ComboboxItem>
                                     )}
                                 </ComboboxList>
@@ -215,7 +214,7 @@ export default function ProjectsIndex() {
             {
                 preserveState: true,
                 preserveScroll: true,
-                preserveUrl:true
+                preserveUrl: true
             }
         );
     }, [query, direction, tags]);
@@ -235,22 +234,21 @@ export default function ProjectsIndex() {
                             <span className="sr-only">
                                 {t('pagination:' + direction)}
                             </span>
-                            <DirectionIcon className="text-link"/>
+                            <DirectionIcon/>
                         </Button>
                         <p className="section-title mx-1">{t('filter_' + currentFilter)}</p>
-                        {/* TODO use real dialog instead of this */}
                         <Button variant="outline" size="icon"
-                        onClick={()=>setShowFiltering(true)}>
+                                onClick={() => setShowFiltering(true)}>
                                         <span className="sr-only">
                                         {t('filter')}
                                         </span>
-                            <ListFilter className="text-link"/>
+                            <ListFilter/>
                         </Button>
                         {/*<Button variant="outline" size="icon">
                                         <span className="sr-only">
                                         {t('filter')}
                                         </span>
-                            <ListFilter className="text-link"/>
+                            <ListFilter/>
                         </Button>*/}
                     </div>
                     <TagsContainer tags={tags}/>
@@ -262,20 +260,20 @@ export default function ProjectsIndex() {
                     >
                         <Field>
                             {/*<ButtonGroup>*/}
-                                {/*<Button type="submit">
+                            {/*<Button type="submit">
                                     <span className="sr-only">{t('search')}</span>
                                     <Search/>
                                 </Button>*/}
-                        <Input
-                            id="search"
-                            name="search"
-                            autoFocus
-                            placeholder={t('search')}
-                            onChange={(e) => {
-                                setQuery(e.currentTarget.value);
-                            }}
-                            defaultValue={uri?.split('query=')[1]?.split('&')[0] ?? ''}
-                        />
+                            <Input
+                                id="search"
+                                name="search"
+                                autoFocus
+                                placeholder={t('search')}
+                                onChange={(e) => {
+                                    setQuery(e.currentTarget.value);
+                                }}
+                                defaultValue={uri?.split('query=')[1]?.split('&')[0] ?? ''}
+                            />
                             {/*</ButtonGroup>*/}
                         </Field>
                     </Form>

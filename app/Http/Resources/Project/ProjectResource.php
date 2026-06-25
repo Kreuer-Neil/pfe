@@ -18,7 +18,7 @@ class ProjectResource extends ProjectMiniatureResource
     {
         return array_merge(parent::toArray($request), [
             'description' => $this->resource->description,
-            'owner' => new ProfileResource(User::find($this->resource->owner_id)),
+            'owner' => (new ProfileResource(User::find($this->resource->owner_id)))->toArray($request),
             'members' => ProfileResource::collection($this->resource->members)->toArray($request),
             'user_role' => $this->resource->userRole(auth()->user()),
             'is_member' => $this->resource->members->find(auth()->id()) !== null,

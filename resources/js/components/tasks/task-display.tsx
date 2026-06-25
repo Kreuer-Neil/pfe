@@ -17,6 +17,7 @@ import {RouteQueryOptions} from "@/wayfinder";
 import {usePage} from "@inertiajs/react";
 import {ItemGroup} from "@/components/ui/item";
 import {Separator} from "@/components/ui/separator";
+import {Button} from "@/components/ui/button";
 
 
 type TaskDisplayProps = {
@@ -51,7 +52,7 @@ function TasksList({tasks, isInProjectPage, maxLength, onTapTask}: {
             return (
                 // <li className="w-full flex flex-col gap-4" key={task.id}>
                 <li key={task.id} className="w-full flex flex-col gap-4">
-                    {precedentMonthCondition && <span className="month-divider" key={i}>{t('month_' + month)}</span> }
+                    {precedentMonthCondition && <span className="month-divider" key={i}>{t('month_' + month)}</span>}
                     {/*{precedentMonthCondition && <Separator/>}*/}
                     <TaskItem
                         task={task}
@@ -134,14 +135,21 @@ export default function TaskDisplay(
         }
     }
 
+    console.log(project?.owner.id === currentUser.id)
     const pageId = 'tasks';
     return (
         <section className={cn('items-section max-w-xl', className)} id={pageId}>
             <div className="flex items-center mx-3">
                 <h2 className="section-title w-full">{title ?? (project ? t('tasks_container_title', {project: project.name}) : t('task_upcoming_title'))}</h2>
-                {project?.owner.id === currentUser.id && // TODO fix if user
-                    <IconButton icon={ClipboardPlus} textContent={t('task_add')}
-                                onClick={() => setShowCreateModal(true)}/>}
+                {project?.owner.id === currentUser.id && // TODO fix if user is taskmaster or other
+                    <Button size="icon" variant="outline"
+                        onClick={() => setShowCreateModal(true)}>
+                        <span className="sr-only">
+                            {t('task_add')}
+                        </span>
+                        <ClipboardPlus/>
+                    </Button>
+                }
             </div>
             <TasksList tasks={tasks} isInProjectPage={(project === null)} maxLength={maxItemsLength!}
                        onTapTask={onTaskTap}/>

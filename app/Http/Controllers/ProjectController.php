@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\BaseTags;
 use App\Enums\ProjectRole;
 use App\Enums\ProjectsFilters;
 use App\Http\Resources\Project\ProjectDashboardResource;
 use App\Http\Resources\Project\ProjectMiniatureResource;
 use App\Http\Resources\Project\ProjectResource;
+use App\Http\Resources\TagRessourceCollection;
 use App\Jobs\HandleProfileImageUploads;
 use App\Models\Member;
 use App\Models\Project;
+use App\Models\ProjectTag;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -23,13 +25,10 @@ class ProjectController extends Controller
     {
         // use Pagination
         $filtersList = ProjectsFilters::cases();
-        // TODO create
-        $tagsList = BaseTags::cases();
 
+        $tagsList = (new TagRessourceCollection(Tag::all()))->toArray($request);
         $currentFilter = $request->input('filters') ?? (Str::lower(ProjectsFilters::RECENT_PROJECTS->name));
-
         $currentTags = $request->input('tags') ?? [];
-
         $projects = $this->searchProjects($request);
 
         auth()->user()->projects;
@@ -74,7 +73,10 @@ class ProjectController extends Controller
         $project = Project::where('slug', $slug)->first();
         $user = auth()->user();
         if (!$project || !($project = $this->getShowDataFor($user, $project))) {
-            abort(404);
+            abort(
+                404,
+                __('project_not_found')
+            );
         }
 
         auth()->user()->projects;
@@ -101,10 +103,15 @@ class ProjectController extends Controller
         return (new ProjectResource($project))->toArray(request());
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        $tagsList = (new TagRessourceCollection(Tag::all()))->toArray($request);
+
         auth()->user()->projects;
-        return Inertia::render('projects/projects-create');
+        return Inertia::render(
+            'projects/projects-create',
+            compact(['tagsList'])
+        );
     }
 
     public function store(Request $request)
@@ -113,6 +120,8 @@ class ProjectController extends Controller
             'name' => 'required|string|min:6|max:255|unique:projects,name',
             'description' => 'required|min:6|string',
             'is_private' => 'boolean',
+            'tags' => 'required_if:is_private,true|array|max:7',
+            'tags.*' => 'string|exists:tags,name',
         ]);
         // , ['name.unique' => 'project_name_exists']
 
@@ -120,8 +129,17 @@ class ProjectController extends Controller
         $validated['owner_id'] = $ownerId;
         $validated['is_private'] = array_key_exists('is_private', $validated);
         $validated['slug'] = Str::slug($validated['name']);
+        $tags = $validated['tags'];
 
         $project = Project::create($validated);
+
+        foreach ($tags as $tagName) {
+            $tag = Tag::where('name', $tagName)->first();
+            ProjectTag::create([
+                'tag_id' => $tag->id,
+                'project_id' => $project->id,
+            ]);
+        }
 
         Member::create([
             'project_id' => $project->id,
@@ -183,7 +201,7 @@ class ProjectController extends Controller
             return redirect()
                 ->back()
                 // Use php translation for this error
-                ->withErrors(['update' => 'validation.not_allowed']);
+                ->withErrors(['update' => __('validation.not_allowed')]);
         }
 
         $project->name = $validated['name'];
@@ -193,7 +211,7 @@ class ProjectController extends Controller
             return redirect()
                 ->back()
                 // Error: Could not update project with given data.
-                ->withErrors(['update'=> 'validation.undefined_error']);
+                ->withErrors(['update' => __('validation.undefined_error')]);
         }
 
         Inertia::flash(['success' => true]);
