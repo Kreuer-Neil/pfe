@@ -80,9 +80,6 @@ export default function TaskDisplay(
     const {auth} = usePage<SharedData>().props;
     const currentUser = auth.user;
 
-    {/* TODO use flash data for tasks? Needs auto-update */
-    }
-
     const {t} = useTranslation(['projects', 'date']);
     const [maxItemsLength, setMaxItemsLength] = useState<number>(minLength);
     const [showMoreState, setShowMoreState] = useState<boolean>(true);
@@ -135,7 +132,6 @@ export default function TaskDisplay(
         }
     }
 
-    console.log(project?.owner.id === currentUser.id)
     const pageId = 'tasks';
     return (
         <section className={cn('items-section max-w-xl', className)} id={pageId}>

@@ -166,12 +166,14 @@ class ProjectController extends Controller
         }*/
 
         $project = Project::where('slug', $slug)->first();
+
         if (!$project) {
-            Inertia::flash(['error' => [
-                'key' => 'project_not_found',
-                'params' => [],
-            ]]);
-            return redirect(route('projects.show', $slug));
+            abort(403);
+//            return redirect()->back()->withErrors([
+//                'update' => __('validation.exists', [
+//                    'attribute' => __('projects.project')
+//                ])
+//            ]);
         }
 
         $currentUser = auth()->user();
@@ -198,10 +200,12 @@ class ProjectController extends Controller
         }
 
         if (!$project->canEdit($currentUser)) {
-            return redirect()
-                ->back()
-                // Use php translation for this error
-                ->withErrors(['update' => __('validation.not_allowed')]);
+            abort(403);
+//            return redirect()
+//                ->back()
+//                // Use php translation for this error
+//                ->withErrors(['update' => __('unauthorized')
+//                ]);
         }
 
         $project->name = $validated['name'];
@@ -251,5 +255,31 @@ class ProjectController extends Controller
 
         Inertia::flash(['join_success' => true]);
         return redirect(route('projects.show', $slug));
+    }
+
+    public function edit(Request $request, string $slug)
+    {
+        // TODO check w/ middleware if can access this
+        $project = (new ProjectResource(Project::where('slug', $slug)->first()))->toArray($request);
+
+        auth()->user()->projects;
+        return Inertia::render('projects/edit',
+            compact(['project']));
+    }
+
+    public function update(Request $request, string $slug)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|min:6|max:255|unique:projects,name',
+            'description' => 'required|min:6|string',
+            'is_private' => 'boolean',
+            'tags' => 'required_if:is_private,true|array|max:7',
+            'tags.*' => 'string|exists:tags,name',
+        ]);
+    }
+
+    public function updateTags()
+    {
+        
     }
 }

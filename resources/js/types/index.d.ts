@@ -106,10 +106,11 @@ export interface IProjectMiniature extends IProjectContext {
     description: string;
     // featured_members: IUser[];
     user_role: 'viewer' | 'member' | 'taskmaster' | 'moderator' | 'admin';
-    // is_member: boolean;
+    is_member: boolean;
     members_count: number;
     coordinates: string | null;
     place: string | null;
+    tags: Array<string>;
 
     slug: string;
 }

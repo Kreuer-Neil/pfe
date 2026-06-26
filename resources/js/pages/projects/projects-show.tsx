@@ -8,7 +8,7 @@ import {
     Camera,
     Copy,
     LogIn,
-    PencilLine,
+    PencilLine, Settings,
     UserRoundPlus
 } from "lucide-react";
 import {Button} from "@/components/ui/button";
@@ -18,7 +18,7 @@ import {Dispatch, ReactNode, SetStateAction, useState} from "react";
 import {Input} from "@/components/ui/input";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import ProjectController from "@/actions/App/Http/Controllers/ProjectController";
-import {join as joinProject} from "@/actions/App/Http/Controllers/ProjectController";
+import {join as projectsJoin, edit as projectsEdit} from "@/actions/App/Http/Controllers/ProjectController";
 import ModalCast from "@/components/modals/modal-cast";
 import CustomModal from "@/components/modals/custom-modal";
 import ModalSection from "@/components/modals/modal-section";
@@ -26,7 +26,6 @@ import ProjectInvitationController from "@/actions/App/Http/Controllers/ProjectI
 import UserAvatar from "@/components/users/user-avatar";
 import {show as showProfile} from "@/actions/App/Http/Controllers/UserProfileController";
 import InputError from "@/components/input-error";
-import {cn} from "@/lib/utils";
 import {Field, FieldGroup} from "@/components/ui/field";
 import {Label} from "@/components/ui/label";
 import {Textarea} from "@/components/ui/textarea";
@@ -241,8 +240,6 @@ function ProjectHeader({project}: {
         setShowInvitationModal(true);
     }
 
-    const [updateResponse, setUpdateResponse] = useState<IServerResponse>({success: false, error: null});
-
     const [showMembersModal, setShowMembersModal] = useState<boolean>(false);
     const openMembersModal = (e: any) => {
         e.preventDefault();
@@ -258,20 +255,30 @@ function ProjectHeader({project}: {
                     <>
                         <div className="w-full">
                             <div className="aspect-[2.8] w-full bg-container flex justify-end">
-                                {project.user_role === 'admin' &&
+                                {(project.user_role === 'admin' && !isEditing) &&
                                     <div className="flex gap-1 m-3 h-fit">
-                                        {!isEditing &&
-                                            <Button size="sm" variant="secondary"
-                                                    onClick={() => setIsEditing(true)}
-                                            >
+                                        <Button size="sm" variant="secondary"
+                                                onClick={() => setIsEditing(true)}
+                                        >
                                                 <span>
                                                     {t('project_edit')}
                                                 </span>
-                                                <PencilLine/>
-                                            </Button>}
-                                        {/*<IconButton icon={Settings} textContent={t('project_settings')}
-                                                    alt/>*/}
-                                    </div>}
+                                            <PencilLine/>
+                                        </Button>
+                                        <Button asChild
+                                                variant="secondary"
+                                                size="icon-sm"
+                                        >
+                                            <Link href={projectsEdit(project.slug).url}>
+
+                                            <span className="sr-only">
+                                                {t('project_settings')}
+                                            </span>
+                                                <Settings/>
+                                            </Link>
+                                        </Button>
+                                    </div>
+                                }
 
                                 {!(!project.banner) &&
                                     <img src={useImageAsset('project/' + project.banner)} alt={''}
@@ -314,14 +321,17 @@ function ProjectHeader({project}: {
                                     {project.user_role === 'viewer' ?
                                         // Add more conditions on project
                                         <Button size="sm" variant="outline" asChild>
-                                            <Link href={joinProject(project.slug).url}>
+                                            <Link href={projectsJoin(project.slug).url}>
                                                 <span>
                                                     {t('join')}
                                                 </span>
                                                 <LogIn/>
                                             </Link>
                                         </Button> :
-                                        <Button size="sm" variant="outline" onClick={() => openInvitationModal()}>
+                                        <Button size="sm"
+                                                variant="outline"
+                                                onClick={() => openInvitationModal()}
+                                        >
                                             <span>
                                                 {t('button_invite')}
                                             </span>
@@ -357,29 +367,32 @@ function ProjectHeader({project}: {
                                     <Button type="submit">
                                         {t('project_form_update')}
                                     </Button>
-                                    <Button variant="destructive" onClick={() => {
-                                        setProjectName(project.name);
-                                        setProjectDesc(project.description);
-                                        setIsEditing(false);
-                                    }}>
+                                    <Button variant="destructive"
+                                            onClick={() => {
+                                                setProjectName(project.name);
+                                                setProjectDesc(project.description);
+                                                setIsEditing(false);
+                                            }}
+                                    >
                                         {t('project_form_cancel')}
                                     </Button>
                                     <InputError message={errors.update}/>
                                 </Field>
                             }
-                            {project.news ?
+                            {/*project.news &&
                                 <div>
                                     <article>
                                         <h2 className="section-title">
-                                            {/* TODO fix when news added */}
-                                            {/*{project.news.first.title}*/}
+                                            // TODO fix when news added
+                                            {{project.news.first.title}}
                                         </h2>
-                                        <p>{/*{project.news.first.text_content}*/}</p>
+                                        <p>{{project.news.first.text_content}}</p>
                                     </article>
                                     <Button variant="ghost">
                                         {t('more_news')}
                                     </Button>
-                                </div> : ''}
+                                </div>
+                            */}
 
                         </div>
                     </>

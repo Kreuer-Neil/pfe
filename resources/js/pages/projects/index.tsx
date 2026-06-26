@@ -124,7 +124,6 @@ function Filtering({showModal, setShowModal, tags, setTags}: {
 
     const modalId = 'filters';
     return (
-        // TODO use custom modal to use real dialog instead of this?
         <CustomModal showModal={showModal} onClose={() => {
             setShowModal(false)
         }} id={modalId}>
