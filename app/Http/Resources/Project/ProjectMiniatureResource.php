@@ -2,7 +2,8 @@
 
 namespace App\Http\Resources\Project;
 
-use App\Enums\ProjectRole;
+use App\Http\Resources\TagRessourceCollection;
+use Gate;
 use Illuminate\Http\Request;
 use Str;
 
@@ -19,10 +20,8 @@ class ProjectMiniatureResource extends ProjectContextResource
             'description' => Str::limit(value: $this->resource->description, preserveWords: true),
             'coordinates' => $this->resource->coordinates,
             'place' => $this->resource->place(),
-             // TODO replace with method and ways to get role and authorized actions directly
-            'is_member' => $this->resource->members()
-                    ->where('role', '!==', ProjectRole::BANNED->value)
-                    ->find(auth()->id()) !== null,
+            'tags' => (new TagRessourceCollection($this->resource->tags()->get()))->toArray($request),
+            'is_member' => Gate::check('view-project-data', $this->resource),
             'members_count' => $this->resource->members->count(),
         ]);
     }

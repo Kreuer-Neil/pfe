@@ -29,7 +29,7 @@ function ProfileIcon({isEditing, user, avatarError}: {
     if (!isEditing) {
         return <img
             alt={user.nickname} src={useImageAsset(`users/${user.avatar}/large`)}
-            className="-my-14 ml-3 mr-auto size-[7rem] bg-secondary rounded-full"
+            className="-my-14 ml-3 mr-auto size-28 bg-secondary rounded-full"
         />
     }
 
@@ -40,7 +40,7 @@ function ProfileIcon({isEditing, user, avatarError}: {
                 <span className="sr-only">{t('field_avatar')}</span>
 
                 <img src={iconPath} alt={user.nickname}
-                     className="size-[7rem] rounded-full object-cover"/>
+                     className="size-28 rounded-full object-cover"/>
 
                 <Camera className="bg-background text-secondary-border rounded-full ml-auto p-1 -mt-8 -mr-2 z-10"/>
                 <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp, image/gif" name="avatar" id="avatar"

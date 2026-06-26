@@ -43,7 +43,12 @@ Route::get('projects/{slug}/update', [ProjectController::class, 'update'])
 
 Route::post('projects/{slug}/update/appearance', [ProjectController::class, 'updateAppearance'])
     ->name('projects.update.appearance');
+Route::post('projects/{slug}/update/visibility', [ProjectController::class, 'updateVisibility'])
+    ->name('projects.update.visibility');
 
 Route::post('projects/{slug}/update/tags', [ProjectController::class, 'updateTags'])
     ->name('projects.update.tags');
+
+Route::post('projects/{slug}/update/location', [ProjectController::class, 'updateLocation'])
+    ->name('projects.update.location');
 

@@ -97,7 +97,7 @@ function ProjectHeaderIcon({isEditing, project, iconError}: {
                 <span className="sr-only">{t('field_icon')}</span>
 
                 <img src={iconPath} alt={t('icon_alt', {project: project.name})}
-                     className="size-[7rem] bg-secondary rounded-full object-cover"/>
+                     className="size-28 bg-secondary rounded-full object-cover"/>
 
                 {/* TODO fix icon positioning */}
                 <Camera className="bg-background text-secondary-border rounded-full ml-auto p-1 -mt-8 -mr-2 z-10"/>

@@ -14,6 +14,7 @@ use App\Models\Project;
 use App\Models\ProjectTag;
 use App\Models\Tag;
 use App\Models\User;
+use Gate;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Str;
@@ -71,12 +72,9 @@ class ProjectController extends Controller
     public function show(string $slug)
     {
         $project = Project::where('slug', $slug)->first();
-        $user = auth()->user();
-        if (!$project || !($project = $this->getShowDataFor($user, $project))) {
-            abort(
-                404,
-                __('project_not_found')
-            );
+
+        if (!$project || !($project = $this->getShowDataFor($project))) {
+            abort(404, __('project_not_found'));
         }
 
         auth()->user()->projects;
@@ -89,16 +87,16 @@ class ProjectController extends Controller
     /**
      * Gets the required show data for the project view (should not be here)
      */
-    private function getShowDataFor(User $user, Project $project)
+    private function getShowDataFor(Project $project)
     {
-        if (!$project->userIsMember(auth()->user())) {
-
-            if ($project->is_private) {
-                return null;
-            }
-
+        if (!Gate::allows('view-project', $project)) {
+            return null;
         }
-        // Get user role too
+
+//        if (!Gate::allows('access-data-for-project', $project)) {
+//            // TODO fix?
+//            return new ProjectMiniatureResource($project);
+//        }
 
         return (new ProjectResource($project))->toArray(request());
     }
@@ -119,7 +117,7 @@ class ProjectController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|min:6|max:255|unique:projects,name',
             'description' => 'required|min:6|string',
-            'is_private' => 'boolean',
+//            'is_private' => 'boolean',
             'tags' => 'required_if:is_private,true|array|max:7',
             'tags.*' => 'string|exists:tags,name',
         ]);
@@ -127,7 +125,7 @@ class ProjectController extends Controller
 
         $ownerId = auth()->user()->id;
         $validated['owner_id'] = $ownerId;
-        $validated['is_private'] = array_key_exists('is_private', $validated);
+        $validated['is_private'] = $request->has('is_private');
         $validated['slug'] = Str::slug($validated['name']);
         $tags = $validated['tags'];
 
@@ -150,76 +148,35 @@ class ProjectController extends Controller
         return redirect(route('projects.show', $project->slug));
     }
 
+
     public function updateAppearance(string $slug, Request $request)
     {
-        /*if (!(
-            $request->name &&
-            $request->icon
-        )) {
-            Inertia::flash([
-                'success' => false,
-                'error' => [
-                    'key' => 'missing_parameters',
-                    'params' => [],
-                ]
-            ]);
-        }*/
+        $project = Project::where('slug', $slug)->firstOrFail();
 
-        $project = Project::where('slug', $slug)->first();
-
-        if (!$project) {
+        if (!Gate::check('update-appearance', [$project])) {
             abort(403);
-//            return redirect()->back()->withErrors([
-//                'update' => __('validation.exists', [
-//                    'attribute' => __('projects.project')
-//                ])
-//            ]);
         }
-
-        $currentUser = auth()->user();
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'icon' => 'nullable|image|extensions:jpg,jpeg,png,gif,webp|max:2048|dimensions:max_width=2000,max_height=2000'
+            'icon' => 'nullable|image|extensions:jpg,jpeg,png,gif,webp|max:2048|dimensions:max_width=2000,max_height=2000',
         ]);
 
-        if (array_key_exists('icon', $validated)) {
-
+        if ($request->hasFile('icon')) {
             $oldIconName = $project->icon;
-
-            $path = $request
-                ->file('icon')
-                ->store('images/projects', 'public');
-
+            $path = $request->file('icon')->store('images/projects', 'public');
             $iconName = Str::beforeLast(Str::afterLast($path, '/'), '.');
-
             HandleProfileImageUploads::dispatch($iconName, $oldIconName, $path, 'projects');
-
             $project->icon = $iconName;
-        }
-
-        if (!$project->canEdit($currentUser)) {
-            abort(403);
-//            return redirect()
-//                ->back()
-//                // Use php translation for this error
-//                ->withErrors(['update' => __('unauthorized')
-//                ]);
         }
 
         $project->name = $validated['name'];
         $project->description = $validated['description'];
-
-        if (!$project->save()) {
-            return redirect()
-                ->back()
-                // Error: Could not update project with given data.
-                ->withErrors(['update' => __('validation.undefined_error')]);
-        }
+        $project->save();
 
         Inertia::flash(['success' => true]);
-        return redirect(route('projects.show', $slug));
+        return redirect(route('projects.edit', $slug));
     }
 
     public function myProjects(Request $request)
@@ -259,27 +216,73 @@ class ProjectController extends Controller
 
     public function edit(Request $request, string $slug)
     {
-        // TODO check w/ middleware if can access this
-        $project = (new ProjectResource(Project::where('slug', $slug)->first()))->toArray($request);
+        $project = Project::where('slug', $slug)->firstOrFail();
+        $tagsList = (new TagRessourceCollection(Tag::all()))->toArray($request);
+        $project = (new ProjectResource($project))->toArray($request);
 
         auth()->user()->projects;
-        return Inertia::render('projects/edit',
-            compact(['project']));
+        return Inertia::render('projects/edit', compact(['project', 'tagsList']));
     }
 
-    public function update(Request $request, string $slug)
+
+    public function updateVisibility(string $slug, Request $request)
     {
+        $project = Project::where('slug', $slug)->firstOrFail();
+
+        if (!Gate::authorize('update-project', $project)) {
+            abort(403);
+        }
+
+        $project->is_private = $request->has('is_private');
+        $project->save();
+
+        Inertia::flash(['success' => true]);
+        return redirect(route('projects.edit', $slug));
+    }
+
+    public function updateTags(string $slug, Request $request)
+    {
+        $project = Project::where('slug', $slug)->firstOrFail();
+
+        if (!Gate::check('update-project', $project)) {
+            abort(403);
+        }
+
         $validated = $request->validate([
-            'name' => 'required|string|min:6|max:255|unique:projects,name',
-            'description' => 'required|min:6|string',
-            'is_private' => 'boolean',
-            'tags' => 'required_if:is_private,true|array|max:7',
+            'tags' => 'required|array|max:7',
             'tags.*' => 'string|exists:tags,name',
         ]);
+
+        $tagIds = [];
+        foreach ($validated['tags'] as $tagName) {
+            $tag = Tag::where('name', $tagName)->first();
+            $tagIds[] = $tag->id;
+        }
+
+        $project->tags()->sync($tagIds);
+
+        Inertia::flash(['success' => true]);
+        return redirect(route('projects.edit', $slug));
     }
 
-    public function updateTags()
+    public function updateLocation(string $slug, Request $request)
     {
-        
+        $project = Project::where('slug', $slug)->firstOrFail();
+
+        if (!$project->canEdit(auth()->user())) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'place' => 'nullable|string|max:255',
+            'coordinates' => 'nullable|string|max:255',
+        ]);
+
+//        $project->place = $validated['place'];
+        $project->coordinates = $validated['coordinates'];
+        $project->save();
+
+        Inertia::flash(['success' => true]);
+        return redirect(route('projects.edit', $slug));
     }
 }

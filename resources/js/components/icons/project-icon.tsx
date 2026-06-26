@@ -24,7 +24,7 @@ export default function ProjectIcon({project, size = 'small', className = ''}: p
                 useImageAsset(`projects/${project.icon}/large`) + ' 2x, ';
             break;
         case 'large':
-            sizeStyle = 'size-[7rem]';
+            sizeStyle = 'size-28';
             break;
     }
 

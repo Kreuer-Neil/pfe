@@ -91,6 +91,7 @@ export default function projectsCreate({}) {
                                         {/*<FieldDescription className="sr-only">{t('settings')}</FieldDescription>*/}
                                         <Switch name="is_private"
                                                 defaultChecked={true}
+                                                value={1}
                                         />
                                         <InputError message={errors.is_private}/>
                                     </Field>
@@ -110,10 +111,7 @@ export default function projectsCreate({}) {
                                             autoHighlight
                                             items={tagsList}
                                             limit={7}
-                                            onValueChange={(values: Array<string>) => {
-                                                console.log(values)
-                                                setTags(values ?? [])
-                                            }}
+                                            onValueChange={(values: Array<string>) => setTags(values ?? [])}
                                         >
                                             <ComboboxChips ref={anchor} className="w-full max-w-xs">
                                                 <ComboboxValue>
@@ -141,7 +139,7 @@ export default function projectsCreate({}) {
                                         </Combobox>
                                         {tags?.length &&
                                             tags?.map((tag, i)=> {
-                                                return <Input type="hidden" name={'tags.'+i} value={tag}/>;
+                                                return <Input type="hidden" name={'tags.'+i} value={tag} key={i}/>;
                                             })
                                         }
                                         <InputError message={errors.tags}/>

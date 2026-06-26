@@ -21,7 +21,6 @@ class Project extends Model
     use HasFactory;
     use SoftDeletes;
 
-    //TODO: Slug as project identifier
     protected $fillable = ['owner_id', 'name', 'icon', 'description', 'slug', 'lang', 'coordinates', 'is_private'];
 
     /**
@@ -46,9 +45,9 @@ class Project extends Model
             ->where('banned', false);
     }
 
-    public function owner():BelongsTo
+    public function owner(): BelongsTo
     {
-        return  $this->belongsTo(User::class, 'owner_id');
+        return $this->belongsTo(User::class, 'owner_id');
     }
 
     public function memberships(): HasMany
@@ -109,7 +108,7 @@ class Project extends Model
 
     public function userIsMember(User $user): bool
     {
-        return $this->permission($user, ProjectAction::BELONGS);
+        return !in_array($this->userRole($user), [ProjectRole::VIEWER, ProjectRole::BANNED]);
     }
 
     public function addTask(Task $task, User $user): Task|null
@@ -186,18 +185,12 @@ class Project extends Model
         return $member->pivot->role;
     }
 
-    // TODO replace with user authorization
-    public function canEdit(User $user): bool
-    {
-        return $this->userRole($user) === ProjectRole::ADMIN;
-    }
-
-    public function invitations():HasMany
+    public function invitations(): HasMany
     {
         return $this->hasMany(ProjectInvitation::class);
     }
 
-    public function tags():BelongsToMany
+    public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class, ProjectTag::class);
     }

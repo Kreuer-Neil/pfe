@@ -127,11 +127,16 @@ export interface IProject extends IProjectShow {
     name: string;
     icon: string;
     description: string;
+    is_private: boolean;
     owner: IUser;
     members: IUser[];
     members_count: number;
 
-    user_role: 'member' | 'task_manager' | 'moderator' | 'admin';
+    coordinates: string | null;
+    place: string | null;
+    tags: Array<string>;
+
+    user_role: 'member' | 'task_manager' | 'moderator' | 'admin' | 'banned';
 
     upcoming_tasks: ITaskMiniature[];
 }
