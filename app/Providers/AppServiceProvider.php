@@ -25,5 +25,6 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('update-project', [ProjectPolicy::class, 'update']);
         Gate::define('view-project', [ProjectPolicy::class, 'view']);
         Gate::define('view-project-data', [ProjectPolicy::class, 'viewData']);
+        Gate::define('store-task', [ProjectPolicy::class, 'storeTask']);
     }
 }

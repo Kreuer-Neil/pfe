@@ -7,6 +7,7 @@ use App\Models\Participation;
 use App\Models\Project;
 use App\Models\Task;
 use Carbon\Carbon;
+use Gate;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -42,73 +43,32 @@ class TaskController extends Controller
         ];
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        if (!(
-            array_key_exists('project_id', $_REQUEST) &&
-            array_key_exists('title', $_REQUEST) &&
-            array_key_exists('description', $_REQUEST) &&
-            array_key_exists('due_at', $_REQUEST))
-        ) {
-            return [
-                'success' => false,
-                'error' => [
-                    'key' => 'missing_parameters',
-                    'params' => [
-                    ],
-                ]
-            ];
-        }
-        $project = Project::find($_REQUEST['project_id']);
-        $currentUser = auth()->user();
+        $validated = $request->validate([
+            'project_slug' => 'required|string|exists:projects,slug',
+            'title' => 'required|string|min:3|max:255',
+            'description' => 'required|string|min:3|max:65535',
+            'due_date' => 'required|date_format:Y-m-d',
+            'due_time' => 'required|date_format:H:i',
+            'min_participations' => 'nullable|integer|min:0',
+        ], /*['project_slug.exists' => 'validation.project_undefined']*/);
 
-        try {
-            $validated = request()->validate([
-                'project_id' => 'required|string|exists:projects,id',
-                'title' => 'required|string|max:255',
-                'description' => 'required|string',
-                'due_at' => 'required|date',
-                'min_participations' => 'nullable|integer|min:0',
-            ]);
-        } catch (ValidationException) {
-            return [
-                'success' => false,
-                'error' => [
-                    'key' => 'invalid_parameters',
-                    'params' => [
-                    ],
-                ]
-            ];
+        $project = Project::where('slug', $request['project_slug'])->firstOrFail();
+        if (!Gate::authorize('store-task', $project)) {
+            abort(403);
         }
 
-        $task = new Task([
-            'title' => $validated['title'],
+        Task::create([
+            'project_id' => $project->id,
             'user_id' => auth()->user()->id,
+            'title' => $validated['title'],
             'description' => $validated['description'],
             'min_participations' => $validated['min_participations'] ?? null,
-            'due_at' => $validated['due_at'],
+            'due_at' => $validated['due_date'] . ' ' . $validated['due_time'],
         ]);
 
-        if ($project->addTask($task, $currentUser) === null) {
-            return [
-                'success' => false,
-                'error' => [
-                    'key' => 'not_allowed_on_project',
-                    'params' => []
-                ],
-            ];
-        }
-
-        return [
-            'success' => true,
-            'error' => [
-                'key' => 'success_task_created',
-                'params' => [
-                    'task' => $validated['title']
-                ]
-            ]
-        ];
-
+        return redirect()->back();
     }
 
     public function participate($id)

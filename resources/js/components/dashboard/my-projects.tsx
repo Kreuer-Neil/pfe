@@ -26,7 +26,7 @@ function ProjectsList({projects}: { projects: IDashboardProject[] }): ReactNode 
                 projects.map((project: IDashboardProject): ReactNode => {
                     index++;
                     return (
-                        <li key={project.id} className="w-full">
+                        <li key={project.slug} className="w-full">
                             <ProjectItem project={project}/>
                         </li>
                     );

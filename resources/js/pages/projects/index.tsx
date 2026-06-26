@@ -78,7 +78,7 @@ function ProjectsContainer({projects}: ProjectsContainerProps): ReactNode {
                 <ul className="thumbnails-list-container">
                     {/* TODO see if better to load everything then slice or load progressively server-side */}
                     {projects.map((project: IProjectMiniature | IDashboardProject): ReactNode => (
-                        <li key={project.id} className="w-full">
+                        <li key={project.slug} className="w-full">
                             <ProjectItem project={project}/>
                         </li>))
                     }

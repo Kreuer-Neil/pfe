@@ -105,7 +105,7 @@ function Show({task, onCloseModal, startEdit, deleteTask, hasProjectContext}: {
                     <Link className="item-title text-with-icon w-full"
                           href={task?.project ? projectsShow(task.project.slug) : undefined}>
                         <ProjectIcon
-                            project={task?.project ?? {name: '', icon: '', slug: '', id: ''}}
+                            project={task?.project ?? {name: '', icon: '', slug: ''}}
                             size="small"/>
                         {task?.project.name ?? null}
                     </Link>
@@ -244,7 +244,7 @@ function Edit(
                         <ModalSection className="border-none">
                             <p className="item-title text-with-icon">
                                 <ProjectIcon
-                                    project={task?.project ?? {name: '', icon: '', slug: '', id: ''}}
+                                    project={task?.project ?? {name: '', icon: '', slug: ''}}
                                     size="small"/>
                                 {task?.project.name ?? null}
                             </p>

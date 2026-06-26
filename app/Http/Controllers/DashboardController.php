@@ -27,10 +27,10 @@ class DashboardController extends Controller
             ,
         )->toArray(request());
 
-//        syncLangFiles(['main-nav', 'dashboard', 'project', 'date', 'pagination']);
+        $now = str(now()->toDateTimeString())->beforeLast(':');
         return Inertia::render(
             'dashboard',
-            compact('projects', 'tasks')
+            compact('projects', 'tasks', 'now')
         );
     }
 }

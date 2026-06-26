@@ -84,7 +84,6 @@ export interface IProfile {
 }
 
 export interface IProjectContext {
-    id: string;
     name: string;
     icon: string;
     slug: string;
@@ -123,7 +122,6 @@ export interface IProjectShow extends IProjectMiniature {
 }
 
 export interface IProject extends IProjectShow {
-    id: string;
     name: string;
     icon: string;
     description: string;

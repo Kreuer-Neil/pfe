@@ -77,10 +77,11 @@ class ProjectController extends Controller
             abort(404, __('project_not_found'));
         }
 
+        $now = str(now()->toDateTimeString())->beforeLast(':');
         auth()->user()->projects;
         return Inertia::render(
             'projects/projects-show',
-            compact('project'));
+            compact('project','now'));
     }
 
 

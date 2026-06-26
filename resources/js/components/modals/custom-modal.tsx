@@ -1,15 +1,17 @@
 import {ReactNode, useEffect} from "react";
 import {cn} from "@/lib/utils";
+import {XIcon} from "lucide-react";
+import {Button} from "@/components/ui/button";
 
 interface CustomReactModalProps {
     showModal: boolean;
-    onClose: ()=>void;
+    onClose: () => void;
     id?: string;
     className?: string;
     children: ReactNode | ReactNode[];
 }
 
-function ModalContent({ className, children, ...props }: React.ComponentProps<"div">) {
+function ModalContent({className, children, ...props}: React.ComponentProps<"div">) {
     return (
         <div
             className={cn(
@@ -23,7 +25,7 @@ function ModalContent({ className, children, ...props }: React.ComponentProps<"d
     );
 }
 
-function ModalHeader({ className, ...props }: React.ComponentProps<"div">) {
+function ModalHeader({className, ...props}: React.ComponentProps<"div">) {
     return (
         <div
             className={cn("flex flex-col gap-2 text-center sm:text-left", className)}
@@ -32,7 +34,7 @@ function ModalHeader({ className, ...props }: React.ComponentProps<"div">) {
     );
 }
 
-function ModalFooter({ className, ...props }: React.ComponentProps<"div">) {
+function ModalFooter({className, ...props}: React.ComponentProps<"div">) {
     return (
         <div
             className={cn("flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", className)}
@@ -41,7 +43,7 @@ function ModalFooter({ className, ...props }: React.ComponentProps<"div">) {
     );
 }
 
-function ModalTitle({ className, ...props }: React.ComponentProps<"h2">) {
+function ModalTitle({className, ...props}: React.ComponentProps<"h2">) {
     return (
         <h2
             className={cn("text-lg leading-none font-semibold", className)}
@@ -50,7 +52,7 @@ function ModalTitle({ className, ...props }: React.ComponentProps<"h2">) {
     );
 }
 
-function ModalDescription({ className, ...props }: React.ComponentProps<"p">) {
+function ModalDescription({className, ...props}: React.ComponentProps<"p">) {
     return (
         <p
             className={cn("text-muted-foreground text-sm", className)}
@@ -76,11 +78,21 @@ export default function CustomModal({showModal, onClose, id, className = '', chi
     }, [showModal]);
 
     return (
-        <dialog closedby="any" id={id} onClose={onClose}
+        <dialog closedby="any"
+                id={id}
+                onClose={onClose}
                 className={cn("modal", className)}>
+            <Button size="icon-sm"
+                    variant="ghost"
+                    onClick={onClose}
+                    className="absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4"
+            >
+                <XIcon/>
+                <span className="sr-only">Close</span>
+            </Button>
             {children}
         </dialog>
     );
 }
 
-export { ModalContent, ModalHeader, ModalFooter, ModalTitle, ModalDescription }
+export {ModalContent, ModalHeader, ModalFooter, ModalTitle, ModalDescription}
