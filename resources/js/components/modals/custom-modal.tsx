@@ -37,7 +37,7 @@ function ModalHeader({className, ...props}: React.ComponentProps<"div">) {
 function ModalFooter({className, ...props}: React.ComponentProps<"div">) {
     return (
         <div
-            className={cn("flex flex-col-reverse gap-2 sm:flex-row sm:justify-end", className)}
+            className={cn("flex flex-col gap-2 sm:flex-row items-center justify-center", className)}
             {...props}
         />
     );

@@ -167,44 +167,22 @@ class TaskController extends Controller
             Inertia::flash(['edit_error' => 'invalid_parameter']);
         }
 
-        Inertia::flash(['edit_error' => 'task_edit_success']);
+        Inertia::flash(['task_edit_success' => true]);
         return redirect()->back();
     }
 
     public function destroy(string $id)
     {
-        try {
-            $task = Task::findOrFail($id);
-        } catch (ModelNotFoundException) {
-            return [
-                'success' => false,
-                'error' => [
-                    'key' => 'task_not_found',
-                    'params' => [
-                    ],
-                ]
-            ];
-        }
+        $task = Task::findOrFail($id);
         $currentUser = auth()->user();
 
         if (!($task->owner->id === $currentUser->id)) {
-            return [
-                'success' => false,
-                'error' => [
-                    'key' => 'not_allowed',
-                    'params' => []
-                ],
-            ];
+            return redirect()->back()->withErrors(['confirm' => __('validation.task_not_found')]);
         }
 
         $task->delete();
 
-        return [
-            'success' => true,
-            'error' => [
-                'key' => 'task_deleted',
-                'params' => ['taskName' => $task->title]
-            ],
-        ];
+        Inertia::flash(['task_delete_success' => true]);
+        return redirect()->back();
     }
 }

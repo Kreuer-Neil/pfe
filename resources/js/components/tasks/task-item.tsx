@@ -1,5 +1,5 @@
 import {CalendarCheck, Check, Timer, UsersRound} from "lucide-react";
-import {ITask, ITaskMiniature} from "@/types";
+import {ITask} from "@/types";
 import {cn} from "@/lib/utils";
 import {laravelDateToJsDate, upcomingDateToString} from "@/helpers/date";
 import ProjectIcon from "@/components/icons/project-icon";
@@ -12,11 +12,11 @@ import {Link} from "@inertiajs/react";
 
 
 interface TaskItemProps {
-    task: ITaskMiniature | ITask;
+    task: ITask;
     className?: string;
     isNotInProjectPage: boolean;
     // taskShow: ((e:any) => void);
-    onTap: (id: string) => void;
+    onTap: () => void;
 }
 
 
@@ -84,7 +84,7 @@ export default function TaskItem(
                 // as="article"
                 onClick={(e) => {
                     e.preventDefault();
-                    onTap(task.id);
+                    onTap();
                 }}
             >
                 {isNotInProjectPage &&

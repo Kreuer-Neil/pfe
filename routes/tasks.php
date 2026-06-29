@@ -18,11 +18,11 @@ Route::post('tasks/{id}/participate', [TaskController::class, 'participate'])
 Route::post('tasks/{id}/cancel', [TaskController::class, 'cancelParticipation'])
     ->name('tasks.participate.destroy');
 
-Route::get('tasks/{id}/validate', [TaskController::class, 'validate'])
+Route::post('tasks/{id}/validate', [TaskController::class, 'validate'])
     ->name('tasks.validate');
 
 Route::post('tasks/{id}/edit', [TaskController::class, 'update'])
     ->name('tasks.update');
 
-Route::get('tasks/{id}/delete', [TaskController::class, 'destroy'])
+Route::post('tasks/{id}/delete', [TaskController::class, 'destroy'])
     ->name('tasks.destroy');

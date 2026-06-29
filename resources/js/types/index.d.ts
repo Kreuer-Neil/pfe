@@ -136,31 +136,10 @@ export interface IProject extends IProjectShow {
 
     user_role: 'member' | 'task_manager' | 'moderator' | 'admin' | 'banned';
 
-    upcoming_tasks: ITaskMiniature[];
+    upcoming_tasks: ITask[];
 }
 
-export interface ITaskMiniature {
-    id: string;
-    title: string;
-    project: IProjectContext;
-    min_participations: ?number;
-    participations_count: number;
-    related_users: IProfile[];
-    // if self is participating
-    self_participating: boolean;
-    starting_at: ?string;
-    due_at: string;
-    hasNotes: boolean;
-    // notes: INote[] | null;
-    // created_at: string;
-    owner?: IProfile;
-    isOwner: boolean | null;
-    validated: boolean;
-
-    [key: string]: unknown;
-}
-
-export interface ITask extends ITaskMiniature {
+export interface ITask {
     id: string;
     owner: ?IProfile;
     title: string;
@@ -168,6 +147,7 @@ export interface ITask extends ITaskMiniature {
     project: IProjectContext;
     min_participations: ?number;
     participations_count: number;
+    related_users: IProfile[];
     // if self is participating
     self_participating: boolean;
     participating_users: IProfile[];
@@ -175,6 +155,9 @@ export interface ITask extends ITaskMiniature {
     due_at: string;
     // created_at: string;
     // updated_at: string;
+    // created_at: string;
+    is_owner: boolean;
+    validated: boolean;
     notes: INote[] | null;
 
     [key: string]: unknown;
