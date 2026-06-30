@@ -1,4 +1,4 @@
-import {ReactNode, useEffect} from "react";
+import {ReactNode, useEffect, useRef} from "react";
 import {cn} from "@/lib/utils";
 import {XIcon} from "lucide-react";
 import {Button} from "@/components/ui/button";
@@ -6,7 +6,7 @@ import {Button} from "@/components/ui/button";
 interface CustomReactModalProps {
     showModal: boolean;
     onClose: () => void;
-    id: string;
+    id?: string;
     className?: string;
     children: ReactNode | ReactNode[];
 }
@@ -63,17 +63,19 @@ function ModalDescription({className, ...props}: React.ComponentProps<"p">) {
 
 export default function CustomModal({showModal, onClose, id, className = '', children}: CustomReactModalProps) {
 
+    const dialogRef = useRef<HTMLDialogElement>(null);
+
     useEffect(() => {
-        const dialog = document.getElementById(id) as HTMLDialogElement | null;
         if (showModal) {
-            dialog?.showModal();
+            dialogRef.current?.showModal();
         } else {
-            dialog?.close();
+            dialogRef.current?.close();
         }
     }, [showModal]);
 
     return (
-        <dialog closedby="any"
+        <dialog ref={dialogRef}
+                closedby="any"
                 id={id}
                 onClose={onClose}
                 className={cn("modal", className)}>

@@ -4,17 +4,14 @@ import PageFlowContainer from "@/components/page-flow-container";
 import {useTranslation} from "react-i18next";
 import GeneralInput from "@/components/form/general-input";
 import {useState} from "react";
-import Button from "@/components/buttons/button";
+import {Button} from "@/components/ui/button";
 import ProjectInvitationController from "@/actions/App/Http/Controllers/ProjectInvitationController";
 import CustomModal from "@/components/modals/custom-modal";
 
 
 export default function invitation({}: {}) {
     const {t} = useTranslation('projects');
-
-
-    const [error, setError] = useState('');
-
+    
     const [code, setCode] = useState<string>(document.documentURI.split('code=')[1] ?? '');
 
     const [showConfirmation, setShowConfirmation] = useState(false);
@@ -47,7 +44,7 @@ export default function invitation({}: {}) {
                                         <span className="field-error">{errors.code}</span>}
                                 </div>
 
-                                <Button textContent={t('invitation_use')} type="submit" onClick={() => null}/>
+                                <Button type="submit">{t('invitation_use')}</Button>
                             </>
                         )}
                     </Form>
@@ -64,7 +61,7 @@ export default function invitation({}: {}) {
                         <>
                             <input type="hidden" name="confirm" value={1}/>
                             <input type="hidden" name="code" value={code}/>
-                            <Button textContent={t('invitation_confirm')} type="submit" onClick={() => null}/>
+                            <Button type="submit">{t('invitation_confirm')}</Button>
                         </>
                     )}
                 </Form>

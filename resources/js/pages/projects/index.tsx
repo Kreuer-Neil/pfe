@@ -4,7 +4,6 @@ import {Form, Head, router, usePage} from "@inertiajs/react";
 import {Dispatch, Fragment, ReactNode, SetStateAction, useEffect, useState} from "react";
 import ProjectItem from "@/components/projects/project-item";
 import PageFlowContainer from "@/components/page-flow-container";
-import IconButton from "@/components/buttons/icon-button";
 import {ArrowDownWideNarrow, ArrowUpWideNarrow, ListFilter, LucideIcon, Search} from "lucide-react";
 import SearchBar from "@/components/filtering/search-bar";
 import {useTranslation} from "react-i18next";

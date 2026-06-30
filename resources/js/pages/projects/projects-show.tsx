@@ -5,10 +5,15 @@ import PageFlowContainer from "@/components/page-flow-container";
 import TaskDisplay from "@/components/tasks/task-display";
 import {instanceOfProject, instanceOfProjectShow} from "@/helpers/type-check";
 import {
+    Bookmark,
+    BookmarkCheck,
     Camera,
     Copy,
+    Flag,
     LogIn,
-    PencilLine, Settings,
+    PencilLine,
+    Settings,
+    Share2,
     UserRoundPlus
 } from "lucide-react";
 import {Button} from "@/components/ui/button";
@@ -339,10 +344,18 @@ function ProjectHeader({project}: {
                                         </Button>
                                     }
                                     {/*{project.user_following ?
-                                        <IconButton icon={BookmarkCheck} textContent={t('following')}/> :
-                                        <IconButton icon={Bookmark} textContent={t('follow')}/>}
-                                    <IconButton icon={Share2} textContent={t('common:button_share')}/>
-                                    <IconButton icon={Flag} textContent={t('common:button_report')}/>*/}
+                                        <Button size="icon-sm" variant="outline">
+                                            <span className="sr-only">{t('following')}</span><BookmarkCheck/>
+                                        </Button> :
+                                        <Button size="icon-sm" variant="outline">
+                                            <span className="sr-only">{t('follow')}</span><Bookmark/>
+                                        </Button>}
+                                    <Button size="icon-sm" variant="outline">
+                                        <span className="sr-only">{t('common:button_share')}</span><Share2/>
+                                    </Button>
+                                    <Button size="icon-sm" variant="outline">
+                                        <span className="sr-only">{t('common:button_report')}</span><Flag/>
+                                    </Button>*/}
                                 </div>
                                 {isEditing ?
                                     <Field>
@@ -411,7 +424,6 @@ function ProjectHeader({project}: {
  */
 function VisitorPage() {
     const {project} = usePage<visitorPageProps>().props;
-    const {route} = usePage<{ route: string }>().props;
     const appHeaderContext: IAppHeaderContext =
         {
             contextImageSrc: useImageAsset(`projects/${project.icon}/small`),
@@ -438,7 +450,6 @@ function VisitorPage() {
  */
 function MemberPage() {
     const {project} = usePage<memberPageProps>().props;
-    const {route} = usePage<{ route: string }>().props;
     const {t} = useTranslation('projects');
     const appHeaderContext: IAppHeaderContext =
         {
@@ -453,7 +464,6 @@ function MemberPage() {
 
                 <TaskDisplay tasks={project.upcoming_tasks} title={t('upcoming_tasks')} project={project}/>
             </PageFlowContainer>
-
         </AppLayout>
     );
 }

@@ -5,11 +5,10 @@ import PageFlowContainer from "@/components/page-flow-container";
 import {ReactNode, useState} from "react";
 import AppLayout from "@/layouts/app-layout";
 import {useTranslation} from "react-i18next";
-import IconButton from "@/components/buttons/icon-button";
-import {Camera, Dot, UserMinus, UserPen, UserPlus} from "lucide-react";
+import {Button} from "@/components/ui/button";
+import {Camera, Dot, Flag, Share2, UserMinus, UserPen, UserPlus} from "lucide-react";
 import UserProfileController from "@/actions/App/Http/Controllers/UserProfileController";
 import GeneralInput from "@/components/form/general-input";
-import Button from "@/components/buttons/button";
 import InputError from "@/components/input-error";
 
 type PageProps = {
@@ -127,26 +126,34 @@ export default function profileShow({}) {
                                 <div className="flex gap-1 justify-end -mb-3">
                                     {/* TODO add user as contact & other features */}
                                     {isCurrentUser ?
-                                        <IconButton icon={UserPen} textContent={t('user_edit')}
-                                                    showText={true} onClick={() => setIsEditing(true)}/>
+                                        <Button size="sm" variant="outline" type="button"
+                                                onClick={() => setIsEditing(true)}>
+                                            {t('user_edit')}<UserPen/>
+                                        </Button>
                                         :
                                         user?.is_following ?
                                             <Form
                                                 {...UserProfileController.unfollow.form(user.id)}
                                             >
-                                                <IconButton icon={UserMinus} textContent={t('user_remove')}
-                                                            showText={true} onClick={() => null}/>
+                                                <Button size="sm" variant="outline">
+                                                    {t('user_remove')}<UserMinus/>
+                                                </Button>
                                             </Form> :
                                             <Form
                                                 {...UserProfileController.follow.form(user.id)}
                                             >
-                                                <IconButton icon={UserPlus} textContent={t('user_add')}
-                                                            showText={true} onClick={() => null}/>
+                                                <Button size="sm" variant="outline">
+                                                    {t('user_add')}<UserPlus/>
+                                                </Button>
                                             </Form>
                                     }
-                                    {/*<IconButton icon={Share2} textContent={t('common:share')}/>*/}
+                                    {/*<Button size="icon-sm" variant="outline">
+                                        <span className="sr-only">{t('common:share')}</span><Share2/>
+                                    </Button>*/}
                                     {/*{!isCurrentUser &&
-                                        <IconButton icon={Flag} textContent={t('common:button_report')}/>}*/}
+                                        <Button size="icon-sm" variant="outline">
+                                            <span className="sr-only">{t('common:button_report')}</span><Flag/>
+                                        </Button>}*/}
                                 </div>}
                             <div className="mt-4">
                                 <h1 className="page-title">{isEditing ?
@@ -176,8 +183,9 @@ export default function profileShow({}) {
                                 <p>{user.bio}</p>
                             }
                             {isEditing &&
-                                <Button textContent={t('submit_profile_changes')} type="submit" onClick={() => null}
-                                className="self-center"/>}
+                                <Button type="submit" className="self-center">
+                                    {t('submit_profile_changes')}
+                                </Button>}
                         </div>
                     </>
                 )}
