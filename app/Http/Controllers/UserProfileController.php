@@ -22,7 +22,6 @@ class UserProfileController extends Controller
         }
 
         $user = $user->toProfileResource()->toArray(request());
-        auth()->user()->projects;
         return Inertia::render('profile/profile-show', compact('user'));
     }
 

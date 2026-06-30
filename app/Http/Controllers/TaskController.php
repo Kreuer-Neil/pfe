@@ -8,10 +8,8 @@ use App\Models\Project;
 use App\Models\Task;
 use Carbon\Carbon;
 use Gate;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Throwable;
 
@@ -75,47 +73,30 @@ class TaskController extends Controller
     {
         $task = Task::find($id);
         if (!$task) {
-            Inertia::flash(['participation_error' => 'participation_error']);
+            return redirect()->back()->withErrors(['participation' => 'Task not found.']);
         }
         if (!$task->participate(auth()->user())) {
-            Inertia::flash(['participation_error' => 'participation_error']);
-        } else {
-            Inertia::flash(['participating' => 'true']);
+            return redirect()->back()->withErrors(['participation' => 'Internal error. Try again later.']);
         }
+        Inertia::flash(['participating' => true]);
         return redirect()->back();
     }
 
     public function validate($id)
     {
+        // TODO validation here
         try {
             $task = Task::findOrFail($id);
-        } catch (QueryException) {
-            return [
-                'success' => false,
-                'error' => [
-                    'key' => 'task_validation_error',
-                    'params' => [],
-                ]
-            ];
-        }
-        $task->validated_at = Carbon::now();
-        if ($task->save()) {
-            return [
-                'success' => true,
-                'error' => [
-                    'key' => 'task_validation_success',
-                    'params' => [],
-                ]
-            ];
+        } catch (QueryException $e) {
+            Inertia::flash(['validation_success' => false]);
+            return redirect()->back()->withErrors(['validation' => 'Task not found']);
         }
 
-        return [
-            'success' => false,
-            'error' => [
-                'key' => 'task_validation_error',
-                'params' => [],
-            ]
-        ];
+        $task->validated_at = Carbon::now();
+        if ($task->save()) {
+            return redirect()->back()->withErrors(['validation' => 'Internal error. Try again later.']);
+        }
+        return redirect()->back();
     }
 
     public function cancelParticipation(int $id)
@@ -129,7 +110,7 @@ class TaskController extends Controller
             Inertia::flash(['participation_error' => 'participation_cancel_error']);
             return redirect()->back();
         }
-        Inertia::flash(['participating' => 'false']);
+        Inertia::flash(['participating' => false]);
 
         return redirect()->back();
     }
@@ -154,8 +135,7 @@ class TaskController extends Controller
         $currentUser = auth()->user();
 
         if ($task->owner->id !== $currentUser->id) {
-            Inertia::flash(['edit_error' => 'not_allowed']);
-            return redirect()->back();
+            return redirect()->back()->withErrors(['edit' => 'You are not allowed to edit this task.']);
         }
 
         $task->title = $validated['title'];
@@ -164,7 +144,7 @@ class TaskController extends Controller
         $task->min_participations = $validated['min_participations'] ?? null;
 
         if (!$task->save()) {
-            Inertia::flash(['edit_error' => 'invalid_parameter']);
+            return redirect()->back()->withErrors(['edit' => 'Internal error. Try again later.']);
         }
 
         Inertia::flash(['task_edit_success' => true]);

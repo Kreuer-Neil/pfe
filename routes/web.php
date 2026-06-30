@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthPageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Middleware\LoadUserNavData;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -16,7 +17,7 @@ Route::get('/', function () {
 //Route::get('login', [AuthPageController::class, 'login'])
 //    ->name('login');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', LoadUserNavData::class])->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');

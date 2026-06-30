@@ -13,7 +13,6 @@ class ProjectInvitationController extends Controller
 {
     function index()
     {
-        auth()->user()->projects;
         return Inertia::render('projects/invitation');
     }
 

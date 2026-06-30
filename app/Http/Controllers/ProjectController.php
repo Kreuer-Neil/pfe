@@ -32,7 +32,6 @@ class ProjectController extends Controller
         $currentTags = $request->input('tags') ?? [];
         $projects = $this->searchProjects($request);
 
-        auth()->user()->projects;
         return Inertia::render('projects/index',
             compact(['filtersList', 'tagsList', 'currentFilter', 'currentTags', 'projects'])
         );
@@ -78,7 +77,6 @@ class ProjectController extends Controller
         }
 
         $now = str(now()->toDateTimeString())->beforeLast(':');
-        auth()->user()->projects;
         return Inertia::render(
             'projects/projects-show',
             compact('project','now'));
@@ -106,7 +104,6 @@ class ProjectController extends Controller
     {
         $tagsList = (new TagRessourceCollection(Tag::all()))->toArray($request);
 
-        auth()->user()->projects;
         return Inertia::render(
             'projects/projects-create',
             compact(['tagsList'])
@@ -221,7 +218,6 @@ class ProjectController extends Controller
         $tagsList = (new TagRessourceCollection(Tag::all()))->toArray($request);
         $project = (new ProjectResource($project))->toArray($request);
 
-        auth()->user()->projects;
         return Inertia::render('projects/edit', compact(['project', 'tagsList']));
     }
 
