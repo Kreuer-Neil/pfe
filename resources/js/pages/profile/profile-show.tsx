@@ -2,13 +2,16 @@ import {Form, Head, router, usePage} from '@inertiajs/react'
 import {IAppHeaderContext, IProfile, SharedData} from "@/types";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import PageFlowContainer from "@/components/page-flow-container";
-import {ReactNode, useState} from "react";
+import {ReactNode, useEffect, useState} from "react";
 import AppLayout from "@/layouts/app-layout";
 import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Textarea} from "@/components/ui/textarea";
+import {Label} from "@/components/ui/label";
+import {Field} from "@/components/ui/field";
 import {Camera, Dot, Flag, Share2, UserMinus, UserPen, UserPlus} from "lucide-react";
 import UserProfileController from "@/actions/App/Http/Controllers/UserProfileController";
-import GeneralInput from "@/components/form/general-input";
 import InputError from "@/components/input-error";
 
 type PageProps = {
@@ -42,7 +45,8 @@ function ProfileIcon({isEditing, user, avatarError}: {
                      className="size-28 rounded-full object-cover"/>
 
                 <Camera className="bg-background text-secondary-border rounded-full ml-auto p-1 -mt-8 -mr-2 z-10"/>
-                <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp, image/gif" name="avatar" id="avatar"
+                <input type="file" accept="image/png, image/jpg, image/jpeg, image/webp, image/gif" name="avatar"
+                       id="avatar"
                        className="image-input sr-only"
                        onChange={(e) => {
                            if (e.target.files && e.target.files[0]) {
@@ -50,7 +54,7 @@ function ProfileIcon({isEditing, user, avatarError}: {
                            }
                        }}/>
             </label>
-            <InputError className="mt-6 mx-3" message={avatarError} />
+            <InputError className="mt-6 mx-3" message={avatarError}/>
         </>
     );
 }
@@ -96,11 +100,13 @@ export default function profileShow({}) {
     const [pronouns, setPronouns] = useState<string>(user?.pronouns ?? '');
     const [bio, setBio] = useState<string>(user.bio ?? '');
 
-    router.on('flash', (e) => {
-        if (e.detail.flash.success) {
-            setIsEditing(false);
-        }
-    });
+    useEffect(() => {
+        return router.on('flash', (e) => {
+            if (e.detail.flash.success) {
+                setIsEditing(false);
+            }
+        });
+    }, []);
 
     const appHeaderContext: IAppHeaderContext = {
         contextImageSrc: useImageAsset(`users/${user.avatar}/medium`),
@@ -112,100 +118,98 @@ export default function profileShow({}) {
             <Head title="show"/>
             <PageFlowContainer className="py-0">
 
-            <ProfileContainer id={user.id} isEditing={isEditing}
-                              className="w-full flex flex-col gap-3 max-w-xl bg-card pb-4 -mb-4 border-b border-border">
-                {(errors) => (
-                    <>
-                        <div className="w-full">
-                            <div className="aspect-[2.8] w-full bg-container"/>
-                            <ProfileIcon isEditing={isEditing} user={user} avatarError={errors?.avatar}/>
-                        </div>
-                        <div className="px-3 flex flex-col gap-3">
-                            {!isEditing &&
-                                <div className="flex gap-1 justify-end -mb-3">
-                                    {/* TODO add user as contact & other features */}
-                                    {isCurrentUser ?
-                                        <Button size="sm" variant="outline" type="button"
-                                                onClick={() => setIsEditing(true)}>
-                                            {t('user_edit')}<UserPen/>
-                                        </Button>
-                                        :
-                                        user?.is_following ?
-                                            <Form
-                                                {...UserProfileController.unfollow.form(user.id)}
-                                            >
-                                                <Button size="sm" variant="outline">
-                                                    {t('user_remove')}<UserMinus/>
-                                                </Button>
-                                            </Form> :
-                                            <Form
-                                                {...UserProfileController.follow.form(user.id)}
-                                            >
-                                                <Button size="sm" variant="outline">
-                                                    {t('user_add')}<UserPlus/>
-                                                </Button>
-                                            </Form>
-                                    }
-                                    {/*<Button size="icon-sm" variant="outline">
+                <ProfileContainer id={user.id} isEditing={isEditing}
+                                  className="w-full flex flex-col gap-3 max-w-xl bg-card pb-4 -mb-4 border-b border-border">
+                    {(errors) => (
+                        <>
+                            <div className="w-full">
+                                <div className="aspect-[2.8] w-full bg-container"/>
+                                <ProfileIcon isEditing={isEditing} user={user} avatarError={errors?.avatar}/>
+                            </div>
+                            <div className="px-3 flex flex-col gap-3">
+                                {!isEditing &&
+                                    <div className="flex gap-1 justify-end -mb-3">
+                                        {/* TODO add user as contact & other features */}
+                                        {isCurrentUser ?
+                                            <Button size="sm" variant="outline" type="button"
+                                                    onClick={() => setIsEditing(true)}>
+                                                {t('user_edit')}<UserPen/>
+                                            </Button>
+                                            :
+                                            user?.is_following ?
+                                                <Form
+                                                    {...UserProfileController.unfollow.form(user.id)}
+                                                >
+                                                    <Button size="sm" variant="outline">
+                                                        {t('user_remove')}<UserMinus/>
+                                                    </Button>
+                                                </Form> :
+                                                <Form
+                                                    {...UserProfileController.follow.form(user.id)}
+                                                >
+                                                    <Button size="sm" variant="outline">
+                                                        {t('user_add')}<UserPlus/>
+                                                    </Button>
+                                                </Form>
+                                        }
+                                        {/*<Button size="icon-sm" variant="outline">
                                         <span className="sr-only">{t('common:share')}</span><Share2/>
                                     </Button>*/}
-                                    {/*{!isCurrentUser &&
+                                        {/*{!isCurrentUser &&
                                         <Button size="icon-sm" variant="outline">
                                             <span className="sr-only">{t('common:button_report')}</span><Flag/>
                                         </Button>}*/}
-                                </div>}
-                            <div className="mt-4">
-                                <h1 className="page-title">{isEditing ?
-                                    <GeneralInput name="nickname" label={t('field_nickname')}
-                                                  required={true}
-                                                  className="mb-3 normal-text" inputClassName="w-full page-title"
-                                                  value={nickname} setValue={setNickname}/>
-                                    : user.nickname
-                                }</h1>
-                                {!isEditing && <p className="flex w-full">
-                                    <span>{user.first_name + ' ' + user.last_name}</span>
-                                    {user?.pronouns &&
-                                        <>
-                                            <Dot/>
-                                            <span title={t('pronouns')}>{user.pronouns}</span>
-                                        </>
-                                    }
-                                </p>}
+                                    </div>}
+                                <div className="mt-4">
+                                    {isEditing ? (
+                                        <Field className="mb-3">
+                                            <Label htmlFor="nickname">{t('field_nickname')}</Label>
+                                            <Input name="nickname" id="nickname" required value={nickname}
+                                                   onChange={(e) => setNickname(e.target.value)}
+                                                   className="page-title w-full"/>
+                                            <InputError message={errors.nickname}/>
+                                        </Field>
+                                    ) : (
+                                        <h1 className="page-title">{user.nickname}</h1>
+                                    )}
+                                    {!isEditing && <p className="flex w-full">
+                                        <span>{user.first_name + ' ' + user.last_name}</span>
+                                        {user?.pronouns &&
+                                            <>
+                                                <Dot/>
+                                                <span title={t('pronouns')}>{user.pronouns}</span>
+                                            </>
+                                        }
+                                    </p>}
+                                    {isEditing && (
+                                        <Field>
+                                            <Label htmlFor="pronouns">{t('field_pronouns')}</Label>
+                                            <Input name="pronouns" id="pronouns" value={pronouns}
+                                                   onChange={(e) => setPronouns(e.target.value)}/>
+                                            <InputError message={errors.pronouns}/>
+                                        </Field>
+                                    )}
+                                </div>
+                                {isEditing ? (
+                                    <Field>
+                                        <Label htmlFor="bio">{t('field_bio')}</Label>
+                                        <Textarea name="bio" id="bio" value={bio}
+                                                  onChange={(e) => setBio(e.target.value)}
+                                                  className="w-full"/>
+                                        <InputError message={errors.bio}/>
+                                    </Field>
+                                ) : user?.bio && (
+                                    <p>{user.bio}</p>
+                                )}
                                 {isEditing &&
-                                    <GeneralInput name="pronouns" label={t('field_pronouns')}
-                                                  value={pronouns} setValue={setPronouns}/>}
+                                    <Button type="submit" className="self-center">
+                                        {t('submit_profile_changes')}
+                                    </Button>}
                             </div>
-                            {isEditing ?
-                                <GeneralInput name="bio" label={t('field_bio')} value={bio} setValue={setBio}
-                                              type="textarea" inputClassName="w-full"/>
-                                : user?.bio &&
-                                <p>{user.bio}</p>
-                            }
-                            {isEditing &&
-                                <Button type="submit" className="self-center">
-                                    {t('submit_profile_changes')}
-                                </Button>}
-                        </div>
-                    </>
-                )}
-            </ProfileContainer>
+                        </>
+                    )}
+                </ProfileContainer>
             </PageFlowContainer>
-            {/*<div className="flex flex-col-reverse items-center">
-
-                    <h1 className="page-title">{user.nickname}</h1>
-
-                </div>
-
-                <label htmlFor="profile-picture">
-                    <span className="sr-only">t('profile_picture')</span>
-                    <input type="file" id="profile-picture" name="profile-picture"
-                           accept="image/png, image/jpg, image/webp"
-                           onChange={(e) => {
-                               if (e.target.files && e.target.files[0]) {
-                                   setLocalFilePath(URL.createObjectURL(e.target.files[0]));
-                               }
-                           }}/>
-                </label>*/}
         </AppLayout>
     )
 }

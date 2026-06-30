@@ -2,9 +2,12 @@ import {Form, Head, router} from '@inertiajs/react'
 import AppLayout from "@/layouts/app-layout";
 import PageFlowContainer from "@/components/page-flow-container";
 import {useTranslation} from "react-i18next";
-import GeneralInput from "@/components/form/general-input";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+import {Field} from "@/components/ui/field";
+import InputError from "@/components/input-error";
 import ProjectInvitationController from "@/actions/App/Http/Controllers/ProjectInvitationController";
 import CustomModal from "@/components/modals/custom-modal";
 
@@ -16,13 +19,14 @@ export default function invitation({}: {}) {
 
     const [showConfirmation, setShowConfirmation] = useState(false);
 
-    // TODO c lean this mess
-    router.on('flash', (e) => {
-        if (e.detail.flash.confirm) {
-            setShowConfirmation(true);
-            setCode(e.detail.flash.code as string);
-        }
-    });
+    useEffect(() => {
+        return router.on('flash', (e) => {
+            if (e.detail.flash.confirm) {
+                setShowConfirmation(true);
+                setCode(e.detail.flash.code as string);
+            }
+        });
+    }, []);
 
     return (
         <AppLayout>
@@ -38,9 +42,12 @@ export default function invitation({}: {}) {
                             <>
                                 <div className="modal">
 
-                                    <GeneralInput name="code" label={t('invitation_code')} value={code} required={true}/>
-                                    {errors.code &&
-                                        <span className="field-error">{errors.code}</span>}
+                                    <Field>
+                                        <Label htmlFor="code">{t('invitation_code')}</Label>
+                                        <Input name="code" id="code" value={code} required
+                                               onChange={(e) => setCode(e.target.value)}/>
+                                        <InputError message={errors.code}/>
+                                    </Field>
                                 </div>
 
                                 <Button type="submit">{t('invitation_use')}</Button>

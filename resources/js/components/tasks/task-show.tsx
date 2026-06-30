@@ -1,5 +1,5 @@
 import {ITask} from "@/types";
-import {Dispatch, ReactNode, SetStateAction, useState} from "react";
+import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import CustomModal, {ModalContent, ModalFooter, ModalHeader, ModalTitle} from "@/components/modals/custom-modal";
 import ProjectIcon from "@/components/icons/project-icon";
@@ -283,13 +283,14 @@ export default function TaskShowModal({task, showModal, setShowModal, isInProjec
 }): ReactNode {
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
-    router.on('flash', (e) => {
-        const flash = e.detail.flash;
-
-        if (flash.task_edit_success) {
-            setIsEditing(false);
-        }
-    });
+    useEffect(() => {
+        return router.on('flash', (e) => {
+            const flash = e.detail.flash;
+            if (flash.task_edit_success) {
+                setIsEditing(false);
+            }
+        });
+    }, []);
 
     const closeModal = () => {
         setShowModal(false);

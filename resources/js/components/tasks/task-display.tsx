@@ -1,6 +1,6 @@
 import {IProject, ITask, SharedData} from "@/types";
 import TaskItem from "@/components/tasks/task-item";
-import {ReactNode, useState} from "react";
+import {ReactNode, useEffect, useState} from "react";
 import {cn} from "@/lib/utils";
 import {ClipboardPlus} from "lucide-react";
 import {laravelDateToJsDate} from "@/helpers/date";
@@ -99,14 +99,16 @@ export default function TaskDisplay({
         setShowTaskModal(true);
     };
 
-    router.on('flash', (e) => {
-        const flash = e.detail.flash;
-        if (flash?.task_delete_success) {
-            setShowTaskModal(false);
-            setShowConfirmModal(false);
-            setDeleteSuccess(t('task_delete_success', {task: flash.task_name}));
-        }
-    });
+    useEffect(() => {
+        return router.on('flash', (e) => {
+            const flash = e.detail.flash;
+            if (flash?.task_delete_success) {
+                setShowTaskModal(false);
+                setShowConfirmModal(false);
+                setDeleteSuccess(t('task_delete_success', {task: flash.task_name}));
+            }
+        });
+    }, []);
 
     return (
         <section className={cn('items-section max-w-xl', className)} id="tasks">

@@ -94,7 +94,6 @@ export default function TaskCreateModal({showModal, setShowModal, project}: {
                                                 id="due_date"
                                                 type="date"
                                                 defaultValue={defaultDatetime[0]}
-                                                required
                                             />
                                             <InputError message={errors.due_date}/>
                                         </Field>
@@ -108,7 +107,6 @@ export default function TaskCreateModal({showModal, setShowModal, project}: {
                                                 id="due_time"
                                                 type="time"
                                                 defaultValue={defaultDatetime[1]}
-                                                required
                                             />
                                             <InputError message={errors.due_time}/>
                                         </Field>

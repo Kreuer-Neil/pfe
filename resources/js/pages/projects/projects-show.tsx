@@ -19,14 +19,12 @@ import {
 import {Button} from "@/components/ui/button";
 import ProjectIcon from "@/components/icons/project-icon";
 import {useTranslation} from "react-i18next";
-import {Dispatch, ReactNode, SetStateAction, useState} from "react";
+import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from "react";
 import {Input} from "@/components/ui/input";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import ProjectController from "@/actions/App/Http/Controllers/ProjectController";
 import {join as projectsJoin, edit as projectsEdit} from "@/actions/App/Http/Controllers/ProjectController";
-import ModalCast from "@/components/modals/modal-cast";
-import CustomModal from "@/components/modals/custom-modal";
-import ModalSection from "@/components/modals/modal-section";
+import CustomModal, {ModalContent, ModalHeader, ModalTitle} from "@/components/modals/custom-modal";
 import ProjectInvitationController from "@/actions/App/Http/Controllers/ProjectInvitationController";
 import UserAvatar from "@/components/users/user-avatar";
 import {show as showProfile} from "@/actions/App/Http/Controllers/UserProfileController";
@@ -132,18 +130,22 @@ function InvitationModal({showInvitationModal, setShowInvitationModal, slug}: {
     const [expiresAtTime, setExpiresAtTime] = useState<string>('');
     const [code, setCode] = useState<string | null>(null);
 
-    router.on('flash', (e) => {
-        if (e.detail.flash.invitation) {
-            setCode(e.detail.flash.invitation as string | null);
-            // TODO fix to not have to trick for this
-            setShowInvitationModal(true);
-        }
-    });
+    useEffect(() => {
+        return router.on('flash', (e) => {
+            if (e.detail.flash.invitation) {
+                setCode(e.detail.flash.invitation as string | null);
+                setShowInvitationModal(true);
+            }
+        });
+    }, []);
 
     return (
         <CustomModal showModal={showInvitationModal} onClose={() => setShowInvitationModal(false)}
                      id="invitation-create" className="max-w-md">
-            <ModalCast closeModal={() => setShowInvitationModal(false)} title={t('invitation_modal')}>
+            <ModalHeader>
+                <ModalTitle>{t('invitation_modal')}</ModalTitle>
+            </ModalHeader>
+            <ModalContent>
                 {/*TODO use later with conditional rendering to get invitations*/}
                 <Form
                     {...ProjectInvitationController.show.form()}
@@ -152,27 +154,25 @@ function InvitationModal({showInvitationModal, setShowInvitationModal, slug}: {
                 >
                     {({processing, errors}) => (
                         <>
-                            <ModalSection className="border-none">
-                                <input type="hidden" name="project_slug" value={slug}/>
-                                {/*<GeneralInput name="expires_at_date" label={t('invitation_expires_at_date')}
-                                              value={expiresAtDate} setValue={setExpiresAtDate}
-                                              type="date"
-                                />
-                                <GeneralInput name="expires_at_time" label={t('invitation_expires_at_time')}
-                                              value={expiresAtTime} setValue={setExpiresAtTime}
-                                              type="time"
-                                />*/}
-                                {code &&
-                                    <code onClick={() => navigator.clipboard.writeText(code)}
-                                          onKeyDown={(e) => {
-                                              if (e.key === ' ' || e.key === 'Enter')
-                                                  navigator.clipboard.writeText(code);
-                                          }} tabIndex={0}
-                                          className="flex gap-1 bg-gray-200 p-0.5 px-1 rounded-xs items-center hover:outline"
-                                          title={"copy"}
-                                    >{code}<Copy/></code>
-                                }
-                            </ModalSection>
+                            <input type="hidden" name="project_slug" value={slug}/>
+                            {/*<GeneralInput name="expires_at_date" label={t('invitation_expires_at_date')}
+                                          value={expiresAtDate} setValue={setExpiresAtDate}
+                                          type="date"
+                            />
+                            <GeneralInput name="expires_at_time" label={t('invitation_expires_at_time')}
+                                          value={expiresAtTime} setValue={setExpiresAtTime}
+                                          type="time"
+                            />*/}
+                            {code &&
+                                <code onClick={() => navigator.clipboard.writeText(code)}
+                                      onKeyDown={(e) => {
+                                          if (e.key === ' ' || e.key === 'Enter')
+                                              navigator.clipboard.writeText(code);
+                                      }} tabIndex={0}
+                                      className="flex gap-1 bg-gray-200 p-0.5 px-1 rounded-xs items-center hover:outline"
+                                      title={"copy"}
+                                >{code}<Copy/></code>
+                            }
                             <div className="flex flex-col gap-3 items-center">
                                 <Button type="submit">
                                     {t('invitation_generate')}
@@ -181,7 +181,7 @@ function InvitationModal({showInvitationModal, setShowInvitationModal, slug}: {
                         </>
                     )}
                 </Form>
-            </ModalCast>
+            </ModalContent>
         </CustomModal>
     );
 }
@@ -196,7 +196,10 @@ function MembersModal({showModal, setShowModal, onCloseModal, project}: {
     const {t} = useTranslation('projects')
     return (
         <CustomModal showModal={showModal} onClose={() => setShowModal(false)} id="members-show">
-            <ModalCast closeModal={() => setShowModal(false)} title={t('project_members_title')}>
+            <ModalHeader>
+                <ModalTitle>{t('project_members_title')}</ModalTitle>
+            </ModalHeader>
+            <ModalContent>
                 <ul className="flex flex-col gap-1">
                     {project.members.map((member, index) => {
                         return (
@@ -216,7 +219,7 @@ function MembersModal({showModal, setShowModal, onCloseModal, project}: {
                         );
                     })}
                 </ul>
-            </ModalCast>
+            </ModalContent>
         </CustomModal>
     );
 }
@@ -230,11 +233,13 @@ function ProjectHeader({project}: {
     const [projectName, setProjectName] = useState(project.name);
     const [projectDesc, setProjectDesc] = useState(project.description);
 
-    router.on('flash', (e) => {
-        if (e.detail.flash.success) {
-            setIsEditing(false);
-        }
-    });
+    useEffect(() => {
+        return router.on('flash', (e) => {
+            if (e.detail.flash.success) {
+                setIsEditing(false);
+            }
+        });
+    }, []);
 
     const [showInvitationModal, setShowInvitationModal] = useState<boolean>(false);
 
