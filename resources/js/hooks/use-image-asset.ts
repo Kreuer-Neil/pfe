@@ -5,7 +5,7 @@ export function useImageAsset(assetPath: string): string {
     const assetPathParts = assetPath.split('/');
 
 
-    let directoryPath: string;
+    let directoryPath: string | undefined;
     switch (assetPathParts[0]) {
         case 'app':
             if (assetPathParts[1] === 'logo')
@@ -29,9 +29,8 @@ export function useImageAsset(assetPath: string): string {
             directoryPath = '/';
             break;
     }
-    // @ts-ignore
     if (directoryPath)
-        return directoryPath! + (assetPathParts[2] ? assetPathParts[2] + '/' : 'large/') + assetPathParts[1] + '.png';
+        return directoryPath + (assetPathParts[2] ? assetPathParts[2] + '/' : 'large/') + assetPathParts[1] + '.png';
 
 
     return '/icons/default_icon.svg';

@@ -141,17 +141,17 @@ export interface IProject extends IProjectShow {
 
 export interface ITask {
     id: string;
-    owner: ?IProfile;
+    owner: IProfile | null;
     title: string;
     description: string;
     project: IProjectContext;
-    min_participations: ?number;
+    min_participations: number | null;
     participations_count: number;
     related_users: IProfile[];
     // if self is participating
     self_participating: boolean;
     participating_users: IProfile[];
-    starting_at: ?string;
+    starting_at: string | null;
     due_at: string;
     // created_at: string;
     // updated_at: string;

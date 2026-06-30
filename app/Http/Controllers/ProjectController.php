@@ -151,7 +151,7 @@ class ProjectController extends Controller
     {
         $project = Project::where('slug', $slug)->firstOrFail();
 
-        if (!Gate::check('update-appearance', [$project])) {
+        if (!Gate::check('update-project-appearance', [$project])) {
             abort(403);
         }
 
@@ -266,7 +266,7 @@ class ProjectController extends Controller
     {
         $project = Project::where('slug', $slug)->firstOrFail();
 
-        if (!$project->canEdit(auth()->user())) {
+        if (!Gate::check('update-project', [$project])) {
             abort(403);
         }
 

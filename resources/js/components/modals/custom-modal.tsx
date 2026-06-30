@@ -6,7 +6,7 @@ import {Button} from "@/components/ui/button";
 interface CustomReactModalProps {
     showModal: boolean;
     onClose: () => void;
-    id?: string;
+    id: string;
     className?: string;
     children: ReactNode | ReactNode[];
 }
@@ -64,16 +64,11 @@ function ModalDescription({className, ...props}: React.ComponentProps<"p">) {
 export default function CustomModal({showModal, onClose, id, className = '', children}: CustomReactModalProps) {
 
     useEffect(() => {
+        const dialog = document.getElementById(id) as HTMLDialogElement | null;
         if (showModal) {
-            // @ts-ignore
-            const dialog: HTMLDialogElement | null = document.getElementById(id);
-            if (dialog)
-                dialog.showModal();
+            dialog?.showModal();
         } else {
-            // @ts-ignore
-            const dialog: HTMLDialogElement | null = document.getElementById(id);
-            if (dialog)
-                dialog.close()
+            dialog?.close();
         }
     }, [showModal]);
 
