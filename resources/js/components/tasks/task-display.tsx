@@ -4,7 +4,7 @@ import {ReactNode, useState} from "react";
 import {cn} from "@/lib/utils";
 import {ClipboardPlus} from "lucide-react";
 import {laravelDateToJsDate} from "@/helpers/date";
-import ShowMore from "@/components/buttons/show-more";
+import ShowMore from "@/components/users/show-more";
 import {useTranslation} from "react-i18next";
 import TaskCreateModal from "@/components/tasks/task-create";
 import TaskShowModal from "@/components/tasks/task-show";

@@ -254,21 +254,7 @@
     }
 
     /** Generic style shared between frontpage and app **/
-    .btn, .btn-alt {
-        @apply flex justify-center p-2 px-4 rounded-sm bg-primary text-primary-foreground max-w-xs w-full mx-auto font-semibold text-[1.125rem];
-    }
 
-    .btn-alt {
-        @apply bg-tertiary text-shadow-tertiary-foreground;
-    }
-
-    .icon-btn {
-        @apply bg-card text-link p-1 px-2 rounded-xs border border-border cursor-pointer flex gap-1;
-    }
-
-    .icon-btn-alt {
-        @apply bg-tertiary text-tertiary-foreground p-1 px-2 rounded-xs cursor-pointer flex gap-1;
-    }
 
     /** Frontpage specific style **/
     .frontpage {

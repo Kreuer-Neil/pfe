@@ -53,9 +53,7 @@ class TaskController extends Controller
         ], /*['project_slug.exists' => 'validation.project_undefined']*/);
 
         $project = Project::where('slug', $request['project_slug'])->firstOrFail();
-        if (!Gate::authorize('store-task', $project)) {
-            abort(403);
-        }
+        Gate::authorize('storeTask', $project);
 
         Task::create([
             'project_id' => $project->id,

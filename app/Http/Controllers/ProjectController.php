@@ -88,7 +88,7 @@ class ProjectController extends Controller
      */
     private function getShowDataFor(Project $project)
     {
-        if (!Gate::allows('view-project', $project)) {
+        if (!Gate::allows('view', $project)) {
             return null;
         }
 
@@ -151,7 +151,7 @@ class ProjectController extends Controller
     {
         $project = Project::where('slug', $slug)->firstOrFail();
 
-        if (!Gate::check('update-project-appearance', [$project])) {
+        if (!Gate::check('updateAppearance', $project)) {
             abort(403);
         }
 
@@ -226,9 +226,7 @@ class ProjectController extends Controller
     {
         $project = Project::where('slug', $slug)->firstOrFail();
 
-        if (!Gate::authorize('update-project', $project)) {
-            abort(403);
-        }
+        Gate::authorize('update', $project);
 
         $project->is_private = $request->has('is_private');
         $project->save();
@@ -241,7 +239,7 @@ class ProjectController extends Controller
     {
         $project = Project::where('slug', $slug)->firstOrFail();
 
-        if (!Gate::check('update-project', $project)) {
+        if (!Gate::check('update', $project)) {
             abort(403);
         }
 
@@ -266,7 +264,7 @@ class ProjectController extends Controller
     {
         $project = Project::where('slug', $slug)->firstOrFail();
 
-        if (!Gate::check('update-project', [$project])) {
+        if (!Gate::check('update', $project)) {
             abort(403);
         }
 
