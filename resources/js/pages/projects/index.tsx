@@ -5,22 +5,11 @@ import {Dispatch, Fragment, ReactNode, SetStateAction, useEffect, useState} from
 import ProjectItem from "@/components/projects/project-item";
 import PageFlowContainer from "@/components/page-flow-container";
 import {ArrowDownWideNarrow, ArrowUpWideNarrow, ListFilter, LucideIcon, Search} from "lucide-react";
-import SearchBar from "@/components/filtering/search-bar";
 import {useTranslation} from "react-i18next";
 import {Input} from "@/components/ui/input";
 import ProjectController from "@/actions/App/Http/Controllers/ProjectController";
 import {index as projectsIndex} from "@/actions/App/Http/Controllers/ProjectController";
-import redirectController from "@/actions/Illuminate/Routing/RedirectController";
 import {RouteQueryOptions} from "@/wayfinder";
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription, DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger
-} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
 import {Field, FieldGroup} from "@/components/ui/field";
 import {Label} from "@/components/ui/label";
@@ -29,7 +18,6 @@ import {
     Combobox, ComboboxChip, ComboboxChips, ComboboxChipsInput, ComboboxContent, ComboboxEmpty, ComboboxItem,
     ComboboxList, ComboboxValue, useComboboxAnchor
 } from "@/components/ui/combobox";
-import {ButtonGroup} from "@/components/ui/button-group";
 
 /*const breadcrumbs: BreadcrumbItem[] = [
     {

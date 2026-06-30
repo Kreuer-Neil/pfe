@@ -7,6 +7,7 @@ use App\Enums\ProjectsFilters;
 use App\Http\Resources\Project\ProjectDashboardResource;
 use App\Http\Resources\Project\ProjectMiniatureResource;
 use App\Http\Resources\Project\ProjectResource;
+use App\Http\Resources\Project\ProjectShowresource;
 use App\Http\Resources\TagRessourceCollection;
 use App\Jobs\HandleProfileImageUploads;
 use App\Models\Member;
@@ -75,8 +76,11 @@ class ProjectController extends Controller
         if (!$project || !Gate::allows('view', $project)) {
             abort(404, __('project_not_found'));
         }
-        if ($project->userRole() )
-        $project = (new ProjectResource($project))->toArray(request());
+        if ($project->userRole() === ProjectRole::VIEWER) {
+            $project = (new ProjectShowResource($project))->toArray(request());
+        } else {
+            $project = (new ProjectResource($project))->toArray(request());
+        }
         $now = str(now()->toDateTimeString())->beforeLast(':');
         return Inertia::render(
             'projects/projects-show',

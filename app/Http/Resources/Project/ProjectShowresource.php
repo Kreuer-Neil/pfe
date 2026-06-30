@@ -2,12 +2,12 @@
 
 namespace App\Http\Resources\Project;
 
-use App\Http\Resources\TaskResource;
+use App\Enums\ProjectRole;
 use App\Http\Resources\User\ProfileResource;
-use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProjectResource extends ProjectMiniatureResource
+class ProjectShowresource extends ProjectMiniatureResource
 {
     /**
      * Transform the resource into an array.
@@ -17,12 +17,8 @@ class ProjectResource extends ProjectMiniatureResource
     public function toArray(Request $request): array
     {
         return array_merge(parent::toArray($request), [
-            'description' => $this->resource->description,
-            'owner' => (new ProfileResource(User::find($this->resource->owner_id)))->toArray($request),
             'members' => ProfileResource::collection($this->resource->members)->toArray($request),
-            'user_role' => $this->resource->userRole(auth()->user()),
-            'upcoming_tasks' => TaskResource::collection($this->resource->upcomingTasks)->toArray($request),
+            'user_role' => ProjectRole::VIEWER,
         ]);
     }
-
 }

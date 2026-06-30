@@ -180,7 +180,7 @@ class Project extends Model
      */
     public function userRole(User $user = null): string
     {
-        $member = $this->members->find($user->id == auth()->user()->id);
+        $member = $this->members->find($user->id ?? auth()->user()->id);
         if (!$member) return ProjectRole::VIEWER;
         return $member->pivot->role;
     }
