@@ -74,8 +74,7 @@ function HeaderContainer({slug, isEditing, className, children}: {
     }
     return (
         <div className={className}>
-            {/* @ts-ignore */}
-            {typeof children === 'function' ? children() : children}
+            {typeof children === 'function' ? children({}) : children}
         </div>
     );
 }
@@ -135,8 +134,7 @@ function InvitationModal({showInvitationModal, setShowInvitationModal, slug}: {
 
     router.on('flash', (e) => {
         if (e.detail.flash.invitation) {
-            // @ts-ignore
-            setCode(e.detail.flash.invitation);
+            setCode(e.detail.flash.invitation as string | null);
             // TODO fix to not have to trick for this
             setShowInvitationModal(true);
         }

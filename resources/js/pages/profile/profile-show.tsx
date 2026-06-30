@@ -79,8 +79,7 @@ function ProfileContainer({id, isEditing, className, children}: {
     }
     return (
         <div className={className}>
-            {/* @ts-ignore */}
-            {typeof children === 'function' ? children() : children}
+            {typeof children === 'function' ? children({}) : children}
         </div>
     );
 }

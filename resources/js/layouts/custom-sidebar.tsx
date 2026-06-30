@@ -27,7 +27,6 @@ function SidebarNavItem({props, className = ''}: { props: INavItemProps, classNa
                   className={cn('nav-item section-title', className)}>
                 {Icon ?
                     <Icon className="p-1"/>
-                    /* @ts-ignore */
                     : props.project
                     && <ProjectIcon project={props.project} className="border border-secondary-border"/>
                 }

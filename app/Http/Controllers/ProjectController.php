@@ -72,32 +72,15 @@ class ProjectController extends Controller
     {
         $project = Project::where('slug', $slug)->first();
 
-        if (!$project || !($project = $this->getShowDataFor($project))) {
+        if (!$project || !Gate::allows('view', $project)) {
             abort(404, __('project_not_found'));
         }
-
+        if ($project->userRole() )
+        $project = (new ProjectResource($project))->toArray(request());
         $now = str(now()->toDateTimeString())->beforeLast(':');
         return Inertia::render(
             'projects/projects-show',
-            compact('project','now'));
-    }
-
-
-    /**
-     * Gets the required show data for the project view (should not be here)
-     */
-    private function getShowDataFor(Project $project)
-    {
-        if (!Gate::allows('view', $project)) {
-            return null;
-        }
-
-//        if (!Gate::allows('access-data-for-project', $project)) {
-//            // TODO fix?
-//            return new ProjectMiniatureResource($project);
-//        }
-
-        return (new ProjectResource($project))->toArray(request());
+            compact('project', 'now'));
     }
 
     public function create(Request $request)

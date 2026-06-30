@@ -178,9 +178,9 @@ class Project extends Model
     /**
      * Returns the user's role.
      */
-    public function userRole(User $user)
+    public function userRole(User $user = null): string
     {
-        $member = $this->members->find($user->id);
+        $member = $this->members->find($user->id == auth()->user()->id);
         if (!$member) return ProjectRole::VIEWER;
         return $member->pivot->role;
     }

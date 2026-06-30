@@ -20,8 +20,7 @@ export default function invitation({}: {}) {
     router.on('flash', (e) => {
         if (e.detail.flash.confirm) {
             setShowConfirmation(true);
-            // @ts-ignore
-            setCode(e.detail.flash.code);
+            setCode(e.detail.flash.code as string);
         }
     });
 
