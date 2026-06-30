@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TaskResource;
-use App\Models\Participation;
 use App\Models\Project;
 use App\Models\Task;
 use Carbon\Carbon;
@@ -11,7 +10,6 @@ use Gate;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Throwable;
 
 class TaskController extends Controller
 {
@@ -21,14 +19,14 @@ class TaskController extends Controller
         return Inertia::render('tasks/tasks-index');
     }
 
-    public function show()
+    public function show(Request $request)
     {
-        if (!array_key_exists('task_id', $_REQUEST)) {
+        if (!$request->has('task_id')) {
             return redirect(route('tasks'));
         }
         $currentUser = auth()->user();
 
-        $task = Task::find($_REQUEST['task_id']);
+        $task = Task::find($request->input('task_id'));
         if (!$task || !$task->canSee($currentUser)) return [
             'success' => false,
             'error' => [
@@ -50,7 +48,7 @@ class TaskController extends Controller
             'due_date' => 'required|date_format:Y-m-d',
             'due_time' => 'required|date_format:H:i',
             'min_participations' => 'nullable|integer|min:0',
-        ], /*['project_slug.exists' => 'validation.project_undefined']*/);
+        ] /*['project_slug.exists' => 'validation.project_undefined']*/);
 
         $project = Project::where('slug', $request['project_slug'])->firstOrFail();
         Gate::authorize('storeTask', $project);
@@ -82,34 +80,28 @@ class TaskController extends Controller
 
     public function validate($id)
     {
-        // TODO validation here
         try {
             $task = Task::findOrFail($id);
-        } catch (QueryException $e) {
-            Inertia::flash(['validation_success' => false]);
-            return redirect()->back()->withErrors(['validation' => 'Task not found']);
+        } catch (QueryException) {
+            return redirect()->back()->withErrors(['validate' => 'Task not found']);
         }
+        Gate::authorize('validate', $task);
 
         $task->validated_at = Carbon::now();
-        if ($task->save()) {
-            return redirect()->back()->withErrors(['validation' => 'Internal error. Try again later.']);
+        if (!$task->save()) {
+            return redirect()->back()->withErrors(['validate' => 'Internal error. Try again later.']);
         }
         return redirect()->back();
     }
 
     public function cancelParticipation(int $id)
     {
-        try {
-            Participation::where('user_id', auth()->user()->id)
-                ->where('task_id', $id)
-                ->first()
-                ->deleteOrFail();
-        } catch (Throwable) {
+        $task = Task::find($id);
+        if (!$task || !$task->cancelParticipation(auth()->user())) {
             Inertia::flash(['participation_error' => 'participation_cancel_error']);
             return redirect()->back();
         }
         Inertia::flash(['participating' => false]);
-
         return redirect()->back();
     }
 
@@ -130,11 +122,7 @@ class TaskController extends Controller
             return redirect()->back();
         }
 
-        $currentUser = auth()->user();
-
-        if ($task->owner->id !== $currentUser->id) {
-            return redirect()->back()->withErrors(['edit' => 'You are not allowed to edit this task.']);
-        }
+        Gate::authorize('update', $task);
 
         $task->title = $validated['title'];
         $task->description = $validated['description'];
@@ -152,11 +140,8 @@ class TaskController extends Controller
     public function destroy(string $id)
     {
         $task = Task::findOrFail($id);
-        $currentUser = auth()->user();
 
-        if (!($task->owner->id === $currentUser->id)) {
-            return redirect()->back()->withErrors(['confirm' => __('validation.task_not_found')]);
-        }
+        Gate::authorize('delete', $task);
 
         $task->delete();
 

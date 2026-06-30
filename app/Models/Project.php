@@ -21,7 +21,24 @@ class Project extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['owner_id', 'name', 'icon', 'description', 'slug', 'lang', 'coordinates', 'is_private'];
+    protected $fillable = ['owner_id', 'name', 'icon', 'description', 'lang', 'coordinates', 'is_private'];
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (Project $project) {
+            $project->slug = Str::slug($project->name);
+        });
+
+        static::created(function (Project $project) {
+            Member::create([
+                'project_id' => $project->id,
+                'user_id' => $project->owner_id,
+                'role' => ProjectRole::ADMIN,
+            ]);
+        });
+    }
 
     /**
      * Returns the address where the project takes place
@@ -111,6 +128,17 @@ class Project extends Model
         return !in_array($this->userRole($user), [ProjectRole::VIEWER, ProjectRole::BANNED]);
     }
 
+    public function updateMemberRole(User $target, ProjectRole $newRole): bool
+    {
+        if ($newRole === ProjectRole::VIEWER) return false;
+
+        $membership = $this->memberships()->where('user_id', $target->id)->first();
+        if (!$membership) return false;
+
+        $membership->role = $newRole->value;
+        return $membership->save();
+    }
+
     public function addTask(Task $task, User $user): Task|null
     {
         if (!$this->permission($user, ProjectAction::MANAGE_TASK))
@@ -178,9 +206,9 @@ class Project extends Model
     /**
      * Returns the user's role.
      */
-    public function userRole(User $user = null): string
+    public function userRole(User $user): string
     {
-        $member = $this->members->find($user->id ?? auth()->user()->id);
+        $member = $this->members->find($user->id);
         if (!$member) return ProjectRole::VIEWER;
         return $member->pivot->role;
     }

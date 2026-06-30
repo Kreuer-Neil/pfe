@@ -3,8 +3,6 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Http\Resources\User\NavUserResource;
-use App\Http\Resources\User\ProfileResource;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -114,22 +112,6 @@ class User extends Authenticatable
     public function projects(): BelongsToMany
     {
         return $this->belongsToMany(Project::class, Member::class);
-    }
-
-    /**
-     * Returns user resource to make nav work
-     */
-    public function toNavUserResource(): NavUserResource
-    {
-        return new NavUserResource($this);
-    }
-
-    /**
-     * Returns user profile resource
-     */
-    public function toProfileResource(): ProfileResource
-    {
-        return new ProfileResource($this);
     }
 
     public function follows(): BelongsToMany

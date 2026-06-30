@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\User\ProfileResource;
 use App\Jobs\HandleProfileImageUploads;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -21,8 +22,9 @@ class UserProfileController extends Controller
             abort(404);
         }
 
-        $user = $user->toProfileResource()->toArray(request());
-        return Inertia::render('profile/profile-show', compact('user'));
+        $canEdit = auth()->user()->id === $user->id;
+        $user = (new ProfileResource($user))->toArray(request());
+        return Inertia::render('profile/profile-show', compact('user', 'canEdit'));
     }
 
     public function update(int $id, Request $request)

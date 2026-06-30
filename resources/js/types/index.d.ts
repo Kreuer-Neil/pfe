@@ -104,6 +104,7 @@ export interface IDashboardProject extends IProjectContext {
 export interface IProjectMiniature extends IProjectContext {
     description: string;
     // featured_members: IUser[];
+    // TODO fix with clean ProjectRole type/enum later.
     user_role: 'viewer' | 'member' | 'taskmaster' | 'moderator' | 'admin';
     is_member: boolean;
     members_count: number;

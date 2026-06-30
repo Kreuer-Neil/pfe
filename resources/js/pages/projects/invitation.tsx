@@ -12,10 +12,10 @@ import ProjectInvitationController from "@/actions/App/Http/Controllers/ProjectI
 import CustomModal from "@/components/modals/custom-modal";
 
 
-export default function invitation({}: {}) {
+export default function invitation({ code: initialCode = '' }: { code?: string }) {
     const {t} = useTranslation('projects');
-    
-    const [code, setCode] = useState<string>(document.documentURI.split('code=')[1] ?? '');
+
+    const [code, setCode] = useState<string>(initialCode);
 
     const [showConfirmation, setShowConfirmation] = useState(false);
 

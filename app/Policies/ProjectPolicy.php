@@ -41,4 +41,9 @@ class ProjectPolicy
     {
         return in_array($project->userRole($user), [ProjectRole::ADMIN->value, ProjectRole::MODERATOR->value, ProjectRole::TASK_MANAGER->value]);
     }
+
+    public function updateMemberRole(User $user, Project $project): bool
+    {
+        return $project->userRole($user) === ProjectRole::ADMIN->value;
+    }
 }

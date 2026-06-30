@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Project;
 
 use App\Http\Resources\TagRessourceCollection;
-use Gate;
 use Illuminate\Http\Request;
 use Str;
 
@@ -21,9 +20,8 @@ class ProjectMiniatureResource extends ProjectContextResource
             'coordinates' => $this->resource->coordinates,
             'place' => $this->resource->place(),
             'tags' => (new TagRessourceCollection($this->resource->tags()->get()))->toArray($request),
-            'is_member' => Gate::check('view-project-data', $this->resource),
+            'is_member' => $this->resource->userIsMember(auth()->user()),
             'members_count' => $this->resource->members->count(),
         ]);
     }
-
 }

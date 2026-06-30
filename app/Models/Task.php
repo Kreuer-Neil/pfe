@@ -91,6 +91,17 @@ class Task extends Model
         return true;
     }
 
+    public function cancelParticipation(User $user): bool
+    {
+        $participation = Participation::where('user_id', $user->id)
+            ->where('task_id', $this->id)
+            ->first();
+
+        if (!$participation) return false;
+
+        return (bool) $participation->delete();
+    }
+
     public function isParticipating(User|int $user): bool
     {
         $userId = is_int($user) ? $user : $user->id;

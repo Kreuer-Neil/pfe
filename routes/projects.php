@@ -52,3 +52,6 @@ Route::post('projects/{slug}/update/tags', [ProjectController::class, 'updateTag
 Route::post('projects/{slug}/update/location', [ProjectController::class, 'updateLocation'])
     ->name('projects.update.location');
 
+Route::post('projects/{slug}/update/member-role', [ProjectController::class, 'updateMemberRole'])
+    ->name('projects.update.member-role');
+

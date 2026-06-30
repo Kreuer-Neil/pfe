@@ -1,4 +1,3 @@
-import {IAppHeaderContext, IProject, IProjectShow, IServerResponse} from "@/types";
 import AppLayout from "@/layouts/app-layout";
 import {Form, Head, Link, router, usePage} from "@inertiajs/react";
 import PageFlowContainer from "@/components/page-flow-container";
@@ -32,6 +31,7 @@ import InputError from "@/components/input-error";
 import {Field, FieldGroup} from "@/components/ui/field";
 import {Label} from "@/components/ui/label";
 import {Textarea} from "@/components/ui/textarea";
+import {IAppHeaderContext, IProject, IProjectShow} from "@/types";
 
 type pageProps = {
     project: IProject | IProjectShow | null,
@@ -263,7 +263,7 @@ function ProjectHeader({project}: {
                     <>
                         <div className="w-full">
                             <div className="aspect-[2.8] w-full bg-container flex justify-end">
-                                {(project.user_role === 'admin' && !isEditing) &&
+                                {(project.user_role === 'admin') &&
                                     <div className="flex gap-1 m-3 h-fit">
                                         <Button size="sm" variant="secondary"
                                                 onClick={() => setIsEditing(true)}

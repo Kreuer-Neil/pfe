@@ -11,9 +11,11 @@ use Inertia\Inertia;
 
 class ProjectInvitationController extends Controller
 {
-    function index()
+    function index(Request $request)
     {
-        return Inertia::render('projects/invitation');
+        return Inertia::render('projects/invitation', [
+            'code' => $request->input('code', ''),
+        ]);
     }
 
     function show(Request $request)

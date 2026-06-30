@@ -1,5 +1,5 @@
 import {Form, Head, router, usePage} from '@inertiajs/react'
-import {IAppHeaderContext, IProfile, SharedData} from "@/types";
+import {IAppHeaderContext, IProfile} from "@/types";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import PageFlowContainer from "@/components/page-flow-container";
 import {ReactNode, useEffect, useState} from "react";
@@ -16,6 +16,7 @@ import InputError from "@/components/input-error";
 
 type PageProps = {
     user: IProfile;
+    canEdit: boolean;
 }
 
 function ProfileIcon({isEditing, user, avatarError}: {
@@ -90,11 +91,9 @@ function ProfileContainer({id, isEditing, className, children}: {
 
 export default function profileShow({}) {
     const {t} = useTranslation('profile');
-    const {user} = usePage<PageProps>().props;
-    const {auth} = usePage<SharedData>().props;
+    const {user, canEdit} = usePage<PageProps>().props;
 
     const [isEditing, setIsEditing] = useState<boolean>(false);
-    const isCurrentUser: boolean = Number(user.id) === auth.user.id;
 
     const [nickname, setNickname] = useState<string>(user.nickname);
     const [pronouns, setPronouns] = useState<string>(user?.pronouns ?? '');
@@ -130,7 +129,7 @@ export default function profileShow({}) {
                                 {!isEditing &&
                                     <div className="flex gap-1 justify-end -mb-3">
                                         {/* TODO add user as contact & other features */}
-                                        {isCurrentUser ?
+                                        {canEdit ?
                                             <Button size="sm" variant="outline" type="button"
                                                     onClick={() => setIsEditing(true)}>
                                                 {t('user_edit')}<UserPen/>
@@ -155,7 +154,7 @@ export default function profileShow({}) {
                                         {/*<Button size="icon-sm" variant="outline">
                                         <span className="sr-only">{t('common:share')}</span><Share2/>
                                     </Button>*/}
-                                        {/*{!isCurrentUser &&
+                                        {/*{!canEdit &&
                                         <Button size="icon-sm" variant="outline">
                                             <span className="sr-only">{t('common:button_report')}</span><Flag/>
                                         </Button>}*/}

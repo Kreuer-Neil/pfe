@@ -10,11 +10,10 @@ use App\Http\Resources\Project\ProjectResource;
 use App\Http\Resources\Project\ProjectShowresource;
 use App\Http\Resources\TagRessourceCollection;
 use App\Jobs\HandleProfileImageUploads;
-use App\Models\Member;
 use App\Models\Project;
-use App\Models\ProjectTag;
 use App\Models\Tag;
 use App\Models\User;
+use Illuminate\Validation\Rule;
 use Gate;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -76,7 +75,7 @@ class ProjectController extends Controller
         if (!$project || !Gate::allows('view', $project)) {
             abort(404, __('project_not_found'));
         }
-        if ($project->userRole() === ProjectRole::VIEWER) {
+        if ($project->userRole(auth()->user()) === ProjectRole::VIEWER) {
             $project = (new ProjectShowResource($project))->toArray(request());
         } else {
             $project = (new ProjectResource($project))->toArray(request());
@@ -108,27 +107,13 @@ class ProjectController extends Controller
         ]);
         // , ['name.unique' => 'project_name_exists']
 
-        $ownerId = auth()->user()->id;
-        $validated['owner_id'] = $ownerId;
+        $validated['owner_id'] = auth()->user()->id;
         $validated['is_private'] = $request->has('is_private');
-        $validated['slug'] = Str::slug($validated['name']);
-        $tags = $validated['tags'];
+        $tagNames = $validated['tags'];
 
         $project = Project::create($validated);
 
-        foreach ($tags as $tagName) {
-            $tag = Tag::where('name', $tagName)->first();
-            ProjectTag::create([
-                'tag_id' => $tag->id,
-                'project_id' => $project->id,
-            ]);
-        }
-
-        Member::create([
-            'project_id' => $project->id,
-            'user_id' => $ownerId,
-            'role' => ProjectRole::ADMIN->value,
-        ]);
+        $project->tags()->sync(Tag::whereIn('name', $tagNames)->pluck('id'));
 
         return redirect(route('projects.show', $project->slug));
     }
@@ -189,11 +174,7 @@ class ProjectController extends Controller
         }
 
 
-        Member::create([
-            'user_id' => auth()->user()->id,
-            'project_id' => $project->id,
-            'role' => ProjectRole::MEMBER
-        ]);
+        $project->joinAsMember(auth()->user());
 
         Inertia::flash(['join_success' => true]);
         return redirect(route('projects.show', $slug));
@@ -245,6 +226,32 @@ class ProjectController extends Controller
 
         Inertia::flash(['success' => true]);
         return redirect(route('projects.edit', $slug));
+    }
+
+    public function updateMemberRole(string $slug, Request $request)
+    {
+        $project = Project::where('slug', $slug)->firstOrFail();
+        Gate::authorize('updateMemberRole', $project);
+
+        $assignableRoles = collect(ProjectRole::cases())
+            ->reject(fn($r) => $r === ProjectRole::VIEWER)
+            ->map(fn($r) => $r->value)
+            ->all();
+
+        $validated = $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+            'role'    => ['required', 'string', Rule::in($assignableRoles)],
+        ]);
+
+        $target = User::findOrFail($validated['user_id']);
+        $role = ProjectRole::from($validated['role']);
+
+        if (!$project->updateMemberRole($target, $role)) {
+            return redirect()->back()->withErrors(['role' => __('validation.member_not_found')]);
+        }
+
+        Inertia::flash(['role_change_success' => true]);
+        return redirect()->back();
     }
 
     public function updateLocation(string $slug, Request $request)

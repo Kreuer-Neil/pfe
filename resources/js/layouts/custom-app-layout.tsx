@@ -18,7 +18,6 @@ export default function CustomAppLayout(
     }: AppLayoutProps) {
     const isMobile = useIsMobile();
     const {sidebarOpen} = usePage<SharedData>().props;
-    console.log(sidebarOpen);
 
     const [openMobile, setOpenMobile] = useState(false);
     const [openDesktop, setOpenDesktop] = useState<boolean>(sidebarOpen);
