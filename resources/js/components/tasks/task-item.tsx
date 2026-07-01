@@ -68,7 +68,7 @@ export default function TaskItem(
         // taskShow
         onTap
     }: TaskItemProps) {
-    const {t} = useTranslation(['projects', 'date']);
+    const {t} = useTranslation(['tasks', 'date']);
     const dueAt: string = task.due_at ? upcomingDateToString(laravelDateToJsDate(task.due_at)) : t('date:no_time_limit');
 
     // const dueAtYear: number = dueAt.getFullYear();
@@ -101,7 +101,7 @@ export default function TaskItem(
 
                     {isNotInProjectPage &&
                         <ItemDescription>
-                            {t('task_from_project', {project: task.project.name})}
+                            {t('from_project', {project: task.project.name})}
                         </ItemDescription>
                     }
                     {/*

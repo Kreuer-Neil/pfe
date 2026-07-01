@@ -6,7 +6,6 @@ use App\Models\Task;
 use App\Models\TaskNote;
 use Gate;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class TaskNoteController extends Controller
 {
@@ -50,7 +49,6 @@ class TaskNoteController extends Controller
 
         $note->delete();
 
-        Inertia::flash(['note_delete_succes'=>true]);
         return redirect()->back();
     }
 }

@@ -1,5 +1,5 @@
-import {ITask} from "@/types";
-import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from "react";
+import {INote, ITask} from "@/types";
+import {Dispatch, ReactNode, SetStateAction, useState} from "react";
 import {useTranslation} from "react-i18next";
 import CustomModal, {ModalContent, ModalFooter, ModalHeader, ModalTitle} from "@/components/modals/custom-modal";
 import ProjectIcon from "@/components/icons/project-icon";
@@ -8,14 +8,14 @@ import {
     CalendarClock,
     Check,
     ClockAlert,
-    Notebook,
+    Notebook, PencilLine,
     Plus,
     Trash2,
-    UsersRound
+    UsersRound, X
 } from "lucide-react";
 import TaskController from "@/actions/App/Http/Controllers/TaskController";
 import RelatedUsers from "@/components/users/related-users";
-import {Form, Link, router} from "@inertiajs/react";
+import {Form, Link} from "@inertiajs/react";
 import {show as projectsShow} from '@/actions/App/Http/Controllers/ProjectController';
 import InputError from "@/components/input-error";
 import {Field, FieldGroup, FieldSet, FieldTitle} from "@/components/ui/field";
@@ -23,32 +23,126 @@ import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {Textarea} from "@/components/ui/textarea";
-import {Item, ItemActions, ItemContent, ItemDescription, ItemFooter, ItemMedia, ItemTitle} from "@/components/ui/item";
-import UserAvatar from "@/components/users/user-avatar";
+import {Item, ItemActions, ItemContent, ItemFooter} from "@/components/ui/item";
 import NoteCreateModal from "@/components/tasks/note-create-modal";
 import PostedBy from "@/components/general-posts/posted-by";
 import TaskNoteController from "@/actions/App/Http/Controllers/TaskNoteController";
 import ConfirmModal from "@/components/modals/confirm-modal";
 
-function Show({task, startEdit, onDelete, hasProjectContext}: {
+
+function NoteItem({note, role, onClickDelete}: { note: INote, role: string, onClickDelete: (noteId: string) => void }) {
+    const {t} = useTranslation('tasks');
+
+    const [isEditing, setIsEditing] = useState(false);
+
+    const submitEdit = () => {
+
+    }
+
+    return (
+        <Item size="sm">
+            {/*<ItemMedia>
+               <UserAvatar user={note.owner}/>
+            </ItemMedia>*/}
+            <ItemContent>
+                {isEditing ?
+                    <Form
+                        id={'update-' + note.id + '-note-form'}
+                        {...TaskNoteController.update.form(note.id)}
+                        resetOnSuccess
+                        onSuccess={() => setIsEditing(false)}
+                    >
+                        {({errors}) => (
+                            <FieldGroup>
+                                <Field>
+                                    <Label htmlFor="content"
+                                           className="sr-only"
+                                    >
+                                        {t('field_note_content')}
+                                    </Label>
+                                    <Textarea
+                                        name="content"
+                                        id="content"
+                                        placeholder={t('note_content_placeholder')}
+                                        required
+                                        autoFocus
+                                        defaultValue={note.content}
+                                    />
+                                    <InputError message={errors.content}/>
+                                </Field>
+                                <Field>
+                                    <Button type="submit">
+                                        {t('add_note')}
+                                    </Button>
+                                    <InputError message={errors.general}/>
+                                </Field>
+                            </FieldGroup>
+                        )}
+                    </Form> :
+                    note.content
+                }
+            </ItemContent>
+            {(note.is_owner || ['admin', 'moderator'].includes(role)) &&
+                <ItemActions>
+                    {note.is_owner && (
+                        isEditing
+                            ? <Button key="save" size="icon-sm"
+                                      type="submit"
+                                      form={'update-' + note.id + '-note-form'}
+                            >
+                                <span className="sr-only">{t('common:save_changes')}</span>
+                                <Check/>
+                            </Button>
+                            : <Button key="edit" size="icon-sm"
+                                      variant="secondary"
+                                      onClick={() => setIsEditing(true)}
+                            >
+                                <span className="sr-only">{t('note_edit')}</span>
+                                <PencilLine/>
+                            </Button>
+                    )}
+                    {isEditing ?
+                        <Button size="icon-sm"
+                                key="delete"
+                                variant="ghost"
+                                className="text-danger hover:bg-red-200"
+                                onClick={() => setIsEditing(false)}
+                        >
+                        <span className="sr-only">
+                            {t('note_edit_cancel')}
+                        </span>
+                            <X/>
+                        </Button>
+                        : <Button size="icon-sm"
+                                  key="cancel"
+                                  variant="ghost"
+                                  className="text-danger hover:bg-red-200"
+                                  onClick={() => onClickDelete(note.id)}
+                        >
+                        <span className="sr-only">
+                            {t('note_delete')}
+                        </span>
+                            <Trash2/>
+                        </Button>
+                    }
+                </ItemActions>
+            }
+            <ItemFooter>
+                <PostedBy owner={note.owner}/>
+            </ItemFooter>
+        </Item>
+    );
+}
+
+function Show({task, startEdit, onDelete, hasProjectContext, setShowNoteCreate, onClickDelete}: {
     task: ITask | undefined,
-    // role: IProject.role,
     startEdit: (task: ITask) => void,
     onDelete: () => void,
-    hasProjectContext: boolean
+    hasProjectContext: boolean,
+    setShowNoteCreate: Dispatch<SetStateAction<boolean>>,
+    onClickDelete: (noteId: any) => void
 }) {
     const {t} = useTranslation(['projects', 'date', 'errors']);
-    const [showNoteCreate, setShowNoteCreate] = useState<boolean>(false);
-    const [showNoteDelete, setShowNoteDelete] = useState<boolean>(false);
-    const [deleteNoteId, setDeleteNoteId] = useState<string>('');
-
-    useEffect(()=> {
-        router.on('flash',(e)=> {
-            if(e.detail.flash.note_delete_succes) {
-                setShowNoteDelete(false);
-            }
-        })
-    },[])
 
     return (
         <>
@@ -125,34 +219,9 @@ function Show({task, startEdit, onDelete, hasProjectContext}: {
                         <ul className="flex flex-col gap-1">
                             {task.notes.map((note) => (
                                 <li key={note.id}>
-                                    <Item size="sm">
-                                        <ItemMedia>
-                                            <UserAvatar user={note.owner}/>
-                                        </ItemMedia>
-                                        <ItemContent>
-                                            <ItemDescription>{note.content}</ItemDescription>
-                                        </ItemContent>
-                                        {(note.is_owner || ['admin', 'moderator'].includes(task.project.user_role)) &&
-                                            <ItemActions>
-                                                <Button size="icon"
-                                                        variant="ghost"
-                                                        className="text-danger hover:bg-red-200"
-                                                        onClick={() => {
-                                                            setShowNoteDelete(true);
-                                                            setDeleteNoteId(note.id);
-                                                        }}
-                                                >
-                                                        <span className="sr-only">
-                                                            {t('task_note_delete')}
-                                                        </span>
-                                                    <Trash2/>
-                                                </Button>
-                                            </ItemActions>
-                                        }
-                                        <ItemFooter>
-                                            <PostedBy owner={note.owner}/>
-                                        </ItemFooter>
-                                    </Item>
+                                    <NoteItem note={note}
+                                              role={task.project.user_role}
+                                              onClickDelete={onClickDelete}/>
                                 </li>
                             ))}
                         </ul>
@@ -171,17 +240,6 @@ function Show({task, startEdit, onDelete, hasProjectContext}: {
                     </Button>
                 </Field>
             </ModalContent>
-
-            {task && (
-                <>
-                <NoteCreateModal
-                    showModal={showNoteCreate}
-                    setShowModal={setShowNoteCreate}
-                    task={task}
-                />
-                    <ConfirmModal showModal={showNoteDelete} onClose={()=>setShowNoteDelete(false)} title={t('delete_note')} formAction={TaskNoteController.destroy.form(deleteNoteId)}/>
-                </>
-            )}
 
             <ModalFooter className="sm:justify-center pt-4 sm:flex-col">
 
@@ -248,6 +306,7 @@ function Edit({task, setIsEditing}: {
         <Form
             {...TaskController.update.form(task!.id)}
             className="flex flex-col gap-4"
+            onSuccess={() => setIsEditing(false)}
         >
             {({errors}) => (
                 <>
@@ -372,16 +431,19 @@ export default function TaskShowModal({task, showModal, setShowModal, isInProjec
     isInProjectPage: boolean,
     onDelete: () => void,
 }): ReactNode {
+
+    const {t} = useTranslation('tasks')
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
-    useEffect(() => {
-        return router.on('flash', (e) => {
-            const flash = e.detail.flash;
-            if (flash.task_edit_success) {
-                setIsEditing(false);
-            }
-        });
-    }, []);
+    const [showNoteCreate, setShowNoteCreate] = useState<boolean>(false);
+    const [showNoteDelete, setShowNoteDelete] = useState<boolean>(false);
+    const [deleteNoteId, setDeleteNoteId] = useState<string>('');
+
+    const onClickDelete = (noteId: any) => {
+        setShowNoteDelete(true);
+        setDeleteNoteId(noteId);
+    }
+
 
     const closeModal = () => {
         setShowModal(false);
@@ -389,19 +451,39 @@ export default function TaskShowModal({task, showModal, setShowModal, isInProjec
     };
 
     return (
-        <CustomModal showModal={showModal} onClose={closeModal} id="task-show">
-            {!isEditing
-                ? <Show
-                    task={task}
-                    startEdit={(t) => setIsEditing(true)}
-                    onDelete={onDelete}
-                    hasProjectContext={isInProjectPage}
-                />
-                : <Edit
-                    task={task}
-                    setIsEditing={setIsEditing}
-                />
-            }
-        </CustomModal>
+        <>
+            <CustomModal showModal={showModal} onClose={closeModal} id="task-show">
+                {!isEditing
+                    ? <Show
+                        task={task}
+                        startEdit={(t) => setIsEditing(true)}
+                        onDelete={onDelete}
+                        hasProjectContext={isInProjectPage}
+                        setShowNoteCreate={setShowNoteCreate}
+                        onClickDelete={onClickDelete}
+                    />
+                    : <Edit
+                        task={task}
+                        setIsEditing={setIsEditing}
+                    />
+                }
+            </CustomModal>
+            {task && (
+                <>
+                    <NoteCreateModal
+                        showModal={showNoteCreate}
+                        setShowModal={setShowNoteCreate}
+                        task={task}
+                    />
+                    <ConfirmModal
+                        showModal={showNoteDelete}
+                        onClose={() => setShowNoteDelete(false)}
+                        onSuccess={() => setShowNoteDelete(false)}
+                        title={t('note_delete')}
+                        formAction={TaskNoteController.destroy.form(deleteNoteId)}
+                    />
+                </>
+            )}
+        </>
     );
 }

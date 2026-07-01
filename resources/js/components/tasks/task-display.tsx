@@ -1,6 +1,6 @@
 import {IProject, ITask, SharedData} from "@/types";
 import TaskItem from "@/components/tasks/task-item";
-import {ReactNode, useEffect, useState} from "react";
+import {ReactNode, useState} from "react";
 import {cn} from "@/lib/utils";
 import {ClipboardPlus} from "lucide-react";
 import {laravelDateToJsDate} from "@/helpers/date";
@@ -9,7 +9,7 @@ import {useTranslation} from "react-i18next";
 import TaskCreateModal from "@/components/tasks/task-create";
 import TaskShowModal from "@/components/tasks/task-show";
 import ConfirmModal from "@/components/modals/confirm-modal";
-import {usePage, router, Form} from "@inertiajs/react";
+import {usePage} from "@inertiajs/react";
 import {Button} from "@/components/ui/button";
 import TaskController from "@/actions/App/Http/Controllers/TaskController";
 
@@ -29,18 +29,16 @@ function TasksList({tasks, isInProjectPage, maxLength, onTapTask}: {
     maxLength: number;
     onTapTask: (i: number) => void;
 }): ReactNode {
-    const {t} = useTranslation(['date', 'projects']);
+    const {t} = useTranslation(['tasks', 'date']);
 
     if (tasks.length <= 0) {
         return (
             <div className="thumbnails-list-container">
-                <p>{t('projects:task_empty_message')}</p>
+                <p>{t('empty_message')}</p>
             </div>
         );
     }
 
-
-    console.log(tasks[0].notes)
 
     return (
         <ul className="thumbnails-list-container">
@@ -75,7 +73,7 @@ export default function TaskDisplay({
                                         maxLength = 12,
                                     }: TaskDisplayProps): ReactNode {
     const {auth} = usePage<SharedData>().props;
-    const {t} = useTranslation(['projects', 'date']);
+    const {t} = useTranslation(['tasks', 'date']);
 
     const [maxItemsLength, setMaxItemsLength] = useState<number>(minLength);
     const [showMore, setShowMore] = useState<boolean>(true);
@@ -102,16 +100,6 @@ export default function TaskDisplay({
         setShowTaskModal(true);
     };
 
-    useEffect(() => {
-        return router.on('flash', (e) => {
-            const flash = e.detail.flash;
-            if (flash?.task_delete_success) {
-                setShowTaskModal(false);
-                setShowConfirmModal(false);
-                setDeleteSuccess(t('task_delete_success', {task: flash.task_name}));
-            }
-        });
-    }, []);
 
     return (
         <section className={cn('items-section max-w-xl', className)} id="tasks">
@@ -157,8 +145,12 @@ export default function TaskDisplay({
                     id="task-confirm-delete"
                     showModal={showConfirmModal}
                     onClose={() => setShowConfirmModal(false)}
+                    onSuccess={() => {
+                        setShowTaskModal(false);
+                        setShowConfirmModal(false);
+                        setDeleteSuccess(t('delete_success', {task: modalTask.title}));
+                    }}
                     formAction={TaskController.destroy.form(modalTask.id)}
-                    onConfirm={() => {}}
                     title={t('task_delete_warning')}
                     message={t('task_delete_warning_message', {task: modalTask.title})}
                 />

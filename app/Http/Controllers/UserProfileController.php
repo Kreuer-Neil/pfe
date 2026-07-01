@@ -66,7 +66,6 @@ class UserProfileController extends Controller
 
         $user->save();
 
-        Inertia::flash(['success' => true]);
         return redirect(route('user-profile.show', $id));
     }
 

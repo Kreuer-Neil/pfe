@@ -23,7 +23,7 @@ export default function TaskCreateModal({showModal, setShowModal, project}: {
 }) {
 
     const {now} = usePage<CreatePageProps>().props;
-    const {t} = useTranslation(['projects', 'errors']);
+    const {t} = useTranslation(['tasks', 'errors']);
 
     const defaultDatetime = now.split(' ');
 
@@ -35,7 +35,7 @@ export default function TaskCreateModal({showModal, setShowModal, project}: {
         >
             <ModalHeader>
                 <ModalTitle>
-                    {t('task_create_for_project', {project: project.name})}
+                    {t('create_for_project', {project: project.name})}
                 </ModalTitle>
             </ModalHeader>
             <ModalContent>
@@ -52,12 +52,12 @@ export default function TaskCreateModal({showModal, setShowModal, project}: {
                                     <FieldGroup>
                                         <Field>
                                             <Label htmlFor="title">
-                                                {t('task_form_title')}
+                                                {t('form_title')}
                                             </Label>
                                             <Input
                                                 name="title"
                                                 id="title"
-                                                placeholder={t('task_form_title_placeholder')}
+                                                placeholder={t('form_title_placeholder')}
                                                 required
                                                 autoFocus
                                             />
@@ -66,12 +66,12 @@ export default function TaskCreateModal({showModal, setShowModal, project}: {
 
                                         <Field>
                                             <Label htmlFor="description">
-                                                {t('task_form_description')}
+                                                {t('form_description')}
                                             </Label>
                                             <Textarea
                                                 name="description"
                                                 id="description"
-                                                placeholder={t('task_form_description_placeholder')}
+                                                placeholder={t('form_description_placeholder')}
                                                 required
                                             />
                                             <InputError message={errors.description}/>
@@ -87,7 +87,7 @@ export default function TaskCreateModal({showModal, setShowModal, project}: {
                                     <FieldGroup className="sm:grid sm:grid-cols-2 sm:gap-4">
                                         <Field>
                                             <Label htmlFor="due_date">
-                                                {t('task_form_due_date')}
+                                                {t('form_due_date')}
                                             </Label>
                                             <Input
                                                 name="due_date"
@@ -100,7 +100,7 @@ export default function TaskCreateModal({showModal, setShowModal, project}: {
 
                                         <Field>
                                             <Label htmlFor="due_time">
-                                                {t('task_form_due_time')}
+                                                {t('form_due_time')}
                                             </Label>
                                             <Input
                                                 name="due_time"
@@ -120,7 +120,7 @@ export default function TaskCreateModal({showModal, setShowModal, project}: {
                                     <FieldGroup>
                                         <Field>
                                             <Label htmlFor="min_participations">
-                                                {t('task_form_min_participations')}
+                                                {t('form_min_participations')}
                                             </Label>
                                             <Input
                                                 name="min_participations"
@@ -135,7 +135,7 @@ export default function TaskCreateModal({showModal, setShowModal, project}: {
 
                                 <Field>
                                     <Button type="submit">
-                                        {t('task_create_button')}
+                                        {t('create_button')}
                                     </Button>
                                     <InputError message={errors.general}/>
                                     {/*

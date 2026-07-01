@@ -2,7 +2,7 @@ import {Form, Head, router, usePage} from '@inertiajs/react'
 import {IAppHeaderContext, IProfile} from "@/types";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import PageFlowContainer from "@/components/page-flow-container";
-import {ReactNode, useEffect, useState} from "react";
+import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from "react";
 import AppLayout from "@/layouts/app-layout";
 import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
@@ -60,9 +60,10 @@ function ProfileIcon({isEditing, user, avatarError}: {
     );
 }
 
-function ProfileContainer({id, isEditing, className, children}: {
+function ProfileContainer({id, isEditing, setIsEditing, className, children}: {
     id: string,
     isEditing: boolean,
+    setIsEditing: Dispatch<SetStateAction<boolean>>
     className: string,
     children: ReactNode | ReactNode[] | ((errors: Record<string, string>) => ReactNode | ReactNode[]),
 }) {
@@ -73,6 +74,7 @@ function ProfileContainer({id, isEditing, className, children}: {
                 disableWhileProcessing
                 encType="multipart/form-data"
                 className={className}
+                onSuccess={() => setIsEditing(false)}
             >
                 {({processing, errors}) => (
                     <>
@@ -99,14 +101,6 @@ export default function profileShow({}) {
     const [pronouns, setPronouns] = useState<string>(user?.pronouns ?? '');
     const [bio, setBio] = useState<string>(user.bio ?? '');
 
-    useEffect(() => {
-        return router.on('flash', (e) => {
-            if (e.detail.flash.success) {
-                setIsEditing(false);
-            }
-        });
-    }, []);
-
     const appHeaderContext: IAppHeaderContext = {
         contextImageSrc: useImageAsset(`users/${user.avatar}/medium`),
         context: t('user_context_profile', {user: user.nickname}),
@@ -118,7 +112,9 @@ export default function profileShow({}) {
             <PageFlowContainer className="py-0">
 
                 <ProfileContainer id={user.id} isEditing={isEditing}
-                                  className="w-full flex flex-col gap-3 max-w-xl bg-card pb-4 -mb-4 border-b border-border">
+                                  className="w-full flex flex-col gap-3 max-w-xl bg-card pb-4 -mb-4 border-b border-border"
+                                  setIsEditing={setIsEditing}
+                >
                     {(errors) => (
                         <>
                             <div className="w-full">
@@ -131,7 +127,8 @@ export default function profileShow({}) {
                                         {/* TODO add user as contact & other features */}
                                         {canEdit ?
                                             <Button size="sm" variant="outline" type="button"
-                                                    onClick={() => setIsEditing(true)}>
+                                                    onClick={() => setIsEditing(true)}
+                                            >
                                                 {t('user_edit')}<UserPen/>
                                             </Button>
                                             :

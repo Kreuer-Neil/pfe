@@ -133,7 +133,6 @@ class TaskController extends Controller
             return redirect()->back()->withErrors(['edit' => 'Internal error. Try again later.']);
         }
 
-        Inertia::flash(['task_edit_success' => true]);
         return redirect()->back();
     }
 
@@ -145,7 +144,6 @@ class TaskController extends Controller
 
         $task->delete();
 
-        Inertia::flash(['task_delete_success' => true]);
         return redirect()->back();
     }
 }

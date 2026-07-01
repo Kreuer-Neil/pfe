@@ -3,15 +3,16 @@ import {ReactNode} from "react";
 import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
 import {Form} from "@inertiajs/react";
-import {RouteFormDefinition, RouteQueryOptions} from "@/wayfinder";
+import {RouteFormDefinition} from "@/wayfinder";
 
 type ConfirmModalProps = {
     showModal: boolean;
     onClose: () => void;
     formAction?: RouteFormDefinition<"post">;
     onConfirm?: () => void;
+    onSuccess?: () => void;
     title: string;
-    id?: string
+    id?: string;
     message?: string | null;
 }
 
@@ -21,6 +22,7 @@ export default function ConfirmModal(
         onClose,
         formAction,
         onConfirm,
+        onSuccess,
         title,
         id,
         message = null
@@ -30,6 +32,7 @@ export default function ConfirmModal(
         <CustomModal showModal={showModal} onClose={onClose} id={id ?? 'confirm'}>
             <Form
                 {...formAction}
+                onSuccess={onSuccess}
             >
                 {() => (
                     <>

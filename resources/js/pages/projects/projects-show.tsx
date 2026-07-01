@@ -320,7 +320,7 @@ function ProjectHeader({project}: {
                                         <Button variant="ghost"
                                                 size="sm"
                                                 onClick={openMembersModal}
-                                                className="gap-0"
+                                                className="gap-0 text-foreground"
                                         >
                                             <span className="font-bold">
                                                 {project.members_count}
