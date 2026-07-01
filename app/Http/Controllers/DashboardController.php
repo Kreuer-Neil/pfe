@@ -22,7 +22,7 @@ class DashboardController extends Controller
             $currentUser
                 ->upcomingTasks
 //                    ->with(['owner', 'project', 'participations'])
-                ->take(10)
+//                ->take(10)
 //                    ->get()
             ,
         )->toArray(request());

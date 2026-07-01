@@ -290,26 +290,29 @@ function ProjectHeader({project}: {
 
                                 {!(!project.banner) &&
                                     <img src={useImageAsset('project/' + project.banner)} alt={''}
-                                         className="aspect-[2.8] w-full bg-container"/>}
+                                         className="aspect-[2.8] w-full bg-container"/>
+                                }
                             </div>
 
                             <ProjectHeaderIcon isEditing={isEditing} project={project} iconError={errors?.icon}/>
                         </div>
 
                         <div className="flex flex-col items-center gap-3 px-3">
-                            <h1 className="page-title text-center">{isEditing ?
-                                <Field>
-                                    <Label>
-                                        {t('project_form_name')}
-                                    </Label>
-                                    <Input name="name"
-                                           value={projectName}
-                                           onChange={(e) => setProjectName(e.target.value)}
-                                           className="w-full text-center"
-                                    />
-                                    <InputError message={errors.name}/>
-                                </Field>
-                                : projectName}</h1>
+                            <h1 className="page-title text-center">
+                                {isEditing ?
+                                    <Field>
+                                        <Label>
+                                            {t('project_form_name')}
+                                        </Label>
+                                        <Input name="name"
+                                               value={projectName}
+                                               onChange={(e) => setProjectName(e.target.value)}
+                                               className="w-full text-center"
+                                        />
+                                        <InputError message={errors.name}/>
+                                    </Field>
+                                    : projectName}
+                            </h1>
 
                             <div className="w-full flex flex-col gap-3">
                                 <div className="flex gap-1 w-full">

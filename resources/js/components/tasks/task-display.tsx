@@ -4,7 +4,7 @@ import {ReactNode, useEffect, useState} from "react";
 import {cn} from "@/lib/utils";
 import {ClipboardPlus} from "lucide-react";
 import {laravelDateToJsDate} from "@/helpers/date";
-import ShowMore from "@/components/users/show-more";
+import ShowMore from "@/components/general-posts/show-more";
 import {useTranslation} from "react-i18next";
 import TaskCreateModal from "@/components/tasks/task-create";
 import TaskShowModal from "@/components/tasks/task-show";
@@ -38,6 +38,9 @@ function TasksList({tasks, isInProjectPage, maxLength, onTapTask}: {
             </div>
         );
     }
+
+
+    console.log(tasks[0].notes)
 
     return (
         <ul className="thumbnails-list-container">

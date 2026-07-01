@@ -36,4 +36,9 @@ class TaskPolicy
         return $task->owner->id === $user->id
             || in_array($task->project()->first()->userRole($user), [ProjectRole::MODERATOR, ProjectRole::ADMIN]);
     }
+
+    public function createNote(User $user, Task $task): bool
+    {
+        return $task->project()->first()->userIsMember($user);
+    }
 }

@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\TaskNote;
 use App\Policies\ProjectPolicy;
+use App\Policies\TaskNotePolicy;
 use App\Policies\TaskPolicy;
 use Gate;
 use Illuminate\Support\ServiceProvider;
@@ -26,5 +28,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(Project::class, ProjectPolicy::class);
         Gate::policy(Task::class, TaskPolicy::class);
+        Gate::policy(TaskNote::class, TaskNotePolicy::class);
     }
 }

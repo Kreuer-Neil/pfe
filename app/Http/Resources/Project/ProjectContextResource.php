@@ -20,6 +20,7 @@ class ProjectContextResource extends JsonResource
             'name' => $this->resource->name,
             'icon' => $this->resource->icon,
             'slug' => $this->resource->slug,
+            'user_role' => $this->resource->userRole(auth()->user()),
         ];
     }
 }

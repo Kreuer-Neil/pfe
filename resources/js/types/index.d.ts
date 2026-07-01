@@ -87,6 +87,7 @@ export interface IProjectContext {
     name: string;
     icon: string;
     slug: string;
+    user_role: 'viewer' | 'member' | 'taskmaster' | 'moderator' | 'admin';
 
     [key: string]: unknown;
 }
@@ -105,7 +106,6 @@ export interface IProjectMiniature extends IProjectContext {
     description: string;
     // featured_members: IUser[];
     // TODO fix with clean ProjectRole type/enum later.
-    user_role: 'viewer' | 'member' | 'taskmaster' | 'moderator' | 'admin';
     is_member: boolean;
     members_count: number;
     coordinates: string | null;
@@ -118,7 +118,7 @@ export interface IProjectMiniature extends IProjectContext {
 export interface IProjectShow extends IProjectMiniature {
 
     // is_private: boolean;
-    user_role: 'viewer';
+    // user_role: 'viewer';
     members: IProfile[];
 }
 
@@ -135,7 +135,7 @@ export interface IProject extends IProjectShow {
     place: string | null;
     tags: Array<string>;
 
-    user_role: 'member' | 'task_manager' | 'moderator' | 'admin' | 'banned';
+    // user_role: 'member' | 'task_manager' | 'moderator' | 'admin' | 'banned';
 
     upcoming_tasks: ITask[];
 }
@@ -168,6 +168,7 @@ export interface INote {
     id: string;
     owner: IProfile;
     content: string;
+    is_owner:boolean;
 
     [key: string]: unknown;
 }

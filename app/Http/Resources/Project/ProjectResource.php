@@ -20,7 +20,6 @@ class ProjectResource extends ProjectMiniatureResource
             'description' => $this->resource->description,
             'owner' => (new ProfileResource(User::find($this->resource->owner_id)))->toArray($request),
             'members' => ProfileResource::collection($this->resource->members)->toArray($request),
-            'user_role' => $this->resource->userRole(auth()->user()),
             'upcoming_tasks' => TaskResource::collection($this->resource->upcomingTasks)->toArray($request),
         ]);
     }

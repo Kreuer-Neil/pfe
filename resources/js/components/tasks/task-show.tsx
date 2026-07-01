@@ -3,25 +3,52 @@ import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import CustomModal, {ModalContent, ModalFooter, ModalHeader, ModalTitle} from "@/components/modals/custom-modal";
 import ProjectIcon from "@/components/icons/project-icon";
-import {CalendarCheck, CalendarClock, Check, ClockAlert, UsersRound} from "lucide-react";
+import {
+    CalendarCheck,
+    CalendarClock,
+    Check,
+    ClockAlert,
+    Notebook,
+    Plus,
+    Trash2,
+    UsersRound
+} from "lucide-react";
 import TaskController from "@/actions/App/Http/Controllers/TaskController";
 import RelatedUsers from "@/components/users/related-users";
 import {Form, Link, router} from "@inertiajs/react";
 import {show as projectsShow} from '@/actions/App/Http/Controllers/ProjectController';
 import InputError from "@/components/input-error";
-import {Field, FieldGroup, FieldSet} from "@/components/ui/field";
+import {Field, FieldGroup, FieldSet, FieldTitle} from "@/components/ui/field";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import {Textarea} from "@/components/ui/textarea";
+import {Item, ItemActions, ItemContent, ItemDescription, ItemFooter, ItemMedia, ItemTitle} from "@/components/ui/item";
+import UserAvatar from "@/components/users/user-avatar";
+import NoteCreateModal from "@/components/tasks/note-create-modal";
+import PostedBy from "@/components/general-posts/posted-by";
+import TaskNoteController from "@/actions/App/Http/Controllers/TaskNoteController";
+import ConfirmModal from "@/components/modals/confirm-modal";
 
 function Show({task, startEdit, onDelete, hasProjectContext}: {
     task: ITask | undefined,
+    // role: IProject.role,
     startEdit: (task: ITask) => void,
     onDelete: () => void,
     hasProjectContext: boolean
 }) {
     const {t} = useTranslation(['projects', 'date', 'errors']);
+    const [showNoteCreate, setShowNoteCreate] = useState<boolean>(false);
+    const [showNoteDelete, setShowNoteDelete] = useState<boolean>(false);
+    const [deleteNoteId, setDeleteNoteId] = useState<string>('');
+
+    useEffect(()=> {
+        router.on('flash',(e)=> {
+            if(e.detail.flash.note_delete_succes) {
+                setShowNoteDelete(false);
+            }
+        })
+    },[])
 
     return (
         <>
@@ -29,16 +56,18 @@ function Show({task, startEdit, onDelete, hasProjectContext}: {
                 <ModalTitle>{task?.title ?? ''}</ModalTitle>
                 <FieldGroup>
                     {hasProjectContext &&
-                        <Link
-                            className="item-title text-with-icon w-full"
-                            href={task?.project ? projectsShow(task.project.slug).url : '#'}
-                        >
-                            <ProjectIcon
-                                project={task?.project ?? {name: '', icon: '', slug: ''}}
-                                size="small"
-                            />
-                            {task?.project.name ?? null}
-                        </Link>
+                        <Button asChild size="icon-lg" variant="ghost" className="justify-start px-2 text-foreground">
+                            <Link
+                                className="item-title text-with-icon w-full"
+                                href={task?.project ? projectsShow(task.project.slug).url : '#'}
+                            >
+                                <ProjectIcon
+                                    project={task?.project ?? {name: '', icon: '', slug: '', user_role: 'viewer'}}
+                                    size="small"
+                                />
+                                {task?.project.name ?? null}
+                            </Link>
+                        </Button>
                     }
                     {task?.due_at &&
                         <p className="flex gap-1">
@@ -86,11 +115,73 @@ function Show({task, startEdit, onDelete, hasProjectContext}: {
                         </div>
                     }
                 </FieldGroup>
-                {/*<ModalSection title={t('task_note_title')} icon={Notebook}>
-                            <NotesList task={task}/>
 
-                        </ModalSection>*/}
+                <Field>
+                    <FieldTitle>
+                        <Notebook/>
+                        {t('task_note_title')}
+                    </FieldTitle>
+                    {(task?.notes && task.notes.length > 0) ?
+                        <ul className="flex flex-col gap-1">
+                            {task.notes.map((note) => (
+                                <li key={note.id}>
+                                    <Item size="sm">
+                                        <ItemMedia>
+                                            <UserAvatar user={note.owner}/>
+                                        </ItemMedia>
+                                        <ItemContent>
+                                            <ItemDescription>{note.content}</ItemDescription>
+                                        </ItemContent>
+                                        {(note.is_owner || ['admin', 'moderator'].includes(task.project.user_role)) &&
+                                            <ItemActions>
+                                                <Button size="icon"
+                                                        variant="ghost"
+                                                        className="text-danger hover:bg-red-200"
+                                                        onClick={() => {
+                                                            setShowNoteDelete(true);
+                                                            setDeleteNoteId(note.id);
+                                                        }}
+                                                >
+                                                        <span className="sr-only">
+                                                            {t('task_note_delete')}
+                                                        </span>
+                                                    <Trash2/>
+                                                </Button>
+                                            </ItemActions>
+                                        }
+                                        <ItemFooter>
+                                            <PostedBy owner={note.owner}/>
+                                        </ItemFooter>
+                                    </Item>
+                                </li>
+                            ))}
+                        </ul>
+                        :
+                        <p>
+                            {t('task_no_notes')}
+                        </p>
+                    }
+
+                    <Button
+                        variant="ghost"
+                        onClick={() => setShowNoteCreate(true)}
+                    >
+                        <Plus/>
+                        {t('add_note')}
+                    </Button>
+                </Field>
             </ModalContent>
+
+            {task && (
+                <>
+                <NoteCreateModal
+                    showModal={showNoteCreate}
+                    setShowModal={setShowNoteCreate}
+                    task={task}
+                />
+                    <ConfirmModal showModal={showNoteDelete} onClose={()=>setShowNoteDelete(false)} title={t('delete_note')} formAction={TaskNoteController.destroy.form(deleteNoteId)}/>
+                </>
+            )}
 
             <ModalFooter className="sm:justify-center pt-4 sm:flex-col">
 
@@ -175,7 +266,7 @@ function Edit({task, setIsEditing}: {
                         </ModalTitle>
                         <p className="item-title text-with-icon">
                             <ProjectIcon
-                                project={task?.project ?? {name: '', icon: '', slug: ''}}
+                                project={task?.project ?? {name: '', icon: '', slug: '', user_role: 'viewer'}}
                                 size="small"
                             />
                             {task?.project.name ?? null}
@@ -250,8 +341,8 @@ function Edit({task, setIsEditing}: {
                     <ModalFooter>
                         <FieldGroup className="gap-2 items-center max-w-md sm:grid sm:grid-cols-2">
                             <Button
-                            size="lg"
-                            className="w-full"
+                                size="lg"
+                                className="w-full"
                                 variant="secondary"
                                 type="submit">
                                 {t('task_confirm_changes')}

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TaskNoteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 
@@ -21,8 +22,17 @@ Route::post('tasks/{id}/cancel', [TaskController::class, 'cancelParticipation'])
 Route::post('tasks/{id}/validate', [TaskController::class, 'validate'])
     ->name('tasks.validate');
 
-Route::post('tasks/{id}/edit', [TaskController::class, 'update'])
+Route::post('tasks/{id}/update', [TaskController::class, 'update'])
     ->name('tasks.update');
 
-Route::post('tasks/{id}/delete', [TaskController::class, 'destroy'])
+Route::post('tasks/{id}/destroy', [TaskController::class, 'destroy'])
     ->name('tasks.destroy');
+
+Route::post('tasks/{id}/notes/store', [TaskNoteController::class, 'store'])
+    ->name('tasks.notes.store');
+
+Route::post('tasks/notes/{noteId}/update', [TaskNoteController::class, 'update'])
+    ->name('tasks.notes.update');
+
+Route::post('tasks/notes/{noteId}/delete', [TaskNoteController::class, 'destroy'])
+    ->name('tasks.notes.destroy');
