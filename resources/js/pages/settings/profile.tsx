@@ -7,8 +7,7 @@ import {Form, Head, Link, router, usePage} from '@inertiajs/react';
 import DeleteUser from '@/components/delete-user';
 import HeadingSmall from '@/components/heading-small';
 import InputError from '@/components/input-error';
-import {Button as DefaultButton} from '@/components/ui/button';
-import Button from '@/components/buttons/button';
+import {Button} from '@/components/ui/button';
 import {Input} from '@/components/ui/input';
 import {Label} from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
@@ -143,12 +142,9 @@ export default function Profile({
                                     )}
 
                                 <div className="flex items-center gap-4">
-                                    <DefaultButton
-                                        disabled={processing}
-                                        data-test="update-profile-button"
-                                    >
+                                    <Button disabled={processing} data-test="update-profile-button">
                                         Save
-                                    </DefaultButton>
+                                    </Button>
 
                                     <Transition
                                         show={recentlySuccessful}
@@ -174,8 +170,9 @@ export default function Profile({
                     <Link className="text-link" href={lang({query:{lang:'fr'}}).url}>Français</Link>
                     <Link className="text-link" href={lang({query:{lang:'de'}}).url}>Deutsch</Link>
                 </div>
-                <Button color="destructive" textContent={t('logout')} icon={LogOut}
-                        href={logout()} onClick={handleLogout}/>
+                <Button variant="destructive" asChild onClick={handleLogout}>
+                    <Link href={logout()}><LogOut/>{t('logout')}</Link>
+                </Button>
                 <DeleteUser/>
             </SettingsLayout>
         </AppLayout>

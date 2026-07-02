@@ -3,8 +3,6 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\FormatedModels\FormatedNavUser;
-use App\FormatedModels\FormatedProfile;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -114,22 +112,6 @@ class User extends Authenticatable
     public function projects(): BelongsToMany
     {
         return $this->belongsToMany(Project::class, Member::class);
-    }
-
-    /**
-     * Returns temporary formated user to make nav work
-     */
-    public function toFormatedNavUser(): FormatedNavUser
-    {
-        return new FormatedNavUser($this);
-    }
-
-    /**
-     * Returns formated user profile
-     */
-    public function toFormatedProfile(User $currentUser): FormatedProfile
-    {
-        return new FormatedProfile($this, $currentUser);
     }
 
     public function follows(): BelongsToMany

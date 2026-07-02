@@ -2,131 +2,98 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\BaseTags;
 use App\Enums\ProjectRole;
 use App\Enums\ProjectsFilters;
-use App\FormatedModels\Project\FormatedDashboardProject;
-use App\FormatedModels\Project\FormatedProject;
-use App\FormatedModels\Project\FormatedProjectMiniature;
+use App\Http\Resources\Project\ProjectDashboardResource;
+use App\Http\Resources\Project\ProjectMiniatureResource;
+use App\Http\Resources\Project\ProjectResource;
+use App\Http\Resources\Project\ProjectShowresource;
+use App\Http\Resources\TagRessourceCollection;
 use App\Jobs\HandleProfileImageUploads;
-use App\Models\Member;
 use App\Models\Project;
+use App\Models\Tag;
 use App\Models\User;
-use File;
+use Illuminate\Validation\Rule;
+use Gate;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\Format;
-use Intervention\Image\ImageManager;
 use Str;
 
 class ProjectController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
+        // use Pagination
+        $filtersList = ProjectsFilters::cases();
 
-        $filters = null;
-        // TODO create
-        $tags = BaseTags::cases();
+        $tagsList = (new TagRessourceCollection(Tag::all()))->toArray($request);
+        $currentFilter = $request->input('filters') ?? (Str::lower(ProjectsFilters::RECENT_PROJECTS->name));
+        $currentTags = $request->input('tags') ?? [];
+        $projects = $this->searchProjects($request);
 
-        // TODO fix this for nav
-//        auth()->user()->toFormatedNavUser();
-        auth()->user()->projects;
-        return Inertia::render('projects/index', compact(['filters', 'tags']));
+        return Inertia::render('projects/index',
+            compact(['filtersList', 'tagsList', 'currentFilter', 'currentTags', 'projects'])
+        );
     }
 
-    public function indexPersonnal()
+    private function searchProjects(
+        Request $request
+    )
     {
-        $filters = [ProjectsFilters::MyProjects, ProjectsFilters::RecentProjects];
-        $queryFilters = ['filter' => ProjectsFilters::MyProjects];
+        $query = $request->input('query') ?? null;
+        $tags = $request->input('tags') ?? null;
 
-        $tags = BaseTags::cases();
-        $title = 'my_projects';
+        $order = $request->input('filter') ?? ProjectsFilters::RECENT_PROJECTS->value;
+        $direction = $request->input('direction') === 'asc' ? 'asc' : 'desc';
 
-        return Inertia::render('projects/index', compact(['filters', 'queryFilters', 'tags', 'title']));
-    }
+        $queriedProjects = Project::where('is_private', false)->with(['tags']);
 
-    public function indexSearch()
-    {
-        // TODO find a better way to do this
-        if (!(array_key_exists('user_request', $_REQUEST) && $_REQUEST['user_request'] === '1')) {
-            return redirect(route('projects'));
-        }
-        $order = ProjectsFilters::RecentProjects->value;
-        $direction = (array_key_exists('direction', $_REQUEST) && $_REQUEST['direction'] === 'asc')
-            ? 'asc' : 'desc';
-
-        $queriedProjects = Project::where('is_private', false);
-
-        if (array_key_exists('query', $_REQUEST)) {
-            $query = $_REQUEST['query'];
+        if ($query) {
             // TODO use advanced queries to not cancel is_private clause
-            $queriedProjects = $queriedProjects
-                ->whereLike('name', '%' . $query . '%')
-                ->orWhere('is_private', false)
-                ->whereLike('description', '%' . $query . '%');
+            $queriedProjects = $queriedProjects->where(function ($q) use ($query) {
+                $q->whereLike('name', '%' . $query . '%')
+                    ->orWhereLike('description', '%' . $query . '%');
+            });
+        }
+
+        if ($tags) {
+            $queriedProjects = $queriedProjects->whereHas('tags', fn($q) => $q->whereIn('name', $tags));
         }
 
         // TODO add filtering for data
-        $queriedProjects = $queriedProjects
-            ->orderBy($order, $direction)
-            ->get();
-
-        $projects = [];
-        foreach ($queriedProjects as $project) {
-            $projects[] = new FormatedProjectMiniature($project, auth()->user());
-        }
-
-
-        return [
-            'links' => [
-                [
-                    'url' => route('projects') . '/1',
-                    'label' => 'label',
-                    'active' => false
-                ]
-            ],
-            'data' => $projects
-        ];
+        return ProjectMiniatureResource::collection(
+            $queriedProjects->orderBy($order, $direction)
+                ->get()
+        )->toArray(request());
     }
 
     public function show(string $slug)
     {
         $project = Project::where('slug', $slug)->first();
-        $user = auth()->user();
-        if (!$project || !($project = $this->getShowDataFor($user, $project))) {
-            abort(404);
-        }
 
-        auth()->user()->projects;
+        if (!$project || !Gate::allows('view', $project)) {
+            abort(404, __('project_not_found'));
+        }
+        if ($project->userRole(auth()->user()) === ProjectRole::VIEWER) {
+            $project = (new ProjectShowResource($project))->toArray(request());
+        } else {
+            $project = (new ProjectResource($project))->toArray(request());
+        }
+        $now = str(now()->toDateTimeString())->beforeLast(':');
         return Inertia::render(
             'projects/projects-show',
-            compact('project'));
+            compact('project', 'now'));
     }
 
-
-    /**
-     * Gets the required show data for the project view (should not be here)
-     */
-    private function getShowDataFor(User $user, Project $project)
+    public function create(Request $request)
     {
-        if (!$project->userIsMember(auth()->user())) {
+        $tagsList = (new TagRessourceCollection(Tag::all()))->toArray($request);
 
-            if ($project->is_private) {
-                return null;
-            }
-
-        }
-        // Get user role too
-
-        return new FormatedProject($project, $user);
-    }
-
-    public function create()
-    {
-        auth()->user()->projects;
-        return Inertia::render('projects/projects-create');
+        return Inertia::render(
+            'projects/projects-create',
+            compact(['tagsList'])
+        );
     }
 
     public function store(Request $request)
@@ -134,98 +101,59 @@ class ProjectController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|min:6|max:255|unique:projects,name',
             'description' => 'required|min:6|string',
-            'is_private' => 'boolean',
+//            'is_private' => 'boolean',
+            'tags' => 'required_if:is_private,true|array|max:7',
+            'tags.*' => 'string|exists:tags,name',
         ]);
         // , ['name.unique' => 'project_name_exists']
 
-        $ownerId = auth()->user()->id;
-        $validated['owner_id'] = $ownerId;
-        $validated['is_private'] = array_key_exists('is_private', $validated);
-        $validated['slug'] = Str::slug($validated['name']);
+        $validated['owner_id'] = auth()->user()->id;
+        $validated['is_private'] = $request->has('is_private');
+        $tagNames = $validated['tags'];
 
         $project = Project::create($validated);
 
-        Member::create([
-            'project_id' => $project->id,
-            'user_id' => $ownerId,
-            'role' => ProjectRole::ADMIN->value,
-        ]);
+        $project->tags()->sync(Tag::whereIn('name', $tagNames)->pluck('id'));
 
         return redirect(route('projects.show', $project->slug));
     }
 
+
     public function updateAppearance(string $slug, Request $request)
     {
-        /*if (!(
-            $request->name &&
-            $request->icon
-        )) {
-            Inertia::flash([
-                'success' => false,
-                'error' => [
-                    'key' => 'missing_parameters',
-                    'params' => [],
-                ]
-            ]);
-        }*/
+        $project = Project::where('slug', $slug)->firstOrFail();
 
-        $project = Project::where('slug', $slug)->first();
-        if (!$project) {
-            Inertia::flash(['error' => [
-                'key' => 'project_not_found',
-                'params' => [],
-            ]]);
-            return redirect(route('projects.show', $slug));
+        if (!Gate::check('updateAppearance', $project)) {
+            abort(403);
         }
-
-        $currentUser = auth()->user();
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'icon' => 'nullable|image|extensions:jpg,jpeg,png,gif,webp|max:2048|dimensions:max_width=2000,max_height=2000'
+            'icon' => 'nullable|image|extensions:jpg,jpeg,png,gif,webp|max:2048|dimensions:max_width=2000,max_height=2000',
         ]);
 
-        if (array_key_exists('icon', $validated)) {
-
+        if ($request->hasFile('icon')) {
             $oldIconName = $project->icon;
-
-            $path = $request
-                ->file('icon')
-                ->store('images/projects', 'public');
-
+            $path = $request->file('icon')->store('images/projects', 'public');
             $iconName = Str::beforeLast(Str::afterLast($path, '/'), '.');
-
             HandleProfileImageUploads::dispatch($iconName, $oldIconName, $path, 'projects');
-
             $project->icon = $iconName;
-        }
-
-        if ($project->canEdit($currentUser)) {
-            Inertia::flash(['error' => [
-                'key' => 'not_allowed',
-                'params' => []
-            ]]);
-
-
         }
 
         $project->name = $validated['name'];
         $project->description = $validated['description'];
-
-        if (!$project->save()) {
-            // TODO remove flash and add error
-        }
+        $project->save();
 
         Inertia::flash(['success' => true]);
-        return redirect(route('projects.show', $slug));
+        return redirect(route('projects.edit', $slug));
     }
 
-    public function myProjects()
+    public function myProjects(Request $request)
     {
         $projects = [];
         foreach (auth()->user()->projects as $project) {
-            $projects[] = new FormatedDashboardProject($project);
+            $projects[] = (new ProjectDashboardResource($project))->toArray($request);
         }
         return Inertia::render('projects/my-projects', compact(['projects']));
     }
@@ -246,13 +174,104 @@ class ProjectController extends Controller
         }
 
 
-        Member::create([
-            'user_id' => auth()->user()->id,
-            'project_id' => $project->id,
-            'role' => ProjectRole::MEMBER
-        ]);
+        $project->joinAsMember(auth()->user());
 
         Inertia::flash(['join_success' => true]);
         return redirect(route('projects.show', $slug));
+    }
+
+    public function edit(Request $request, string $slug)
+    {
+        $project = Project::where('slug', $slug)->firstOrFail();
+        $tagsList = (new TagRessourceCollection(Tag::all()))->toArray($request);
+        $project = (new ProjectResource($project))->toArray($request);
+
+        return Inertia::render('projects/edit', compact(['project', 'tagsList']));
+    }
+
+
+    public function updateVisibility(string $slug, Request $request)
+    {
+        $project = Project::where('slug', $slug)->firstOrFail();
+
+        Gate::authorize('update', $project);
+
+        $project->is_private = $request->has('is_private');
+        $project->save();
+
+        Inertia::flash(['success' => true]);
+        return redirect(route('projects.edit', $slug));
+    }
+
+    public function updateTags(string $slug, Request $request)
+    {
+        $project = Project::where('slug', $slug)->firstOrFail();
+
+        if (!Gate::check('update', $project)) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'tags' => 'required|array|max:7',
+            'tags.*' => 'string|exists:tags,name',
+        ]);
+
+        $tagIds = [];
+        foreach ($validated['tags'] as $tagName) {
+            $tag = Tag::where('name', $tagName)->first();
+            $tagIds[] = $tag->id;
+        }
+
+        $project->tags()->sync($tagIds);
+
+        Inertia::flash(['success' => true]);
+        return redirect(route('projects.edit', $slug));
+    }
+
+    public function updateMemberRole(string $slug, Request $request)
+    {
+        $project = Project::where('slug', $slug)->firstOrFail();
+        Gate::authorize('updateMemberRole', $project);
+
+        $assignableRoles = collect(ProjectRole::cases())
+            ->reject(fn($r) => $r === ProjectRole::VIEWER)
+            ->map(fn($r) => $r->value)
+            ->all();
+
+        $validated = $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+            'role'    => ['required', 'string', Rule::in($assignableRoles)],
+        ]);
+
+        $target = User::findOrFail($validated['user_id']);
+        $role = ProjectRole::from($validated['role']);
+
+        if (!$project->updateMemberRole($target, $role)) {
+            return redirect()->back()->withErrors(['role' => __('validation.member_not_found')]);
+        }
+
+        Inertia::flash(['role_change_success' => true]);
+        return redirect()->back();
+    }
+
+    public function updateLocation(string $slug, Request $request)
+    {
+        $project = Project::where('slug', $slug)->firstOrFail();
+
+        if (!Gate::check('update', $project)) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'place' => 'nullable|string|max:255',
+            'coordinates' => 'nullable|string|max:255',
+        ]);
+
+//        $project->place = $validated['place'];
+        $project->coordinates = $validated['coordinates'];
+        $project->save();
+
+        Inertia::flash(['success' => true]);
+        return redirect(route('projects.edit', $slug));
     }
 }

@@ -1,9 +1,8 @@
 import {ReactNode} from "react";
 import {useTranslation} from "react-i18next";
-import {Bell, Calendar, ChartGantt, Home, LucideIcon, Search, Settings2} from "lucide-react";
+import {ChartGantt, Home, LucideIcon, Search, Settings2} from "lucide-react";
 import ProjectIcon from "@/components/icons/project-icon";
 import {dashboard} from "@/routes";
-import {index as tasksIndex} from "@/actions/App/Http/Controllers/TaskController";
 import {Link, usePage} from "@inertiajs/react";
 import {IProjectContext, type SharedData} from "@/types";
 import {useImageAsset} from "@/hooks/use-image-asset";
@@ -28,7 +27,6 @@ function SidebarNavItem({props, className = ''}: { props: INavItemProps, classNa
                   className={cn('nav-item section-title', className)}>
                 {Icon ?
                     <Icon className="p-1"/>
-                    /* @ts-ignore */
                     : props.project
                     && <ProjectIcon project={props.project} className="border border-secondary-border"/>
                 }

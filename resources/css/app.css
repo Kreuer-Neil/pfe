@@ -118,13 +118,13 @@
     --foreground-main: oklch(0.145 0 0);
     --foreground-light: oklch(0.981 0 0);
 
-    --background: oklch(0.9856 0 0);
+    --background: oklch(1 0 0);
     --foreground: var(--foreground-main);
     --modal-behind: oklch(0.576 0.053 159.319 / 0.5);
     /*--card: oklch(1 0 0);*/
 
 
-    --card: oklch(1 0 0);
+    --card: oklch(0.9856 0 0);
     --card-foreground: var(--foreground-main);
 
     --button: var(--tea-green);
@@ -254,20 +254,7 @@
     }
 
     /** Generic style shared between frontpage and app **/
-    .btn, .btn-alt {
-        @apply flex justify-center p-2 px-4 rounded-sm bg-primary text-primary-foreground max-w-xs w-full mx-auto font-semibold text-[1.125rem];
-    }
 
-    .btn-alt {
-        @apply bg-tertiary text-shadow-tertiary-foreground;
-    }
-
-    .icon-btn {
-        @apply bg-card text-link p-1 px-2 rounded-xs border border-border cursor-pointer flex gap-1;
-    }
-    .icon-btn-alt {
-        @apply bg-tertiary text-tertiary-foreground p-1 px-2 rounded-xs cursor-pointer flex gap-1;
-    }
 
     /** Frontpage specific style **/
     .frontpage {
@@ -286,9 +273,10 @@
         & > nav {
             @apply sticky top-0 bg-sidebar text-sidebar-foreground w-screen z-10 flex;
 
-            &>a {
+            & > a {
                 @apply border-r-2 border-tertiary p-2 bg-secondary;
             }
+
             img {
                 @apply h-10 overflow-hidden border-2 border-primary rounded-md box-border;
             }
@@ -376,7 +364,8 @@
             }
 
             img {
-                @apply m-auto aspect-video w-full max-w-lg /*bg-gray-200*/ rounded-xl;
+                @apply m-auto aspect-video w-full max-w-lg /*bg-gray-200*/
+                rounded-xl;
             }
 
         }
@@ -446,7 +435,7 @@
     }
 
     .modal {
-        @apply m-auto p-2 py-3 bg-background text-foreground rounded-lg w-full max-w-3xl;
+        @apply m-auto w-full max-w-[calc(100%-2rem)] sm:max-w-lg bg-background rounded-lg border p-6 shadow-lg;
 
         &::backdrop {
             @apply bg-modal-behind;
@@ -488,15 +477,15 @@
 
     /* Overwrites default Lucide icons style*/
     .lucide {
-        @apply size-6 box-content;
+        @apply size-5 box-content;
     }
 
     .item-tag {
-        @apply bg-tag-neutral border border-tag-neutral-border flex gap-1 p-1 px-1.5 rounded-xs items-center;
+        @apply bg-tag-neutral border border-tag-neutral-border flex gap-0.5 p-0.5 px-1 rounded-xs items-center;
     }
 
     .item-tag-warning {
-        @apply bg-tag-warning border border-tag-warning-border flex gap-1 p-1 px-1.5 rounded-xs items-center;
+        @apply bg-tag-warning border border-tag-warning-border flex gap-0.5 p-0.5 px-1 rounded-xs items-center;
     }
 
     .text-with-icon {
@@ -510,7 +499,7 @@
             flex-grow: 1;
             content: '';
             height: 0.0625rem;
-            background: var(--color-muted-foreground);
+            @apply bg-border;
         }
     }
 

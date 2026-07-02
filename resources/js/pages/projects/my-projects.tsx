@@ -1,11 +1,10 @@
 import Layout from '@/layouts/app-layout'
-import {Head, usePage} from '@inertiajs/react'
+import {Head, Link, usePage} from '@inertiajs/react'
 import PageFlowContainer from "@/components/page-flow-container";
 import {useTranslation} from "react-i18next";
 import MyProjects from "@/components/dashboard/my-projects";
 import {IDashboardProject} from "@/types";
-import Button from "@/components/buttons/button";
-import ButtonText from "@/components/buttons/button-text";
+import {Button} from "@/components/ui/button";
 import {Plus} from "lucide-react";
 import {create as projectCreate} from "@/actions/App/Http/Controllers/ProjectController";
 
@@ -28,7 +27,9 @@ export default function myProjects({}) {
                 <MyProjects projects={projects}/>
 
                 <div className="flex flex-col gap-3 px-3 w-full items-center">
-                    <ButtonText textContent={t('create_project')} icon={Plus} href={projectCreate().url}/>
+                    <Button variant="ghost" asChild>
+                        <Link href={projectCreate().url}><Plus/>{t('create_project')}</Link>
+                    </Button>
                 </div>
             </PageFlowContainer>
         </Layout>

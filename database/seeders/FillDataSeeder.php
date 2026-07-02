@@ -11,7 +11,6 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Str;
 
 class FillDataSeeder extends Seeder
 {
@@ -20,7 +19,7 @@ class FillDataSeeder extends Seeder
      */
     public static function run(): void
     {
-        info('Seeding fill data...');
+        echo 'Seeding fill data...';
 
         $projectsData = [
             [
@@ -127,19 +126,12 @@ class FillDataSeeder extends Seeder
             $projectArray = [
                 'owner_id' => $owner->id,
                 'name' => $projectData['name'],
-                'slug' => Str::slug($projectData['name']),
                 'is_private' => $projectData['is_private'],
                 'description' => $projectData['description'],
                 'icon' => $projectData['icon'] ?? 'default_'.random_int(1,2),
             ];
 
             $project = Project::create($projectArray);
-
-            Member::create([
-                'user_id' => $owner->id,
-                'project_id' => $project->id,
-                'role' => ProjectRole::ADMIN,
-            ]);
 
             $users = [];
             if (array_key_exists('users', $projectData)) {
@@ -180,13 +172,6 @@ class FillDataSeeder extends Seeder
             $projects[] = Project::factory()->create(['is_private' => false, 'owner_id' => $user->id]);
         }
         foreach ($projects as $project) {
-            // Link owners to their projects
-            Member::create([
-                'user_id' => $project->owner->id,
-                'project_id' => $project->id,
-                'role' => ProjectRole::ADMIN,
-            ]);
-
             foreach ($users->random(random_int(2, 10)) as $user) {
                 if (!$project->members()->where('user_id', $user->id)->exists()) {
                     Member::create([
@@ -197,6 +182,6 @@ class FillDataSeeder extends Seeder
             }
         }
 
-        info('Fill data seeded.');
+        echo 'Fill data seeded.';
     }
 }

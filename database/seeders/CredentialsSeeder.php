@@ -3,8 +3,6 @@
 namespace Database\Seeders;
 
 use App\Enums\Language;
-use App\Enums\ProjectRole;
-use App\Models\Member;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
@@ -43,14 +41,8 @@ class CredentialsSeeder
 
                 'lang' => Language::FRENCH,
                 'owner_id' => $user->id,
-                'slug' => \Str::slug($name),
 
                 'is_private' => false,
-            ]);
-
-            Member::create([
-                'user_id' => $user->id,
-                'project_id' => $project->id,
             ]);
 
             $members = User::factory(10)->create();

@@ -1,9 +1,9 @@
 import {ReactNode, useEffect, useState} from "react";
 import CustomSidebarCast from "@/layouts/custom-sidebar-cast";
 import {useIsMobile} from "@/hooks/use-mobile";
-import {cn} from "@/lib/utils";
-import {IAppHeaderContext} from "@/types";
+import {IAppHeaderContext, type SharedData} from "@/types";
 import {ChevronLeft, ChevronRight, LucideIcon} from "lucide-react";
+import {usePage} from "@inertiajs/react";
 
 type AppLayoutProps = {
     children: ReactNode | ReactNode[];
@@ -17,13 +17,12 @@ export default function CustomAppLayout(
         ...props
     }: AppLayoutProps) {
     const isMobile = useIsMobile();
+    const {sidebarOpen} = usePage<SharedData>().props;
 
     const [openMobile, setOpenMobile] = useState(false);
+    const [openDesktop, setOpenDesktop] = useState<boolean>(sidebarOpen);
 
-    // Regex expression and match to get sidebar cookie
-    const match = document.cookie.match(new RegExp('(^| )' + 'sidebar' + '=([^;]+)'));
-    const [openDesktop, setOpenDesktop] = useState<boolean>(match ? match[2] === 'true' : true);
-
+// TODO Use useRef for sidebar
     let sidebar: HTMLElement | null = document.getElementById('sidebar');
     useEffect(() => {
         sidebar = document.getElementById('sidebar');
@@ -38,6 +37,7 @@ export default function CustomAppLayout(
             e.preventDefault();
         }
         if (!sidebar) {
+            // useRef
             sidebar = document.getElementById('sidebar')!;
         }
         if (isMobile) {

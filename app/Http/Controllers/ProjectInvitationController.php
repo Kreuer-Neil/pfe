@@ -11,10 +11,11 @@ use Inertia\Inertia;
 
 class ProjectInvitationController extends Controller
 {
-    function index()
+    function index(Request $request)
     {
-        auth()->user()->projects;
-        return Inertia::render('projects/invitation');
+        return Inertia::render('projects/invitation', [
+            'code' => $request->input('code', ''),
+        ]);
     }
 
     function show(Request $request)

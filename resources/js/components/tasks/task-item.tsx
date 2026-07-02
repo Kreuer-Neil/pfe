@@ -1,19 +1,22 @@
 import {CalendarCheck, Check, Timer, UsersRound} from "lucide-react";
-import {ITask, ITaskMiniature} from "@/types";
+import {ITask} from "@/types";
 import {cn} from "@/lib/utils";
 import {laravelDateToJsDate, upcomingDateToString} from "@/helpers/date";
 import ProjectIcon from "@/components/icons/project-icon";
 import {useTranslation} from "react-i18next";
 import {ReactNode} from "react";
 import RelatedUsers from "@/components/users/related-users";
+import {Item, ItemContent, ItemDescription, ItemFooter, ItemMedia, ItemTitle} from "@/components/ui/item";
+import {Button} from "@base-ui/react";
+import {Link} from "@inertiajs/react";
 
 
 interface TaskItemProps {
-    task: ITaskMiniature | ITask;
+    task: ITask;
     className?: string;
-    isInProjectPage: boolean;
+    isNotInProjectPage: boolean;
     // taskShow: ((e:any) => void);
-    onTap: (id: string) => void;
+    onTap: () => void;
 }
 
 
@@ -61,44 +64,65 @@ export default function TaskItem(
     {
         task,
         className = '',
-        isInProjectPage = false,
+        isNotInProjectPage: isNotInProjectPage = false,
         // taskShow
         onTap
     }: TaskItemProps) {
-    const {t} = useTranslation(['projects', 'date']);
+    const {t} = useTranslation(['tasks', 'date']);
     const dueAt: string = task.due_at ? upcomingDateToString(laravelDateToJsDate(task.due_at)) : t('date:no_time_limit');
 
     // const dueAtYear: number = dueAt.getFullYear();
 
     return (
-        <article className={cn("thumbnail-item", className)} tabIndex={0} key={task.id.toString()}
-                 onClick={() => onTap(task.id)}
-                 onKeyDown={(e)=>{
-                     if (e.key === 'Enter' || e.key === ' ') onTap(task.id);
-                 }}>
-            <h3 className="item-title w-full">{task.title}</h3>
+        <Item
+            key={task.id.toString()}
+            variant="outline"
+            asChild
+            size="sm"
+        >
+            <Link
+                // as="article"
+                onClick={(e) => {
+                    e.preventDefault();
+                    onTap();
+                }}
+            >
+                {isNotInProjectPage &&
+                    <ItemMedia variant="icon">
+                        <ProjectIcon project={task.project} className="size-6"/>
+                    </ItemMedia>
+                }
+                <ItemContent>
+                    <ItemTitle>
+                        {/*<h3>*/}
+                        {task.title}
+                        {/*</h3>*/}
+                    </ItemTitle>
 
-            {isInProjectPage &&
-                <p className="flex gap-1">
-                    <ProjectIcon project={task.project} className="size-6"/>
-                    {t('task_from_project', {project: task.project.name})}
-                </p>}
-            <div className="taskinfo mt-1 flex flex-wrap justify-between items-center gap-1">
-                <span className="flex gap-1"><Timer/><time dateTime={task.due_at}>{dueAt}</time></span>
-                <div className="flex gap-1 ml-auto">
-                    <RelatedUsers profiles={task.related_users}/>
-                    <TaskIconParticipation participations={task.participations_count}
-                                           min={task.min_participations}/>
-                    <ParticipatingIcon participating={task.self_participating}/>
-                    {task.validated &&
-                        <Check className="item-tag"/>}
-                </div>
-            </div>
-            {/*
+                    {isNotInProjectPage &&
+                        <ItemDescription>
+                            {t('from_project', {project: task.project.name})}
+                        </ItemDescription>
+                    }
+                    {/*
                 task.owner
                     ? <PostedBy owner={task.owner}/>
                     : ''
             */}
-        </article>
+                </ItemContent>
+                <ItemFooter>
+                    <span className="flex gap-1"><Timer/><time dateTime={task.due_at}>{dueAt}</time></span>
+                    <div className="flex gap-1 ml-auto">
+                        <RelatedUsers profiles={task.related_users}/>
+                        <TaskIconParticipation participations={task.participations_count}
+                                               min={task.min_participations}/>
+                        <ParticipatingIcon participating={task.self_participating}/>
+                        {task.validated &&
+                            <Check className="item-tag"/>}
+                    </div>
+                </ItemFooter>
+            </Link>
+
+        </Item>
     );
 }

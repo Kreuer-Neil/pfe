@@ -1,410 +1,489 @@
-import {INote, IServerResponse, ITask} from "@/types";
+import {INote, ITask} from "@/types";
 import {Dispatch, ReactNode, SetStateAction, useState} from "react";
 import {useTranslation} from "react-i18next";
-import CustomModal from "@/components/modals/custom-modal";
-import ModalCast from "@/components/modals/modal-cast";
-import ModalSection from "@/components/modals/modal-section";
+import CustomModal, {ModalContent, ModalFooter, ModalHeader, ModalTitle} from "@/components/modals/custom-modal";
 import ProjectIcon from "@/components/icons/project-icon";
-import {cn} from "@/lib/utils";
-import {CalendarCheck, CalendarClock, Check, ClockAlert, Notebook, UsersRound} from "lucide-react";
-import PostedBy from "@/components/general-posts/posted-by";
-import Button from "@/components/buttons/button";
-import TaskController, {
-    destroy as taskDestroy,
-    validate as taskValidation,
-} from "@/actions/App/Http/Controllers/TaskController";
-import GeneralInput from "@/components/form/general-input";
-import {RouteQueryOptions} from "@/wayfinder";
-import ConfirmModal from "@/components/modals/confirm-modal";
+import {
+    CalendarCheck,
+    CalendarClock,
+    Check,
+    ClockAlert,
+    Notebook, PencilLine,
+    Plus,
+    Trash2,
+    UsersRound, X
+} from "lucide-react";
+import TaskController from "@/actions/App/Http/Controllers/TaskController";
 import RelatedUsers from "@/components/users/related-users";
-import {Form, Link, router} from "@inertiajs/react";
+import {Form, Link} from "@inertiajs/react";
 import {show as projectsShow} from '@/actions/App/Http/Controllers/ProjectController';
-import {update as tasksUpdate} from '@/actions/App/Http/Controllers/TaskController';
 import InputError from "@/components/input-error";
-
-type EditProps = {
-    task: ITask | undefined;
-    onCloseModal: () => void;
-    editTitle: string;
-    setEditTitle: Dispatch<SetStateAction<string>>;
-    editDescription: string;
-    setEditDescription: Dispatch<SetStateAction<string>>;
-    editDueAtDate: string;
-    setEditDueAtDate: Dispatch<SetStateAction<string>>;
-    editDueAtTime: string | null;
-    setEditDueAtTime: Dispatch<SetStateAction<string | null>>;
-    editRecommendedParticipations: number | null;
-    setEditRecommendedParticipations: Dispatch<SetStateAction<number | null>>;
-    resetTask: () => void;
-    setIsEditing: Dispatch<SetStateAction<boolean>>;
-    onTaskTap: (id: string, force?: boolean) => void;
-}
+import {Field, FieldGroup, FieldSet, FieldTitle} from "@/components/ui/field";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+import {Textarea} from "@/components/ui/textarea";
+import {Item, ItemActions, ItemContent, ItemFooter} from "@/components/ui/item";
+import NoteCreateModal from "@/components/tasks/note-create-modal";
+import PostedBy from "@/components/general-posts/posted-by";
+import TaskNoteController from "@/actions/App/Http/Controllers/TaskNoteController";
+import ConfirmModal from "@/components/modals/confirm-modal";
 
 
-function NotesList({task}: { task: ITask | undefined }) {
-    const {t} = useTranslation('projects');
+function NoteItem({note, role, onClickDelete}: { note: INote, role: string, onClickDelete: (noteId: string) => void }) {
+    const {t} = useTranslation('tasks');
 
-    if (!(task?.notes && task.notes.length > 0)) {
-        return <p>{t('task_note_empty')}</p>
+    const [isEditing, setIsEditing] = useState(false);
+
+    const submitEdit = () => {
+
     }
+
     return (
-        <ul className="flex flex-col gap-2">
-            {task.notes.map((note: INote) => {
-                // TODO add edit/delete variable for note owner/admin (only delete for admin not owner)
-                // TODO limit notes to 1/2 per task per user
-                return (
-                    <li className="flex flex-col gap-1">
-                        <p>{note.content}</p>
-                        <PostedBy owner={note.owner}/>
-                    </li>
-                );
-            })}
-        </ul>
+        <Item size="sm">
+            {/*<ItemMedia>
+               <UserAvatar user={note.owner}/>
+            </ItemMedia>*/}
+            <ItemContent>
+                {isEditing ?
+                    <Form
+                        id={'update-' + note.id + '-note-form'}
+                        {...TaskNoteController.update.form(note.id)}
+                        resetOnSuccess
+                        onSuccess={() => setIsEditing(false)}
+                    >
+                        {({errors}) => (
+                            <FieldGroup>
+                                <Field>
+                                    <Label htmlFor="content"
+                                           className="sr-only"
+                                    >
+                                        {t('field_note_content')}
+                                    </Label>
+                                    <Textarea
+                                        name="content"
+                                        id="content"
+                                        placeholder={t('note_content_placeholder')}
+                                        required
+                                        autoFocus
+                                        defaultValue={note.content}
+                                    />
+                                    <InputError message={errors.content}/>
+                                </Field>
+                                <Field>
+                                    <Button type="submit">
+                                        {t('add_note')}
+                                    </Button>
+                                    <InputError message={errors.general}/>
+                                </Field>
+                            </FieldGroup>
+                        )}
+                    </Form> :
+                    note.content
+                }
+            </ItemContent>
+            {(note.is_owner || ['admin', 'moderator'].includes(role)) &&
+                <ItemActions>
+                    {note.is_owner && (
+                        isEditing
+                            ? <Button key="save" size="icon-sm"
+                                      type="submit"
+                                      form={'update-' + note.id + '-note-form'}
+                            >
+                                <span className="sr-only">{t('common:save_changes')}</span>
+                                <Check/>
+                            </Button>
+                            : <Button key="edit" size="icon-sm"
+                                      variant="secondary"
+                                      onClick={() => setIsEditing(true)}
+                            >
+                                <span className="sr-only">{t('note_edit')}</span>
+                                <PencilLine/>
+                            </Button>
+                    )}
+                    {isEditing ?
+                        <Button size="icon-sm"
+                                key="delete"
+                                variant="ghost"
+                                className="text-danger hover:bg-red-200"
+                                onClick={() => setIsEditing(false)}
+                        >
+                        <span className="sr-only">
+                            {t('note_edit_cancel')}
+                        </span>
+                            <X/>
+                        </Button>
+                        : <Button size="icon-sm"
+                                  key="cancel"
+                                  variant="ghost"
+                                  className="text-danger hover:bg-red-200"
+                                  onClick={() => onClickDelete(note.id)}
+                        >
+                        <span className="sr-only">
+                            {t('note_delete')}
+                        </span>
+                            <Trash2/>
+                        </Button>
+                    }
+                </ItemActions>
+            }
+            <ItemFooter>
+                <PostedBy owner={note.owner}/>
+            </ItemFooter>
+        </Item>
     );
 }
 
-function Show({task, onCloseModal, startEdit, deleteTask, hasProjectContext}: {
+function Show({task, startEdit, onDelete, hasProjectContext, setShowNoteCreate, onClickDelete}: {
     task: ITask | undefined,
-    onCloseModal: () => void,
     startEdit: (task: ITask) => void,
-    deleteTask: (task: ITask) => void,
-    hasProjectContext: boolean
+    onDelete: () => void,
+    hasProjectContext: boolean,
+    setShowNoteCreate: Dispatch<SetStateAction<boolean>>,
+    onClickDelete: (noteId: any) => void
 }) {
     const {t} = useTranslation(['projects', 'date', 'errors']);
 
-    const [participationError, setParticipationError] = useState<string | undefined>();
-
-    router.on('flash', (e) => {
-        if (e.detail.flash?.participation_error)
-            // @ts-ignore
-            setParticipationError(e.detail.flash.participation_error);
-        if (e.detail.flash?.participating)
-            //@ts-ignore
-            setParticipationStatus(e.detail.flash.participating === 'true');
-    });
-
-    const validate = () => {
-        const confirmValidation = async () => {
-            try {
-                const response = await fetch(taskValidation(task!.id).url);
-                const data: IServerResponse = await response.json();
-                return data;
-            } catch (e) {
-                console.error(e);
-            }
-        }
-        confirmValidation().then((value) => {
-            // setParticipationStatus(value!)
-            task!.validated = true;
-        });
-    }
-
-
     return (
-        <ModalCast title={task?.title ?? ''} closeModal={onCloseModal}>
-            <ModalSection className="border-none">
-                {hasProjectContext &&
-                    <Link className="item-title text-with-icon w-full"
-                          href={task?.project ? projectsShow(task.project.slug) : undefined}>
-                        <ProjectIcon
-                            project={task?.project ?? {name: '', icon: '', slug: '', id: ''}}
-                            size="small"/>
-                        {task?.project.name ?? null}
-                    </Link>
-                }
-                {/* TODO fix date */}
-                {task?.due_at &&
-                    <p className={cn("flex gap-1", task?.due_at ? '' : 'hidden')}>
-                        <CalendarClock/>
-                        <time dateTime={task.due_at}>{task.due_at}</time>
-                    </p>
-                }
-                <p className="mt-1">
-                    {task?.description ?? null}
-                </p>
-            </ModalSection>
-            <ModalSection>
-                <div className="flex wrap">
-                    <div className="text-with-icon mr-auto">
-                        {task?.related_users &&
-                            <RelatedUsers profiles={task.related_users} isWithLinks/>
-                        }
-                        <p>
-                            {task?.participations_count ? t('task_participations_count', {count: task.participations_count}) : t('task_no_participations')}
+        <>
+            <ModalHeader>
+                <ModalTitle>{task?.title ?? ''}</ModalTitle>
+                <FieldGroup>
+                    {hasProjectContext &&
+                        <Button asChild size="icon-lg" variant="ghost" className="justify-start px-2 text-foreground">
+                            <Link
+                                className="item-title text-with-icon w-full"
+                                href={task?.project ? projectsShow(task.project.slug).url : '#'}
+                            >
+                                <ProjectIcon
+                                    project={task?.project ?? {name: '', icon: '', slug: '', user_role: 'viewer'}}
+                                    size="small"
+                                />
+                                {task?.project.name ?? null}
+                            </Link>
+                        </Button>
+                    }
+                    {task?.due_at &&
+                        <p className="flex gap-1">
+                            <CalendarClock/>
+                            <time dateTime={task.due_at}>{task.due_at}</time>
                         </p>
-                    </div>
-                    {task?.min_participations &&
-                        <div className="text-with-icon">
-                            <UsersRound className="item-tag"/>
+                    }
+                    <p className="mt-1">{task?.description ?? null}</p>
+                </FieldGroup>
+            </ModalHeader>
+
+            <ModalContent>
+                <FieldGroup>
+                    <div className="flex wrap">
+                        <div className="text-with-icon mr-auto">
+                            {task?.related_users &&
+                                <RelatedUsers profiles={task.related_users} isWithLinks/>
+                            }
                             <p>
-                                {t('task_recommended_participations_count', {count: task.min_participations})}
+                                {task?.participations_count
+                                    ? t('task_participations_count', {count: task.participations_count})
+                                    : t('task_no_participations')
+                                }
                             </p>
                         </div>
+                        {task?.min_participations &&
+                            <div className="text-with-icon">
+                                <UsersRound className="item-tag"/>
+                                <p>{t('task_recommended_participations_count', {count: task.min_participations})}</p>
+                            </div>
+                        }
+                    </div>
+
+                    {task?.self_participating &&
+                        <div className="text-with-icon">
+                            <CalendarCheck className="item-tag bg-tag"/>
+                            <p>{t('task_self_participating')}</p>
+                        </div>
                     }
-                </div>
-                {task?.self_participating &&
-                    <div className="text-with-icon">
-                        <CalendarCheck className="item-tag bg-tag"/>
+
+                    {task?.validated &&
+                        <div className="text-with-icon">
+                            <Check className="item-tag"/>
+                            <p>{t('task_valid')}</p>
+                        </div>
+                    }
+                </FieldGroup>
+
+                <Field>
+                    <FieldTitle>
+                        <Notebook/>
+                        {t('task_note_title')}
+                    </FieldTitle>
+                    {(task?.notes && task.notes.length > 0) ?
+                        <ul className="flex flex-col gap-1">
+                            {task.notes.map((note) => (
+                                <li key={note.id}>
+                                    <NoteItem note={note}
+                                              role={task.project.user_role}
+                                              onClickDelete={onClickDelete}/>
+                                </li>
+                            ))}
+                        </ul>
+                        :
                         <p>
-                            {t('task_self_participating')}
+                            {t('task_no_notes')}
                         </p>
-                    </div>}
-                {/*modalTask.due_at > Date.now()*/}
-                {task?.due_at && false &&
-                    <div className="text-with-icon">
-                        <ClockAlert className="item-tag-warning"/>
-                        <p>
-                            {t('task_due_soon')}
-                        </p>
-                    </div>}
-                {task?.validated &&
-                    <div className="text-with-icon">
-                        <Check className="item-tag"/>
-                        <p>
-                            {t('task_valid')}
-                        </p>
-                    </div>}
-            </ModalSection>
-            {/*<ModalSection title={t('task_note_title')} icon={Notebook}>
-                <NotesList task={task}/>
-                <ButtonText textContent={t('task_note_add')} icon={NotebookPen} className="self-center"
-                            onClick={() => {
-                                // TODO note creation logic
-                            }} autoFocus={true}/>
-            </ModalSection>*/}
-            <div className="flex flex-col gap-3 px-2 items-center">
-                {/* TODO restyle this corner */}
-                {(task?.self_participating && !task?.validated) ?
-                    <Form className="w-full max-w-md"
-                          {...TaskController.cancelParticipation.form(task?.id ?? 0)}
+                    }
+
+                    <Button
+                        variant="ghost"
+                        onClick={() => setShowNoteCreate(true)}
                     >
-                        {({processing, errors}) => (
-                            <Button textContent={t('task_cancel_participate')} type="submit"
-                                    color="destructive"/>
+                        <Plus/>
+                        {t('add_note')}
+                    </Button>
+                </Field>
+            </ModalContent>
+
+            <ModalFooter className="sm:justify-center pt-4 sm:flex-col">
+
+                {task?.self_participating && !task?.validated
+                    ? <Form
+                        className="w-full flex justify-center"
+                        {...TaskController.validate.form(task.id)}
+                    >
+                        {() => (
+                            <Button type="submit" size="lg" className="w-full max-w-md">
+                                {t('task_validate')}
+                            </Button>
                         )}
-                    </Form> :
-                    !task?.validated &&
-                    <Form className="w-full max-w-md"
-                          {...TaskController.participate.form(task?.id ?? 0)}
+                    </Form>
+                    : !task?.validated &&
+                    <Form
+                        className="w-full flex justify-center col-span-2 sm:content-stretch"
+                        {...TaskController.participate.form(task?.id ?? 0)}
                     >
-                        {({processing, errors}) => (
-                            <Button textContent={t('task_participate')} type="submit"/>
+                        {() => (
+                            <Button type="submit" size="lg" className="w-full max-w-md">
+                                {t('task_participate')}
+                            </Button>
                         )}
                     </Form>
                 }
-                {(task?.self_participating && !task?.validated) &&
-                    <Button textContent={t('task_validate')} onClick={validate}/>
+
+                {task?.self_participating && !task?.validated &&
+                    <Form
+                        className="w-full flex justify-center"
+                        {...TaskController.cancelParticipation.form(task.id)}
+                    >
+                        {() => (
+                            <Button type="submit" size="lg" variant="destructive" className="w-full max-w-md">
+                                {t('task_cancel_participate')}
+                            </Button>
+                        )}
+                    </Form>
                 }
-                <InputError message={participationError ? t('errors:' + participationError) : undefined}/>
-                {task?.isOwner &&
-                    <div className="grid md:grid-cols-2 gap-1 sm:justify-center w-full max-w-md">
-                        <Button textContent={t('task_edit')} color="edit" onClick={() => startEdit(task)}/>
-                        <Button textContent={t('task_delete')} color="destructive" onClick={() => deleteTask(task)}/>
-                    </div>
+
+                {task?.is_owner &&
+                    <FieldGroup className="sm:grid sm:grid-cols-2 gap-2 w-full max-w-md self-center">
+                        <Button variant="secondary" onClick={() => startEdit(task)} size="lg">
+                            {t('task_edit')}
+                        </Button>
+                        <Button variant="destructive" onClick={onDelete} size="lg">
+                            {t('task_delete')}
+                        </Button>
+                    </FieldGroup>
                 }
-            </div>
-        </ModalCast>
+            </ModalFooter>
+        </>
     );
 }
 
-function Edit(
-    {
-        task,
-        onCloseModal,
-        editTitle,
-        editDescription,
-        editDueAtDate,
-        editDueAtTime,
-        editRecommendedParticipations,
-        setIsEditing,
-        onTaskTap
-    }: EditProps): ReactNode {
+function Edit({task, setIsEditing}: {
+    task: ITask | undefined;
+    setIsEditing: Dispatch<SetStateAction<boolean>>;
+}): ReactNode {
     const {t} = useTranslation(['projects', 'date']);
+    const [defaultDueAtDate, defaultDueAtTime] = task!.due_at.split(' ');
 
-    const [updateResponse, setUpdateResponse] = useState<IServerResponse>({success: false, error: null});
-
-    router.on('flash', (e) => {
-        if (e.detail.flash.edit_error) {
-            setIsEditing(false);
-            onTaskTap(task!.id, true);
-        }
-    });
-
-    const title = (
-        <>
-            <GeneralInput name="title" label={t('task_title')} required={true} value={editTitle} style="text"/>
-        </>
-    );
     return (
         <Form
             {...TaskController.update.form(task!.id)}
             className="flex flex-col gap-4"
+            onSuccess={() => setIsEditing(false)}
         >
-            {({processing, errors}) => (
+            {({errors}) => (
                 <>
-                    <ModalCast title={title} closeModal={onCloseModal}>
-                        <ModalSection className="border-none">
-                            <p className="item-title text-with-icon">
-                                <ProjectIcon
-                                    project={task?.project ?? {name: '', icon: '', slug: '', id: ''}}
-                                    size="small"/>
-                                {task?.project.name ?? null}
-                            </p>
-                            {/* TODO fix date */}
-                            <p className="flex gap-1">
-                                <CalendarClock/>
-                                <GeneralInput name="due_at_date" label={t('due_at_date')} style="text" type="date"
-                                              required={true} value={editDueAtDate ?? undefined}/>
-                                <InputError message={errors.due_at_date}/>
-                                <GeneralInput name="due_at_time" label={t('due_at_time')} style="text" type="time"
-                                              value={editDueAtTime ?? undefined}
+                    <ModalHeader>
+                        <ModalTitle>
+                            <Field>
+                                <Label htmlFor="title">{t('task_form_title')}</Label>
+                                <Input
+                                    name="title"
+                                    id="title"
+                                    required
+                                    defaultValue={task?.title}
                                 />
-                                <InputError message={errors.due_at_time}/>
-                            </p>
+                                <InputError message={errors.title}/>
+                            </Field>
+                        </ModalTitle>
+                        <p className="item-title text-with-icon">
+                            <ProjectIcon
+                                project={task?.project ?? {name: '', icon: '', slug: '', user_role: 'viewer'}}
+                                size="small"
+                            />
+                            {task?.project.name ?? null}
+                        </p>
+                    </ModalHeader>
 
-                            <p className="mt-1">
-                                <GeneralInput name="description" label={t('task_description')}
-                                              type="textarea" style="text"
-                                              inputClassName="w-full min-h-0"
-                                              value={editDescription}
-                                />
-                                <InputError message={errors.description}/>
-                            </p>
-                        </ModalSection>
-                        <ModalSection>
-                            <div className="flex wrap">
-                                <p className="text-with-icon mr-auto">
-                                    {/*<RelatedUsers />*/}
-                                    {task?.participations_count ? t('task_participations_count', {count: task.participations_count}) : t('task_no_participations')}
-                                </p>
-                                <p className="text-with-icon">
-                                    <UsersRound className="item-tag"/>
-                                    <GeneralInput name="min_participations" type="number"
-                                                  style="text" inputClassName="w-fit max-w-[40vw]"
-                                                  label={t('task_recommended_participations_count', {count: '0'})}
-                                                  value={editRecommendedParticipations?.toString() ?? undefined}
-                                    />
-                                    <InputError message={errors.recommended_participations}/>
-                                </p>
-                            </div>
-                            {task?.self_participating &&
-                                <p className="text-with-icon">
-                                    <CalendarCheck className="item-tag bg-tag"/>
-                                    {t('task_self_participating')}
-                                </p>}
-                            {/*modalTask.due_at > Date.now()*/}
-                            {(task?.due_at && false) &&
-                                <p className="flex gap-1">
-                                    <ClockAlert className="item-tag bg-tag-warning"/>
-                                    {t('task_due_soon')}
-                                </p>}
-                        </ModalSection>
-                        {/*<ModalSection title={t('task_note_title')} icon={Notebook}>
-                            <NotesList task={task}/>
+                    <ModalContent>
+                        <FieldGroup>
+                            <FieldSet>
+                                <FieldGroup>
+                                    <FieldGroup className="sm:flex-row">
+                                        <Field>
+                                            <Label htmlFor="due_at_date">{t('task_form_date')}</Label>
+                                            <Input
+                                                name="due_at_date"
+                                                id="due_at_date"
+                                                type="date"
+                                                defaultValue={defaultDueAtDate}
+                                            />
+                                            <InputError message={errors.due_at_date}/>
+                                        </Field>
+                                        <Field>
+                                            <Label htmlFor="due_at_time">{t('task_form_time')}</Label>
+                                            <Input
+                                                name="due_at_time"
+                                                id="due_at_time"
+                                                type="time"
+                                                defaultValue={defaultDueAtTime}
+                                            />
+                                            <InputError message={errors.due_at_time}/>
+                                        </Field>
+                                    </FieldGroup>
 
-                        </ModalSection>*/}
-                        <div className="flex flex-col gap-3 px-2 items-center">
-                            <Button color="edit" textContent={t('task_confirm_changes')} onClick={() => null}
-                                    type="submit"/>
-                            {updateResponse.error ? <span
-                                className={updateResponse.success ? 'field-success' : 'field-error' + ' -mt-2'}>{t('errors:' + updateResponse.error.key, updateResponse.error.params)}</span> : null}
-                            <Button textContent={t('task_edit_cancel')} color="destructive" onClick={() => {
-                                setIsEditing(false);
-                            }} type="reset"/>
+                                    <Field>
+                                        <Label htmlFor="description">{t('task_form_description')}</Label>
+                                        <Textarea
+                                            name="description"
+                                            id="description"
+                                            defaultValue={task?.description}
+                                        />
+                                        <InputError message={errors.description}/>
+                                    </Field>
+                                </FieldGroup>
+                            </FieldSet>
 
-                        </div>
-                    </ModalCast>
+                            <FieldSet>
+                                <FieldGroup>
+                                    <Field>
+                                        <Label htmlFor="min_participations">
+                                            {t('task_form_min_participations')}
+                                        </Label>
+                                        <Input
+                                            name="min_participations"
+                                            id="min_participations"
+                                            type="number"
+                                            defaultValue={task?.min_participations ?? undefined}
+                                        />
+                                        <InputError message={errors.min_participations}/>
+                                    </Field>
+
+                                    {task?.self_participating &&
+                                        <p className="text-with-icon">
+                                            <CalendarCheck className="item-tag bg-tag"/>
+                                            {t('task_self_participating')}
+                                        </p>
+                                    }
+                                </FieldGroup>
+                            </FieldSet>
+                        </FieldGroup>
+                    </ModalContent>
+
+                    <ModalFooter>
+                        <FieldGroup className="gap-2 items-center max-w-md sm:grid sm:grid-cols-2">
+                            <Button
+                                size="lg"
+                                className="w-full"
+                                variant="secondary"
+                                type="submit">
+                                {t('task_confirm_changes')}
+                            </Button>
+                            <InputError message={errors.update}/>
+                            <Button
+                                size="lg"
+                                className="w-full"
+                                variant="destructive"
+                                type="reset"
+                                onClick={() => setIsEditing(false)}
+                            >
+                                {t('task_edit_cancel')}
+                            </Button>
+                        </FieldGroup>
+                    </ModalFooter>
                 </>
             )}
         </Form>
     );
 }
 
-export default function TaskShowModal({task, showModal, setShowModal, isInProjectPage, onTaskTap}: {
+export default function TaskShowModal({task, showModal, setShowModal, isInProjectPage, onDelete}: {
     task?: ITask,
     showModal: boolean,
     setShowModal: Dispatch<SetStateAction<boolean>>,
     isInProjectPage: boolean,
-    onTaskTap: (id: string, force?: boolean) => void
-}): [ReactNode, ReactNode] {
-    const {t} = useTranslation('projects');
+    onDelete: () => void,
+}): ReactNode {
 
+    const {t} = useTranslation('tasks')
     const [isEditing, setIsEditing] = useState<boolean>(false);
 
-    const [editedTaskId, setEditedTaskId] = useState<string>('');
-    const [editTitle, setEditTitle] = useState<string>('');
-    const [editDescription, setEditDescription] = useState<string>('')
-    const [editDueAtDate, setEditDueAtDate] = useState<string>('');
-    const [editDueAtTime, setEditDueAtTime] = useState<string | null>('');
-    const [editRecommendedParticipations, setEditRecommendedParticipations] = useState<number | null>(null);
+    const [showNoteCreate, setShowNoteCreate] = useState<boolean>(false);
+    const [showNoteDelete, setShowNoteDelete] = useState<boolean>(false);
+    const [deleteNoteId, setDeleteNoteId] = useState<string>('');
 
-    function resetTask() {
-        const taskDueAt = task!.due_at.split(' ');
-        setEditTitle(task!.title);
-        setEditDescription(task!.description);
-        setEditDueAtDate(taskDueAt[0]);
-        setEditDueAtTime(taskDueAt[1]);
-        setEditRecommendedParticipations(task!.min_participations);
+    const onClickDelete = (noteId: any) => {
+        setShowNoteDelete(true);
+        setDeleteNoteId(noteId);
     }
 
-    const startEdit = (task: ITask) => {
-        setIsEditing(true);
-
-        if (!(editedTaskId === task.id)) {
-            resetTask();
-
-            setEditedTaskId(task.id);
-        }
-    }
-
-    const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
-    const [destroyResponse, setDestroyResponse] = useState<IServerResponse>({success: false, error: null});
-
-    function deleteTask(task: ITask) {
-        const destroy = async () => {
-            try {
-
-                const response = await fetch(taskDestroy(task.id).url);
-                const data: IServerResponse = await response.json();
-                // setUpdateResponse(data);
-                setDestroyResponse(data);
-                return data;
-            } catch (e) {
-                console.error(e);
-            }
-        }
-        destroy().then(() => {
-        });
-    }
 
     const closeModal = () => {
         setShowModal(false);
         setIsEditing(false);
-    }
+    };
 
-    return ([
-        <CustomModal showModal={showModal} onClose={closeModal} id="task-show" key="show">
-            {!isEditing ?
-                <Show task={task} onCloseModal={closeModal} startEdit={startEdit}
-                      deleteTask={() => setShowConfirmationModal(true)} hasProjectContext={isInProjectPage}/>
-                :
-                <Edit task={task} onCloseModal={closeModal}
-                      editTitle={editTitle} setEditTitle={setEditTitle}
-                      editDescription={editDescription} setEditDescription={setEditDescription}
-                      editDueAtDate={editDueAtDate} setEditDueAtDate={setEditDueAtDate}
-                      editDueAtTime={editDueAtTime} setEditDueAtTime={setEditDueAtTime}
-                      editRecommendedParticipations={editRecommendedParticipations}
-                      setEditRecommendedParticipations={setEditRecommendedParticipations}
-                      resetTask={resetTask} setIsEditing={setIsEditing}
-                      onTaskTap={onTaskTap}
-                />
-            }
-        </CustomModal>,
-        <ConfirmModal title={t('task_delete_warning')}
-                      message={t('task_delete_warning_message', {task: task?.title ?? ''})}
-                      showModal={showConfirmationModal} onClose={() => {
-            setShowConfirmationModal(false);
-        }}
-                      onConfirm={() => deleteTask(task!)} key="delete"/>
-    ]);
+    return (
+        <>
+            <CustomModal showModal={showModal} onClose={closeModal} id="task-show">
+                {!isEditing
+                    ? <Show
+                        task={task}
+                        startEdit={(t) => setIsEditing(true)}
+                        onDelete={onDelete}
+                        hasProjectContext={isInProjectPage}
+                        setShowNoteCreate={setShowNoteCreate}
+                        onClickDelete={onClickDelete}
+                    />
+                    : <Edit
+                        task={task}
+                        setIsEditing={setIsEditing}
+                    />
+                }
+            </CustomModal>
+            {task && (
+                <>
+                    <NoteCreateModal
+                        showModal={showNoteCreate}
+                        setShowModal={setShowNoteCreate}
+                        task={task}
+                    />
+                    <ConfirmModal
+                        showModal={showNoteDelete}
+                        onClose={() => setShowNoteDelete(false)}
+                        onSuccess={() => setShowNoteDelete(false)}
+                        title={t('note_delete')}
+                        formAction={TaskNoteController.destroy.form(deleteNoteId)}
+                    />
+                </>
+            )}
+        </>
+    );
 }

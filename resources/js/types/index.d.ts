@@ -84,10 +84,10 @@ export interface IProfile {
 }
 
 export interface IProjectContext {
-    id: string;
     name: string;
     icon: string;
     slug: string;
+    user_role: 'viewer' | 'member' | 'taskmaster' | 'moderator' | 'admin';
 
     [key: string]: unknown;
 }
@@ -105,11 +105,12 @@ export interface IDashboardProject extends IProjectContext {
 export interface IProjectMiniature extends IProjectContext {
     description: string;
     // featured_members: IUser[];
-    user_role: 'viewer' | 'member' | 'taskmaster' | 'moderator' | 'admin';
-    // is_member: boolean;
+    // TODO fix with clean ProjectRole type/enum later.
+    is_member: boolean;
     members_count: number;
     coordinates: string | null;
     place: string | null;
+    tags: Array<string>;
 
     slug: string;
 }
@@ -117,60 +118,47 @@ export interface IProjectMiniature extends IProjectContext {
 export interface IProjectShow extends IProjectMiniature {
 
     // is_private: boolean;
-    user_role: 'viewer';
+    // user_role: 'viewer';
     members: IProfile[];
 }
 
 export interface IProject extends IProjectShow {
-    id: string;
     name: string;
     icon: string;
     description: string;
+    is_private: boolean;
     owner: IUser;
     members: IUser[];
     members_count: number;
 
-    user_role: 'member' | 'task_manager' | 'moderator' | 'admin';
+    coordinates: string | null;
+    place: string | null;
+    tags: Array<string>;
 
-    upcoming_tasks: ITaskMiniature[];
+    // user_role: 'member' | 'task_manager' | 'moderator' | 'admin' | 'banned';
+
+    upcoming_tasks: ITask[];
 }
 
-export interface ITaskMiniature {
+export interface ITask {
     id: string;
+    owner: IProfile | null;
     title: string;
+    description: string;
     project: IProjectContext;
-    min_participations: ?number;
+    min_participations: number | null;
     participations_count: number;
     related_users: IProfile[];
     // if self is participating
     self_participating: boolean;
-    starting_at: ?string;
-    due_at: string;
-    hasNotes: boolean;
-    // notes: INote[] | null;
-    // created_at: string;
-    owner?: IProfile;
-    isOwner: boolean | null;
-    validated: boolean;
-
-    [key: string]: unknown;
-}
-
-export interface ITask extends ITaskMiniature {
-    id: string;
-    owner: ?IProfile;
-    title: string;
-    description: string;
-    project: IProjectContext;
-    min_participations: ?number;
-    participations_count: number;
-    // if self is participating
-    self_participating: boolean;
     participating_users: IProfile[];
-    starting_at: ?string;
+    starting_at: string | null;
     due_at: string;
     // created_at: string;
     // updated_at: string;
+    // created_at: string;
+    is_owner: boolean;
+    validated: boolean;
     notes: INote[] | null;
 
     [key: string]: unknown;
@@ -180,6 +168,7 @@ export interface INote {
     id: string;
     owner: IProfile;
     content: string;
+    is_owner:boolean;
 
     [key: string]: unknown;
 }

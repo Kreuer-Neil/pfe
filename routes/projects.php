@@ -35,6 +35,23 @@ Route::get('projects/{slug}', [ProjectController::class, 'show'])
 Route::get('projects/{slug}/join', [ProjectController::class, 'join'])
     ->name('projects.join');
 
+Route::get('projects/{slug}/edit', [ProjectController::class, 'edit'])
+    ->name('projects.edit');
+
+Route::get('projects/{slug}/update', [ProjectController::class, 'update'])
+    ->name('projects.update');
+
 Route::post('projects/{slug}/update/appearance', [ProjectController::class, 'updateAppearance'])
     ->name('projects.update.appearance');
+Route::post('projects/{slug}/update/visibility', [ProjectController::class, 'updateVisibility'])
+    ->name('projects.update.visibility');
+
+Route::post('projects/{slug}/update/tags', [ProjectController::class, 'updateTags'])
+    ->name('projects.update.tags');
+
+Route::post('projects/{slug}/update/location', [ProjectController::class, 'updateLocation'])
+    ->name('projects.update.location');
+
+Route::post('projects/{slug}/update/member-role', [ProjectController::class, 'updateMemberRole'])
+    ->name('projects.update.member-role');
 

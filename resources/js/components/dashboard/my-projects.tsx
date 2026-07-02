@@ -2,8 +2,8 @@ import {index as projectsIndex} from '@/actions/App/Http/Controllers/ProjectCont
 import {IDashboardProject} from "@/types";
 import {ReactNode} from "react";
 import {ListFilter} from "lucide-react";
-import Button from "@/components/buttons/button";
-import IconButton from "@/components/buttons/icon-button";
+import {Button} from "@/components/ui/button";
+import {Link} from "@inertiajs/react";
 import ProjectItem from "@/components/projects/project-item";
 import {useTranslation} from "react-i18next";
 
@@ -14,7 +14,9 @@ function ProjectsList({projects}: { projects: IDashboardProject[] }): ReactNode 
         return (
             <div className="thumbnails-list-container">
                 <p>{t("no_projects_joined")}</p>
-                <Button href={projectsIndex().url} textContent={t("search_project")} color="cta"/>
+                <Button asChild variant="secondary">
+                    <Link href={projectsIndex().url}>{t("search_project")}</Link>
+                </Button>
             </div>
         );
     }
@@ -26,7 +28,7 @@ function ProjectsList({projects}: { projects: IDashboardProject[] }): ReactNode 
                 projects.map((project: IDashboardProject): ReactNode => {
                     index++;
                     return (
-                        <li key={project.id} className="w-full">
+                        <li key={project.slug} className="w-full">
                             <ProjectItem project={project}/>
                         </li>
                     );
@@ -48,8 +50,12 @@ export default function MyProjects({projects}: { projects: IDashboardProject[] |
                 <h2 className="section-title w-fit mr-auto">
                     {t('common:my_projects')}
                 </h2>
-                <IconButton href={projectsIndex().url} textContent={t("dashboard:project_filter")} icon={ListFilter}
-                            showText={true} className="ml-auto"/>
+                <Button asChild size="sm" variant="outline" className="ml-auto">
+                    <Link href={projectsIndex().url}>
+                        {t("dashboard:project_filter")}
+                        <ListFilter/>
+                    </Link>
+                </Button>
             </div>
             <ProjectsList projects={projects}/>
             {/*<div className="flex flex-col gap-4 px-3 items-center">

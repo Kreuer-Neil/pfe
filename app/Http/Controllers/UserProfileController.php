@@ -2,17 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\FormatedModels\FormatedProfile;
-use App\FormatedModels\FormatedUser;
+use App\Http\Resources\User\ProfileResource;
 use App\Jobs\HandleProfileImageUploads;
 use App\Models\User;
-use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\Format;
-use Intervention\Image\ImageManager;
 
 class UserProfileController extends Controller
 {
@@ -27,9 +22,9 @@ class UserProfileController extends Controller
             abort(404);
         }
 
-        $user = $user->toFormatedProfile(auth()->user());
-        auth()->user()->projects;
-        return Inertia::render('profile/profile-show', compact('user'));
+        $canEdit = auth()->user()->id === $user->id;
+        $user = (new ProfileResource($user))->toArray(request());
+        return Inertia::render('profile/profile-show', compact('user', 'canEdit'));
     }
 
     public function update(int $id, Request $request)
@@ -71,7 +66,6 @@ class UserProfileController extends Controller
 
         $user->save();
 
-        Inertia::flash(['success' => true]);
         return redirect(route('user-profile.show', $id));
     }
 

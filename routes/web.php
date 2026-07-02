@@ -1,10 +1,8 @@
 <?php
 
-use App\Http\Controllers\AuthPageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LanguageController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 Route::get('/', function () {

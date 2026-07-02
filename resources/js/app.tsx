@@ -1,3 +1,5 @@
+// noinspection BadExpressionStatementJS
+
 import '../css/app.css';
 
 import { createInertiaApp } from '@inertiajs/react';
