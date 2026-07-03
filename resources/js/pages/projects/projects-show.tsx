@@ -320,7 +320,7 @@ function ProjectHeader({project}: {
                                         <Button variant="ghost"
                                                 size="sm"
                                                 onClick={openMembersModal}
-                                                className="gap-0 text-foreground"
+                                                className="gap-0"
                                         >
                                             <span className="font-bold">
                                                 {project.members_count}
@@ -407,7 +407,7 @@ function ProjectHeader({project}: {
                                         </h2>
                                         <p>{{project.news.first.text_content}}</p>
                                     </article>
-                                    <Button variant="ghost">
+                                    <Button variant="ghost_accent">
                                         {t('more_news')}
                                     </Button>
                                 </div>

@@ -83,6 +83,10 @@ export interface IProfile {
     [key: string]: unknown; // This allows for additional properties...
 }
 
+export interface IMember extends IProfile {
+    role: 'member' | 'taskmaster' | 'moderator' | 'admin';
+}
+
 export interface IProjectContext {
     name: string;
     icon: string;
@@ -128,7 +132,7 @@ export interface IProject extends IProjectShow {
     description: string;
     is_private: boolean;
     owner: IUser;
-    members: IUser[];
+    members: IMember[];
     members_count: number;
 
     coordinates: string | null;

@@ -1,4 +1,6 @@
 {
+    "profile_show": "Profile",
+    "profile_edit": "Edit profile",
     "user_edit": "Edit profile",
     "user_add": "Add contact",
     "user_remove": "Remove contact",

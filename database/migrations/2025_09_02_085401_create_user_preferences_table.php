@@ -11,12 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('project_tags', function (Blueprint $table) {
+        Schema::create('user_preferences', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('project_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('tag_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 
+            // Ask for the address, or for the "rayon d'action" the user has in onboarding
+            $table->foreignId('location_id')->nullable()->constrained()->nullOnDelete();
+
+
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -26,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('project_tags');
+        Schema::dropIfExists('user_preferences');
     }
 };

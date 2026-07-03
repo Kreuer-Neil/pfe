@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Enums\BaseTags;
-use App\Models\ProjectTag;
 use App\Models\Tag;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;

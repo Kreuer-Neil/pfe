@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Enums\Language;
 use App\Enums\ProjectRole;
 use App\Models\Member;
 use App\Models\Project;
@@ -23,6 +22,9 @@ class DatabaseSeeder extends Seeder
     {
         // Seed tags
         TagsSeeder::run();
+
+        // Seed languages
+        LanguagesSeeder::run();
 
         FillDataSeeder::run();
 

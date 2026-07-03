@@ -60,4 +60,10 @@ class ProfileController extends Controller
 
         return redirect('/');
     }
+
+    public function index()
+    {
+
+        return Inertia::render('settings/index');
+    }
 }

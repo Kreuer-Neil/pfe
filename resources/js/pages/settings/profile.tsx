@@ -48,7 +48,7 @@ export default function Profile({
             <SettingsLayout>
                 <div className="space-y-6">
                     <HeadingSmall
-                        title="Profile information"
+                        title={t('account_settings_title')}
                         description={t('update_email')}
                     />
 

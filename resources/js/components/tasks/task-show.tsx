@@ -232,7 +232,7 @@ function Show({task, startEdit, onDelete, hasProjectContext, setShowNoteCreate, 
                     }
 
                     <Button
-                        variant="ghost"
+                        variant="ghost_accent"
                         onClick={() => setShowNoteCreate(true)}
                     >
                         <Plus/>

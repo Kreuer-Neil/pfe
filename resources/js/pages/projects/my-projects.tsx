@@ -27,7 +27,7 @@ export default function myProjects({}) {
                 <MyProjects projects={projects}/>
 
                 <div className="flex flex-col gap-3 px-3 w-full items-center">
-                    <Button variant="ghost" asChild>
+                    <Button variant="ghost_accent" asChild>
                         <Link href={projectCreate().url}><Plus/>{t('create_project')}</Link>
                     </Button>
                 </div>

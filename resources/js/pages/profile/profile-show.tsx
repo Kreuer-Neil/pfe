@@ -17,6 +17,7 @@ import InputError from "@/components/input-error";
 type PageProps = {
     user: IProfile;
     canEdit: boolean;
+    editing: boolean;
 }
 
 function ProfileIcon({isEditing, user, avatarError}: {
@@ -93,9 +94,9 @@ function ProfileContainer({id, isEditing, setIsEditing, className, children}: {
 
 export default function profileShow({}) {
     const {t} = useTranslation('profile');
-    const {user, canEdit} = usePage<PageProps>().props;
+    const {user, canEdit, editing} = usePage<PageProps>().props;
 
-    const [isEditing, setIsEditing] = useState<boolean>(false);
+    const [isEditing, setIsEditing] = useState<boolean>(editing);
 
     const [nickname, setNickname] = useState<string>(user.nickname);
     const [pronouns, setPronouns] = useState<string>(user?.pronouns ?? '');
@@ -108,7 +109,7 @@ export default function profileShow({}) {
 
     return (
         <AppLayout appHeaderContext={appHeaderContext}>
-            <Head title="show"/>
+            <Head title={t(isEditing ? 'profile_edit' : 'profile_show')}/>
             <PageFlowContainer className="py-0">
 
                 <ProfileContainer id={user.id} isEditing={isEditing}

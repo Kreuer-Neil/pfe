@@ -1,5 +1,5 @@
 import Layout from '@/layouts/app-layout'
-import {Form, Head, usePage} from '@inertiajs/react'
+import {Form, Head, Link, usePage} from '@inertiajs/react'
 import PageFlowContainer from "@/components/page-flow-container";
 import ProjectController from "@/actions/App/Http/Controllers/ProjectController";
 import {IProject} from "@/types";
@@ -18,11 +18,12 @@ import InputError from "@/components/input-error";
 import {Textarea} from "@/components/ui/textarea";
 import {Switch} from "@/components/ui/switch";
 import {Separator} from "@/components/ui/separator";
-import {Camera} from "lucide-react";
+import {Camera, EllipsisVertical, SquareArrowOutUpRight} from "lucide-react";
 import {Avatar, AvatarImage} from "@/components/ui/avatar";
-import {Item, ItemContent, ItemDescription, ItemTitle, ItemFooter} from "@/components/ui/item";
+import {Item, ItemContent, ItemDescription, ItemTitle, ItemFooter, ItemActions} from "@/components/ui/item";
 import {Badge} from "@/components/ui/badge";
 import {useImageAsset} from "@/hooks/use-image-asset";
+import {show as showProfile} from '@/actions/App/Http/Controllers/UserProfileController'
 
 type EditPageProps = {
     project: IProject;
@@ -36,6 +37,8 @@ export default function ProjectsEdit({}) {
     const [localFilePath, setLocalFilePath] = useState<string | undefined>(undefined);
     const iconPath = localFilePath ?? useImageAsset('projects/' + project.icon + '/large');
 
+    const [updateSuccessMessage, setUpdateSuccessMessage] = useState<'appearance' | 'visibility' | 'tags' | 'location' | null>(null)
+
     const [tags, setTags] = useState<Array<string>>(project.tags ?? []);
     const anchor = useComboboxAnchor();
 
@@ -44,10 +47,10 @@ export default function ProjectsEdit({}) {
             <Head title={t('project_edit_title')}/>
             <PageFlowContainer className="px-3">
 
-                {/* ── Apparence ── */}
                 <Form
                     {...ProjectController.updateAppearance.form(project.slug)}
                     className="w-full"
+                    onSuccess={() => setUpdateSuccessMessage('appearance')}
                 >
                     {({errors}) => (
                         <FieldGroup>
@@ -108,7 +111,11 @@ export default function ProjectsEdit({}) {
                             </FieldSet>
 
                             <Field>
-                                <Button type="submit">{t('common:save_changes')}</Button>
+                                <Button type="submit">
+                                    {t('common:save_changes')}
+                                </Button>
+                                <InputError className="text-green-700"
+                                            message={updateSuccessMessage === 'appearance' ? t('common:changes_saved') : undefined}/>
                             </Field>
                         </FieldGroup>
                     )}
@@ -116,10 +123,10 @@ export default function ProjectsEdit({}) {
 
                 <Separator/>
 
-                {/* ── Visibilité ── */}
                 <Form
                     {...ProjectController.updateVisibility.form(project.slug)}
                     className="w-full"
+                    onSuccess={() => setUpdateSuccessMessage('visibility')}
                 >
                     {({errors}) => (
                         <FieldGroup>
@@ -140,6 +147,8 @@ export default function ProjectsEdit({}) {
                             </FieldSet>
                             <Field>
                                 <Button type="submit">{t('common:save_changes')}</Button>
+                                <InputError className="text-green-700"
+                                            message={updateSuccessMessage === 'visibility' ? t('common:changes_saved') : undefined}/>
                             </Field>
                         </FieldGroup>
                     )}
@@ -147,10 +156,10 @@ export default function ProjectsEdit({}) {
 
                 <Separator/>
 
-                {/* ── Tags ── */}
                 <Form
                     className="w-full"
                     {...ProjectController.updateTags.form(project.slug)}
+                    onSuccess={() => setUpdateSuccessMessage('tags')}
                 >
                     {({errors}) => (
                         <FieldGroup>
@@ -199,6 +208,8 @@ export default function ProjectsEdit({}) {
                             </FieldSet>
                             <Field>
                                 <Button type="submit">{t('common:save_changes')}</Button>
+                                <InputError className="text-green-700"
+                                            message={updateSuccessMessage === 'tags' ? t('common:changes_saved') : undefined}/>
                             </Field>
                         </FieldGroup>
                     )}
@@ -209,6 +220,7 @@ export default function ProjectsEdit({}) {
                 <Form
                     {...ProjectController.updateLocation.form(project.slug)}
                     className="w-full"
+                    onSuccess={() => setUpdateSuccessMessage('location')}
                 >
                     {({errors}) => (
                         <FieldGroup>
@@ -237,6 +249,8 @@ export default function ProjectsEdit({}) {
                             </FieldSet>
                             <Field>
                                 <Button type="submit">{t('common:save_changes')}</Button>
+                                <InputError className="text-green-700"
+                                            message={updateSuccessMessage === 'location' ? t('common:changes_saved') : undefined}/>
                             </Field>
                         </FieldGroup>
                     )}
@@ -251,7 +265,7 @@ export default function ProjectsEdit({}) {
                     <ul className="flex flex-col gap-2">
                         {project.members.map((member) => (
                             <li key={member.id}>
-                                <Item variant="outline">
+                                <Item variant="outline" size="sm">
                                     <Avatar>
                                         <AvatarImage
                                             src={useImageAsset('users/' + member.avatar + '/small')}
@@ -259,12 +273,37 @@ export default function ProjectsEdit({}) {
                                         />
                                     </Avatar>
                                     <ItemContent>
-                                        <ItemTitle>{member.nickname}</ItemTitle>
+                                        <ItemTitle>
+                                            {member.nickname}
+                                        </ItemTitle>
                                         <ItemDescription>
                                             {member.first_name} {member.last_name}
                                         </ItemDescription>
                                     </ItemContent>
+                                    <ItemActions>
+                                        <Button asChild
+                                                size="icon"
+                                                variant="ghost"
+                                        >
+                                            <Link href={showProfile(member.id).url}>
+                                             <span className="sr-only">
+                                                 {t('common:to_user_profile',{user:member.nickname})}
+                                             </span>
+                                                <SquareArrowOutUpRight/>
+                                            </Link>
+                                        </Button>
+                                        <Button
+                                                size="icon"
+                                                variant="ghost"
+                                        >
+                                             <span className="sr-only">
+                                                 {t('project:manage_user',{user:member.nickname})}
+                                             </span>
+                                            <EllipsisVertical/>
+                                        </Button>
+                                    </ItemActions>
                                     <ItemFooter>
+                                        {/* TODO add colors for roles? */}
                                         <Badge>
                                             {t('role_' + member.role)}
                                         </Badge>

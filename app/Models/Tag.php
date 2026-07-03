@@ -3,13 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Tag extends Model
 {
-    public function projects():BelongsToMany
+    public $timestamps = false;
+
+    protected $fillable = ['name'];
+
+    public function projects(): MorphToMany
     {
-        return $this->belongsToMany(Project::class, ProjectTag::class);
+        return $this->morphedByMany(Project::class, 'taggable');
     }
 
     // TODO keep for later

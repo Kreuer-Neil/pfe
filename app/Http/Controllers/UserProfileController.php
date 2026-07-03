@@ -13,6 +13,16 @@ class UserProfileController extends Controller
 {
     public function show($id)
     {
+        return $this->renderProfile($id, false);
+    }
+
+    public function edit($id)
+    {
+        return $this->renderProfile($id, true);
+    }
+
+    private function renderProfile($id, bool $editing)
+    {
         $user = User::find($id);
 
         // TODO add check if not contact or project in common + if account private
@@ -23,8 +33,16 @@ class UserProfileController extends Controller
         }
 
         $canEdit = auth()->user()->id === $user->id;
+
+        if ($editing && !$canEdit) {
+            abort(403);
+        }
+
         $user = (new ProfileResource($user))->toArray(request());
-        return Inertia::render('profile/profile-show', compact('user', 'canEdit'));
+
+        return Inertia::render('profile/profile-show', compact(
+            'user', 'canEdit', 'editing'
+        ));
     }
 
     public function update(int $id, Request $request)

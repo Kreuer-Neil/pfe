@@ -10,7 +10,7 @@ import {show as projectsShow} from "@/routes/projects";
 import {index as projectsIndex, myProjects} from "@/actions/App/Http/Controllers/ProjectController";
 import {show as showProfile} from "@/actions/App/Http/Controllers/UserProfileController";
 import {cn} from "@/lib/utils";
-import {edit as profileEdit} from "@/actions/App/Http/Controllers/Settings/ProfileController";
+import {index} from "@/actions/App/Http/Controllers/Settings/ProfileController";
 
 interface INavItemProps {
     icon?: LucideIcon;
@@ -64,7 +64,7 @@ export default function CustomSidebar(
         {
             icon: Settings2,
             title: t('settings'),
-            href: profileEdit().url
+            href: index().url
         },
         {
             icon: ChartGantt,

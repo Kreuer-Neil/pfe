@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tags', function (Blueprint $table) {
+        Schema::create('languageables', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-//            $table->timestamps();
+
+            $table->foreignId('language_id')->constrained()->cascadeOnDelete();
+            $table->morphs('languageable');
+
+            $table->timestamps();
         });
     }
 
@@ -23,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tags');
+        Schema::dropIfExists('languageables');
     }
 };

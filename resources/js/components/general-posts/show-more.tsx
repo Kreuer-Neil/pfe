@@ -10,6 +10,6 @@ type showMoreProps = {
 export default function ShowMore({showMore = true, onClick}: showMoreProps) {
     const {t} = useTranslation('pagination');
     return showMore ?
-        <Button variant="ghost" onClick={onClick}><LucideChevronDown/>{t('show_more')}</Button> :
-        <Button variant="ghost" onClick={onClick}><LucideChevronUp/>{t('show_less')}</Button>
+        <Button variant="ghost_accent" onClick={onClick}><LucideChevronDown/>{t('show_more')}</Button> :
+        <Button variant="ghost_accent" onClick={onClick}><LucideChevronUp/>{t('show_less')}</Button>
 }

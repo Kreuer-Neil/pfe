@@ -140,7 +140,7 @@ export default function TaskCreateModal({showModal, setShowModal, project}: {
                                     <InputError message={errors.general}/>
                                     {/*
                         <Button
-                            variant="ghost"
+                            variant="ghost_accent"
                             // TODO setup
                         >
                             <ClipboardCopy/>
