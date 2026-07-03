@@ -23,6 +23,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     require __DIR__ . '/projects.php';
     require __DIR__ . '/tasks.php';
     require __DIR__ . '/userProfile.php';
+    require __DIR__ . '/location.php';
 
 //    Route::get('users/{id}', );
 });

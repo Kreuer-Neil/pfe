@@ -30,10 +30,11 @@ class Location extends Model
     /**
      * Deletes the location if no project or user preference references it anymore.
      */
-    public function pruneIfUnused(): void
+    public function removeIfUnused(): void
     {
         if ($this->projects()->doesntExist() && $this->userPreferences()->doesntExist()) {
             $this->delete();
         }
     }
+
 }

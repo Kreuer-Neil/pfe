@@ -166,6 +166,9 @@ return [
     'ulid' => 'The :attribute field must be a valid ULID.',
     'uuid' => 'The :attribute field must be a valid UUID.',
 
+    'member_not_found' => 'This member could not be found.',
+    'location_selection_expired' => 'This location selection has expired, please search again.',
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines

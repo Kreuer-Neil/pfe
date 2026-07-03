@@ -10,7 +10,6 @@ use App\Http\Resources\Project\ProjectResource;
 use App\Http\Resources\Project\ProjectShowresource;
 use App\Http\Resources\TagRessourceCollection;
 use App\Jobs\HandleProfileImageUploads;
-use App\Models\Location;
 use App\Models\Project;
 use App\Models\Tag;
 use App\Models\User;
@@ -241,7 +240,7 @@ class ProjectController extends Controller
 
         $validated = $request->validate([
             'user_id' => 'required|integer|exists:users,id',
-            'role'    => ['required', 'string', Rule::in($assignableRoles)],
+            'role' => ['required', 'string', Rule::in($assignableRoles)],
         ]);
 
         $target = User::findOrFail($validated['user_id']);
@@ -264,25 +263,33 @@ class ProjectController extends Controller
         }
 
         $validated = $request->validate([
-            'osm_id' => 'nullable|string|max:255',
-            'osm_type' => 'nullable|required_with:osm_id|string|max:255',
-            'latitude' => 'nullable|required_with:osm_id|string|max:255',
-            'longitude' => 'nullable|required_with:osm_id|string|max:255',
-            'display_name' => 'nullable|required_with:osm_id|string|max:255',
-            'name' => 'nullable|required_with:osm_id|string|max:255',
-            'type' => 'nullable|required_with:osm_id|string|max:255',
+            'q' => 'nullable|required_with:osm_id,osm_type|string|max:255',
+            'osm_id' => 'nullable|required_with:q|string|max:255',
+            'osm_type' => 'nullable|required_with:q|string|max:255',
         ]);
 
         $oldLocation = $project->location;
 
-        $project->location_id = !empty($validated['osm_id'])
-            ? Location::findOrCreateFromNominatim($validated)->id
-            : null;
+        if (!empty($validated['osm_id'])) {
+            $location = LocationController::resolveFromSearchCache($validated['q'], $validated['osm_id'], $validated['osm_type']);
+
+            if (!$location) {
+                return redirect()->back()->withErrors(['osm_id' => __('validation.location_selection_expired')]);
+            }
+
+            $project->location_id = $location->id;
+        } else {
+            // Temporary. Shouldn't be null, maybe?
+            // TODO define if should be nullable or not.
+            $project->location_id = null;
+        }
 
         $project->save();
 
-        if ($oldLocation && $oldLocation->id !== $project->location_id) {
-            $oldLocation->pruneIfUnused();
+        // Check since it's nullable
+        if ($oldLocation) {
+            // remove old location
+            $oldLocation->removeIfUnused();
         }
 
         Inertia::flash(['success' => true]);

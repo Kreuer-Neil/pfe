@@ -155,6 +155,9 @@ return [
     'ulid' => 'Das Feld :attribute muss eine gültige ULID sein.',
     'uuid' => 'Das Feld :attribute muss eine gültige UUID sein.',
 
+    'member_not_found' => 'Dieses Mitglied wurde nicht gefunden.',
+    'location_selection_expired' => 'Diese Standortauswahl ist abgelaufen, bitte erneut suchen.',
+
     'custom' => [
         'attribute-name' => [
             'rule-name' => 'custom-message',
