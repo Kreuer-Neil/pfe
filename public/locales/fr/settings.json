@@ -1,0 +1,16 @@
+{
+    "title": "Paramètres",
+    "description": "Gérez votre profil et les paramètres de votre compte",
+    "profile": "Profil",
+    "password": "Mot de passe",
+    "two_factor": "Authentification à deux facteurs",
+    "account": "Compte",
+    "account_page_details": "Modifier l'e-mail, le mot de passe, l'authentification à deux facteurs...",
+    "preferences": "Préférences",
+    "preferences_page_details": "Langues, centres d'intérêt et localisation",
+    "preferences_languages_title": "Langues préférées",
+    "preferences_languages_description": "Les langues dans lesquelles vous êtes à l'aise pour communiquer. Utilisées pour vous proposer des projets pertinents.",
+    "preferences_tags_title": "Centres d'intérêt",
+    "preferences_tags_description": "Les thématiques qui vous intéressent. Utilisées pour vous proposer des projets pertinents.",
+    "preferences_location_title": "Localisation"
+}

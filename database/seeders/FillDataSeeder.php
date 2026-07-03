@@ -3,12 +3,12 @@
 namespace Database\Seeders;
 
 use App\Enums\ProjectRole;
+use App\Models\Location;
 use App\Models\Member;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class FillDataSeeder extends Seeder
@@ -16,16 +16,45 @@ class FillDataSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public static function run(): void
+    public function run(): void
     {
-        echo 'Seeding fill data...';
+        $liege = Location::firstOrCreate(
+            ['osm_id' => '1407192', 'osm_type' => 'relation'],
+            [
+                'latitude' => '50.61126712133781',
+                'longitude' => '5.510050323190294',
+                'display_name' => 'Liège, Wallonie, Belgique',
+                'name' => 'Liège',
+                'type' => 'city',
+            ]
+        );
+        $outremeuse = Location::firstOrCreate(
+            ['osm_id' => '1407194', 'osm_type' => 'node'],
+            [
+                'latitude' => '50.6417',
+                'longitude' => '5.5807',
+                'display_name' => 'Outremeuse, Liège, Wallonie, Belgique',
+                'name' => 'Outremeuse',
+                'type' => 'suburb',
+            ]
+        );
+        $seraing = Location::firstOrCreate(
+            ['osm_id' => '1407193', 'osm_type' => 'relation'],
+            [
+                'latitude' => '50.5885',
+                'longitude' => '5.5064',
+                'display_name' => 'Seraing, Liège, Wallonie, Belgique',
+                'name' => 'Seraing',
+                'type' => 'city',
+            ]
+        );
 
         $projectsData = [
             [
                 'name' => 'Luigi\'s Garden',
                 'is_private' => false,
                 'description' => 'Luigi’s Garden is about maintaining sir Luigi’s mansion garden, an unofficial park in this choking city, open to anyone respectful enough.',
-                // Coordinates : 50.61126712133781, 5.510050323190294
+                'location_id' => $liege->id,
                 'owner' => [
                     'first_name' => 'Luigi',
                     'last_name' => 'Mario',
@@ -37,6 +66,7 @@ class FillDataSeeder extends Seeder
                 'name' => 'Silk Song Band',
                 'is_private' => false,
                 'description' => 'Eh Guarana Adida SHAW',
+                'location_id' => $outremeuse->id,
                 'owner' => [
                     'first_name' => 'Hornet',
                     'last_name' => 'Silk',
@@ -64,6 +94,7 @@ class FillDataSeeder extends Seeder
                 'name' => 'Planter des arbres à Seraing',
                 'is_private' => false,
                 'icon' => 'project_default',
+                'location_id' => $seraing->id,
                 'description' => 'Rejoignez-nous pour reverdir Seraing ! Ce projet citoyen a pour but de replanter des arbres dans les espaces inutilisés et délaissés de la ville, afin d\'améliorer la qualité de l\'air, de lutter contre les îlots de chaleur urbains et de rendre notre ville plus agréable à vivre. Tout le monde peut participer, aucune expérience n\'est nécessaire — juste de la bonne volonté et l\'envie de faire quelque chose de concret pour notre environnement !',
                 'tasks' => [
                     [
@@ -124,6 +155,7 @@ class FillDataSeeder extends Seeder
                 'is_private' => $projectData['is_private'],
                 'description' => $projectData['description'],
                 'icon' => $projectData['icon'] ?? 'default_'.random_int(1,2),
+                'location_id' => $projectData['location_id'],
             ];
 
             $project = Project::create($projectArray);
@@ -176,7 +208,5 @@ class FillDataSeeder extends Seeder
                 }
             }
         }
-
-        echo 'Fill data seeded.';
     }
 }

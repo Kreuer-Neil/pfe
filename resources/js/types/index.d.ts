@@ -98,6 +98,21 @@ export interface ILocation {
     type: string;
 }
 
+// Raw Nominatim search result, as proxied by LocationController::search().
+// Not the same shape as ILocation - this hasn't been resolved/persisted yet.
+export interface INominatimResult {
+    osm_id: number;
+    osm_type: string;
+    display_name: string;
+    type: string;
+}
+
+export interface IUserPreferences {
+    languages: string[];
+    tags: string[];
+    place: string | null;
+}
+
 export interface IProjectContext {
     name: string;
     icon: string;

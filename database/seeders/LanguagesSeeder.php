@@ -11,14 +11,10 @@ class LanguagesSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public static function run(): void
+    public function run(): void
     {
-        echo 'Seeding languages...';
-
         foreach (Language::cases() as $language) {
             LanguageModel::firstOrCreate(['name' => $language->value]);
         }
-
-        echo 'Languages seeded.';
     }
 }

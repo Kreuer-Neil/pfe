@@ -101,15 +101,28 @@ class ProjectController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|min:6|max:255|unique:projects,name',
             'description' => 'required|min:6|string',
-//            'is_private' => 'boolean',
+//            'is_private' => 'nullable|contains:1',
             'tags' => 'required_if:is_private,true|array|max:7',
             'tags.*' => 'string|exists:tags,name',
+            'q' => 'required_unless:is_private,1|string|max:255',
+            'osm_id' => 'required_unless:is_private,1|string|max:255',
+            'osm_type' => 'required_unless:is_private,1|string|max:255',
         ]);
         // , ['name.unique' => 'project_name_exists']
 
         $validated['owner_id'] = auth()->user()->id;
         $validated['is_private'] = $request->has('is_private');
-        $tagNames = $validated['tags'];
+        $tagNames = array_key_exists('tags', $validated) ? $validated['tags'] : [];
+
+        if (!empty($validated['osm_id'])) {
+            $location = LocationController::resolveFromSearchCache($validated['q'], $validated['osm_id'], $validated['osm_type']);
+
+            if (!$location) {
+                return redirect()->back()->withErrors(['osm_id' => __('validation.location_selection_expired')]);
+            }
+
+            $validated['location_id'] = $location->id;
+        }
 
         $project = Project::create($validated);
 
@@ -196,7 +209,13 @@ class ProjectController extends Controller
 
         Gate::authorize('update', $project);
 
-        $project->is_private = $request->has('is_private');
+        $isPrivate = $request->has('is_private');
+
+        if (!$isPrivate && !$project->location_id) {
+            return redirect()->back()->withErrors(['is_private' => __('validation.location_required_for_public')]);
+        }
+
+        $project->is_private = $isPrivate;
         $project->save();
 
         Inertia::flash(['success' => true]);
@@ -263,9 +282,9 @@ class ProjectController extends Controller
         }
 
         $validated = $request->validate([
-            'q' => 'nullable|required_with:osm_id,osm_type|string|max:255',
-            'osm_id' => 'nullable|required_with:q|string|max:255',
-            'osm_type' => 'nullable|required_with:q|string|max:255',
+            'q' => [Rule::requiredIf(!$project->is_private), 'required_with:osm_id,osm_type', 'string', 'max:255'],
+            'osm_id' => [Rule::requiredIf(!$project->is_private), 'required_with:q', 'string', 'max:255'],
+            'osm_type' => [Rule::requiredIf(!$project->is_private), 'required_with:q', 'string', 'max:255'],
         ]);
 
         $oldLocation = $project->location;
@@ -279,8 +298,6 @@ class ProjectController extends Controller
 
             $project->location_id = $location->id;
         } else {
-            // Temporary. Shouldn't be null, maybe?
-            // TODO define if should be nullable or not.
             $project->location_id = null;
         }
 

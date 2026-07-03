@@ -3,20 +3,32 @@
 namespace Database\Seeders;
 
 use App\Enums\ProjectRole;
+use App\Models\Location;
 use App\Models\Member;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
-class TestUserSeeder
+class TestUserSeeder extends Seeder
 {
     /**
      * Seed the Test User
      */
-    public static function run(): void
+    public function run(): void
     {
-        echo 'Seeding test user data...';
+        // Same real place as Luigi's Garden in FillDataSeeder - dedupes to the same row either way.
+        $liege = Location::firstOrCreate(
+            ['osm_id' => '1407192', 'osm_type' => 'relation'],
+            [
+                'latitude' => '50.61126712133781',
+                'longitude' => '5.510050323190294',
+                'display_name' => 'Liège, Wallonie, Belgique',
+                'name' => 'Liège',
+                'type' => 'city',
+            ]
+        );
 
         $testUser = User::firstOrCreate(
             ['email' => 'test@example.com'],
@@ -42,7 +54,7 @@ class TestUserSeeder
                 'name' => 'Sunshine Alley 22b',
                 'description' => 'The group for Building 22b on Sunshine Alley. Our shared garden is soon to become a vegetable garden, and we\'re workin hard on it. So that we could dine together sometimes, nearly for free. Living already costs too much, at least mutual aid is free.',
                 'icon' => 'project_default',
-                // Coordinates : 50.61126712133781, 5.510050323190294
+                'location_id' => $liege->id,
 
                 'is_private' => true,
             ]
@@ -73,7 +85,5 @@ class TestUserSeeder
             $task->participate($projectUsers->random(1)->first());
             $task->participate($projectUsers->random(1)->first());
         }
-
-        echo 'Test user data seeded.';
     }
 }

@@ -20,6 +20,7 @@ import {Textarea} from "@/components/ui/textarea";
 import {Separator} from "@/components/ui/separator";
 import {Switch} from "@/components/ui/switch";
 import {Button} from "@/components/ui/button";
+import LocationSearch from "@/components/location-search";
 
 type PageProps = {
     tagsList: Array<string>;
@@ -145,6 +146,10 @@ export default function projectsCreate({}) {
                                         <InputError message={errors.tags}/>
                                     </Field>
                                 </FieldGroup>
+                                
+                                <Separator/>
+
+                                <LocationSearch legend={t('project_form_location_title')} errors={errors}/>
 
                                 <div className="flex flex-col gap-3 px-2 items-center pt-3">
                                     <Button type="submit">

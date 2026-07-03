@@ -1,0 +1,16 @@
+{
+    "title": "Einstellungen",
+    "description": "Verwalten Sie Ihr Profil und Ihre Kontoeinstellungen",
+    "profile": "Profil",
+    "password": "Passwort",
+    "two_factor": "Zwei-Faktor-Authentifizierung",
+    "account": "Konto",
+    "account_page_details": "E-Mail, Passwort, Zwei-Faktor-Authentifizierung ändern...",
+    "preferences": "Präferenzen",
+    "preferences_page_details": "Sprachen, Interessen und Standort",
+    "preferences_languages_title": "Bevorzugte Sprachen",
+    "preferences_languages_description": "Sprachen, in denen Sie sich wohlfühlen. Werden genutzt, um Ihnen passende Projekte vorzuschlagen.",
+    "preferences_tags_title": "Interessen",
+    "preferences_tags_description": "Themen, die Sie interessieren. Werden genutzt, um Ihnen passende Projekte vorzuschlagen.",
+    "preferences_location_title": "Standort"
+}

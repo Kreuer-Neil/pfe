@@ -1,0 +1,16 @@
+{
+    "title": "Settings",
+    "description": "Manage your profile and account settings",
+    "profile": "Profile",
+    "password": "Password",
+    "two_factor": "Two-Factor Auth",
+    "account": "Account",
+    "account_page_details": "Change email, password, two-factor authentication...",
+    "preferences": "Preferences",
+    "preferences_page_details": "Languages, interests, and location",
+    "preferences_languages_title": "Preferred languages",
+    "preferences_languages_description": "Languages you're comfortable communicating in. Used to help match you with relevant projects.",
+    "preferences_tags_title": "Interests",
+    "preferences_tags_description": "Topics you're interested in. Used to help match you with relevant projects.",
+    "preferences_location_title": "Location"
+}

@@ -2,20 +2,20 @@
 
 namespace Database\Seeders;
 
+use App\Models\Location;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
-class CredentialsSeeder
+class CredentialsSeeder extends Seeder
 {
     /**
      * Seed the teachers credentials
      */
-    public static function run(): void
+    public function run(): void
     {
-        info('Seeding credential users data...');
-
         $users = [
             'wera' => User::create([
                 'last_name' => 'Wera',
@@ -33,12 +33,36 @@ class CredentialsSeeder
             ]),
         ];
 
-        foreach ($users as $user) {
+        $locations = [
+            'wera' => Location::firstOrCreate(
+                ['osm_id' => '1407195', 'osm_type' => 'relation'],
+                [
+                    'latitude' => '50.5900',
+                    'longitude' => '5.8626',
+                    'display_name' => 'Verviers, Liège, Wallonie, Belgique',
+                    'name' => 'Verviers',
+                    'type' => 'city',
+                ]
+            ),
+            'schreurs' => Location::firstOrCreate(
+                ['osm_id' => '1407196', 'osm_type' => 'relation'],
+                [
+                    'latitude' => '50.5192',
+                    'longitude' => '5.2378',
+                    'display_name' => 'Huy, Liège, Wallonie, Belgique',
+                    'name' => 'Huy',
+                    'type' => 'city',
+                ]
+            ),
+        ];
+
+        foreach ($users as $key => $user) {
             $project = Project::create([
                 'name' => $name = 'Projet de ' . $user->last_name,
                 'description' => 'Projet créé afin que ' . $user->nickname . ' puisse tester l’application.',
 
                 'owner_id' => $user->id,
+                'location_id' => $locations[$key]->id,
 
                 'is_private' => false,
             ]);
@@ -69,7 +93,5 @@ class CredentialsSeeder
                 }
             }
         }
-
-        info('Credential users seeded.');
     }
 }

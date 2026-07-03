@@ -157,6 +157,7 @@ return [
 
     'member_not_found' => 'Dieses Mitglied wurde nicht gefunden.',
     'location_selection_expired' => 'Diese Standortauswahl ist abgelaufen, bitte erneut suchen.',
+    'location_required_for_public' => 'Öffentliche Projekte benötigen einen Standort, bevor sie öffentlich gemacht werden können.',
 
     'custom' => [
         'attribute-name' => [

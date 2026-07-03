@@ -14,8 +14,8 @@
 pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->beforeEach(function () {
-        Database\Seeders\TagsSeeder::run();
-        Database\Seeders\LanguagesSeeder::run();
+        (new Database\Seeders\TagsSeeder())->run();
+        (new Database\Seeders\LanguagesSeeder())->run();
     })
     ->in('Feature');
 

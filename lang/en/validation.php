@@ -168,6 +168,7 @@ return [
 
     'member_not_found' => 'This member could not be found.',
     'location_selection_expired' => 'This location selection has expired, please search again.',
+    'location_required_for_public' => 'Public projects need a location set before they can be made public.',
 
     /*
     |--------------------------------------------------------------------------

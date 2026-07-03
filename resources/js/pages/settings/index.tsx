@@ -5,7 +5,8 @@ import {Separator} from "@/components/ui/separator";
 import {Button} from "@/components/ui/button";
 import {edit as editAccount} from "@/actions/App/Http/Controllers/Settings/ProfileController";
 import {edit as editProfile} from "@/actions/App/Http/Controllers/UserProfileController";
-import {ChevronRight, LucideIcon, User, UserPen} from "lucide-react";
+import {edit as editPreferences} from "@/actions/App/Http/Controllers/UserPreferencesController";
+import {ChevronRight, LucideIcon, SlidersHorizontal, User, UserPen} from "lucide-react";
 import {SharedData} from "@/types";
 import PageFlowContainer from "@/components/page-flow-container";
 import {Item, ItemActions, ItemContent, ItemDescription, ItemMedia} from "@/components/ui/item";
@@ -60,6 +61,12 @@ export default function SettingsIndex({}) {
             href: editAccount().url,
             icon: User,
             details: t('account_page_details') // Change Email, Password, ...
+        },
+        {
+            title: t('preferences'),
+            href: editPreferences().url,
+            icon: SlidersHorizontal,
+            details: t('preferences_page_details')
         },
     ];
     return (

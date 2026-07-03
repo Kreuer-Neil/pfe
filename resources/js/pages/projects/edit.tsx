@@ -24,6 +24,7 @@ import {Item, ItemContent, ItemDescription, ItemTitle, ItemFooter, ItemActions} 
 import {Badge} from "@/components/ui/badge";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import {show as showProfile} from '@/actions/App/Http/Controllers/UserProfileController'
+import LocationSearch from "@/components/location-search";
 
 type EditPageProps = {
     project: IProject;
@@ -37,7 +38,7 @@ export default function ProjectsEdit({}) {
     const [localFilePath, setLocalFilePath] = useState<string | undefined>(undefined);
     const iconPath = localFilePath ?? useImageAsset('projects/' + project.icon + '/large');
 
-    const [updateSuccessMessage, setUpdateSuccessMessage] = useState<'appearance' | 'visibility' | 'tags' | null>(null)
+    const [updateSuccessMessage, setUpdateSuccessMessage] = useState<'appearance' | 'visibility' | 'tags' | 'location' | null>(null)
 
     const [tags, setTags] = useState<Array<string>>(project.tags ?? []);
     const anchor = useComboboxAnchor();
@@ -217,16 +218,26 @@ export default function ProjectsEdit({}) {
 
                 <Separator/>
 
-                <FieldSet>
-                    <FieldLegend>{t('project_form_location_title')}</FieldLegend>
-                    <FieldGroup>
-                        <Field>
-                            <Label>{t('project_form_place')}</Label>
-                            <p>{project.place ?? t('project_form_location_pending')}</p>
-                        </Field>
-                    </FieldGroup>
-                </FieldSet>
-                {/* TODO: replace with LocationSearch component once LocationController::search()/store() exist */}
+                <Form
+                    {...ProjectController.updateLocation.form(project.slug)}
+                    className="w-full"
+                    onSuccess={() => setUpdateSuccessMessage('location')}
+                >
+                    {({errors}) => (
+                        <FieldGroup>
+                            <LocationSearch
+                                legend={t('project_form_location_title')}
+                                initialPlace={project.place}
+                                errors={errors}
+                            />
+                            <Field>
+                                <Button type="submit">{t('common:save_changes')}</Button>
+                                <InputError className="text-green-700"
+                                            message={updateSuccessMessage === 'location' ? t('common:changes_saved') : undefined}/>
+                            </Field>
+                        </FieldGroup>
+                    )}
+                </Form>
 
                 <Separator/>
 

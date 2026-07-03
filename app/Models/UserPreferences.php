@@ -24,4 +24,9 @@ class UserPreferences extends Model
     {
         return $this->morphToMany(Language::class, 'languageable');
     }
+
+    public function tags(): MorphToMany
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
+    }
 }

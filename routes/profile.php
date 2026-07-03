@@ -3,6 +3,7 @@
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\TwoFactorAuthenticationController;
+use App\Http\Controllers\UserPreferencesController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -29,3 +30,12 @@ Route::put('settings/password', [PasswordController::class, 'update'])
 
 Route::get('settings/two-factor', [TwoFactorAuthenticationController::class, 'show'])
     ->name('two-factor.show');
+
+Route::get('settings/preferences', [UserPreferencesController::class, 'edit'])
+    ->name('preferences.edit');
+Route::post('settings/preferences/languages', [UserPreferencesController::class, 'updateLanguages'])
+    ->name('preferences.update.languages');
+Route::post('settings/preferences/tags', [UserPreferencesController::class, 'updateTags'])
+    ->name('preferences.update.tags');
+Route::post('settings/preferences/location', [UserPreferencesController::class, 'updateLocation'])
+    ->name('preferences.update.location');
