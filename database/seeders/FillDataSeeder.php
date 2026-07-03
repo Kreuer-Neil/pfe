@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Enums\Language;
 use App\Enums\ProjectRole;
 use App\Models\Member;
 use App\Models\Project;
@@ -27,7 +26,6 @@ class FillDataSeeder extends Seeder
                 'is_private' => false,
                 'description' => 'Luigi’s Garden is about maintaining sir Luigi’s mansion garden, an unofficial park in this choking city, open to anyone respectful enough.',
                 'coordinates' => '50.61126712133781, 5.510050323190294',
-                'lang' => Language::ENGLISH,
                 'owner' => [
                     'first_name' => 'Luigi',
                     'last_name' => 'Mario',
@@ -39,7 +37,6 @@ class FillDataSeeder extends Seeder
                 'name' => 'Silk Song Band',
                 'is_private' => false,
                 'description' => 'Eh Guarana Adida SHAW',
-                'lang' => Language::JAPANESE,
                 'owner' => [
                     'first_name' => 'Hornet',
                     'last_name' => 'Silk',
@@ -68,8 +65,6 @@ class FillDataSeeder extends Seeder
                 'is_private' => false,
                 'icon' => 'project_default',
                 'description' => 'Rejoignez-nous pour reverdir Seraing ! Ce projet citoyen a pour but de replanter des arbres dans les espaces inutilisés et délaissés de la ville, afin d\'améliorer la qualité de l\'air, de lutter contre les îlots de chaleur urbains et de rendre notre ville plus agréable à vivre. Tout le monde peut participer, aucune expérience n\'est nécessaire — juste de la bonne volonté et l\'envie de faire quelque chose de concret pour notre environnement !',
-                'lang' => Language::FRENCH,
-
                 'tasks' => [
                     [
                         'title' => 'Planter sur le terrain vague',

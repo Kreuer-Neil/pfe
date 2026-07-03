@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
@@ -22,7 +24,7 @@ class Project extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['owner_id', 'name', 'icon', 'description', 'lang', 'coordinates', 'is_private'];
+    protected $fillable = ['owner_id', 'name', 'icon', 'description', 'langguage_id', 'coordinates', 'is_private'];
 
     protected static function boot(): void
     {
@@ -222,5 +224,10 @@ class Project extends Model
     public function tags(): MorphToMany
     {
         return $this->morphToMany(Tag::class, 'taggable');
+    }
+
+    public function lang(): HasOne
+    {
+        return $this->hasOne(Language::class);
     }
 }

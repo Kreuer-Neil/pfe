@@ -11,8 +11,8 @@ class Language extends Model
 
     protected $fillable = ['name'];
 
-    public function userPreferences(): MorphToMany
+    public function projects(): MorphToMany
     {
-        return $this->morphedByMany(UserPreferences::class, 'languageable');
+        return $this->morphedByMany(Project::class, 'languageable');
     }
 }

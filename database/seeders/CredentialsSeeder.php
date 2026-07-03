@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Enums\Language;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
@@ -39,7 +38,6 @@ class CredentialsSeeder
                 'name' => $name = 'Projet de ' . $user->last_name,
                 'description' => 'Projet créé afin que ' . $user->nickname . ' puisse tester l’application.',
 
-                'lang' => Language::FRENCH,
                 'owner_id' => $user->id,
 
                 'is_private' => false,

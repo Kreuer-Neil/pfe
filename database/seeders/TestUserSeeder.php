@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Enums\Language;
 use App\Enums\ProjectRole;
 use App\Models\Member;
 use App\Models\Project;
@@ -44,7 +43,6 @@ class TestUserSeeder
                 'description' => 'The group for Building 22b on Sunshine Alley. Our shared garden is soon to become a vegetable garden, and we\'re workin hard on it. So that we could dine together sometimes, nearly for free. Living already costs too much, at least mutual aid is free.',
                 'icon' => 'project_default',
                 'coordinates' => '50.61126712133781, 5.510050323190294',
-                'lang' => Language::ENGLISH,
 
                 'is_private' => true,
             ]

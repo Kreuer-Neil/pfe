@@ -22,17 +22,9 @@ return new class extends Migration {
             $table->text('description')->nullable();
             // Status is a collection of posts related to the project
             $table->string('slug',/*24*/)->unique();
-            $table->enum('lang', Language::cases())->default(Language::ENGLISH); // Project languages. Default: User lang/English
+            $table->foreignId('language_id')->default(1)->constrained();
             $table->string('coordinates')->nullable();
             $table->boolean('is_private')->default(true);
-
-            // + hasMany_members
-            // + hasMany_tags
-            // + hasMany_chatrooms
-            // + hasMany_tasks
-            // + hasMany_resources
-
-            // TODO add perms (users->can_post_ressources (user_id on created ressource to allow edit), moderators->can_manage_tasks (edit/delete), etc.)
 
             $table->softDeletes();
             $table->timestamps();
