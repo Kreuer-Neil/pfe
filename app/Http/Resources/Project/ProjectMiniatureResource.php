@@ -17,7 +17,7 @@ class ProjectMiniatureResource extends ProjectContextResource
     {
         return array_merge(parent::toArray($request), [
             'description' => Str::limit(value: $this->resource->description, preserveWords: true),
-            'coordinates' => $this->resource->coordinates,
+            'location' => $this->resource->location,
             'place' => $this->resource->place(),
             'tags' => (new TagRessourceCollection($this->resource->tags()->get()))->toArray($request),
             'is_member' => $this->resource->userIsMember(auth()->user()),

@@ -12,8 +12,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
@@ -24,7 +22,7 @@ class Project extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['owner_id', 'name', 'icon', 'description', 'langguage_id', 'coordinates', 'is_private'];
+    protected $fillable = ['owner_id', 'name', 'icon', 'description', 'language_id', 'location_id', 'is_private'];
 
     protected static function boot(): void
     {
@@ -48,10 +46,12 @@ class Project extends Model
      */
     public function place(): ?string
     {
-        if (!$this->coordinates) return null;
-        $coordinates = explode(', ', $this->coordinates);
-        // TODO return real location if possible with Google services? (And add column "address" on projects)
-        return "Place at {$coordinates[0]}, {$coordinates[1]}";
+        return $this->location?->display_name;
+    }
+
+    public function location(): BelongsTo
+    {
+        return $this->belongsTo(Location::class);
     }
 
     /**
@@ -226,8 +226,8 @@ class Project extends Model
         return $this->morphToMany(Tag::class, 'taggable');
     }
 
-    public function lang(): HasOne
+    public function lang(): BelongsTo
     {
-        return $this->hasOne(Language::class);
+        return $this->belongsTo(Language::class);
     }
 }

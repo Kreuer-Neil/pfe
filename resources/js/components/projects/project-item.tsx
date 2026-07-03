@@ -12,7 +12,6 @@ interface ProjectItemsProps {
 
 export default function ProjectItem({project}: ProjectItemsProps) {
     const place: string | null = project.place;
-    const coordinates: string | null = project.coordinates;
     return (
         <Item
             variant="outline"
@@ -34,16 +33,13 @@ export default function ProjectItem({project}: ProjectItemsProps) {
                 </ItemContent>
                 <ItemFooter>
                     {
-                        (place && coordinates) &&
-                        // Google maps link
+                        place &&
                         // TODO fix link not clickable because of link nav
-                        // <a href={'https://www.google.com/maps/@' + coordinates.replace(' ', '') + ',14z?entry=ttu&g_ep=EgoyMDI2MDUwMi4wIKXMDSoASAFQAw%3D%3D'}
                         <div
                             className="flex gap-1">
                             <MapPin/>
                             <p>{place}</p>
                         </div>
-                        // </a>
                     }
                     {/* TODO what's new since last passage on project */}
                     <div className="flex gap-1 ml-auto">

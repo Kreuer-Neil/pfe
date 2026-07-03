@@ -10,6 +10,7 @@ use App\Http\Resources\Project\ProjectResource;
 use App\Http\Resources\Project\ProjectShowresource;
 use App\Http\Resources\TagRessourceCollection;
 use App\Jobs\HandleProfileImageUploads;
+use App\Models\Location;
 use App\Models\Project;
 use App\Models\Tag;
 use App\Models\User;
@@ -263,13 +264,26 @@ class ProjectController extends Controller
         }
 
         $validated = $request->validate([
-            'place' => 'nullable|string|max:255',
-            'coordinates' => 'nullable|string|max:255',
+            'osm_id' => 'nullable|string|max:255',
+            'osm_type' => 'nullable|required_with:osm_id|string|max:255',
+            'latitude' => 'nullable|required_with:osm_id|string|max:255',
+            'longitude' => 'nullable|required_with:osm_id|string|max:255',
+            'display_name' => 'nullable|required_with:osm_id|string|max:255',
+            'name' => 'nullable|required_with:osm_id|string|max:255',
+            'type' => 'nullable|required_with:osm_id|string|max:255',
         ]);
 
-//        $project->place = $validated['place'];
-        $project->coordinates = $validated['coordinates'];
+        $oldLocation = $project->location;
+
+        $project->location_id = !empty($validated['osm_id'])
+            ? Location::findOrCreateFromNominatim($validated)->id
+            : null;
+
         $project->save();
+
+        if ($oldLocation && $oldLocation->id !== $project->location_id) {
+            $oldLocation->pruneIfUnused();
+        }
 
         Inertia::flash(['success' => true]);
         return redirect(route('projects.edit', $slug));

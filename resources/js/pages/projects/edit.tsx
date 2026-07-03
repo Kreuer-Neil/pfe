@@ -37,7 +37,7 @@ export default function ProjectsEdit({}) {
     const [localFilePath, setLocalFilePath] = useState<string | undefined>(undefined);
     const iconPath = localFilePath ?? useImageAsset('projects/' + project.icon + '/large');
 
-    const [updateSuccessMessage, setUpdateSuccessMessage] = useState<'appearance' | 'visibility' | 'tags' | 'location' | null>(null)
+    const [updateSuccessMessage, setUpdateSuccessMessage] = useState<'appearance' | 'visibility' | 'tags' | null>(null)
 
     const [tags, setTags] = useState<Array<string>>(project.tags ?? []);
     const anchor = useComboboxAnchor();
@@ -217,44 +217,16 @@ export default function ProjectsEdit({}) {
 
                 <Separator/>
 
-                <Form
-                    {...ProjectController.updateLocation.form(project.slug)}
-                    className="w-full"
-                    onSuccess={() => setUpdateSuccessMessage('location')}
-                >
-                    {({errors}) => (
-                        <FieldGroup>
-                            <FieldSet>
-                                <FieldLegend>{t('project_form_location_title')}</FieldLegend>
-                                <FieldGroup>
-                                    <Field>
-                                        <Label>{t('project_form_place')}</Label>
-                                        <Input
-                                            name="place"
-                                            id="place"
-                                            defaultValue={project.place ?? ''}
-                                        />
-                                        <InputError message={errors.place}/>
-                                    </Field>
-                                    <Field>
-                                        <Label>{t('project_form_coordinates')}</Label>
-                                        <Input
-                                            name="coordinates"
-                                            id="coordinates"
-                                            defaultValue={project.coordinates ?? ''}
-                                        />
-                                        <InputError message={errors.coordinates}/>
-                                    </Field>
-                                </FieldGroup>
-                            </FieldSet>
-                            <Field>
-                                <Button type="submit">{t('common:save_changes')}</Button>
-                                <InputError className="text-green-700"
-                                            message={updateSuccessMessage === 'location' ? t('common:changes_saved') : undefined}/>
-                            </Field>
-                        </FieldGroup>
-                    )}
-                </Form>
+                <FieldSet>
+                    <FieldLegend>{t('project_form_location_title')}</FieldLegend>
+                    <FieldGroup>
+                        <Field>
+                            <Label>{t('project_form_place')}</Label>
+                            <p>{project.place ?? t('project_form_location_pending')}</p>
+                        </Field>
+                    </FieldGroup>
+                </FieldSet>
+                {/* TODO: replace with LocationSearch component once LocationController::search()/store() exist */}
 
                 <Separator/>
 

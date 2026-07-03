@@ -23,7 +23,7 @@ return new class extends Migration {
             // Status is a collection of posts related to the project
             $table->string('slug',/*24*/)->unique();
             $table->foreignId('language_id')->default(1)->constrained();
-            $table->string('coordinates')->nullable();
+            $table->foreignId('location_id')->nullable()->constrained()->nullOnDelete();
             $table->boolean('is_private')->default(true);
 
             $table->softDeletes();

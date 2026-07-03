@@ -25,7 +25,7 @@ class FillDataSeeder extends Seeder
                 'name' => 'Luigi\'s Garden',
                 'is_private' => false,
                 'description' => 'Luigi’s Garden is about maintaining sir Luigi’s mansion garden, an unofficial park in this choking city, open to anyone respectful enough.',
-                'coordinates' => '50.61126712133781, 5.510050323190294',
+                // Coordinates : 50.61126712133781, 5.510050323190294
                 'owner' => [
                     'first_name' => 'Luigi',
                     'last_name' => 'Mario',

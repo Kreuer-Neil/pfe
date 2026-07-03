@@ -87,6 +87,17 @@ export interface IMember extends IProfile {
     role: 'member' | 'taskmaster' | 'moderator' | 'admin';
 }
 
+export interface ILocation {
+    id: number;
+    latitude: string;
+    longitude: string;
+    display_name: string;
+    name: string;
+    osm_id: string;
+    osm_type: string;
+    type: string;
+}
+
 export interface IProjectContext {
     name: string;
     icon: string;
@@ -99,7 +110,7 @@ export interface IProjectContext {
 export interface IDashboardProject extends IProjectContext {
     description: string;
     members_count: number;
-    coordinates: string;
+    location: ILocation | null;
     place: string | null;
 
     slug: string;
@@ -112,7 +123,7 @@ export interface IProjectMiniature extends IProjectContext {
     // TODO fix with clean ProjectRole type/enum later.
     is_member: boolean;
     members_count: number;
-    coordinates: string | null;
+    location: ILocation | null;
     place: string | null;
     tags: Array<string>;
 
@@ -135,7 +146,7 @@ export interface IProject extends IProjectShow {
     members: IMember[];
     members_count: number;
 
-    coordinates: string | null;
+    location: ILocation | null;
     place: string | null;
     tags: Array<string>;
 
