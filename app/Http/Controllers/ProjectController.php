@@ -41,11 +41,23 @@ class ProjectController extends Controller
         Request $request
     )
     {
+        $request->validate([
+            'query' => 'nullable|string',
+            'tags' => 'nullable|array',
+            'tags.*' => 'string|exists:tags,name',
+            'max_distance' => 'nullable|int'
+        ]);
         $query = $request->input('query') ?? null;
         $tags = $request->input('tags') ?? null;
+        $maxDistance = $request->input('max_distance') ?? null;
 
-        $order = $request->input('filter') ?? ProjectsFilters::RECENT_PROJECTS->value;
-        $direction = $request->input('direction') === 'asc' ? 'asc' : 'desc';
+        $userLocation = auth()->user()->preferences?->location;
+
+        $order = $request->input('filter') ?? ($userLocation ? ProjectsFilters::CLOSE_PROJECTS->value : ProjectsFilters::RECENT_PROJECTS->value);
+        // Closest-first makes more sense as the default for proximity than newest-first's default of desc.
+        $direction = in_array($request->input('direction'), ['asc', 'desc'])
+            ? $request->input('direction')
+            : ($order === ProjectsFilters::CLOSE_PROJECTS->value ? 'asc' : 'desc');
 
         $queriedProjects = Project::where('is_private', false)->with(['tags']);
 
@@ -61,9 +73,20 @@ class ProjectController extends Controller
             $queriedProjects = $queriedProjects->whereHas('tags', fn($q) => $q->whereIn('name', $tags));
         }
 
-        // TODO add filtering for data
+        $orderColumn = $order;
+
+        if ($userLocation) {
+            if ($order === ProjectsFilters::CLOSE_PROJECTS->value) {
+                $queriedProjects = $queriedProjects->withDistanceFrom($userLocation->latitude, $userLocation->longitude);
+                $orderColumn = 'distance';
+            }
+            if ($maxDistance) {
+                $queriedProjects = $queriedProjects->where('distance', '<=', $maxDistance);
+            }
+        }
+
         return ProjectMiniatureResource::collection(
-            $queriedProjects->orderBy($order, $direction)
+            $queriedProjects->orderBy($orderColumn, $direction)
                 ->get()
         )->toArray(request());
     }

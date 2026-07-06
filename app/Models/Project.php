@@ -7,6 +7,7 @@ use App\Enums\ProjectInvitationResponse;
 use App\Enums\ProjectPermissionResponse;
 use App\Enums\ProjectRole;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -52,6 +53,22 @@ class Project extends Model
     public function location(): BelongsTo
     {
         return $this->belongsTo(Location::class);
+    }
+
+    /**
+     * Adds a `distance` column (in km, great-circle) from the given point, via the Haversine formula.
+     * Left-joins locations so projects without one (shouldn't happen for public projects, but just in
+     * case) don't get silently dropped from the results - they'll just have a null distance.
+     */
+    public function scopeWithDistanceFrom(Builder $query, float $latitude, float $longitude): Builder
+    {
+        return $query
+            ->leftJoin('locations', 'locations.id', '=', 'projects.location_id')
+            ->select('projects.*')
+            ->selectRaw(
+                '(6371 * acos(cos(radians(?)) * cos(radians(locations.latitude)) * cos(radians(locations.longitude) - radians(?)) + sin(radians(?)) * sin(radians(locations.latitude)))) as distance',
+                [$latitude, $longitude, $latitude]
+            );
     }
 
     /**
@@ -142,6 +159,7 @@ class Project extends Model
         return $membership->save();
     }
 
+    // TODO remove and use the policies
     public function addTask(Task $task, User $user): Task|null
     {
         if (!$this->permission($user, ProjectAction::MANAGE_TASK))

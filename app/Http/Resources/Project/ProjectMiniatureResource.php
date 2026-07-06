@@ -19,6 +19,7 @@ class ProjectMiniatureResource extends ProjectContextResource
             'description' => Str::limit(value: $this->resource->description, preserveWords: true),
             'location' => $this->resource->location,
             'place' => $this->resource->place(),
+            'distance' => $this->resource->distance,
             'tags' => (new TagRessourceCollection($this->resource->tags()->get()))->toArray($request),
             'is_member' => $this->resource->userIsMember(auth()->user()),
             'members_count' => $this->resource->members->count(),

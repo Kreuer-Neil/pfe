@@ -140,6 +140,7 @@ export interface IProjectMiniature extends IProjectContext {
     members_count: number;
     location: ILocation | null;
     place: string | null;
+    distance: number | null;
     tags: Array<string>;
 
     slug: string;
