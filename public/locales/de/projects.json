@@ -6,6 +6,7 @@
     "get_absent": "Mich als abwesend markieren",
     "upcoming_tasks": "Bevorstehende Aufgaben",
     "icon_alt": "Symbol des Projekts {{project}}",
+    "distance_km": "{{distance}} km",
     "members_count": "Mitglied(er)",
     "button_invite": "Einladen",
     "project_edit": "Bearbeiten",

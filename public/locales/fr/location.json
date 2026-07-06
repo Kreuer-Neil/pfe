@@ -2,5 +2,11 @@
     "search_placeholder": "Rechercher un lieu...",
     "searching": "Recherche en cours...",
     "change": "Modifier",
-    "no_results": "Aucun résultat trouvé"
+    "no_results": "Aucun résultat trouvé",
+    "mode_search": "Recherche",
+    "mode_precise": "Adresse précise",
+    "street_label": "Rue",
+    "number_label": "Numéro",
+    "city_label": "Ville",
+    "postal_code_label": "Code postal"
 }

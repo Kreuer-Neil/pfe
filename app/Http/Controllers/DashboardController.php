@@ -12,8 +12,15 @@ class DashboardController extends Controller
     {
         $currentUser = auth()->user();
 
+        $userLocation = $currentUser->preferences?->location;
+        $projectsQuery = $currentUser->projects();
+
+        if ($userLocation) {
+            $projectsQuery = $projectsQuery->withDistanceFrom($userLocation->latitude, $userLocation->longitude);
+        }
+
         $projects = [];
-        foreach ($currentUser->projects as $project) {
+        foreach ($projectsQuery->get() as $project) {
             $projects[] = (new ProjectDashboardResource($project))->toArray(request());
         }
 

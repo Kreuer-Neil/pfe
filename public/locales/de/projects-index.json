@@ -2,7 +2,16 @@
     "title": "Projektsuche",
     "search_title": "Ein Projekt finden",
     "search": "Suchen",
-    "filter_pertinence": "Relevanz",
-    "filter_recent": "Zuletzt hinzugefügt",
+    "filter_legend": "Sortierung",
+    "filter_label": "Sortieren nach",
+    "filter_my_projects": "Meine Projekte",
+    "filter_created_at": "Zuletzt hinzugefügt",
+    "filter_proximity": "Nächstgelegene zuerst",
+    "distance_legend": "Entfernung",
+    "max_distance_label": "Maximale Entfernung (km)",
+    "filters_title": "Filter",
+    "filters_description": "Verfeinere die unten angezeigten Projekte.",
+    "tags_legend": "Tags",
+    "tags_select_label": "Tags",
     "results": "Ergebnisse"
 }

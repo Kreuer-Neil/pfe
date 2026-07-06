@@ -6,17 +6,47 @@ use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Validation\Rule;
 use Str;
 
 class LocationController extends Controller
 {
+    /**
+     * `precise` is an explicit flag from the client (not inferred from which fields are
+     * filled in), so validation can require the right fields per mode instead of leaving
+     * everything nullable. Precise mode gets assembled server-side into the same kind of
+     * query string a free-search user would type, so caching and resolveFromSearchCache()
+     * don't need to know which mode produced it - the response echoes back the resolved
+     * `query` so the frontend can store it verbatim for the later store() call.
+     */
     public function search(Request $request)
     {
+        $precise = $request->boolean('precise');
+
         $validated = $request->validate([
-            'q' => 'required|string|min:2|max:255',
+            'precise' => 'nullable|boolean',
+            'q' => [Rule::requiredIf(!$precise), 'string', 'max:255'],
+            'street' => [Rule::requiredIf($precise), 'string', 'max:255'],
+            'number' => 'nullable|string|max:30',
+            'city' => [Rule::requiredIf($precise), 'string', 'max:255'],
+            'postal_code' => 'nullable|string|max:30',
         ]);
 
-        return response()->json(self::searchNominatim($validated['q']));
+        $query = $precise ? self::buildPreciseQuery($validated) : trim($validated['q']);
+
+        if (mb_strlen($query) < 2) {
+            return response()->json(['query' => $query, 'results' => []]);
+        }
+
+        return response()->json(['query' => $query, 'results' => self::searchNominatim($query)]);
+    }
+
+    private static function buildPreciseQuery(array $fields): string
+    {
+        $streetLine = trim(($fields['number'] ?? '') . ' ' . ($fields['street'] ?? ''));
+        $cityLine = trim(($fields['postal_code'] ?? '') . ' ' . ($fields['city'] ?? ''));
+
+        return collect([$streetLine, $cityLine])->filter()->implode(', ');
     }
 
     /**
@@ -58,9 +88,9 @@ class LocationController extends Controller
     private static function findInNominatimResults(array $results, string $osmId, string $osmType): ?array
     {
         foreach ($results as $item) {
-            if ((string) $item['osm_id'] === $osmId && $item['osm_type'] === $osmType) {
+            if ((string)$item['osm_id'] === $osmId && $item['osm_type'] === $osmType) {
                 return [
-                    'osm_id' => (string) $item['osm_id'],
+                    'osm_id' => (string)$item['osm_id'],
                     'osm_type' => $item['osm_type'],
                     'latitude' => $item['lat'],
                     'longitude' => $item['lon'],

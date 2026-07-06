@@ -19,6 +19,7 @@ class ProjectDashboardResource extends ProjectContextResource
             'description' => Str::limit(value: $this->resource->description, preserveWords: true),
             'location' => $this->resource->location,
             'place' => $this->resource->place(),
+            'distance' => $this->resource->distance,
             'members_count' => $this->resource->members->count(),
         ]);
     }

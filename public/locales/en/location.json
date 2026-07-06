@@ -2,5 +2,11 @@
     "search_placeholder": "Search for a place...",
     "searching": "Searching...",
     "change": "Change",
-    "no_results": "No results found"
+    "no_results": "No results found",
+    "mode_search": "Search",
+    "mode_precise": "Precise address",
+    "street_label": "Street",
+    "number_label": "Number",
+    "city_label": "City",
+    "postal_code_label": "Postal code"
 }

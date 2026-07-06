@@ -107,6 +107,14 @@ export interface INominatimResult {
     type: string;
 }
 
+// Response shape of LocationController::search() - `query` is the resolved search
+// text (typed verbatim in free mode, built server-side from fields in precise mode),
+// and must be stored alongside the chosen result so resolveFromSearchCache() can find it again.
+export interface INominatimSearchResponse {
+    query: string;
+    results: INominatimResult[];
+}
+
 export interface IUserPreferences {
     languages: string[];
     tags: string[];
@@ -127,6 +135,7 @@ export interface IDashboardProject extends IProjectContext {
     members_count: number;
     location: ILocation | null;
     place: string | null;
+    distance: number | null;
 
     slug: string;
     // featured_members: IUser[];

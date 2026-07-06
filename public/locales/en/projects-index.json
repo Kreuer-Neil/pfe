@@ -2,7 +2,16 @@
     "title": "Projects search",
     "search_title": "Find a project",
     "search": "Search",
-    "filter_pertinence": "Pertinence",
-    "filter_recent": "Recently added",
+    "filter_legend": "Sorting",
+    "filter_label": "Sort by",
+    "filter_my_projects": "My projects",
+    "filter_created_at": "Recently added",
+    "filter_proximity": "Closest first",
+    "distance_legend": "Distance",
+    "max_distance_label": "Maximum distance (km)",
+    "filters_title": "Filters",
+    "filters_description": "Refine the projects shown below.",
+    "tags_legend": "Tags",
+    "tags_select_label": "Tags",
     "results": "Results"
 }

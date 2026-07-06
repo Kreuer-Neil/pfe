@@ -2,7 +2,16 @@
     "title": "Recherche de projets",
     "search_title": "Trouver un projet",
     "search": "Rechercher",
-    "filter_pertinence": "Pertinence",
-    "filter_recent": "Ajoutés récemment",
+    "filter_legend": "Tri",
+    "filter_label": "Trier par",
+    "filter_my_projects": "Mes projets",
+    "filter_created_at": "Ajoutés récemment",
+    "filter_proximity": "Les plus proches",
+    "distance_legend": "Distance",
+    "max_distance_label": "Distance maximale (km)",
+    "filters_title": "Filtres",
+    "filters_description": "Affinez les projets affichés ci-dessous.",
+    "tags_legend": "Tags",
+    "tags_select_label": "Tags",
     "results": "Résultats"
 }

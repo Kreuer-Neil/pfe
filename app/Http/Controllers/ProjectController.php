@@ -24,16 +24,25 @@ class ProjectController extends Controller
 
     public function index(Request $request)
     {
-        // use Pagination
-        $filtersList = ProjectsFilters::cases();
+        // TODO use Pagination?
+        $hasLocation = (bool)auth()->user()->preferences?->location;
+
+        // Remove proximity filters for users with no locaiton
+        $filtersList = collect(ProjectsFilters::cases())
+            ->filter(fn (ProjectsFilters $filter) => $hasLocation || $filter !== ProjectsFilters::CLOSE_PROJECTS)
+            ->values();
 
         $tagsList = (new TagRessourceCollection(Tag::all()))->toArray($request);
-        $currentFilter = $request->input('filters') ?? (Str::lower(ProjectsFilters::RECENT_PROJECTS->name));
+
+        $distancesList = [5, 10, 15, 20, 30, 50];
+
+        $currentFilter = $request->input('filter')
+            ?? ($hasLocation ? ProjectsFilters::CLOSE_PROJECTS->value : ProjectsFilters::RECENT_PROJECTS->value);
         $currentTags = $request->input('tags') ?? [];
         $projects = $this->searchProjects($request);
 
         return Inertia::render('projects/index',
-            compact(['filtersList', 'tagsList', 'currentFilter', 'currentTags', 'projects'])
+            compact(['filtersList', 'tagsList', 'distancesList', 'currentFilter', 'currentTags', 'hasLocation', 'projects'])
         );
     }
 
@@ -62,7 +71,6 @@ class ProjectController extends Controller
         $queriedProjects = Project::where('is_private', false)->with(['tags']);
 
         if ($query) {
-            // TODO use advanced queries to not cancel is_private clause
             $queriedProjects = $queriedProjects->where(function ($q) use ($query) {
                 $q->whereLike('name', '%' . $query . '%')
                     ->orWhereLike('description', '%' . $query . '%');
@@ -76,12 +84,16 @@ class ProjectController extends Controller
         $orderColumn = $order;
 
         if ($userLocation) {
+            $queriedProjects = $queriedProjects->withDistanceFrom($userLocation->latitude, $userLocation->longitude);
+
             if ($order === ProjectsFilters::CLOSE_PROJECTS->value) {
-                $queriedProjects = $queriedProjects->withDistanceFrom($userLocation->latitude, $userLocation->longitude);
                 $orderColumn = 'distance';
             }
             if ($maxDistance) {
-                $queriedProjects = $queriedProjects->where('distance', '<=', $maxDistance);
+                // Not where(): `distance` is a SELECT-list alias, and WHERE is evaluated
+                // before SELECT in SQL's logical order, so the alias doesn't exist yet there.
+                // HAVING runs after SELECT, so it can see it.
+                $queriedProjects = $queriedProjects->having('distance', '<=', $maxDistance);
             }
         }
 
