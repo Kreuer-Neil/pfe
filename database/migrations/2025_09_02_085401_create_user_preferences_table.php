@@ -16,9 +16,8 @@ return new class extends Migration
 
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 
-            // Ask for the address, or for the "rayon d'action" the user has in onboarding
             $table->foreignId('location_id')->nullable()->constrained()->nullOnDelete();
-
+            $table->timestamp('onboarding_completed_at')->nullable();
 
             $table->softDeletes();
             $table->timestamps();

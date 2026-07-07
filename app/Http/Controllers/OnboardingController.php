@@ -9,52 +9,30 @@ use App\Models\Tag;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class UserPreferencesController extends Controller
+class OnboardingController extends Controller
 {
     public function edit(Request $request)
     {
         $preferences = $request->user()->preferences;
 
-        return Inertia::render('settings/preferences', [
+        if ($preferences->onboarding_completed_at->isBefore(now())) {
+            return redirect(route('dashboard'));
+        }
+
+        return Inertia::render('onboarding', [
             'preferences' => (new UserPreferencesResource($preferences))->toArray($request),
             'languagesList' => Language::all()->pluck('name'),
             'tagsList' => (new TagRessourceCollection(Tag::all()))->toArray($request),
         ]);
     }
 
-    public function updateLanguages(Request $request)
-    {
-        $validated = $request->validate([
-            'languages' => 'nullable|array',
-            'languages.*' => 'string|exists:languages,name',
-        ]);
-
-        $preferences = $request->user()->preferences;
-        $ids = Language::whereIn('name', $validated['languages'] ?? [])->pluck('id');
-        $preferences->languages()->sync($ids);
-
-        Inertia::flash(['success' => true]);
-        return redirect()->back();
-    }
-
-    public function updateTags(Request $request)
-    {
-        $validated = $request->validate([
-            'tags' => 'nullable|array|max:7',
-            'tags.*' => 'string|exists:tags,name',
-        ]);
-
-        $preferences = $request->user()->preferences;
-        $ids = Tag::whereIn('name', $validated['tags'] ?? [])->pluck('id');
-        $preferences->tags()->sync($ids);
-
-        Inertia::flash(['success' => true]);
-        return redirect()->back();
-    }
-
-    public function updateLocation(Request $request)
+    public function complete(Request $request)
     {
         $preferences = $request->user()->preferences;
+
+        if ($preferences->onboarding_completed_at->isBefore(now())) {
+            return redirect(route('dashboard'));
+        }
 
         $validated = $request->validate([
             'q' => 'nullable|required_with:osm_id,osm_type|string|max:255',
@@ -76,13 +54,13 @@ class UserPreferencesController extends Controller
             $preferences->location_id = null;
         }
 
+        $preferences->onboarding_completed_at = now();
         $preferences->save();
 
         if ($oldLocation && $oldLocation->id !== $preferences->location_id) {
             $oldLocation->removeIfUnused();
         }
 
-        Inertia::flash(['success' => true]);
-        return redirect(route('preferences.edit'));
+        return redirect(route('dashboard'));
     }
 }

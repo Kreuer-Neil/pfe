@@ -40,6 +40,16 @@ class UserFactory extends Factory
     }
 
     /**
+     * By default, factory-created users are treated as already onboarded
+     */
+    public function configure(): static
+    {
+        return $this->afterCreating(function (\App\Models\User $user) {
+            $user->preferences?->update(['onboarding_completed_at' => now()]);
+        });
+    }
+
+    /**
      * Indicate that the model's email address should be unverified.
      */
     public function unverified(): static
