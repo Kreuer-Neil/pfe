@@ -25,12 +25,11 @@ class ProjectInvitationController extends Controller
             return back();
         }
 
+
         $project = Project::where('slug', $slug)->first();
-        if (!$project->is_private) {
-            // TODO change later?
-            Inertia::flash(['invitation' => route('projects.show', $slug)]);
-        } // Check if request has right attributes
-        else {
+
+        // Only generates for private projects since public ones generate the link themselves
+        if ($project->is_private) {
             if (!($invitation = $project->invitations()
                 ->where('expires_at', $request->expires_at ?? null)
                 ->where('uses', $request->uses ?? null))

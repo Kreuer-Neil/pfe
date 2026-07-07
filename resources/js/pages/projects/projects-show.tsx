@@ -22,7 +22,7 @@ import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from "react";
 import {Input} from "@/components/ui/input";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import ProjectController from "@/actions/App/Http/Controllers/ProjectController";
-import {join as projectsJoin, edit as projectsEdit} from "@/actions/App/Http/Controllers/ProjectController";
+import {join as projectsJoin, edit as projectsEdit, show as projectsShow} from "@/actions/App/Http/Controllers/ProjectController";
 import CustomModal, {ModalContent, ModalHeader, ModalTitle} from "@/components/modals/custom-modal";
 import ProjectInvitationController from "@/actions/App/Http/Controllers/ProjectInvitationController";
 import UserAvatar from "@/components/users/user-avatar";
@@ -119,16 +119,17 @@ function ProjectHeaderIcon({isEditing, project, iconError}: {
 
 }
 
-function InvitationModal({showInvitationModal, setShowInvitationModal, slug}: {
+function InvitationModal({showInvitationModal, setShowInvitationModal, slug, isPrivate}: {
     showInvitationModal: boolean,
     setShowInvitationModal: Dispatch<SetStateAction<boolean>>,
-    slug: string
+    slug: string,
+    isPrivate: boolean,
 }) {
     const {t} = useTranslation(['projects']);
 
     const [expiresAtDate, setExpiresAtDate] = useState<string>('');
     const [expiresAtTime, setExpiresAtTime] = useState<string>('');
-    const [code, setCode] = useState<string | null>(null);
+    const [code, setCode] = useState<string | null>(isPrivate ? null : projectsShow(slug).url);
 
     useEffect(() => {
         return router.on('flash', (e) => {
@@ -146,16 +147,27 @@ function InvitationModal({showInvitationModal, setShowInvitationModal, slug}: {
                 <ModalTitle>{t('invitation_modal')}</ModalTitle>
             </ModalHeader>
             <ModalContent>
-                {/*TODO use later with conditional rendering to get invitations*/}
-                <Form
-                    {...ProjectInvitationController.show.form()}
-                    disableWhileProcessing
-                    encType="multipart/form-data"
-                >
-                    {({processing, errors}) => (
-                        <>
-                            <input type="hidden" name="project_slug" value={slug}/>
-                            {/*<GeneralInput name="expires_at_date" label={t('invitation_expires_at_date')}
+                {code &&
+                    <code onClick={() => navigator.clipboard.writeText(code)}
+                          onKeyDown={(e) => {
+                              if (e.key === ' ' || e.key === 'Enter')
+                                  navigator.clipboard.writeText(code);
+                          }} tabIndex={0}
+                          className="flex gap-1 bg-gray-200 p-0.5 px-1 rounded-xs items-center hover:outline"
+                          title={"copy"}
+                    >{code}<Copy/></code>
+                }
+                {isPrivate &&
+                    // TODO use later with conditional rendering to get invitations
+                    <Form
+                        {...ProjectInvitationController.show.form()}
+                        disableWhileProcessing
+                        encType="multipart/form-data"
+                    >
+                        {({processing, errors}) => (
+                            <>
+                                <input type="hidden" name="project_slug" value={slug}/>
+                                {/*<GeneralInput name="expires_at_date" label={t('invitation_expires_at_date')}
                                           value={expiresAtDate} setValue={setExpiresAtDate}
                                           type="date"
                             />
@@ -163,24 +175,15 @@ function InvitationModal({showInvitationModal, setShowInvitationModal, slug}: {
                                           value={expiresAtTime} setValue={setExpiresAtTime}
                                           type="time"
                             />*/}
-                            {code &&
-                                <code onClick={() => navigator.clipboard.writeText(code)}
-                                      onKeyDown={(e) => {
-                                          if (e.key === ' ' || e.key === 'Enter')
-                                              navigator.clipboard.writeText(code);
-                                      }} tabIndex={0}
-                                      className="flex gap-1 bg-gray-200 p-0.5 px-1 rounded-xs items-center hover:outline"
-                                      title={"copy"}
-                                >{code}<Copy/></code>
-                            }
-                            <div className="flex flex-col gap-3 items-center">
-                                <Button type="submit">
-                                    {t('invitation_generate')}
-                                </Button>
-                            </div>
-                        </>
-                    )}
-                </Form>
+                                <div className="flex flex-col gap-3 items-center">
+                                    <Button type="submit">
+                                        {t('invitation_generate')}
+                                    </Button>
+                                </div>
+                            </>
+                        )}
+                    </Form>
+                }
             </ModalContent>
         </CustomModal>
     );
@@ -418,7 +421,7 @@ function ProjectHeader({project}: {
                 )}
             </HeaderContainer>
             <InvitationModal showInvitationModal={showInvitationModal} setShowInvitationModal={setShowInvitationModal}
-                             slug={project.slug}/>
+                             slug={project.slug} isPrivate={instanceOfProject(project) ? project.is_private : false}/>
             <MembersModal showModal={showMembersModal} setShowModal={setShowMembersModal}
                           onCloseModal={() => setShowMembersModal(false)} project={project}/>
         </>

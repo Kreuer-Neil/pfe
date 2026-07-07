@@ -24,7 +24,6 @@ class DashboardController extends Controller
             $projects[] = (new ProjectDashboardResource($project))->toArray(request());
         }
 
-        // TODO do the same with users & profiles
         $tasks = TaskResource::collection(
             $currentUser
                 ->upcomingTasks
