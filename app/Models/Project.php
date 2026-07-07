@@ -205,21 +205,21 @@ class Project extends Model
         return true;
     }
 
-    public function generateInvitation(string|null $expires_at, int|null $uses): ProjectInvitation
+    public function generateInvitation(string|null $expires_at, int|null $max_uses): ProjectInvitation
     {
         $code = $this->generateInvitationCode();
         return ProjectInvitation::create([
             'project_id' => $this->id,
             'code' => $code,
             'expires_at' => $expires_at,
-            'uses' => $uses,
+            'max_uses' => $max_uses,
         ]);
     }
 
     function generateInvitationCode(): string
     {
         $code = Str::random();
-        if (ProjectInvitation::withTrashed()->where('code', $code)->exists())
+        if (ProjectInvitation::where('code', $code)->exists())
             return $this->generateInvitationCode();
         return $code;
     }

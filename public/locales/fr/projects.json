@@ -31,5 +31,16 @@
     "invitation_use": "Utiliser l’invitation",
     "invitation_index": "Invitations",
     "invitation_code": "Code d’invitation",
-    "invitation_confirm": "Rejoindre le projet"
+    "invitation_confirm": "Rejoindre le projet",
+    "invitation_max_uses_label": "Utilisations maximales",
+    "invitation_max_uses_placeholder": "Illimité",
+    "invitation_manage_title": "Historique des invitations",
+    "invitation_none": "Aucune invitation pour le moment",
+    "invitation_no_expiry": "N'expire jamais",
+    "invitation_uses_display": "{{used}} / {{max}} utilisations",
+    "invitation_status_valid": "Active",
+    "invitation_status_revoked": "Révoquée",
+    "invitation_revoke_title": "Révoquer l'invitation",
+    "invitation_revoke_warning": "Ceci invalidera immédiatement l'invitation {{code}}. Cette action est irréversible.",
+    "invitation_revoke_action": "Révoquer"
 }

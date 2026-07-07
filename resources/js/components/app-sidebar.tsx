@@ -28,19 +28,6 @@ const mainNavItems: NavItem[] = [
 ];
 // const { auth } = usePage<SharedData>().props;
 
-// TODO access Auth::user()->projects to insert here
-// https://ui.shadcn.com/docs/components/sidebar#sidebargroup
-// let projectNavItems:NavItem[] = [];
-//
-// for (const project of auth.user.projects) {
-//     projectNavItems.push({
-//         title: project.name,
-//         href: 'projects/' + project.id,
-//         icon: BookmarkIcon,
-//     });
-// }
-
-
 const footerNavItems: NavItem[] = [
     /*{
         title: 'Repository',

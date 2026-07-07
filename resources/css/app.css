@@ -395,12 +395,12 @@
     }
 
     .page-title {
-        @apply font-medium text-[2rem] w-full text-left;
+        @apply font-medium text-[2rem] w-full text-left mb-2;
         line-height: 2rem;
     }
 
     .section-title {
-        @apply font-medium text-2xl w-full text-left;
+        @apply font-medium text-2xl w-full text-left mb-1;
     }
 
     .item-title {

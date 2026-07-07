@@ -2,7 +2,8 @@ import Layout from '@/layouts/app-layout'
 import {Form, Head, Link, usePage} from '@inertiajs/react'
 import PageFlowContainer from "@/components/page-flow-container";
 import ProjectController from "@/actions/App/Http/Controllers/ProjectController";
-import {IProject} from "@/types";
+import ProjectInvitationController from "@/actions/App/Http/Controllers/ProjectInvitationController";
+import {IProjectInvitation, IProjectSettings} from "@/types";
 import {Field, FieldDescription, FieldGroup, FieldLegend, FieldSet} from "@/components/ui/field";
 import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
@@ -18,16 +19,18 @@ import InputError from "@/components/input-error";
 import {Textarea} from "@/components/ui/textarea";
 import {Switch} from "@/components/ui/switch";
 import {Separator} from "@/components/ui/separator";
-import {Camera, EllipsisVertical, SquareArrowOutUpRight} from "lucide-react";
+import {Camera, EllipsisVertical, SquareArrowOutUpRight, Trash2} from "lucide-react";
 import {Avatar, AvatarImage} from "@/components/ui/avatar";
 import {Item, ItemContent, ItemDescription, ItemTitle, ItemFooter, ItemActions} from "@/components/ui/item";
 import {Badge} from "@/components/ui/badge";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import {show as showProfile} from '@/actions/App/Http/Controllers/UserProfileController'
 import LocationSearch from "@/components/location-search";
+import ConfirmModal from "@/components/modals/confirm-modal";
+import {laravelDateToJsDate, upcomingDateToString} from "@/helpers/date";
 
 type EditPageProps = {
-    project: IProject;
+    project: IProjectSettings;
     tagsList: Array<string>;
 }
 
@@ -42,6 +45,9 @@ export default function ProjectsEdit({}) {
 
     const [tags, setTags] = useState<Array<string>>(project.tags ?? []);
     const anchor = useComboboxAnchor();
+
+    const [revokeTarget, setRevokeTarget] = useState<IProjectInvitation | null>(null);
+    const canManageInvitations = project.user_role === 'admin' || project.user_role === 'moderator';
 
     return (
         <Layout>
@@ -297,7 +303,75 @@ export default function ProjectsEdit({}) {
                     </ul>
                 </section>
 
+                {canManageInvitations && (
+                    <>
+                        <Separator/>
+
+                        <section>
+                            <h2 className="section-title">
+                                {t('invitation_manage_title')}
+                            </h2>
+                            {project.invitations.length === 0 ? (
+                                <p>{t('invitation_none')}</p>
+                            ) : (
+                                <ul className="flex flex-col gap-2">
+                                    {project.invitations.map((invitation) => (
+                                        <li key={invitation.id}>
+                                            <Item variant="outline" size="sm">
+                                                <ItemContent>
+                                                    <ItemTitle>
+                                                        {invitation.code}
+                                                    </ItemTitle>
+                                                    <ItemDescription>
+                                                        {invitation.expires_at
+                                                            ? upcomingDateToString(laravelDateToJsDate(invitation.expires_at))
+                                                            : t('invitation_no_expiry')}
+                                                        {' · '}
+                                                        {t('invitation_uses_display', {
+                                                            used: invitation.used_count,
+                                                            max: invitation.max_uses ?? '∞',
+                                                        })}
+                                                    </ItemDescription>
+                                                </ItemContent>
+                                                <ItemActions>
+                                                    {invitation.is_valid && (
+                                                        <Button
+                                                            size="icon"
+                                                            variant="ghost"
+                                                            onClick={() => setRevokeTarget(invitation)}
+                                                        >
+                                                            <span className="sr-only">
+                                                                {t('invitation_revoke_action')}
+                                                            </span>
+                                                            <Trash2/>
+                                                        </Button>
+                                                    )}
+                                                </ItemActions>
+                                                <ItemFooter>
+                                                    <Badge variant={invitation.is_valid ? 'default' : 'destructive'}>
+                                                        {t(invitation.is_valid ? 'invitation_status_valid' : 'invitation_status_revoked')}
+                                                    </Badge>
+                                                </ItemFooter>
+                                            </Item>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </section>
+                    </>
+                )}
+
             </PageFlowContainer>
+
+            <ConfirmModal
+                id="invitation-confirm-revoke"
+                showModal={revokeTarget !== null}
+                onClose={() => setRevokeTarget(null)}
+                onSuccess={() => setRevokeTarget(null)}
+                formAction={revokeTarget ? ProjectInvitationController.revoke.form([project.slug, revokeTarget.id]) : undefined}
+                title={t('invitation_revoke_title')}
+                message={revokeTarget ? t('invitation_revoke_warning', {code: revokeTarget.code}) : null}
+            />
         </Layout>
     );
 }

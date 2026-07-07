@@ -6,7 +6,7 @@ import {useEffect, useState} from "react";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
-import {Field} from "@/components/ui/field";
+import {Field, FieldGroup} from "@/components/ui/field";
 import InputError from "@/components/input-error";
 import ProjectInvitationController from "@/actions/App/Http/Controllers/ProjectInvitationController";
 import CustomModal from "@/components/modals/custom-modal";
@@ -39,8 +39,8 @@ export default function invitation({ code: initialCode = '' }: { code?: string }
                         {...ProjectInvitationController.use.form()}
                     >
                         {({processing, errors}) => (
-                            <>
-                                <div className="modal">
+                            <FieldGroup>
+                                <div>
 
                                     <Field>
                                         <Label htmlFor="code">{t('invitation_code')}</Label>
@@ -51,7 +51,7 @@ export default function invitation({ code: initialCode = '' }: { code?: string }
                                 </div>
 
                                 <Button type="submit">{t('invitation_use')}</Button>
-                            </>
+                            </FieldGroup>
                         )}
                     </Form>
                 </div>
@@ -64,11 +64,11 @@ export default function invitation({ code: initialCode = '' }: { code?: string }
                     {...ProjectInvitationController.use.form()}
                 >
                     {({processing, errors}) => (
-                        <>
+                        <FieldGroup>
                             <input type="hidden" name="confirm" value={1}/>
                             <input type="hidden" name="code" value={code}/>
                             <Button type="submit">{t('invitation_confirm')}</Button>
-                        </>
+                        </FieldGroup>
                     )}
                 </Form>
             </CustomModal>

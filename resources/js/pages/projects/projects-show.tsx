@@ -127,8 +127,6 @@ function InvitationModal({showInvitationModal, setShowInvitationModal, slug, isP
 }) {
     const {t} = useTranslation(['projects']);
 
-    const [expiresAtDate, setExpiresAtDate] = useState<string>('');
-    const [expiresAtTime, setExpiresAtTime] = useState<string>('');
     const [code, setCode] = useState<string | null>(isPrivate ? null : projectsShow(slug).url);
 
     useEffect(() => {
@@ -158,29 +156,49 @@ function InvitationModal({showInvitationModal, setShowInvitationModal, slug, isP
                     >{code}<Copy/></code>
                 }
                 {isPrivate &&
-                    // TODO use later with conditional rendering to get invitations
                     <Form
                         {...ProjectInvitationController.show.form()}
                         disableWhileProcessing
                         encType="multipart/form-data"
                     >
                         {({processing, errors}) => (
-                            <>
+                            <FieldGroup>
                                 <input type="hidden" name="project_slug" value={slug}/>
-                                {/*<GeneralInput name="expires_at_date" label={t('invitation_expires_at_date')}
-                                          value={expiresAtDate} setValue={setExpiresAtDate}
-                                          type="date"
-                            />
-                            <GeneralInput name="expires_at_time" label={t('invitation_expires_at_time')}
-                                          value={expiresAtTime} setValue={setExpiresAtTime}
-                                          type="time"
-                            />*/}
+                                <Field>
+                                    <Label htmlFor="invitation-max-uses">{t('invitation_max_uses_label')}</Label>
+                                    <Input
+                                        id="invitation-max-uses"
+                                        name="max_uses"
+                                        type="number"
+                                        min={1}
+                                        placeholder={t('invitation_max_uses_placeholder')}
+                                    />
+                                    <InputError message={errors.max_uses}/>
+                                </Field>
+                                <Field>
+                                    <Label htmlFor="invitation-expires-at-date">{t('invitation_expires_at_date')}</Label>
+                                    <Input
+                                        id="invitation-expires-at-date"
+                                        name="expires_at_date"
+                                        type="date"
+                                    />
+                                    <InputError message={errors.expires_at_date}/>
+                                </Field>
+                                <Field>
+                                    <Label htmlFor="invitation-expires-at-time">{t('invitation_expires_at_time')}</Label>
+                                    <Input
+                                        id="invitation-expires-at-time"
+                                        name="expires_at_time"
+                                        type="time"
+                                    />
+                                    <InputError message={errors.expires_at_time}/>
+                                </Field>
                                 <div className="flex flex-col gap-3 items-center">
                                     <Button type="submit">
                                         {t('invitation_generate')}
                                     </Button>
                                 </div>
-                            </>
+                            </FieldGroup>
                         )}
                     </Form>
                 }
@@ -405,7 +423,6 @@ function ProjectHeader({project}: {
                                 <div>
                                     <article>
                                         <h2 className="section-title">
-                                            // TODO fix when news added
                                             {{project.news.first.title}}
                                         </h2>
                                         <p>{{project.news.first.text_content}}</p>

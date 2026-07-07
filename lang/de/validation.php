@@ -158,6 +158,8 @@ return [
     'member_not_found' => 'Dieses Mitglied wurde nicht gefunden.',
     'location_selection_expired' => 'Diese Standortauswahl ist abgelaufen, bitte erneut suchen.',
     'location_required_for_public' => 'Öffentliche Projekte benötigen einen Standort, bevor sie öffentlich gemacht werden können.',
+    'invitation_invalid_code' => 'Dieser Einladungscode ist ungültig oder abgelaufen.',
+    'invitation_already_member' => 'Sie sind bereits Mitglied dieses Projekts.',
 
     'custom' => [
         'attribute-name' => [

@@ -55,3 +55,6 @@ Route::post('projects/{slug}/update/location', [ProjectController::class, 'updat
 Route::post('projects/{slug}/update/member-role', [ProjectController::class, 'updateMemberRole'])
     ->name('projects.update.member-role');
 
+Route::post('projects/{slug}/invitations/{invitation}/revoke', [ProjectInvitationController::class, 'revoke'])
+    ->name('projects.invitations.revoke');
+

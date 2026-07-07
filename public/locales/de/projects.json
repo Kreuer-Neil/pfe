@@ -31,5 +31,16 @@
     "invitation_use": "Einladung benutzen",
     "invitation_index": "Einladungen",
     "invitation_code": "Einladung code",
-    "invitation_confirm": "Join the project"
+    "invitation_confirm": "Join the project",
+    "invitation_max_uses_label": "Maximale Nutzungen",
+    "invitation_max_uses_placeholder": "Unbegrenzt",
+    "invitation_manage_title": "Einladungsverlauf",
+    "invitation_none": "Noch keine Einladungen",
+    "invitation_no_expiry": "Läuft nie ab",
+    "invitation_uses_display": "{{used}} / {{max}} Nutzungen",
+    "invitation_status_valid": "Aktiv",
+    "invitation_status_revoked": "Widerrufen",
+    "invitation_revoke_title": "Einladung widerrufen",
+    "invitation_revoke_warning": "Dies macht die Einladung {{code}} sofort ungültig. Dies kann nicht rückgängig gemacht werden.",
+    "invitation_revoke_action": "Widerrufen"
 }

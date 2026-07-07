@@ -20,7 +20,6 @@ class TaskResource extends JsonResource
                 ? new ProfileResource($this->resource->owner)
                 : null,
             'is_owner' => $this->resource->owner?->id === auth()->user()->id,
-// TODO add ProjectContext & Project etc.
             'project' => (new ProjectContextResource(
                 $this->resource->project()->first(['id', 'name', 'icon', 'slug'])
             ))->toArray($request),

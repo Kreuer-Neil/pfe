@@ -16,11 +16,11 @@ return new class extends Migration
 
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
             $table->string('code')->unique();
-            $table->integer('uses')->nullable(); // The number of uses left for this invitation. Deletes when 0.
+            $table->unsignedInteger('max_uses')->nullable(); // Cap set at creation. Null = unlimited.
+            $table->unsignedInteger('used_count')->default(0); // Incremented on each successful join.
             $table->dateTime('expires_at')->nullable();
 
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

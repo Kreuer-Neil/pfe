@@ -169,6 +169,8 @@ return [
     'member_not_found' => 'This member could not be found.',
     'location_selection_expired' => 'This location selection has expired, please search again.',
     'location_required_for_public' => 'Public projects need a location set before they can be made public.',
+    'invitation_invalid_code' => 'This invitation code is invalid or has expired.',
+    'invitation_already_member' => 'You are already a member of this project.',
 
     /*
     |--------------------------------------------------------------------------

@@ -158,6 +158,8 @@ return [
     'member_not_found' => 'Ce membre est introuvable.',
     'location_selection_expired' => 'Cette sélection de localisation a expiré, veuillez rechercher à nouveau.',
     'location_required_for_public' => 'Les projets publics doivent avoir une localisation définie avant de pouvoir être rendus publics.',
+    'invitation_invalid_code' => "Ce code d'invitation est invalide ou a expiré.",
+    'invitation_already_member' => 'Vous êtes déjà membre de ce projet.',
 
     'custom' => [
         'attribute-name' => [

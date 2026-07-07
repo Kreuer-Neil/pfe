@@ -45,7 +45,7 @@ class TaskController extends Controller
             'project_slug' => 'required|string|exists:projects,slug',
             'title' => 'required|string|min:3|max:255',
             'description' => 'required|string|min:3|max:65535',
-            'due_date' => 'required|date_format:Y-m-d',
+            'due_date' => 'required|date_format:Y-m-d|after_or_equal:today',
             'due_time' => 'required|date_format:H:i',
             'min_participations' => 'nullable|integer|min:0',
         ] /*['project_slug.exists' => 'validation.project_undefined']*/);
@@ -111,7 +111,7 @@ class TaskController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|min:3|max:255',
             'description' => 'required|string',
-            'due_at_date' => 'required|date',
+            'due_at_date' => 'required|date|after_or_equal:today',
             'due_at_time' => 'required|date_format:H:i:s',
             'min_participations' => 'nullable|integer|min:1',
         ]);

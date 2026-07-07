@@ -7,6 +7,7 @@ use App\Enums\ProjectsFilters;
 use App\Http\Resources\Project\ProjectDashboardResource;
 use App\Http\Resources\Project\ProjectMiniatureResource;
 use App\Http\Resources\Project\ProjectResource;
+use App\Http\Resources\Project\ProjectSettingsResource;
 use App\Http\Resources\Project\ProjectShowresource;
 use App\Http\Resources\TagRessourceCollection;
 use App\Jobs\HandleProfileImageUploads;
@@ -90,9 +91,7 @@ class ProjectController extends Controller
                 $orderColumn = 'distance';
             }
             if ($maxDistance) {
-                // Not where(): `distance` is a SELECT-list alias, and WHERE is evaluated
-                // before SELECT in SQL's logical order, so the alias doesn't exist yet there.
-                // HAVING runs after SELECT, so it can see it.
+                // Using having instead of where because distance is a "scope" column
                 $queriedProjects = $queriedProjects->having('distance', '<=', $maxDistance);
             }
         }
@@ -232,7 +231,7 @@ class ProjectController extends Controller
     {
         $project = Project::where('slug', $slug)->firstOrFail();
         $tagsList = (new TagRessourceCollection(Tag::all()))->toArray($request);
-        $project = (new ProjectResource($project))->toArray($request);
+        $project = (new ProjectSettingsResource($project))->toArray($request);
 
         return Inertia::render('projects/edit', compact(['project', 'tagsList']));
     }

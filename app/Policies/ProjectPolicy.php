@@ -46,4 +46,9 @@ class ProjectPolicy
     {
         return $project->userRole($user) === ProjectRole::ADMIN->value;
     }
+
+    public function manageInvitations(User $user, Project $project): bool
+    {
+        return in_array($project->userRole($user), [ProjectRole::ADMIN->value, ProjectRole::MODERATOR->value]);
+    }
 }

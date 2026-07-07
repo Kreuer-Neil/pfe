@@ -180,6 +180,26 @@ export interface IProject extends IProjectShow {
     upcoming_tasks: ITask[];
 }
 
+// Raw invitation row, as shaped by ProjectInvitationResource - only ever delivered inside
+// IProjectSettings (settings page), gated to admins/moderators server-side.
+export interface IProjectInvitation {
+    id: number;
+    code: string;
+    max_uses: number | null;
+    used_count: number;
+    remaining_uses: number | null;
+    is_valid: boolean;
+    expires_at: string | null;
+    created_at: string;
+}
+
+// Shape delivered by ProjectSettingsResource (ProjectController::edit() only) - IProject plus
+// settings-only fields. Don't add these fields to IProject itself; other pages using IProject
+// (e.g. projects-show.tsx) never receive them.
+export interface IProjectSettings extends IProject {
+    invitations: IProjectInvitation[];
+}
+
 export interface ITask {
     id: string;
     owner: IProfile | null;
