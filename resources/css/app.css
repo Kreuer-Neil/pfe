@@ -421,7 +421,7 @@
     }
 
     .main-container {
-        @apply max-w-[var(--number-container-max-width)] w-full;
+        @apply max-w-[var(--number-container-max-w)] w-full;
     }
 
     .thumbnail-item {

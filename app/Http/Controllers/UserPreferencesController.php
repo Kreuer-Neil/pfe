@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\TagRessourceCollection;
 use App\Http\Resources\User\UserPreferencesResource;
 use App\Models\Language;
 use App\Models\Tag;
@@ -18,7 +17,7 @@ class UserPreferencesController extends Controller
         return Inertia::render('settings/preferences', [
             'preferences' => (new UserPreferencesResource($preferences))->toArray($request),
             'languagesList' => Language::all()->pluck('name'),
-            'tagsList' => (new TagRessourceCollection(Tag::all()))->toArray($request),
+            'tagsList' => Tag::all()->pluck('name'),
         ]);
     }
 

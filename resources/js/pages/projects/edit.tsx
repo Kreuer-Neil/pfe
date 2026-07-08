@@ -178,6 +178,7 @@ export default function ProjectsEdit({}) {
                                         multiple
                                         autoHighlight
                                         items={tagsList}
+                                        itemToStringLabel={(tag: string) => t('tags:' + tag)}
                                         limit={7}
                                         defaultValue={project.tags}
                                         onValueChange={(values: Array<string>) => setTags(values ?? [])}

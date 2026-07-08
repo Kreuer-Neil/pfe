@@ -70,6 +70,7 @@ function ProjectsContainer({projects}: ProjectsContainerProps): ReactNode {
                     {/* TODO see if better to load everything then slice or load progressively server-side */}
                     {projects.map((project: IProjectMiniature | IDashboardProject): ReactNode => (
                         <li key={project.slug} className="w-full">
+                            {/* TODO add tags to show */}
                             <ProjectItem project={project}/>
                         </li>))
                     }
@@ -160,6 +161,7 @@ function Filtering({showModal, setShowModal, tags, setTags, filter, setFilter, m
                                 multiple
                                 autoHighlight
                                 items={tagsList}
+                                itemToStringLabel={(tag: string) => t('tags:' + tag)}
                                 value={tags}
                                 onValueChange={(values: Array<string>) => {
                                     setTags(values ?? [])
@@ -292,23 +294,17 @@ export default function ProjectsIndex() {
                                         </span>
                             <ListFilter/>
                         </Button>
-                        {/*<Button variant="outline" size="icon">
-                                        <span className="sr-only">
-                                        {t('filter')}
-                                        </span>
-                            <ListFilter/>
-                        </Button>*/}
                     </div>
-                    <TagsContainer tags={tags}/>
                     {/* Tags container (only if tags.) */}
+                    <TagsContainer tags={tags}/>
                     {/* Search bar */}
                     <Form
                         {...ProjectController.indexSearch.form()}
 
                     >
                         <Field>
-                            {/*<ButtonGroup>*/}
-                            {/*<Button type="submit">
+                            {/*<ButtonGroup>
+                            <Button type="submit">
                                     <span className="sr-only">{t('search')}</span>
                                     <Search/>
                                 </Button>*/}

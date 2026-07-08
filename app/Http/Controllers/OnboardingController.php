@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\TagRessourceCollection;
 use App\Http\Resources\User\UserPreferencesResource;
 use App\Models\Language;
 use App\Models\Tag;
@@ -13,16 +12,17 @@ class OnboardingController extends Controller
 {
     public function edit(Request $request)
     {
-        $preferences = $request->user()->preferences;
+        $preferences = auth()->user()->preferences;
 
-        if ($preferences->onboarding_completed_at->isBefore(now())) {
+        // "Inline middleware/gate"
+        if ($preferences->onboarding_completed_at && $preferences->onboarding_completed_at->isBefore(now())) {
             return redirect(route('dashboard'));
         }
 
         return Inertia::render('onboarding', [
             'preferences' => (new UserPreferencesResource($preferences))->toArray($request),
             'languagesList' => Language::all()->pluck('name'),
-            'tagsList' => (new TagRessourceCollection(Tag::all()))->toArray($request),
+            'tagsList' => Tag::all()->pluck('name'),
         ]);
     }
 
@@ -30,7 +30,8 @@ class OnboardingController extends Controller
     {
         $preferences = $request->user()->preferences;
 
-        if ($preferences->onboarding_completed_at->isBefore(now())) {
+        // "Inline middleware/gate"
+        if ($preferences->onboarding_completed_at && $preferences->onboarding_completed_at->isBefore(now())) {
             return redirect(route('dashboard'));
         }
 

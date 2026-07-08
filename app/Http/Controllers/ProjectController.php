@@ -9,7 +9,6 @@ use App\Http\Resources\Project\ProjectMiniatureResource;
 use App\Http\Resources\Project\ProjectResource;
 use App\Http\Resources\Project\ProjectSettingsResource;
 use App\Http\Resources\Project\ProjectShowresource;
-use App\Http\Resources\TagRessourceCollection;
 use App\Jobs\HandleProfileImageUploads;
 use App\Models\Project;
 use App\Models\Tag;
@@ -33,7 +32,7 @@ class ProjectController extends Controller
             ->filter(fn (ProjectsFilters $filter) => $hasLocation || $filter !== ProjectsFilters::CLOSE_PROJECTS)
             ->values();
 
-        $tagsList = (new TagRessourceCollection(Tag::all()))->toArray($request);
+        $tagsList = Tag::all()->pluck('name');
 
         $distancesList = [5, 10, 15, 20, 30, 50];
 
@@ -122,7 +121,7 @@ class ProjectController extends Controller
 
     public function create(Request $request)
     {
-        $tagsList = (new TagRessourceCollection(Tag::all()))->toArray($request);
+        $tagsList = Tag::all()->pluck('name');
 
         return Inertia::render(
             'projects/projects-create',
@@ -230,7 +229,7 @@ class ProjectController extends Controller
     public function edit(Request $request, string $slug)
     {
         $project = Project::where('slug', $slug)->firstOrFail();
-        $tagsList = (new TagRessourceCollection(Tag::all()))->toArray($request);
+        $tagsList = Tag::all()->pluck('name');
         $project = (new ProjectSettingsResource($project))->toArray($request);
 
         return Inertia::render('projects/edit', compact(['project', 'tagsList']));

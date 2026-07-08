@@ -1,4 +1,4 @@
-import {IProject, IProjectShow} from "@/types";
+import {IProject, IProjectMiniature, IProjectShow} from "@/types";
 
 
 export function instanceOfProjectShow(object: any): object is IProjectShow {
@@ -10,4 +10,10 @@ export function instanceOfProject(object: any): object is IProject {
         || object.user_role === 'task_manager'
         || object.user_role === 'moderator'
         || object.user_role === 'admin';
+}
+
+// IDashboardProject (the other half of the union project-item.tsx renders) has no `tags` -
+// ProjectDashboardResource genuinely doesn't send any, unlike IProjectMiniature.
+export function instanceOfProjectMiniature(object: any): object is IProjectMiniature {
+    return 'tags' in object;
 }

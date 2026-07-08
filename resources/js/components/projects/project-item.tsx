@@ -5,6 +5,7 @@ import {Link} from "@inertiajs/react";
 import {show as projectsShow} from '@/actions/App/Http/Controllers/ProjectController';
 import {Item, ItemContent, ItemDescription, ItemFooter, ItemMedia, ItemTitle} from "@/components/ui/item";
 import {useTranslation} from "react-i18next";
+import {instanceOfProjectMiniature} from "@/helpers/type-check";
 
 
 interface ProjectItemsProps {
@@ -12,7 +13,7 @@ interface ProjectItemsProps {
 }
 
 export default function ProjectItem({project}: ProjectItemsProps) {
-    const {t} = useTranslation('projects');
+    const {t} = useTranslation(['projects','tags']);
     const place: string | null = project.place;
     const distance: number | null = project.distance;
     return (
@@ -33,20 +34,27 @@ export default function ProjectItem({project}: ProjectItemsProps) {
                     <ItemDescription>
                         {project.description}
                     </ItemDescription>
+                    {(instanceOfProjectMiniature(project) && project.tags.length > 0) &&
+                        <div className="flex gap-1 flex-wrap items-center">
+                            <span>{t('related_tags')}</span>
+                            {project.tags.map((tag) => {
+                                return <span className="item-tag" key={tag}>{t('tags:' + tag)}</span>
+                            })}
+                        </div>
+                    }
                 </ItemContent>
                 <ItemFooter>
-                    {
-                        place &&
-                        // TODO fix link not clickable because of link nav
+                    {place &&
                         <div
                             className="item-tag">
                             <MapPin/>
                             <p>{place}</p>
                         </div>
                     }
-                            {(place && distance) &&
-                                <span className="item-tag"><CornerUpRight/>{t('distance_km', {distance: distance.toFixed(1)})}</span>
-                            }
+                    {(place && distance) &&
+                        <span
+                            className="item-tag"><CornerUpRight/>{t('distance_km', {distance: distance.toFixed(1)})}</span>
+                    }
                     {/* TODO what's new since last passage on project */}
                     <div className="flex gap-1 ml-auto">
                         {/*Related users*/}

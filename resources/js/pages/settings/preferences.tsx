@@ -67,6 +67,7 @@ export default function Preferences() {
                                         multiple
                                         autoHighlight
                                         items={languagesList}
+                                        itemToStringLabel={(language: string) => t('languages:' + language)}
                                         value={selectedLanguages}
                                         onValueChange={(values: string[]) => setSelectedLanguages(values ?? [])}
                                     >
@@ -138,6 +139,7 @@ export default function Preferences() {
                                         multiple
                                         autoHighlight
                                         items={tagsList}
+                                        itemToStringLabel={(tag: string) => t('tags:' + tag)}
                                         limit={7}
                                         value={selectedTags}
                                         onValueChange={(values: string[]) => setSelectedTags(values ?? [])}

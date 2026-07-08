@@ -1,4 +1,24 @@
 {
     "nature": "Nature",
-    "insects": "Insectes"
+    "natural": "Naturel",
+    "gardening": "Jardinage",
+    "plants": "Plantes",
+    "insects": "Insectes",
+    "music": "Musique",
+    "animals": "Animaux",
+    "ecology": "Écologie",
+    "sustainability": "Durabilité",
+    "beekeeping": "Apiculture",
+    "birds": "Oiseaux",
+    "cooking": "Cuisine",
+    "crafts": "Artisanat",
+    "photography": "Photographie",
+    "outdoors": "Plein air",
+    "sports": "Sports",
+    "volunteering": "Bénévolat",
+    "education": "Éducation",
+    "technology": "Technologie",
+    "reading": "Lecture",
+    "culture": "Culture",
+    "board_games": "Jeux de société"
 }

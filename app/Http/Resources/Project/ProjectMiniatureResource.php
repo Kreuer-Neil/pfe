@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\Project;
 
-use App\Http\Resources\TagRessourceCollection;
 use Illuminate\Http\Request;
 use Str;
 
@@ -20,7 +19,7 @@ class ProjectMiniatureResource extends ProjectContextResource
             'location' => $this->resource->location,
             'place' => $this->resource->place(),
             'distance' => $this->resource->distance,
-            'tags' => (new TagRessourceCollection($this->resource->tags()->get()))->toArray($request),
+            'tags' => $this->resource->tags()->pluck('name'),
             'is_member' => $this->resource->userIsMember(auth()->user()),
             'members_count' => $this->resource->members->count(),
         ]);
