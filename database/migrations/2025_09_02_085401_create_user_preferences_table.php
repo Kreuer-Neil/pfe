@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('user_preferences', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->unique()->constrained()->cascadeOnDelete();
 
             $table->foreignId('location_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamp('onboarding_completed_at')->nullable();
