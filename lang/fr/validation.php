@@ -160,6 +160,10 @@ return [
     'location_required_for_public' => 'Les projets publics doivent avoir une localisation définie avant de pouvoir être rendus publics.',
     'invitation_invalid_code' => "Ce code d'invitation est invalide ou a expiré.",
     'invitation_already_member' => 'Vous êtes déjà membre de ce projet.',
+    'task_not_found' => 'Cette tâche est introuvable.',
+    'project_not_found' => 'Ce projet est introuvable.',
+    'task_participation_cancel_failed' => "Votre participation n'a pas pu être annulée. Veuillez réessayer.",
+    'internal_error' => 'Une erreur interne est survenue. Veuillez réessayer plus tard.',
 
     'custom' => [
         'attribute-name' => [

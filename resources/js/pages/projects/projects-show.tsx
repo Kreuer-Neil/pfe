@@ -46,10 +46,11 @@ type memberPageProps = {
 }
 
 
-function HeaderContainer({slug, isEditing, className, children}: {
+function HeaderContainer({slug, isEditing, className, onSuccess, children}: {
     slug: string,
     isEditing: boolean,
     className: string,
+    onSuccess: () => void,
     children: ReactNode | ReactNode[] | ((errors: Record<string, string>) => ReactNode | ReactNode[]),
 }): ReactNode {
     if (isEditing) {
@@ -61,6 +62,7 @@ function HeaderContainer({slug, isEditing, className, children}: {
                 disableWhileProcessing
                 encType="multipart/form-data"
                 className={className}
+                onSuccess={onSuccess}
             >
                 {({processing, errors}) => (
                     <>
@@ -254,14 +256,6 @@ function ProjectHeader({project}: {
     const [projectName, setProjectName] = useState(project.name);
     const [projectDesc, setProjectDesc] = useState(project.description);
 
-    useEffect(() => {
-        return router.on('flash', (e) => {
-            if (e.detail.flash.success) {
-                setIsEditing(false);
-            }
-        });
-    }, []);
-
     const [showInvitationModal, setShowInvitationModal] = useState<boolean>(false);
 
     function openInvitationModal() {
@@ -278,7 +272,7 @@ function ProjectHeader({project}: {
     }
     return (
         <>
-            <HeaderContainer slug={project.slug} isEditing={isEditing}
+            <HeaderContainer slug={project.slug} isEditing={isEditing} onSuccess={() => setIsEditing(false)}
                              className="w-full flex flex-col gap-2 max-w-xl bg-card border-b border-border pb-4 -mb-4">
                 {(errors) => (
                     <>

@@ -38,8 +38,8 @@ Route::get('projects/{slug}/join', [ProjectController::class, 'join'])
 Route::get('projects/{slug}/edit', [ProjectController::class, 'edit'])
     ->name('projects.edit');
 
-Route::get('projects/{slug}/update', [ProjectController::class, 'update'])
-    ->name('projects.update');
+//Route::get('projects/{slug}/update', [ProjectController::class, 'update'])
+//    ->name('projects.update');
 
 Route::post('projects/{slug}/update/appearance', [ProjectController::class, 'updateAppearance'])
     ->name('projects.update.appearance');

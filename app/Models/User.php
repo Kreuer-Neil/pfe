@@ -147,6 +147,8 @@ class User extends Authenticatable
             'user_id' => $user->id,
             'followed_user_id' => $this->id,
         ]);
+
+        return true;
     }
 
     public function unfollowAs(User $user)

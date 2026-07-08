@@ -7,7 +7,7 @@ use App\Models\Project;
 use App\Models\Task;
 use Carbon\Carbon;
 use Gate;
-use Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -69,12 +69,11 @@ class TaskController extends Controller
     {
         $task = Task::find($id);
         if (!$task) {
-            return redirect()->back()->withErrors(['participation' => 'Task not found.']);
+            return redirect()->back()->withErrors(['participation' => __('validation.task_not_found')]);
         }
         if (!$task->participate(auth()->user())) {
-            return redirect()->back()->withErrors(['participation' => 'Internal error. Try again later.']);
+            return redirect()->back()->withErrors(['participation' => __('validation.internal_error')]);
         }
-        Inertia::flash(['participating' => true]);
         return redirect()->back();
     }
 
@@ -82,14 +81,14 @@ class TaskController extends Controller
     {
         try {
             $task = Task::findOrFail($id);
-        } catch (QueryException) {
-            return redirect()->back()->withErrors(['validate' => 'Task not found']);
+        } catch (ModelNotFoundException) {
+            return redirect()->back()->withErrors(['validate' => __('validation.task_not_found')]);
         }
         Gate::authorize('validate', $task);
 
         $task->validated_at = Carbon::now();
         if (!$task->save()) {
-            return redirect()->back()->withErrors(['validate' => 'Internal error. Try again later.']);
+            return redirect()->back()->withErrors(['validate' => __('validation.internal_error')]);
         }
         return redirect()->back();
     }
@@ -98,10 +97,9 @@ class TaskController extends Controller
     {
         $task = Task::find($id);
         if (!$task || !$task->cancelParticipation(auth()->user())) {
-            Inertia::flash(['participation_error' => 'participation_cancel_error']);
-            return redirect()->back();
+            return redirect()->back()->withErrors(['cancel_participation' => __('validation.task_participation_cancel_failed')]);
         }
-        Inertia::flash(['participating' => false]);
+
         return redirect()->back();
     }
 
@@ -118,8 +116,7 @@ class TaskController extends Controller
 
         $task = Task::find($id);
         if (!$task) {
-            Inertia::flash(['edit_error' => 'invalid_task']);
-            return redirect()->back();
+            return redirect()->back()->withErrors(['update' => __('validation.task_not_found')]);
         }
 
         Gate::authorize('update', $task);
@@ -130,7 +127,7 @@ class TaskController extends Controller
         $task->min_participations = $validated['min_participations'] ?? null;
 
         if (!$task->save()) {
-            return redirect()->back()->withErrors(['edit' => 'Internal error. Try again later.']);
+            return redirect()->back()->withErrors(['update' => __('validation.internal_error')]);
         }
 
         return redirect()->back();

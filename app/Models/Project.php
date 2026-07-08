@@ -195,6 +195,12 @@ class Project extends Model
             return ProjectInvitationResponse::REQUIRE_INVITATION;
         }
 
+        Member::create([
+            'user_id' => $user->id,
+            'project_id' => $this->id,
+            'role' => ProjectRole::MEMBER,
+        ]);
+
         return ProjectInvitationResponse::WELCOME;
     }
 

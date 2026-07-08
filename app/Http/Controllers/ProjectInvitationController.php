@@ -76,7 +76,6 @@ class ProjectInvitationController extends Controller
 
         if (!array_key_exists('confirm',$validated)) {
             Inertia::flash([
-                'error' => null,
                 'confirm' => true,
                 'code'=> $code,
             ]);
@@ -92,7 +91,6 @@ class ProjectInvitationController extends Controller
 
         $invitation->recordUse();
 
-        Inertia::flash(['join_success' => true]);
         return redirect(route('projects.show', $invitation->project->slug));
     }
 

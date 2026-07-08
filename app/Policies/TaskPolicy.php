@@ -34,7 +34,7 @@ class TaskPolicy
     public function delete(User $user, Task $task): bool
     {
         return $task->owner->id === $user->id
-            || in_array($task->project()->first()->userRole($user), [ProjectRole::MODERATOR, ProjectRole::ADMIN]);
+            || in_array($task->project()->first()->userRole($user), [ProjectRole::MODERATOR->value, ProjectRole::ADMIN->value]);
     }
 
     public function createNote(User $user, Task $task): bool

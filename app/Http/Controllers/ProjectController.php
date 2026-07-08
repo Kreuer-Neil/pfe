@@ -16,6 +16,7 @@ use App\Models\User;
 use Illuminate\Validation\Rule;
 use Gate;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\RequiredIf;
 use Inertia\Inertia;
 use Str;
 
@@ -29,7 +30,7 @@ class ProjectController extends Controller
 
         // Remove proximity filters for users with no locaiton
         $filtersList = collect(ProjectsFilters::cases())
-            ->filter(fn (ProjectsFilters $filter) => $hasLocation || $filter !== ProjectsFilters::CLOSE_PROJECTS)
+            ->filter(fn(ProjectsFilters $filter) => $hasLocation || $filter !== ProjectsFilters::CLOSE_PROJECTS)
             ->values();
 
         $tagsList = Tag::all()->pluck('name');
@@ -135,7 +136,8 @@ class ProjectController extends Controller
             'name' => 'required|string|min:6|max:255|unique:projects,name',
             'description' => 'required|min:6|string',
 //            'is_private' => 'nullable|contains:1',
-            'tags' => 'required_if:is_private,true|array|max:7',
+            // Public projects need tags for discoverability
+            'tags' => 'required_unless:is_private,1|array|max:7',
             'tags.*' => 'string|exists:tags,name',
             'q' => 'required_unless:is_private,1|string|max:255',
             'osm_id' => 'required_unless:is_private,1|string|max:255',
@@ -191,7 +193,6 @@ class ProjectController extends Controller
         $project->description = $validated['description'];
         $project->save();
 
-        Inertia::flash(['success' => true]);
         return redirect(route('projects.edit', $slug));
     }
 
@@ -208,11 +209,7 @@ class ProjectController extends Controller
     {
         $project = Project::where('slug', $slug)->first();
         if (!$project) {
-            Inertia::flash(['error' => [
-                'key' => 'project_not_found',
-                'params' => [],
-            ]]);
-            return redirect(route('projects.show', $slug));
+            return redirect()->back()->withErrors(['join' => __('validation.project_not_found')]);
         }
 
         if ($project->is_private) {
@@ -222,7 +219,6 @@ class ProjectController extends Controller
 
         $project->joinAsMember(auth()->user());
 
-        Inertia::flash(['join_success' => true]);
         return redirect(route('projects.show', $slug));
     }
 
@@ -238,6 +234,7 @@ class ProjectController extends Controller
 
     public function updateVisibility(string $slug, Request $request)
     {
+        // TODO check if at least 1 tag before getting public
         $project = Project::where('slug', $slug)->firstOrFail();
 
         Gate::authorize('update', $project);
@@ -251,7 +248,6 @@ class ProjectController extends Controller
         $project->is_private = $isPrivate;
         $project->save();
 
-        Inertia::flash(['success' => true]);
         return redirect(route('projects.edit', $slug));
     }
 
@@ -264,7 +260,7 @@ class ProjectController extends Controller
         }
 
         $validated = $request->validate([
-            'tags' => 'required|array|max:7',
+            'tags' => [Rule::requiredIf(!$project->is_private), 'array', 'max:7'],
             'tags.*' => 'string|exists:tags,name',
         ]);
 
@@ -276,7 +272,6 @@ class ProjectController extends Controller
 
         $project->tags()->sync($tagIds);
 
-        Inertia::flash(['success' => true]);
         return redirect(route('projects.edit', $slug));
     }
 
@@ -302,7 +297,6 @@ class ProjectController extends Controller
             return redirect()->back()->withErrors(['role' => __('validation.member_not_found')]);
         }
 
-        Inertia::flash(['role_change_success' => true]);
         return redirect()->back();
     }
 
@@ -342,7 +336,6 @@ class ProjectController extends Controller
             $oldLocation->removeIfUnused();
         }
 
-        Inertia::flash(['success' => true]);
         return redirect(route('projects.edit', $slug));
     }
 }

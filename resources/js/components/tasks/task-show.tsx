@@ -248,10 +248,13 @@ function Show({task, startEdit, onDelete, hasProjectContext, setShowNoteCreate, 
                         className="w-full flex justify-center"
                         {...TaskController.validate.form(task.id)}
                     >
-                        {() => (
-                            <Button type="submit" size="lg" className="w-full max-w-md">
-                                {t('task_validate')}
-                            </Button>
+                        {({errors}) => (
+                            <>
+                                <Button type="submit" size="lg" className="w-full max-w-md">
+                                    {t('task_validate')}
+                                </Button>
+                                <InputError message={errors.validate}/>
+                            </>
                         )}
                     </Form>
                     : !task?.validated &&
@@ -259,10 +262,13 @@ function Show({task, startEdit, onDelete, hasProjectContext, setShowNoteCreate, 
                         className="w-full flex justify-center col-span-2 sm:content-stretch"
                         {...TaskController.participate.form(task?.id ?? 0)}
                     >
-                        {() => (
-                            <Button type="submit" size="lg" className="w-full max-w-md">
-                                {t('task_participate')}
-                            </Button>
+                        {({errors}) => (
+                            <>
+                                <Button type="submit" size="lg" className="w-full max-w-md">
+                                    {t('task_participate')}
+                                </Button>
+                                <InputError message={errors.participation}/>
+                            </>
                         )}
                     </Form>
                 }
@@ -272,10 +278,13 @@ function Show({task, startEdit, onDelete, hasProjectContext, setShowNoteCreate, 
                         className="w-full flex justify-center"
                         {...TaskController.cancelParticipation.form(task.id)}
                     >
-                        {() => (
+                        {({errors}) => (
+                            <>
                             <Button type="submit" size="lg" variant="destructive" className="w-full max-w-md">
                                 {t('task_cancel_participate')}
                             </Button>
+                                <InputError message={errors.cancel_participation}/>
+                            </>
                         )}
                     </Form>
                 }

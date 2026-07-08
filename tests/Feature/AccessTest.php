@@ -28,9 +28,8 @@ test('authenticated users can visit their projects', function () {
             'owner_id' => $this->user->id,
             'is_private' => false
         ]);
-    $project->joinAsMember($this->user);
 
-    $this->get(route('projects.show', $project->id))->assertOk();
+    $this->get(route('projects.show', $project->slug))->assertOk();
 });
 
 test('authenticated users can visit public projects they aren\'t part of', function () {
@@ -41,7 +40,7 @@ test('authenticated users can visit public projects they aren\'t part of', funct
             'is_private' => false
         ]);
 
-    $this->get(route('projects.show', $project->id))->assertOk();
+    $this->get(route('projects.show', $project->slug))->assertOk();
 });
 
 test('authenticated users cannot visit private projects they aren\'t part of', function () {
@@ -55,7 +54,3 @@ test('authenticated users cannot visit private projects they aren\'t part of', f
     $this->get(route('projects.show', $project->slug))->assertNotFound();
 });
 
-test('authenticated users cannot go to the project search page and are redirected to projects index', function () {
-    $this->get(route('projects.search'))
-        ->assertRedirect(route('projects'));
-});

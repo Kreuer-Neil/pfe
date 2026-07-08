@@ -160,6 +160,10 @@ return [
     'location_required_for_public' => 'Öffentliche Projekte benötigen einen Standort, bevor sie öffentlich gemacht werden können.',
     'invitation_invalid_code' => 'Dieser Einladungscode ist ungültig oder abgelaufen.',
     'invitation_already_member' => 'Sie sind bereits Mitglied dieses Projekts.',
+    'task_not_found' => 'Diese Aufgabe wurde nicht gefunden.',
+    'project_not_found' => 'Dieses Projekt wurde nicht gefunden.',
+    'task_participation_cancel_failed' => 'Ihre Teilnahme konnte nicht storniert werden. Bitte versuchen Sie es erneut.',
+    'internal_error' => 'Ein interner Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
 
     'custom' => [
         'attribute-name' => [

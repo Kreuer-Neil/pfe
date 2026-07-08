@@ -32,7 +32,6 @@ class UserPreferencesController extends Controller
         $ids = Language::whereIn('name', $validated['languages'] ?? [])->pluck('id');
         $preferences->languages()->sync($ids);
 
-        Inertia::flash(['success' => true]);
         return redirect()->back();
     }
 
@@ -47,7 +46,6 @@ class UserPreferencesController extends Controller
         $ids = Tag::whereIn('name', $validated['tags'] ?? [])->pluck('id');
         $preferences->tags()->sync($ids);
 
-        Inertia::flash(['success' => true]);
         return redirect()->back();
     }
 
@@ -81,7 +79,6 @@ class UserPreferencesController extends Controller
             $oldLocation->removeIfUnused();
         }
 
-        Inertia::flash(['success' => true]);
         return redirect(route('preferences.edit'));
     }
 }

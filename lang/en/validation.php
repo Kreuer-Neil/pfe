@@ -171,6 +171,10 @@ return [
     'location_required_for_public' => 'Public projects need a location set before they can be made public.',
     'invitation_invalid_code' => 'This invitation code is invalid or has expired.',
     'invitation_already_member' => 'You are already a member of this project.',
+    'task_not_found' => 'This task could not be found.',
+    'project_not_found' => 'This project could not be found.',
+    'task_participation_cancel_failed' => 'Your participation could not be cancelled. Please try again.',
+    'internal_error' => 'An internal error occurred. Please try again later.',
 
     /*
     |--------------------------------------------------------------------------

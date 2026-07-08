@@ -55,7 +55,7 @@ class UserProfileController extends Controller
         $user = User::find($id);
 
         $validated = $request->validate([
-            'nickname' => 'required|string|min:3|max:32',
+            'nickname' => 'nullable|string|min:3|max:32',
             'pronouns' => 'nullable|string|max:24',
             'bio' => 'nullable|min:3|max:255',
             'avatar' => 'nullable|image|extensions:jpg,jpeg,png,gif,webp|max:2048|dimensions:max_width=2000,max_height=2000'
@@ -78,7 +78,7 @@ class UserProfileController extends Controller
             $user->avatar = $imageName;
         }
 
-        $user->nickname = $validated['nickname'];
+        $user->nickname = $validated['nickname'] ?? `$user->first_name $user->last_name`;
         $user->pronouns = $validated['pronouns'] ?? null;
         $user->bio = $validated['bio'] ?? null;
 
@@ -96,12 +96,8 @@ class UserProfileController extends Controller
         }
 
         $currentUser = auth()->user();
-        if ($id === $currentUser->id) {
-            Inertia::flash(['follow_success' => false]);
-        } else {
-            $user = User::find($id);
-
-            Inertia::flash(['follow_success' => $user->followAs($currentUser)]);
+        if ($id !== $currentUser->id) {
+            User::find($id)->followAs($currentUser);
         }
 
         return redirect(route('user-profile.show', $id));
@@ -114,12 +110,8 @@ class UserProfileController extends Controller
         }
 
         $currentUser = auth()->user();
-        if ($id === $currentUser->id) {
-            Inertia::flash(['follow_success' => false]);
-        } else {
-            $user = User::find($id);
-
-            Inertia::flash(['follow_success' => $user->unfollowAs($currentUser)]);
+        if ($id !== $currentUser->id) {
+            User::find($id)->unfollowAs($currentUser);
         }
 
         return redirect(route('user-profile.show', $id));
