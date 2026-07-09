@@ -391,7 +391,7 @@
 
     /** Generic app style **/
     .main-page {
-        @apply w-full max-w-7xl flex flex-col items-center gap-8 py-8 min-h-[100vh-1rem] bg-background sm:rounded-md sm:m-2 sm:ml-0 overflow-hidden;
+        @apply w-full max-w-7xl flex flex-col items-center gap-8 py-8 sm:min-h-[calc(100vh-1rem)] min-h-[calc(100vh-4rem)] bg-background sm:rounded-md sm:m-2 sm:ml-0 overflow-hidden;
     }
 
     .page-title {
@@ -475,9 +475,9 @@
         @apply text-xs text-green-700;
     }
 
-    /* Overwrites default Lucide icons style*/
+    /* Overwrites default Lucide icons style */
     .lucide {
-        @apply size-5 box-content;
+        @apply size-5 shrink-0 box-content;
     }
 
     .item-tag {
@@ -550,7 +550,7 @@
     }
 
     .nav-pfp {
-        @apply bg-loading rounded-full size-12 border border-secondary-border;
+        @apply bg-loading rounded-full size-12 shrink-0 border border-secondary-border object-cover;
     }
 
     .closed .nav-pfp {
@@ -562,7 +562,11 @@
     }
 
     .nav-item {
-        @apply p-2 flex gap-2 items-center cursor-pointer hover:bg-secondary rounded-sm;
+        @apply p-2 flex gap-2 items-center cursor-pointer hover:bg-secondary rounded-sm text-sm font-medium leading-tight;
+    }
+
+    .nav-title {
+        @apply font-medium text-lg w-full text-left;
     }
 
     .closed .nav-item {

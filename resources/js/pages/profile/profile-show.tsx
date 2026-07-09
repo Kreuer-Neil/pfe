@@ -1,7 +1,6 @@
 import {Form, Head, router, usePage} from '@inertiajs/react'
 import {IAppHeaderContext, IProfile} from "@/types";
 import {useImageAsset} from "@/hooks/use-image-asset";
-import PageFlowContainer from "@/components/page-flow-container";
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from "react";
 import AppLayout from "@/layouts/app-layout";
 import {useTranslation} from "react-i18next";
@@ -108,11 +107,9 @@ export default function profileShow({}) {
     }
 
     return (
-        <AppLayout appHeaderContext={appHeaderContext}>
+        <AppLayout appHeaderContext={appHeaderContext} className="py-0">
             <Head title={t(isEditing ? 'profile_edit' : 'profile_show')}/>
-            <PageFlowContainer className="py-0">
-
-                <ProfileContainer id={user.id} isEditing={isEditing}
+            <ProfileContainer id={user.id} isEditing={isEditing}
                                   className="w-full flex flex-col gap-3 max-w-xl bg-card pb-4 -mb-4 border-b border-border"
                                   setIsEditing={setIsEditing}
                 >
@@ -206,7 +203,6 @@ export default function profileShow({}) {
                         </>
                     )}
                 </ProfileContainer>
-            </PageFlowContainer>
         </AppLayout>
     )
 }

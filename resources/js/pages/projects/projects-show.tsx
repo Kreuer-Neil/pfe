@@ -1,6 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
 import {Form, Head, Link, router, usePage} from "@inertiajs/react";
-import PageFlowContainer from "@/components/page-flow-container";
 import TaskDisplay from "@/components/tasks/task-display";
 import {instanceOfProject, instanceOfProjectShow} from "@/helpers/type-check";
 import {
@@ -450,16 +449,12 @@ function VisitorPage() {
             context: project.name,
         };
     return (
-        <AppLayout appHeaderContext={appHeaderContext}>
+        <AppLayout appHeaderContext={appHeaderContext} className="pt-0">
             <Head title={project.name}/>
-            <PageFlowContainer className="pt-0">
-                <ProjectHeader project={project}/>
+            <ProjectHeader project={project}/>
 
-                <section>
-                </section>
-
-            </PageFlowContainer>
-
+            <section>
+            </section>
         </AppLayout>
     );
 }
@@ -478,12 +473,10 @@ function MemberPage() {
         };
 
     return (
-        <AppLayout appHeaderContext={appHeaderContext}>
-            <PageFlowContainer className="pt-0">
-                <ProjectHeader project={project}/>
+        <AppLayout appHeaderContext={appHeaderContext} className="pt-0">
+            <ProjectHeader project={project}/>
 
-                <TaskDisplay tasks={project.upcoming_tasks} title={t('upcoming_tasks')} project={project}/>
-            </PageFlowContainer>
+            <TaskDisplay tasks={project.upcoming_tasks} title={t('upcoming_tasks')} project={project}/>
         </AppLayout>
     );
 }

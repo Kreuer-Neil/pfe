@@ -23,8 +23,8 @@ function SidebarNavItem({props, className = ''}: { props: INavItemProps, classNa
     const Icon = props.icon;
     return (
         <li>
-            <Link as="a" href={props.href}
-                  className={cn('nav-item section-title', className)}>
+            <Link href={props.href}
+                  className={cn('nav-item', className)}>
                 {Icon ?
                     <Icon className="p-1"/>
                     : props.project
@@ -105,7 +105,7 @@ export default function CustomSidebar(
                         }
                              alt={t('user_profile_picture', {user: auth.user.nickname})}
                              className="nav-pfp"/>
-                        <span className="page-title">{auth.user.nickname}</span>
+                        <span className="nav-title">{auth.user.nickname}</span>
                     </Link>
                     <ul className="nav-item-container">
                         {
@@ -119,7 +119,7 @@ export default function CustomSidebar(
                 </div>
                 <div>
                     <div className="nav-closed-separator"/>
-                    <span className="page-title flex items-center min-h-16 px-2">
+                    <span className="nav-title flex items-center py-2 px-2">
                         {t('my_projects')}
                     </span>
                     <ul className="nav-item-container">

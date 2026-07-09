@@ -1,6 +1,5 @@
 import Layout from '@/layouts/app-layout'
 import {Form, Head, usePage} from '@inertiajs/react'
-import PageFlowContainer from "@/components/page-flow-container";
 import {useTranslation} from "react-i18next";
 import ProjectController from "@/actions/App/Http/Controllers/ProjectController";
 import {Fragment, useState} from "react";
@@ -38,8 +37,7 @@ export default function projectsCreate({}) {
     return (
         <Layout>
             <Head title="create"/>
-            <PageFlowContainer>
-                <h1 className="page-title w-full px-3">{t('Create a project')}</h1>
+            <h1 className="page-title w-full px-3">{t('Create a project')}</h1>
 
                 <Form
                     {...ProjectController.store.form()}
@@ -160,8 +158,6 @@ export default function projectsCreate({}) {
                         </>
                     )}
                 </Form>
-
-            </PageFlowContainer>
         </Layout>
     )
 }

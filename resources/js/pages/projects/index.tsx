@@ -3,7 +3,6 @@ import AppLayout from "@/layouts/app-layout";
 import {Form, Head, router, usePage} from "@inertiajs/react";
 import {Dispatch, Fragment, ReactNode, SetStateAction, useEffect, useState} from "react";
 import ProjectItem from "@/components/projects/project-item";
-import PageFlowContainer from "@/components/page-flow-container";
 import {ArrowDownWideNarrow, ArrowUpWideNarrow, ListFilter, LucideIcon, Search} from "lucide-react";
 import {useTranslation} from "react-i18next";
 import {Input} from "@/components/ui/input";
@@ -272,11 +271,9 @@ export default function ProjectsIndex() {
     const DirectionIcon: LucideIcon = direction === 'desc' ? ArrowDownWideNarrow : ArrowUpWideNarrow;
 
     return (
-        <AppLayout>
+        <AppLayout className="pt-0">
             <Head title={t('title')}/>
-            <PageFlowContainer className="pt-0">
-
-                <div className="flex flex-col gap-2 w-full px-3 max-w-xl bg-card border-b border-border pb-4 -mb-4">
+            <div className="flex flex-col gap-2 w-full px-3 max-w-xl bg-card border-b border-border pb-4 -mb-4">
                     <h1 className="page-title text-center mx-auto my-6">{t(title ?? 'search_title')}</h1>
 
                     <div className="flex gap-1">
@@ -328,7 +325,6 @@ export default function ProjectsIndex() {
                     projects={projects}
                 />
 
-            </PageFlowContainer>
             <Filtering
                 showModal={showFiltering}
                 setShowModal={setShowFiltering}

@@ -4,17 +4,19 @@ import {useIsMobile} from "@/hooks/use-mobile";
 import {IAppHeaderContext, type SharedData} from "@/types";
 import {ChevronLeft, ChevronRight, LucideIcon} from "lucide-react";
 import {usePage} from "@inertiajs/react";
+import {cn} from "@/lib/utils";
 
 type AppLayoutProps = {
     children: ReactNode | ReactNode[];
     appHeaderContext: IAppHeaderContext | null;
+    className?: string;
 }
 
 export default function CustomAppLayout(
     {
         children,
         appHeaderContext,
-        ...props
+        className,
     }: AppLayoutProps) {
     const isMobile = useIsMobile();
     const {sidebarOpen} = usePage<SharedData>().props;
@@ -73,7 +75,9 @@ export default function CustomAppLayout(
             <CustomSidebarCast isMobile={isMobile} appHeaderContext={appHeaderContext}
                                switchModalState={switchModalState} sidebarSwitchIcon={sidebarSwitchIcon}
                                onClickOutsideSidebar={onClickOutsideSidebar}/>
-            {children}
+            <div className={cn('@container main-page', className)}>
+                {children}
+            </div>
         </div>
     );
 }

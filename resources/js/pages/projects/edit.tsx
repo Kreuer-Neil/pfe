@@ -1,6 +1,5 @@
 import Layout from '@/layouts/app-layout'
 import {Form, Head, Link, usePage} from '@inertiajs/react'
-import PageFlowContainer from "@/components/page-flow-container";
 import ProjectController from "@/actions/App/Http/Controllers/ProjectController";
 import ProjectInvitationController from "@/actions/App/Http/Controllers/ProjectInvitationController";
 import {IProjectInvitation, IProjectSettings} from "@/types";
@@ -50,11 +49,9 @@ export default function ProjectsEdit({}) {
     const canManageInvitations = project.user_role === 'admin' || project.user_role === 'moderator';
 
     return (
-        <Layout>
+        <Layout className="px-3">
             <Head title={t('project_edit_title')}/>
-            <PageFlowContainer className="px-3">
-
-                <Form
+            <Form
                     {...ProjectController.updateAppearance.form(project.slug)}
                     className="w-full"
                     onSuccess={() => setUpdateSuccessMessage('appearance')}
@@ -361,8 +358,6 @@ export default function ProjectsEdit({}) {
                         </section>
                     </>
                 )}
-
-            </PageFlowContainer>
 
             <ConfirmModal
                 id="invitation-confirm-revoke"

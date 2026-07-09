@@ -26,7 +26,7 @@ function MobileHeader({appHeaderContext, switchModalState}: {
                 {/* TODO replace with <Icon/> type param instead of image asset */}
                 <img src={appHeaderContext?.contextImageSrc ?? useImageAsset('app/logo')}
                      alt={appHeaderContext?.contextImageAlt ?? 'ComeUnite app logo'}
-                     className="rounded-sm bg-loading border border-secondary-border size-8"/>
+                     className="rounded-sm bg-loading border border-secondary-border size-8 shrink-0 object-cover"/>
                 <div className="flex flex-col">
                     <span className="section-title">{appHeaderContext?.context ?? defaultTitle}</span>
                     {appHeaderContext?.contextSecondary ?

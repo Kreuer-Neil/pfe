@@ -8,7 +8,6 @@ import {edit as editProfile} from "@/actions/App/Http/Controllers/UserProfileCon
 import {edit as editPreferences} from "@/actions/App/Http/Controllers/UserPreferencesController";
 import {ChevronRight, LucideIcon, SlidersHorizontal, User, UserPen} from "lucide-react";
 import {SharedData} from "@/types";
-import PageFlowContainer from "@/components/page-flow-container";
 import {Item, ItemActions, ItemContent, ItemDescription, ItemMedia} from "@/components/ui/item";
 
 interface ISettingsLink {
@@ -72,22 +71,20 @@ export default function SettingsIndex({}) {
     return (
         <Layout>
             <Head title="index"/>
-            <PageFlowContainer>
 
-                {/* Settings */}
-                <h1>{t('title')}</h1>
+            {/* Settings */}
+            <h1>{t('title')}</h1>
 
-                <div className="flex flex-col w-full max-w-md">
-                    {settingsLinks.map((link, i) => {
-                        return (
-                            <>
-                                <SettingsLink settingsLink={link} key={i * 2}/>
-                                <Separator key={i * 2 + 1}/>
-                            </>
-                        )
-                    })}
-                </div>
-            </PageFlowContainer>
+            <div className="flex flex-col w-full max-w-md">
+                {settingsLinks.map((link, i) => {
+                    return (
+                        <div key={link.title}>
+                            <SettingsLink settingsLink={link}/>
+                            <Separator/>
+                        </div>
+                    )
+                })}
+            </div>
         </Layout>
     )
 }
