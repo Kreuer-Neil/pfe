@@ -374,8 +374,24 @@
             @apply md:-order-1;
         }
 
+        /* Matches the "secondary" variant of components/ui/button.tsx */
+        .btn {
+            @apply cursor-pointer inline-flex shrink-0 items-center justify-center gap-2
+            rounded-md h-9 px-4 py-2 text-sm font-medium whitespace-nowrap transition-all
+            outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50
+            bg-tertiary text-tertiary-foreground hover:bg-secondary/80;
+        }
+
         .large-section {
             @apply flex flex-col justify-center gap-12;
+        }
+
+        .policy-section {
+            @apply grid gap-6 sm:grid-cols-3 max-w-5xl w-full mx-auto;
+        }
+
+        .policy-item {
+            @apply flex flex-col gap-2 p-6 rounded-xl bg-card border border-border;
         }
 
         article.bottom-section, section.bottom-section {

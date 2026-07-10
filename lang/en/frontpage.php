@@ -3,7 +3,7 @@ return [
     'nav' => [
         'title' => 'Main navigation',
         'index' => 'Home',
-        'policy' => 'Policy',
+        'policy' => 'Our policy',
         'contact' => 'Contact us',
         'register' => 'Register',
         'login' => 'Login',
@@ -64,11 +64,30 @@ return [
             'about' => 'About us',
             'team' => 'Meet the team',
             'contact' => 'Contact us',
-            'policy' => 'Privacy policy',
+            'policy' => 'Our policy',
             //
             'support-title' => 'Support',
             'faq' => 'App FAQs',
             'support' => 'Contact support',
+        ],
+    ],
+    //
+    'policy' => [
+        'title' => 'Our policy',
+        'subtitle' => 'A few simple rules to keep ComeUnite welcoming for everyone.',
+        'items' => [
+            'names' => [
+                'title' => 'Keep names respectful',
+                'text' => 'Usernames, project names, and task titles should never be offensive, hateful, or discriminatory. Pick something that welcomes people in, not something that pushes them away.',
+            ],
+            'purpose' => [
+                'title' => 'Projects help, they don\'t harm',
+                'text' => 'Every project on ComeUnite should aim to help people, animals, or the community around it. Projects meant to harm, exploit, or endanger others have no place here.',
+            ],
+            'kindness' => [
+                'title' => 'Be nice to each other',
+                'text' => 'Disagreements happen, but treat other members with respect and kindness. We\'re all here to build something good together.',
+            ],
         ],
     ],
 ];

@@ -3,7 +3,7 @@ return [
     'nav' => [
         'title' => 'Hauptnavigation',
         'index' => 'Startseite',
-        'policy' => 'Datenschutzrichtlinie',
+        'policy' => 'Unsere Richtlinie',
         'contact' => 'Kontakt',
         'register' => 'Registrieren',
         'login' => 'Anmelden',
@@ -58,10 +58,28 @@ return [
             'about' => 'Über uns',
             'team' => 'Das Team',
             'contact' => 'Kontakt',
-            'policy' => 'Datenschutzrichtlinie',
+            'policy' => 'Unsere Richtlinie',
             'support-title' => 'Support',
             'faq' => 'App-FAQs',
             'support' => 'Support kontaktieren',
+        ],
+    ],
+    'policy' => [
+        'title' => 'Unsere Richtlinie',
+        'subtitle' => 'Ein paar einfache Regeln, damit ComeUnite für alle einladend bleibt.',
+        'items' => [
+            'names' => [
+                'title' => 'Respektvolle Namen',
+                'text' => 'Benutzernamen, Projektnamen und Aufgabentitel dürfen niemals beleidigend, hasserfüllt oder diskriminierend sein. Wählt etwas, das einlädt, statt abzuschrecken.',
+            ],
+            'purpose' => [
+                'title' => 'Projekte helfen, statt zu schaden',
+                'text' => 'Jedes Projekt auf ComeUnite sollte Menschen, Tieren oder der umliegenden Gemeinschaft helfen. Projekte, die schaden, ausnutzen oder gefährden, haben hier keinen Platz.',
+            ],
+            'kindness' => [
+                'title' => 'Seid nett zueinander',
+                'text' => 'Meinungsverschiedenheiten passieren, aber behandelt andere Mitglieder mit Respekt und Freundlichkeit. Wir sind alle hier, um gemeinsam etwas Gutes aufzubauen.',
+            ],
         ],
     ],
 ];
