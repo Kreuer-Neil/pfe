@@ -15,7 +15,7 @@ export default function NoteCreateModal({showModal, setShowModal, task}: {
     setShowModal: Dispatch<SetStateAction<boolean>>,
     task: ITask,
 }) {
-    const {t} = useTranslation(['projects', 'errors']);
+    const {t} = useTranslation(['tasks', 'projects', 'errors']);
 
     return (
         <CustomModal
@@ -24,7 +24,7 @@ export default function NoteCreateModal({showModal, setShowModal, task}: {
             id="note-create"
         >
             <ModalHeader>
-                <ModalTitle>{t('add_note')}</ModalTitle>
+                <ModalTitle>{t('note_add')}</ModalTitle>
             </ModalHeader>
             <ModalContent>
                 <Form
@@ -36,12 +36,12 @@ export default function NoteCreateModal({showModal, setShowModal, task}: {
                         <FieldGroup>
                             <Field>
                                 <Label htmlFor="content">
-                                    {t('field_note_content')}
+                                    {t('note_field')}
                                 </Label>
                                 <Textarea
                                     name="content"
                                     id="content"
-                                    placeholder={t('note_content_placeholder')}
+                                    placeholder={t('note_placeholder')}
                                     required
                                     autoFocus
                                     rows={4}
@@ -50,7 +50,7 @@ export default function NoteCreateModal({showModal, setShowModal, task}: {
                             </Field>
                             <Field>
                                 <Button type="submit">
-                                    {t('add_note')}
+                                    {t('note_add')}
                                 </Button>
                                 <InputError message={errors.general}/>
                             </Field>

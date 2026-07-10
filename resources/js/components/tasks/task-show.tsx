@@ -58,12 +58,12 @@ function NoteItem({note, role, onClickDelete}: { note: INote, role: string, onCl
                                     <Label htmlFor="content"
                                            className="sr-only"
                                     >
-                                        {t('field_note_content')}
+                                        {t('note_field')}
                                     </Label>
                                     <Textarea
                                         name="content"
                                         id="content"
-                                        placeholder={t('note_content_placeholder')}
+                                        placeholder={t('note_placeholder')}
                                         required
                                         autoFocus
                                         defaultValue={note.content}
@@ -72,7 +72,7 @@ function NoteItem({note, role, onClickDelete}: { note: INote, role: string, onCl
                                 </Field>
                                 <Field>
                                     <Button type="submit">
-                                        {t('add_note')}
+                                        {t('note_add')}
                                     </Button>
                                     <InputError message={errors.general}/>
                                 </Field>
@@ -142,7 +142,7 @@ function Show({task, startEdit, onDelete, hasProjectContext, setShowNoteCreate, 
     setShowNoteCreate: Dispatch<SetStateAction<boolean>>,
     onClickDelete: (noteId: any) => void
 }) {
-    const {t} = useTranslation(['projects', 'date', 'errors']);
+    const {t} = useTranslation(['tasks', 'projects', 'date', 'errors']);
 
     return (
         <>
@@ -175,37 +175,37 @@ function Show({task, startEdit, onDelete, hasProjectContext, setShowNoteCreate, 
 
             <ModalContent>
                 <FieldGroup>
-                    <div className="flex wrap">
+                    <div className="flex flex-wrap gap-2">
                         <div className="text-with-icon mr-auto">
                             {task?.related_users &&
                                 <RelatedUsers profiles={task.related_users} isWithLinks/>
                             }
                             <p>
                                 {task?.participations_count
-                                    ? t('task_participations_count', {count: task.participations_count})
-                                    : t('task_no_participations')
+                                    ? t('participations_count', {count: task.participations_count})
+                                    : t('no_participations')
                                 }
                             </p>
                         </div>
                         {task?.min_participations &&
                             <div className="text-with-icon">
                                 <UsersRound className="item-tag"/>
-                                <p>{t('task_recommended_participations_count', {count: task.min_participations})}</p>
+                                <p>{t('recommended_participations_count', {count: task.min_participations})}</p>
                             </div>
                         }
                     </div>
 
                     {task?.self_participating &&
                         <div className="text-with-icon">
-                            <CalendarCheck className="item-tag bg-tag"/>
-                            <p>{t('task_self_participating')}</p>
+                            <CalendarCheck className="item-tag"/>
+                            <p>{t('self_participating')}</p>
                         </div>
                     }
 
                     {task?.validated &&
                         <div className="text-with-icon">
                             <Check className="item-tag"/>
-                            <p>{t('task_valid')}</p>
+                            <p>{t('valid')}</p>
                         </div>
                     }
                 </FieldGroup>
@@ -213,7 +213,7 @@ function Show({task, startEdit, onDelete, hasProjectContext, setShowNoteCreate, 
                 <Field>
                     <FieldTitle>
                         <Notebook/>
-                        {t('task_note_title')}
+                        {t('note_title')}
                     </FieldTitle>
                     {(task?.notes && task.notes.length > 0) ?
                         <ul className="flex flex-col gap-1">
@@ -227,7 +227,7 @@ function Show({task, startEdit, onDelete, hasProjectContext, setShowNoteCreate, 
                         </ul>
                         :
                         <p>
-                            {t('task_no_notes')}
+                            {t('note_empty')}
                         </p>
                     }
 
@@ -236,7 +236,7 @@ function Show({task, startEdit, onDelete, hasProjectContext, setShowNoteCreate, 
                         onClick={() => setShowNoteCreate(true)}
                     >
                         <Plus/>
-                        {t('add_note')}
+                        {t('note_add')}
                     </Button>
                 </Field>
             </ModalContent>
@@ -251,7 +251,7 @@ function Show({task, startEdit, onDelete, hasProjectContext, setShowNoteCreate, 
                         {({errors}) => (
                             <>
                                 <Button type="submit" size="lg" className="w-full max-w-md">
-                                    {t('task_validate')}
+                                    {t('validate')}
                                 </Button>
                                 <InputError message={errors.validate}/>
                             </>
@@ -265,7 +265,7 @@ function Show({task, startEdit, onDelete, hasProjectContext, setShowNoteCreate, 
                         {({errors}) => (
                             <>
                                 <Button type="submit" size="lg" className="w-full max-w-md">
-                                    {t('task_participate')}
+                                    {t('participate')}
                                 </Button>
                                 <InputError message={errors.participation}/>
                             </>
@@ -281,7 +281,7 @@ function Show({task, startEdit, onDelete, hasProjectContext, setShowNoteCreate, 
                         {({errors}) => (
                             <>
                             <Button type="submit" size="lg" variant="destructive" className="w-full max-w-md">
-                                {t('task_cancel_participate')}
+                                {t('cancel_participate')}
                             </Button>
                                 <InputError message={errors.cancel_participation}/>
                             </>
@@ -292,10 +292,10 @@ function Show({task, startEdit, onDelete, hasProjectContext, setShowNoteCreate, 
                 {task?.is_owner &&
                     <FieldGroup className="sm:grid sm:grid-cols-2 gap-2 w-full max-w-md self-center">
                         <Button variant="secondary" onClick={() => startEdit(task)} size="lg">
-                            {t('task_edit')}
+                            {t('edit')}
                         </Button>
                         <Button variant="destructive" onClick={onDelete} size="lg">
-                            {t('task_delete')}
+                            {t('delete')}
                         </Button>
                     </FieldGroup>
                 }
@@ -308,7 +308,7 @@ function Edit({task, setIsEditing}: {
     task: ITask | undefined;
     setIsEditing: Dispatch<SetStateAction<boolean>>;
 }): ReactNode {
-    const {t} = useTranslation(['projects', 'date']);
+    const {t} = useTranslation(['tasks', 'projects', 'date']);
     const [defaultDueAtDate, defaultDueAtTime] = task!.due_at.split(' ');
 
     return (
@@ -322,7 +322,7 @@ function Edit({task, setIsEditing}: {
                     <ModalHeader>
                         <ModalTitle>
                             <Field>
-                                <Label htmlFor="title">{t('task_form_title')}</Label>
+                                <Label htmlFor="title">{t('form_title')}</Label>
                                 <Input
                                     name="title"
                                     id="title"
@@ -347,7 +347,7 @@ function Edit({task, setIsEditing}: {
                                 <FieldGroup>
                                     <FieldGroup className="sm:flex-row">
                                         <Field>
-                                            <Label htmlFor="due_at_date">{t('task_form_date')}</Label>
+                                            <Label htmlFor="due_at_date">{t('form_date')}</Label>
                                             <Input
                                                 name="due_at_date"
                                                 id="due_at_date"
@@ -357,7 +357,7 @@ function Edit({task, setIsEditing}: {
                                             <InputError message={errors.due_at_date}/>
                                         </Field>
                                         <Field>
-                                            <Label htmlFor="due_at_time">{t('task_form_time')}</Label>
+                                            <Label htmlFor="due_at_time">{t('form_time')}</Label>
                                             <Input
                                                 name="due_at_time"
                                                 id="due_at_time"
@@ -369,7 +369,7 @@ function Edit({task, setIsEditing}: {
                                     </FieldGroup>
 
                                     <Field>
-                                        <Label htmlFor="description">{t('task_form_description')}</Label>
+                                        <Label htmlFor="description">{t('form_description')}</Label>
                                         <Textarea
                                             name="description"
                                             id="description"
@@ -384,7 +384,7 @@ function Edit({task, setIsEditing}: {
                                 <FieldGroup>
                                     <Field>
                                         <Label htmlFor="min_participations">
-                                            {t('task_form_min_participations')}
+                                            {t('form_min_participations')}
                                         </Label>
                                         <Input
                                             name="min_participations"
@@ -397,8 +397,8 @@ function Edit({task, setIsEditing}: {
 
                                     {task?.self_participating &&
                                         <p className="text-with-icon">
-                                            <CalendarCheck className="item-tag bg-tag"/>
-                                            {t('task_self_participating')}
+                                            <CalendarCheck className="item-tag"/>
+                                            {t('self_participating')}
                                         </p>
                                     }
                                 </FieldGroup>
@@ -413,7 +413,7 @@ function Edit({task, setIsEditing}: {
                                 className="w-full"
                                 variant="secondary"
                                 type="submit">
-                                {t('task_confirm_changes')}
+                                {t('confirm_changes')}
                             </Button>
                             <InputError message={errors.update}/>
                             <Button
@@ -423,7 +423,7 @@ function Edit({task, setIsEditing}: {
                                 type="reset"
                                 onClick={() => setIsEditing(false)}
                             >
-                                {t('task_edit_cancel')}
+                                {t('edit_cancel')}
                             </Button>
                         </FieldGroup>
                     </ModalFooter>
