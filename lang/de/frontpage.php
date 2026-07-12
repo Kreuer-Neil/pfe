@@ -82,4 +82,19 @@ return [
             ],
         ],
     ],
+    'contact' => [
+        'title' => 'Kontakt',
+        'subtitle' => 'Eine Frage oder brauchst du Hilfe? Wir freuen uns, von dir zu hören.',
+        'bug_note' => 'Du meldest einen Fehler? Verwende die E-Mail-Adresse deines Kontos (wird automatisch ausgefüllt, wenn du angemeldet bist), damit wir das Problem direkt in deinem Konto untersuchen können. Gemäß unserer Richtlinie greifen wir nur dann auf deine Daten zu, wenn es zur Behebung des Fehlers notwendig ist.',
+        'field_name' => 'Name',
+        'field_email' => 'E-Mail',
+        'field_subject' => 'Worum geht es?',
+        'field_message' => 'Nachricht',
+        'subjects' => [
+            'question' => 'Eine Frage stellen',
+            'support' => 'Ein Problem melden',
+        ],
+        'submit' => 'Nachricht senden',
+        'success' => 'Danke! Deine Nachricht wurde gesendet, wir melden uns bald bei dir.',
+    ],
 ];

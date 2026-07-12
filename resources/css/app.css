@@ -394,6 +394,22 @@
             @apply flex flex-col gap-2 p-6 rounded-xl bg-card border border-border;
         }
 
+        .contact-form {
+            @apply flex flex-col gap-4 max-w-xl w-full mx-auto;
+        }
+
+        .contact-field {
+            @apply flex flex-col gap-1 text-left;
+
+            label {
+                @apply text-sm font-medium;
+            }
+        }
+
+        .contact-success {
+            @apply max-w-xl w-full mx-auto text-center p-3 rounded-md bg-valid/20 border border-valid;
+        }
+
         article.bottom-section, section.bottom-section {
             @apply w-screen max-w-screen m-0 p-3 py-6 sm:py-12 bg-tertiary text-tertiary-foreground border-b-2 border-b-primary;
 

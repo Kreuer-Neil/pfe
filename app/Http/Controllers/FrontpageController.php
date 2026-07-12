@@ -9,7 +9,7 @@ class FrontpageController extends Controller
     public array $navbarItems = [
         'index',
         'policy',
-//        'contact', // With support in contact
+        'contact', // With support in contact
     ];
     public array $footerItems = [
         [
@@ -49,13 +49,12 @@ class FrontpageController extends Controller
 
     public function contact()
     {
-        return redirect(route('frontpage.index'));
-        return view('policy', compact('navbarItems', 'footerItems'));
+        return view('contact');
     }
 
-    public function team()
-    {
-        return redirect(route('frontpage.index'));
-        return view('policy', compact('navbarItems', 'footerItems'));
-    }
+//    public function team()
+//    {
+//        return redirect(route('frontpage.index'));
+//        return view('policy', compact('navbarItems', 'footerItems'));
+//    }
 }

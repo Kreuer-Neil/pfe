@@ -83,4 +83,19 @@ return [
             ],
         ],
     ],
+    'contact' => [
+        'title' => 'Nous contacter',
+        'subtitle' => 'Une question, ou besoin d’aide&nbsp;? Nous serions ravis de vous lire.',
+        'bug_note' => 'Vous signalez un bug&nbsp;? Utilisez l’adresse e-mail liée à votre compte (elle est pré-remplie automatiquement si vous êtes connecté·e) afin que nous puissions examiner le problème directement sur votre compte. Conformément à notre politique, nous ne consulterons vos données que si cela s’avère nécessaire pour corriger le bug.',
+        'field_name' => 'Nom',
+        'field_email' => 'E-mail',
+        'field_subject' => 'De quoi s’agit-il&nbsp;?',
+        'field_message' => 'Message',
+        'subjects' => [
+            'question' => 'Poser une question',
+            'support' => 'Signaler un problème',
+        ],
+        'submit' => 'Envoyer le message',
+        'success' => 'Merci&nbsp;! Votre message a bien été envoyé, nous vous répondrons rapidement.',
+    ],
 ];

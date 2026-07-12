@@ -90,4 +90,20 @@ return [
             ],
         ],
     ],
+    //
+    'contact' => [
+        'title' => 'Contact us',
+        'subtitle' => 'Got a question, or need a hand? We\'d love to hear from you.',
+        'bug_note' => 'Reporting a bug? Use your account\'s email address (auto-filled if you\'re signed in) so we can look into it directly on your account. In line with our policy, we\'ll only access your data if it\'s necessary to fix the issue.',
+        'field_name' => 'Name',
+        'field_email' => 'Email',
+        'field_subject' => 'What is this about?',
+        'field_message' => 'Message',
+        'subjects' => [
+            'question' => 'Ask something',
+            'support' => 'Signal a problem',
+        ],
+        'submit' => 'Send message',
+        'success' => 'Thanks! Your message has been sent, we\'ll get back to you soon.',
+    ],
 ];

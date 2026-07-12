@@ -1,7 +1,7 @@
 @php($navbarItems = [
         'index',
         'policy',
-//        'contact',
+        'contact',
     ])
 
 <nav class="frontpage-nav">
