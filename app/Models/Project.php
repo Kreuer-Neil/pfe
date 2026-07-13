@@ -39,6 +39,10 @@ class Project extends Model
                 'user_id' => $project->owner_id,
                 'role' => ProjectRole::ADMIN,
             ]);
+
+            ChatRoom::create([
+                'project_id' => $project->id,
+            ]);
         });
     }
 
@@ -253,5 +257,18 @@ class Project extends Model
     public function lang(): BelongsTo
     {
         return $this->belongsTo(Language::class);
+    }
+
+    /*
+     * Returns the project's chat rooms
+     */
+    public function chatRooms(): HasMany
+    {
+        return $this->hasMany(ChatRoom::class);
+    }
+
+    public function defaultChatRoom(): ?ChatRoom
+    {
+        return $this->chatRooms()->where('type', 'default')->first();
     }
 }

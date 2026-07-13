@@ -5,6 +5,7 @@
     "show_project": "Show this project",
     "get_absent": "Mark yourself absent",
     "upcoming_tasks": "Upcoming tasks",
+    "open_chat": "Chat",
     "icon_alt": "Icon from project {{project}}",
     "distance_km": "{{distance}} km",
     "members_count": "member(s)",

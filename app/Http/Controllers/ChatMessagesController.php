@@ -1,0 +1,70 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\ChatMessage;
+use App\Models\Project;
+use Gate;
+use Illuminate\Http\Request;
+
+class ChatMessagesController extends Controller
+{
+    public function store(Request $request, string $slug, int $room)
+    {
+        $validated = $request->validate([
+            'content' => 'required|string|min:1|max:4000',
+            'chat_message_id' => 'nullable|integer|exists:chat_messages,id',
+        ]);
+
+        $project = Project::where('slug', $slug)->firstOrFail();
+        $chatRoom = $project->chatRooms()->findOrFail($room);
+
+        Gate::authorize('sendMessage', $chatRoom);
+
+        if (! empty($validated['chat_message_id'])) {
+            $repliesWithinRoom = ChatMessage::where('id', $validated['chat_message_id'])
+                ->where('chat_room_id', $chatRoom->id)
+                ->exists();
+
+            if (! $repliesWithinRoom) {
+                return back()->withErrors(['chat_message_id' => __('validation.chat_message_not_found')]);
+            }
+        }
+
+        ChatMessage::create([
+            'chat_room_id' => $chatRoom->id,
+            'user_id' => auth()->user()->id,
+            'chat_message_id' => $validated['chat_message_id'] ?? null,
+            'content' => $validated['content'],
+        ]);
+
+        return redirect()->back();
+    }
+
+    public function update(Request $request, int $message)
+    {
+        $validated = $request->validate([
+            'content' => 'required|string|min:1|max:4000',
+        ]);
+
+        $chatMessage = ChatMessage::findOrFail($message);
+
+        Gate::authorize('update', $chatMessage);
+
+        $chatMessage->content = $validated['content'];
+        $chatMessage->save();
+
+        return redirect()->back();
+    }
+
+    public function destroy(int $message)
+    {
+        $chatMessage = ChatMessage::findOrFail($message);
+
+        Gate::authorize('delete', $chatMessage);
+
+        $chatMessage->delete();
+
+        return redirect()->back();
+    }
+}

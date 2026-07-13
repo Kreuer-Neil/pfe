@@ -1,0 +1,15 @@
+{
+    "empty_message": "Aucun message ici pour l'instant. Soyez le premier à écrire quelque chose !",
+    "form_placeholder": "Écrivez un message…",
+    "send": "Envoyer",
+    "reply": "Répondre",
+    "reply_cancel": "Annuler la réponse",
+    "replying_to": "Réponse à {{name}}",
+    "edit": "Modifier le message",
+    "edit_cancel": "Annuler la modification",
+    "edited": "(modifié)",
+    "delete": "Supprimer le message",
+    "delete_warning_message": "Êtes-vous sûr de vouloir supprimer ce message ?",
+    "deleted_user": "Utilisateur supprimé",
+    "load_older": "Charger les messages plus anciens"
+}

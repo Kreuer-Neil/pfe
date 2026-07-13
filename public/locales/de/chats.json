@@ -1,0 +1,15 @@
+{
+    "empty_message": "Hier gibt es noch keine Nachrichten. Seien Sie der Erste, der etwas schreibt!",
+    "form_placeholder": "Nachricht schreiben…",
+    "send": "Senden",
+    "reply": "Antworten",
+    "reply_cancel": "Antwort abbrechen",
+    "replying_to": "Antwort an {{name}}",
+    "edit": "Nachricht bearbeiten",
+    "edit_cancel": "Bearbeitung abbrechen",
+    "edited": "(bearbeitet)",
+    "delete": "Nachricht löschen",
+    "delete_warning_message": "Möchten Sie diese Nachricht wirklich löschen?",
+    "deleted_user": "Gelöschter Benutzer",
+    "load_older": "Ältere Nachrichten laden"
+}

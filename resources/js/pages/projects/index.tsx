@@ -1,12 +1,11 @@
 import type {IDashboardProject, IPaginationLink, IProjectMiniature} from "@/types";
 import AppLayout from "@/layouts/app-layout";
-import {Form, Head, router, usePage} from "@inertiajs/react";
+import {Head, router, usePage} from "@inertiajs/react";
 import {Dispatch, Fragment, ReactNode, SetStateAction, useEffect, useState} from "react";
 import ProjectItem from "@/components/projects/project-item";
-import {ArrowDownWideNarrow, ArrowUpWideNarrow, ListFilter, LucideIcon, Search} from "lucide-react";
+import {ArrowDownWideNarrow, ArrowUpWideNarrow, ListFilter, LucideIcon} from "lucide-react";
 import {useTranslation} from "react-i18next";
 import {Input} from "@/components/ui/input";
-import ProjectController from "@/actions/App/Http/Controllers/ProjectController";
 import {index as projectsIndex} from "@/actions/App/Http/Controllers/ProjectController";
 import {RouteQueryOptions} from "@/wayfinder";
 import {Button} from "@/components/ui/button";
@@ -294,30 +293,19 @@ export default function ProjectsIndex() {
                     </div>
                     {/* Tags container (only if tags.) */}
                     <TagsContainer tags={tags}/>
-                    {/* Search bar */}
-                    <Form
-                        {...ProjectController.indexSearch.form()}
-
-                    >
-                        <Field>
-                            {/*<ButtonGroup>
-                            <Button type="submit">
-                                    <span className="sr-only">{t('search')}</span>
-                                    <Search/>
-                                </Button>*/}
-                            <Input
-                                id="search"
-                                name="search"
-                                autoFocus
-                                placeholder={t('search')}
-                                onChange={(e) => {
-                                    setQuery(e.currentTarget.value);
-                                }}
-                                defaultValue={uri?.split('query=')[1]?.split('&')[0] ?? ''}
-                            />
-                            {/*</ButtonGroup>*/}
-                        </Field>
-                    </Form>
+                    {/* Search bar - live search via the useEffect above, no submission needed */}
+                    <Field>
+                        <Input
+                            id="search"
+                            name="search"
+                            autoFocus
+                            placeholder={t('search')}
+                            onChange={(e) => {
+                                setQuery(e.currentTarget.value);
+                            }}
+                            defaultValue={uri?.split('query=')[1]?.split('&')[0] ?? ''}
+                        />
+                    </Field>
                 </div>
 
                 <ProjectsContainer

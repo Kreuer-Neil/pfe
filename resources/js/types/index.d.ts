@@ -233,6 +233,30 @@ export interface INote {
     [key: string]: unknown;
 }
 
+export interface IChatRoom {
+    id: string;
+    name: string | null;
+}
+
+export interface IChatMessageReplyPreview {
+    id: string;
+    content: string;
+    owner: IProfile | null;
+}
+
+export interface IChatMessage {
+    id: string;
+    content: string;
+    owner: IProfile | null;
+    is_owner: boolean;
+    reply_to: IChatMessageReplyPreview | null;
+    edited: boolean;
+    created_at: string;
+    updated_at: string;
+
+    [key: string]: unknown;
+}
+
 // Non-items related items
 export interface IAppHeaderContext {
     contextImageSrc?: string;

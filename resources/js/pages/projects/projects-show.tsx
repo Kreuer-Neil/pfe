@@ -9,6 +9,7 @@ import {
     Copy,
     Flag,
     LogIn,
+    MessageCircle,
     PencilLine,
     Settings,
     Share2,
@@ -21,7 +22,12 @@ import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from "react";
 import {Input} from "@/components/ui/input";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import ProjectController from "@/actions/App/Http/Controllers/ProjectController";
-import {join as projectsJoin, edit as projectsEdit, show as projectsShow} from "@/actions/App/Http/Controllers/ProjectController";
+import {
+    join as projectsJoin,
+    edit as projectsEdit,
+    show as projectsShow
+} from "@/actions/App/Http/Controllers/ProjectController";
+import {index as chatsIndex} from "@/actions/App/Http/Controllers/ChatRoomController";
 import CustomModal, {ModalContent, ModalHeader, ModalTitle} from "@/components/modals/custom-modal";
 import ProjectInvitationController from "@/actions/App/Http/Controllers/ProjectInvitationController";
 import UserAvatar from "@/components/users/user-avatar";
@@ -177,7 +183,8 @@ function InvitationModal({showInvitationModal, setShowInvitationModal, slug, isP
                                     <InputError message={errors.max_uses}/>
                                 </Field>
                                 <Field>
-                                    <Label htmlFor="invitation-expires-at-date">{t('invitation_expires_at_date')}</Label>
+                                    <Label
+                                        htmlFor="invitation-expires-at-date">{t('invitation_expires_at_date')}</Label>
                                     <Input
                                         id="invitation-expires-at-date"
                                         name="expires_at_date"
@@ -186,7 +193,8 @@ function InvitationModal({showInvitationModal, setShowInvitationModal, slug, isP
                                     <InputError message={errors.expires_at_date}/>
                                 </Field>
                                 <Field>
-                                    <Label htmlFor="invitation-expires-at-time">{t('invitation_expires_at_time')}</Label>
+                                    <Label
+                                        htmlFor="invitation-expires-at-time">{t('invitation_expires_at_time')}</Label>
                                     <Input
                                         id="invitation-expires-at-time"
                                         name="expires_at_time"
@@ -460,6 +468,22 @@ function VisitorPage() {
 }
 
 
+function ChatRooms({project}:{project:IProject}) {
+    const  {t} = useTranslation('projects');
+    // TODO adapt for more chat rooms later
+
+    return (
+        <div className="max-w-xl w-full px-3 flex flex-row-reverse">
+            <Button asChild variant="outline" size="sm">
+                <Link href={chatsIndex(project.slug).url}>
+                    <MessageCircle/>
+                    {t('open_chat')}
+                </Link>
+            </Button>
+        </div>
+    );
+}
+
 /**
  * Page display for members only.
  */
@@ -475,6 +499,8 @@ function MemberPage() {
     return (
         <AppLayout appHeaderContext={appHeaderContext} className="pt-0">
             <ProjectHeader project={project}/>
+
+            <ChatRooms project={project}/>
 
             <TaskDisplay tasks={project.upcoming_tasks} title={t('upcoming_tasks')} project={project}/>
         </AppLayout>

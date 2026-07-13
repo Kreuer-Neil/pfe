@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('projects', [ProjectController::class, 'index'])
     ->name('projects');
 
-Route::get('projects/search', [ProjectController::class, 'indexSearch'])
-    ->name('projects.search');
+//Route::get('projects/search', [ProjectController::class, 'indexSearch'])
+//    ->name('projects.search');
 
 Route::get('projects/my-projects', [ProjectController::class, 'myProjects'])
     ->name('project.my-projects');

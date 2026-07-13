@@ -635,6 +635,18 @@
         @apply text-link hover:bg-primary focus:bg-primary flex gap-2 p-1.5 justify-center items-center w-full max-w-md rounded-sm cursor-pointer font-medium;
     }
 
+    .chat-actions {
+        @apply invisible flex absolute bg-card rounded-md right-0 -top-4;
+    }
+
+    .chat-item {
+        @apply relative;
+
+        &:hover .chat-actions {
+            @apply visible;
+        }
+    }
+
     /* Generic Widgets style */
 
 }

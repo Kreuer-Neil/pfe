@@ -174,6 +174,7 @@ return [
     'task_not_found' => 'This task could not be found.',
     'project_not_found' => 'This project could not be found.',
     'task_participation_cancel_failed' => 'Your participation could not be cancelled. Please try again.',
+    'chat_message_not_found' => 'The message you are replying to could not be found in this chat room.',
     'internal_error' => 'An internal error occurred. Please try again later.',
 
     /*

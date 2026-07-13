@@ -163,6 +163,7 @@ return [
     'task_not_found' => 'Diese Aufgabe wurde nicht gefunden.',
     'project_not_found' => 'Dieses Projekt wurde nicht gefunden.',
     'task_participation_cancel_failed' => 'Ihre Teilnahme konnte nicht storniert werden. Bitte versuchen Sie es erneut.',
+    'chat_message_not_found' => 'Die Nachricht, auf die Sie antworten, wurde in diesem Chatraum nicht gefunden.',
     'internal_error' => 'Ein interner Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
 
     'custom' => [
