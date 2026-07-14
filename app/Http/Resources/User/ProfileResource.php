@@ -17,7 +17,7 @@ class ProfileResource extends JsonResource
             'pronouns' => $this->resource->pronouns,
             'avatar' => $this->resource->avatar,
             'bio' => $this->resource->bio,
-            'is_following' => auth()->user()->follows()
+            'is_following' => auth()->check() && auth()->user()->follows()
                 ->where('followed_user_id', $this->resource->id)
                 ->exists(),
         ];

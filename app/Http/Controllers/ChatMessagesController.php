@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSentEvent;
 use App\Models\ChatMessage;
 use App\Models\Project;
 use Gate;
@@ -31,12 +32,14 @@ class ChatMessagesController extends Controller
             }
         }
 
-        ChatMessage::create([
+        $chatMessage = ChatMessage::create([
             'chat_room_id' => $chatRoom->id,
             'user_id' => auth()->user()->id,
             'chat_message_id' => $validated['chat_message_id'] ?? null,
             'content' => $validated['content'],
         ]);
+
+        broadcast(new MessageSentEvent($chatMessage->load(['owner', 'replyTo.owner'])));
 
         return redirect()->back();
     }

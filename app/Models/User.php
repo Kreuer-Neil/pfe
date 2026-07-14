@@ -44,6 +44,15 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    /*
+     * Checks if a user belongs to a chat room (more specifically a project for now)
+     */
+    public function isMemberOfRoom(int $id):bool
+    {
+        $chatRoom = ChatRoom::find($id);
+        return $chatRoom->project->userIsMember($this);
+    }
+
     /**
      * Get the attributes that should be cast.
      *
