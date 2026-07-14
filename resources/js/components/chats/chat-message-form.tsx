@@ -45,6 +45,14 @@ export default function ChatMessageForm({slug, room, replyTo, onCancelReply}: {
                             required
                             rows={1}
                             className="flex-1 min-h-10 resize-none"
+                            onKeyDown={(e) => {
+                                // Shift+Enter still inserts a newline; plain Enter submits. Skip while
+                                // an IME composition is active so confirming a candidate doesn't send.
+                                if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
+                                    e.preventDefault();
+                                    e.currentTarget.form?.requestSubmit();
+                                }
+                            }}
                         />
                         <Button type="submit" size="icon" disabled={processing}>
                             <span className="sr-only">{t('send')}</span>
