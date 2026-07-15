@@ -55,6 +55,12 @@ export default function ChatMessageItem({message, canModerate, onReply}: {
                                     defaultValue={message.content}
                                     autoFocus
                                     required
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
+                                            e.preventDefault();
+                                            e.currentTarget.form?.requestSubmit();
+                                        }
+                                    }}
                                 />
                                 <InputError message={errors.content}/>
                             </>
