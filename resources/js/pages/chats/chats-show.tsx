@@ -59,40 +59,45 @@ export default function ChatsShow(): ReactNode {
         `chat.${chatRoom.id}`,
         'MessageSentEvent',
         (e) => {
-            // Broadcast payloads are built without a per-viewer request, so is_owner can't be
-            // trusted as sent - recompute it against the current user.
-            const message: IChatMessage = {...e.message, is_owner: e.message.owner?.id.toString() === auth.user.id.toString()};
+            // Recomputed because Broadcast can't share the info since it can't check auth()
+            const message: IChatMessage = {
+                ...e.message,
+                is_owner: e.message.owner?.id.toString() === auth.user.id.toString()
+            };
             setDisplayedMessages((previous) => [...previous, message]);
         },
         [chatRoom.id],
     );
 
     return (
-        <AppLayout appHeaderContext={appHeaderContext} className="pt-0">
-            <Head title={chatRoom.name ?? t('project_chat',{project:project.name})}/>
+        <AppLayout appHeaderContext={appHeaderContext} className="pt-0 h-fixed">
+            <Head title={chatRoom.name ?? t('project_chat', {project: project.name})}/>
 
             {/* (project)'s chat room */}
-            <h1 className="sr-only">{t('project_chat',{project:project.name})}</h1>
+            <h1 className="sr-only">{t('project_chat', {project: project.name})}</h1>
 
-            <div className="items-section max-w-xl flex flex-col gap-2 h-full">
-                {nextPage &&
-                    <div className="flex justify-center">
-                        <Button variant="ghost" size="sm" disabled={loadingMore} onClick={loadOlder}>
-                            {t('load_older')}
-                        </Button>
-                    </div>
-                }
+            <div className="items-section h-full">
 
-                {displayedMessages.length === 0
-                    ? <p className="text-center text-muted-foreground flex items-center h-full">{t('empty_message')}</p>
-                    : <ul className="flex flex-col justify-end gap-2 px-3 h-full overscroll-y-auto">
-                        {displayedMessages.map((message) => (
+
+                {displayedMessages.length > 0
+                    ? <ul className="flex flex-col-reverse gap-2 px-3 flex-1 overflow-y-scroll">
+                        {displayedMessages.toReversed().map((message) => (
                             <li key={message.id}>
                                 <ChatMessageItem message={message} canModerate={canModerate} onReply={setReplyTo}/>
                             </li>
                         ))}
+
+                        {/* Loading more button */}
+                        {nextPage &&
+                            <li key="loadMore" className="flex justify-center mt-6">
+                                <Button variant="ghost" size="sm" disabled={loadingMore} onClick={loadOlder}>
+                                    {t('load_older')}
+                                </Button>
+                            </li>
+                        }
                     </ul>
-                }
+                    :
+                    <p className="text-center text-muted-foreground flex items-center flex-1">{t('empty_message')}</p>}
 
                 {canPost &&
                     <ChatMessageForm

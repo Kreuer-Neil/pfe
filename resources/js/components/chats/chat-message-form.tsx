@@ -43,6 +43,7 @@ export default function ChatMessageForm({slug, room, replyTo, onCancelReply}: {
                             id="content"
                             placeholder={t('form_placeholder')}
                             required
+                            autoFocus
                             rows={1}
                             className="flex-1 min-h-10 resize-none"
                             onKeyDown={(e) => {
