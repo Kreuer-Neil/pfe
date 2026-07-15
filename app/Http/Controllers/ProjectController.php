@@ -25,10 +25,9 @@ class ProjectController extends Controller
 
     public function index(Request $request)
     {
-        // TODO use Pagination?
         $hasLocation = (bool)auth()->user()->preferences?->location;
 
-        // Remove proximity filters for users with no locaiton
+        // Remove proximity filters for users with no location
         $filtersList = collect(ProjectsFilters::cases())
             ->filter(fn(ProjectsFilters $filter) => $hasLocation || $filter !== ProjectsFilters::CLOSE_PROJECTS)
             ->values();
@@ -40,10 +39,15 @@ class ProjectController extends Controller
         $currentFilter = $request->input('filter')
             ?? ($hasLocation ? ProjectsFilters::CLOSE_PROJECTS->value : ProjectsFilters::RECENT_PROJECTS->value);
         $currentTags = $request->input('tags') ?? [];
-        $projects = $this->searchProjects($request);
+
+        $paginatedProjects = $this->searchProjects($request);
+        $projects = ProjectMiniatureResource::collection($paginatedProjects)->toArray($request);
+        $projectsNextPage = $paginatedProjects->currentPage() < $paginatedProjects->lastPage()
+            ? $paginatedProjects->currentPage() + 1
+            : null;
 
         return Inertia::render('projects/index',
-            compact(['filtersList', 'tagsList', 'distancesList', 'currentFilter', 'currentTags', 'hasLocation', 'projects'])
+            compact(['filtersList', 'tagsList', 'distancesList', 'currentFilter', 'currentTags', 'hasLocation', 'projects', 'projectsNextPage'])
         );
     }
 
@@ -96,10 +100,7 @@ class ProjectController extends Controller
             }
         }
 
-        return ProjectMiniatureResource::collection(
-            $queriedProjects->orderBy($orderColumn, $direction)
-                ->get()
-        )->toArray(request());
+        return $queriedProjects->orderBy($orderColumn, $direction)->paginate(20);
     }
 
     public function show(string $slug)

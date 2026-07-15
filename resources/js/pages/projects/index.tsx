@@ -36,6 +36,7 @@ type PageProps = {
     hasLocation: boolean;
     title: string | null;
     projects: IProjectMiniature[];
+    projectsNextPage: number | null;
 }
 
 interface IFilter {
@@ -46,7 +47,9 @@ interface IFilter {
 
 interface ProjectsContainerProps {
     projects: IProjectMiniature[] | IDashboardProject[];
-    // currentPage: number,
+    nextPage: number | null;
+    loadingMore: boolean;
+    onLoadMore: () => void;
 }
 
 interface IPaginatedProjects {
@@ -54,7 +57,7 @@ interface IPaginatedProjects {
     links: IPaginationLink[];
 }
 
-function ProjectsContainer({projects}: ProjectsContainerProps): ReactNode {
+function ProjectsContainer({projects, nextPage, loadingMore, onLoadMore}: ProjectsContainerProps): ReactNode {
     const {t} = useTranslation(['projects-index', 'projects']);
 
 
@@ -65,7 +68,6 @@ function ProjectsContainer({projects}: ProjectsContainerProps): ReactNode {
             {projects.length <= 0 ?
                 <p>{t('projects:empty')}</p> :
                 <ul className="thumbnails-list-container">
-                    {/* TODO see if better to load everything then slice or load progressively server-side */}
                     {projects.map((project: IProjectMiniature | IDashboardProject): ReactNode => (
                         <li key={project.slug} className="w-full">
                             {/* TODO add tags to show */}
@@ -73,6 +75,14 @@ function ProjectsContainer({projects}: ProjectsContainerProps): ReactNode {
                         </li>))
                     }
                 </ul>
+            }
+
+            {nextPage &&
+                <div className="flex justify-center">
+                    <Button variant="ghost" size="sm" disabled={loadingMore} onClick={onLoadMore}>
+                        {t('pagination:show_more')}
+                    </Button>
+                </div>
             }
         </section>
     );
@@ -228,11 +238,13 @@ function Filtering({showModal, setShowModal, tags, setTags, filter, setFilter, m
 }
 
 export default function ProjectsIndex() {
-    const {title, currentFilter, currentTags, projects} = usePage<PageProps>().props;
+    const {title, currentFilter, currentTags, projects, projectsNextPage} = usePage<PageProps>().props;
 
     const {t} = useTranslation(['projects-index', 'projects']);
 
-    // const [projects, setProjects] = useState<IPaginatedProjects>({data: [], links: []});
+    const [displayedProjects, setDisplayedProjects] = useState<IProjectMiniature[]>(projects);
+    const [nextPage, setNextPage] = useState<number | null>(projectsNextPage);
+    const [loadingMore, setLoadingMore] = useState(false);
 
     const uri = document.documentURI;
     const [direction, setDirection] = useState<string>(uri?.split('direction=')[1]?.split('&')[0] ?? 'desc');
@@ -262,10 +274,31 @@ export default function ProjectsIndex() {
             {
                 preserveState: true,
                 preserveScroll: true,
-                preserveUrl: true
+                preserveUrl: true,
+                onSuccess: (page) => {
+                    const props = page.props as unknown as PageProps;
+                    setDisplayedProjects(props.projects);
+                    setNextPage(props.projectsNextPage);
+                },
             }
         );
     }, [query, direction, tags, filter, maxDistance]);
+
+    const loadMore = () => {
+        if (!nextPage || loadingMore) return;
+        setLoadingMore(true);
+        router.reload({
+            data: {page: nextPage},
+            only: ['projects', 'projectsNextPage'],
+            preserveUrl: true,
+            onSuccess: (page) => {
+                const props = page.props as unknown as PageProps;
+                setDisplayedProjects((previous) => [...previous, ...props.projects]);
+                setNextPage(props.projectsNextPage);
+                setLoadingMore(false);
+            },
+        });
+    };
 
     const DirectionIcon: LucideIcon = direction === 'desc' ? ArrowDownWideNarrow : ArrowUpWideNarrow;
 
@@ -309,8 +342,10 @@ export default function ProjectsIndex() {
                 </div>
 
                 <ProjectsContainer
-                    // currentPage={currentPage}
-                    projects={projects}
+                    projects={displayedProjects}
+                    nextPage={nextPage}
+                    loadingMore={loadingMore}
+                    onLoadMore={loadMore}
                 />
 
             <Filtering

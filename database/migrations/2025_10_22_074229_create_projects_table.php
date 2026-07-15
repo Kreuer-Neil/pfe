@@ -26,6 +26,8 @@ return new class extends Migration {
             $table->foreignId('location_id')->nullable()->constrained()->nullOnDelete();
             $table->boolean('is_private')->default(true);
 
+            $table->fullText(['name', 'description']);
+
             $table->softDeletes();
             $table->timestamps();
         });
