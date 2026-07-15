@@ -46,6 +46,7 @@ export default function ChatsShow(): ReactNode {
         router.reload({
             data: {page: nextPage},
             only: ['messages', 'messagesNextPage'],
+            preserveUrl: true,
             onSuccess: (page) => {
                 const props = page.props as unknown as PageProps;
                 setDisplayedMessages((previous) => [...props.messages, ...previous]);
