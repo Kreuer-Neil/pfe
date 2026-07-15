@@ -55,48 +55,39 @@ export default function ChatsShow(): ReactNode {
         });
     };
 
+    const channelName = `chat.${chatRoom.id}`;
+
+    // Broadcast payloads can't check auth(), so is_owner always comes back false - recompute it here.
+    const getMessageWithOwnership = (message: IChatMessage): IChatMessage => ({
+        ...message,
+        is_owner: message.owner?.id.toString() === auth.user.id.toString(),
+    });
+
     useEcho<{ message: IChatMessage }>(
-        `chat.${chatRoom.id}`,
+        channelName,
         'MessageSentEvent',
         (e) => {
-            // Recomputed because Broadcast can't share the info since it can't check auth()
-            const message: IChatMessage = {
-                ...e.message,
-                is_owner: e.message.owner?.id.toString() === auth.user.id.toString()
-            };
+            const message = getMessageWithOwnership(e.message);
             setDisplayedMessages((previous) => [...previous, message]);
         },
         [chatRoom.id],
     );
 
     useEcho<{ message: IChatMessage }>(
-        `chat.${chatRoom.id}`,
+        channelName,
         'MessageUpdatedEvent',
         (e) => {
-            // Recomputed because Broadcast can't share the info since it can't check auth()
-            const message: IChatMessage = {
-                ...e.message,
-                is_owner: e.message.owner?.id.toString() === auth.user.id.toString()
-            };
-            setDisplayedMessages((previous) => {
-                previous[previous.findIndex((oldMessage) => oldMessage.id === message.id)] = message;
-                return [...previous];
-            });
+            const message = getMessageWithOwnership(e.message);
+            setDisplayedMessages((previous) => previous.map((oldMessage) => oldMessage.id === message.id ? message : oldMessage));
         },
         [chatRoom.id],
     );
 
     useEcho<{ message_id: string }>(
-        `chat.${chatRoom.id}`,
+        channelName,
         'MessageDeletedEvent',
         (e) => {
-            setDisplayedMessages((previous) => {
-                previous.splice(
-                    previous.findIndex((oldMessage) => oldMessage.id === e.message_id),
-                    1
-                );
-                return [...previous];
-            });
+            setDisplayedMessages((previous) => previous.filter((oldMessage) => oldMessage.id !== e.message_id));
         },
         [chatRoom.id],
     );
