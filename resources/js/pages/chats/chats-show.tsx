@@ -69,6 +69,38 @@ export default function ChatsShow(): ReactNode {
         [chatRoom.id],
     );
 
+    useEcho<{ message: IChatMessage }>(
+        `chat.${chatRoom.id}`,
+        'MessageUpdatedEvent',
+        (e) => {
+            // Recomputed because Broadcast can't share the info since it can't check auth()
+            const message: IChatMessage = {
+                ...e.message,
+                is_owner: e.message.owner?.id.toString() === auth.user.id.toString()
+            };
+            setDisplayedMessages((previous) => {
+                previous[previous.findIndex((oldMessage) => oldMessage.id === message.id)] = message;
+                return [...previous];
+            });
+        },
+        [chatRoom.id],
+    );
+
+    useEcho<{ message_id: string }>(
+        `chat.${chatRoom.id}`,
+        'MessageDeletedEvent',
+        (e) => {
+            setDisplayedMessages((previous) => {
+                previous.splice(
+                    previous.findIndex((oldMessage) => oldMessage.id === e.message_id),
+                    1
+                );
+                return [...previous];
+            });
+        },
+        [chatRoom.id],
+    );
+
     return (
         <AppLayout appHeaderContext={appHeaderContext} className="pt-0 h-fixed">
             <Head title={chatRoom.name ?? t('project_chat', {project: project.name})}/>

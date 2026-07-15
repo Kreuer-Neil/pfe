@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageDeletedEvent;
 use App\Events\MessageSentEvent;
+use App\Events\MessageUpdatedEvent;
 use App\Models\ChatMessage;
 use App\Models\Project;
 use Gate;
@@ -54,6 +56,8 @@ class ChatMessagesController extends Controller
         $chatMessage->content = $validated['content'];
         $chatMessage->save();
 
+        broadcast(new MessageUpdatedEvent($chatMessage->load(['owner', 'replyTo.owner'])));
+
         return redirect()->back();
     }
 
@@ -64,6 +68,8 @@ class ChatMessagesController extends Controller
         Gate::authorize('delete', $chatMessage);
 
         $chatMessage->delete();
+
+        broadcast(new MessageDeletedEvent($chatMessage));
 
         return redirect()->back();
     }
