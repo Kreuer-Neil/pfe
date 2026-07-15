@@ -22,12 +22,9 @@ class ChatMessagesController extends Controller
 
         Gate::authorize('sendMessage', $chatRoom);
 
-        if (! empty($validated['chat_message_id'])) {
-            $repliesWithinRoom = ChatMessage::where('id', $validated['chat_message_id'])
-                ->where('chat_room_id', $chatRoom->id)
-                ->exists();
-
-            if (! $repliesWithinRoom) {
+        if (!empty($validated['chat_message_id'])) {
+            $replyedMessage = ChatMessage::find($validated['chat_message_id']);
+            if (!($replyedMessage && $replyedMessage->chat_room_id === $chatRoom->id)) {
                 return back()->withErrors(['chat_message_id' => __('validation.chat_message_not_found')]);
             }
         }

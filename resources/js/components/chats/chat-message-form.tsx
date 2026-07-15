@@ -26,7 +26,7 @@ export default function ChatMessageForm({slug, room, replyTo, onCancelReply}: {
             {({errors, processing}) => (
                 <>
                     {replyTo &&
-                        <div className="flex items-center gap-2 rounded bg-container px-2 py-1 text-xs text-muted-foreground">
+                        <div className="flex items-center gap-2 rounded bg-card px-2 py-1 text-xs text-muted-foreground">
                             <span className="flex-1 truncate">
                                 {t('replying_to', {name: replyTo.owner?.nickname ?? t('deleted_user')}) + ': ' + replyTo.content}
                             </span>

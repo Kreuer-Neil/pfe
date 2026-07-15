@@ -32,9 +32,10 @@ export default function ChatMessageItem({message, canModerate, onReply}: {
                     : <div className="size-8 shrink-0 rounded-full bg-secondary"/>}
             </ItemMedia>
             <ItemContent>
+                {/* TODO fix reply style later */}
                 {message.reply_to &&
                     <a href={`#message-${message.reply_to.id}`}
-                       className="block truncate rounded border-l-2 border-border bg-container px-2 py-1 text-xs text-muted-foreground"
+                       className="block truncate rounded border-l-2 border-border bg-card px-2 py-1 text-xs text-muted-foreground"
                     >
                         {(message.reply_to.owner?.nickname ?? t('deleted_user')) + ': ' + message.reply_to.content}
                     </a>
