@@ -350,7 +350,8 @@ function ProjectHeader({project}: {
                                             &nbsp;{t('members_count')}
                                         </Button>
                                     </p>
-                                    {/* TODO add condition with permission for inviting people to project, as well as sharing */}
+                                    {/* Any non-banned member can invite by default (enforced server-side by ProjectInvitationController::show()'s viewData gate). 
+                                    TODO: add a per-project admin setting to restrict invites to admin/moderator instead of all members. */}
                                     {project.user_role === 'viewer' ?
                                         // Add more conditions on project
                                         <Button size="sm" variant="outline" asChild>
