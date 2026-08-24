@@ -6,7 +6,8 @@ import {Button} from "@/components/ui/button";
 import {edit as editAccount} from "@/actions/App/Http/Controllers/Settings/ProfileController";
 import {edit as editProfile} from "@/actions/App/Http/Controllers/UserProfileController";
 import {edit as editPreferences} from "@/actions/App/Http/Controllers/UserPreferencesController";
-import {ChevronRight, LucideIcon, SlidersHorizontal, User, UserPen} from "lucide-react";
+import {edit as editNotificationPreferences} from "@/actions/App/Http/Controllers/NotificationPreferencesController";
+import {Bell, ChevronRight, LucideIcon, SlidersHorizontal, User, UserPen} from "lucide-react";
 import {SharedData} from "@/types";
 import {Item, ItemActions, ItemContent, ItemDescription, ItemMedia} from "@/components/ui/item";
 
@@ -66,6 +67,12 @@ export default function SettingsIndex({}) {
             href: editPreferences().url,
             icon: SlidersHorizontal,
             details: t('preferences_page_details')
+        },
+        {
+            title: t('preferences_notifications_title'),
+            href: editNotificationPreferences().url,
+            icon: Bell,
+            details: t('preferences_notifications_description')
         },
     ];
     return (

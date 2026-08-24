@@ -12,5 +12,9 @@
     "preferences_languages_description": "Sprachen, in denen Sie sich wohlfühlen. Werden genutzt, um Ihnen passende Projekte vorzuschlagen.",
     "preferences_tags_title": "Interessen",
     "preferences_tags_description": "Themen, die Sie interessieren. Werden genutzt, um Ihnen passende Projekte vorzuschlagen.",
-    "preferences_location_title": "Standort"
+    "preferences_location_title": "Standort",
+    "preferences_notifications_title": "Benachrichtigungen",
+    "preferences_notifications_description": "Wählen Sie, welche Benachrichtigungen Sie zusätzlich per E-Mail erhalten möchten.",
+    "notification_type_task_due_soon": "Aufgabe bald fällig",
+    "notification_type_project_member_banned": "Aus einem Projekt entfernt"
 }

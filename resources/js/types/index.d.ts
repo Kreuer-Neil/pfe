@@ -123,6 +123,15 @@ export interface IUserPreferences {
     place: string | null;
 }
 
+// Not the same thing as lib/notifications-enum.ts
+/// Remember to edit App\Enums\NotificationType when editing this
+export type NotificationPreferenceType = 'task_due_soon' | 'project_member_banned';
+
+export interface INotificationPreference {
+    type: NotificationPreferenceType;
+    email_enabled: boolean;
+}
+
 export interface IProjectContext {
     name: string;
     icon: string;

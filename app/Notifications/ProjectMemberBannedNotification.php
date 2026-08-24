@@ -2,8 +2,11 @@
 
 namespace App\Notifications;
 
+use App\Enums\NotificationType;
+use App\Mail\ProjectMemberBannedMail;
 use App\Models\Project;
 use App\Notifications\Concerns\BroadcastsResourceShape;
+use Illuminate\Mail\Mailable;
 use Illuminate\Notifications\Notification;
 
 class ProjectMemberBannedNotification extends Notification
@@ -17,7 +20,18 @@ class ProjectMemberBannedNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database', 'broadcast'];
+        $channels = ['database', 'broadcast'];
+
+        if ($notifiable->wantsEmailFor(NotificationType::PROJECT_MEMBER_BANNED)) {
+            $channels[] = 'mail';
+        }
+
+        return $channels;
+    }
+
+    public function toMail(object $notifiable): Mailable
+    {
+        return new ProjectMemberBannedMail($this->project, $notifiable);
     }
 
     /**

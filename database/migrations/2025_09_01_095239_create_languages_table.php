@@ -16,7 +16,13 @@ return new class extends Migration
 
             $table->string('name')->unique();
 
-//            $table->timestamps();
+            //            $table->timestamps();
+        });
+
+        // users.language_id (preferred app locale) is added here, not in create_users_table,
+        // since users migrates before languages and needs the target table to exist first.
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreignId('language_id')->nullable()->after('password')->constrained()->nullOnDelete();
         });
     }
 
@@ -25,6 +31,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropConstrainedForeignId('language_id');
+        });
+
         Schema::dropIfExists('languages');
     }
 };

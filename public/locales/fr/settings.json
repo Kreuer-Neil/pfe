@@ -12,5 +12,9 @@
     "preferences_languages_description": "Les langues dans lesquelles vous êtes à l'aise pour communiquer. Utilisées pour vous proposer des projets pertinents.",
     "preferences_tags_title": "Centres d'intérêt",
     "preferences_tags_description": "Les thématiques qui vous intéressent. Utilisées pour vous proposer des projets pertinents.",
-    "preferences_location_title": "Localisation"
+    "preferences_location_title": "Localisation",
+    "preferences_notifications_title": "Notifications",
+    "preferences_notifications_description": "Choisissez les notifications que vous souhaitez également recevoir par e-mail.",
+    "notification_type_task_due_soon": "Tâche bientôt due",
+    "notification_type_project_member_banned": "Retiré d'un projet"
 }

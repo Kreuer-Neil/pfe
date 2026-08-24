@@ -3,18 +3,21 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\NotificationType;
 use Carbon\Carbon;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Collection;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
 
     /**
@@ -30,6 +33,7 @@ class User extends Authenticatable
         'avatar',
         'nickname',
         'bio',
+        'language_id',
     ];
 
     /**
@@ -47,9 +51,10 @@ class User extends Authenticatable
     /*
      * Checks if a user belongs to a chat room (more specifically a project for now)
      */
-    public function isMemberOfRoom(int $id):bool
+    public function isMemberOfRoom(int $id): bool
     {
         $chatRoom = ChatRoom::find($id);
+
         return $chatRoom->project->userIsMember($this);
     }
 
@@ -78,7 +83,6 @@ class User extends Authenticatable
         });
     }
 
-
     /**
      * Get a user's preferences on the app (lang(s), location, etc.)
      */
@@ -105,12 +109,7 @@ class User extends Authenticatable
         return $this
             ->tasks()
             ->where('due_at', '>=', Carbon::now())
-            ->where('validated_at', null)
-            // TODO check for this later, only for non-validated tasks if possible
-            // Add 24h-left tasks from user projects with not enough participations and mix them
-            // ->where('due_at', '<=', Carbon::now()->addHours(-24))
-            // ->where('pivot_participating',true)
-            ;
+            ->where('validated_at', null);
     }
 
     /**
@@ -126,18 +125,51 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, UserFollow::class);
     }
 
+    /**
+     * The user's preferred app language (distinct from user_preferences' spoken-languages list).
+     */
+    public function language(): BelongsTo
+    {
+        return $this->belongsTo(Language::class);
+    }
+
+    /**
+     * The user's app locale, resolved from their preferred language.
+     * Null when unset, or when the preferred language isn't one the app has translations for.
+     */
+    public function locale(): ?string
+    {
+        $code = $this->language ? strtolower($this->language->name) : null;
+
+        return in_array($code, config('app.locales'), true) ? $code : null;
+    }
+
+    public function notificationPreferences(): HasMany
+    {
+        return $this->hasMany(NotificationPreference::class);
+    }
+
+    /**
+     * Whether the user wants to receive email for a given notification type.
+     * Defaults to true when no preference row exists yet.
+     */
+    public function wantsEmailFor(NotificationType $type): bool
+    {
+        return $this->notificationPreferences()->where('type', $type->value)->value('email_enabled') ?? true;
+    }
+
     // TODO Should be policy
-    public static function canFindUser($userId, User $currentUser): null|User
+    public static function canFindUser($userId, User $currentUser): ?User
     {
         $user = User::find($userId);
 
-        if (!$user) {
+        if (! $user) {
             return null;
         }
 
-//        if ($user->is_private) {
+        //        if ($user->is_private) {
         // Check if user has projects in common or public projects
-//        }
+        //        }
 
         return $user;
     }
@@ -164,8 +196,10 @@ class User extends Authenticatable
     {
         if (($userFollow = UserFollow::where('user_id', $user->id)->where('followed_user_id', $this->id))->exists()) {
             $userFollow->delete();
+
             return true;
         }
+
         return false;
     }
 }
