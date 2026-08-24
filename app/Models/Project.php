@@ -6,6 +6,7 @@ use App\Enums\ProjectAction;
 use App\Enums\ProjectInvitationResponse;
 use App\Enums\ProjectPermissionResponse;
 use App\Enums\ProjectRole;
+use App\Notifications\ProjectMemberBannedNotification;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -152,6 +153,7 @@ class Project extends Model
         return !in_array($this->userRole($user), [ProjectRole::VIEWER, ProjectRole::BANNED]);
     }
 
+    // Shouldn't this be in a controller? And there, we could make a separate ban method? (this 2nd part not mandatory)
     public function updateMemberRole(User $target, ProjectRole $newRole): bool
     {
         if ($newRole === ProjectRole::VIEWER) return false;
@@ -160,7 +162,13 @@ class Project extends Model
         if (!$membership) return false;
 
         $membership->role = $newRole->value;
-        return $membership->save();
+        $saved = $membership->save();
+
+        if ($saved && $newRole === ProjectRole::BANNED) {
+            $target->notify(new ProjectMemberBannedNotification($this));
+        }
+
+        return $saved;
     }
 
     // TODO remove and use the policies

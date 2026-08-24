@@ -9,7 +9,10 @@ use App\Models\User;
 beforeEach(function () {
     $this->owner = User::factory()->create();
     $this->project = Project::factory()->create(['owner_id' => $this->owner->id, 'is_private' => false]);
-    Member::create(['user_id' => $this->owner->id, 'project_id' => $this->project->id, 'role' => ProjectRole::MEMBER]);
+    // Owner's membership is auto-created as admin - downgrade to member here to prove
+    // task deletion is ownership-based, not only role-based.
+    Member::where(['user_id' => $this->owner->id, 'project_id' => $this->project->id])
+        ->update(['role' => ProjectRole::MEMBER]);
 
     $this->moderatorUser = User::factory()->create();
     Member::create(['user_id' => $this->moderatorUser->id, 'project_id' => $this->project->id, 'role' => ProjectRole::MODERATOR]);

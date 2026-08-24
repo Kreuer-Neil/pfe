@@ -30,6 +30,7 @@ Route::middleware(['auth', 'verified', 'onboarded'])->group(function () {
     require __DIR__ . '/tasks.php';
     require __DIR__ . '/chat.php';
     require __DIR__ . '/userProfile.php';
+    require __DIR__ . '/notifications.php';
 
 //    Route::get('users/{id}', );
 });

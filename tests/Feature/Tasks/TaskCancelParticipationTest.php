@@ -10,7 +10,6 @@ use App\Models\User;
 beforeEach(function () {
     $this->owner = User::factory()->create();
     $this->project = Project::factory()->create(['owner_id' => $this->owner->id, 'is_private' => false]);
-    Member::create(['user_id' => $this->owner->id, 'project_id' => $this->project->id, 'role' => ProjectRole::ADMIN]);
 
     $this->memberUser = User::factory()->create();
     Member::create(['user_id' => $this->memberUser->id, 'project_id' => $this->project->id, 'role' => ProjectRole::MEMBER]);

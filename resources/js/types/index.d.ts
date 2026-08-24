@@ -1,5 +1,6 @@
 import {InertiaLinkProps} from '@inertiajs/react';
 import {LucideIcon} from 'lucide-react';
+import {NotificationType} from '@/lib/notifications-enum';
 
 export interface Auth {
     user: IUser;
@@ -27,6 +28,7 @@ export interface SharedData {
     quote: { message: string; author: string };
     auth: Auth;
     sidebarOpen: boolean;
+    unreadNotificationsCount: number;
 
     [key: string]: unknown;
 }
@@ -258,6 +260,28 @@ export interface IChatMessage {
 }
 
 // Non-items related items
+export interface ITaskDueSoonNotificationData {
+    task_id: number;
+    task_title: string;
+    project_id: number;
+    project_slug: string;
+    due_at: string;
+}
+
+export interface IProjectMemberBannedNotificationData {
+    project_id: number;
+    project_slug: string;
+    project_name: string;
+}
+
+export interface INotification {
+    id: string;
+    type: NotificationType;
+    data: ITaskDueSoonNotificationData | IProjectMemberBannedNotificationData;
+    read_at: boolean;
+    created_at: string;
+}
+
 export interface IAppHeaderContext {
     contextImageSrc?: string;
     contextImageAlt?: string;

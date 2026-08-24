@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
 
             // One row per (poll, user, choice) - a `multi` poll just means a user can have more than one row here.
-            $table->unique(['project_poll_id', 'user_id', 'poll_choice_id']);
+            $table->unique(['project_poll_id', 'user_id', 'poll_choice_id'], 'project_poll_user_unique_choice');
 
             $table->timestamps();
         });

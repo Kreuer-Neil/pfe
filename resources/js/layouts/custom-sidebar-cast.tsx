@@ -4,6 +4,7 @@ import {IAppHeaderContext} from "@/types";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import CustomSidebar from "@/layouts/custom-sidebar";
 import {useTranslation} from "react-i18next";
+import NotificationBell from "@/components/notifications/notification-bell";
 
 type CustomSidebarProps = {
     isMobile: boolean,
@@ -36,10 +37,9 @@ function MobileHeader({appHeaderContext, switchModalState}: {
             </div>
 
             <div className="flex ml-auto">
-                {/*<BellDot className="p-2 cursor-pointer hover:bg-secondary focus:bg-secondary rounded-sm"
-                         onClick={() => {
-                         }}/>*/}
+                <NotificationBell/>
                 {/* TODO fix key reacting to onKeyDown */}
+
                 <button className="p-2 cursor-pointer hover:bg-secondary focus:bg-secondary rounded-sm"
                      onClick={switchModalState} onKeyDown={(e)=> {
                     if (e.key === 'Enter' || e.key === ' ') switchModalState();
@@ -55,7 +55,7 @@ function MobileHeader({appHeaderContext, switchModalState}: {
 
 export default function CustomSidebarCast(
     {
-        isMobile,
+        // isMobile,
         appHeaderContext,
         switchModalState,
         sidebarSwitchIcon,

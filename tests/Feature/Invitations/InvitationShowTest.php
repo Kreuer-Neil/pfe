@@ -8,11 +8,10 @@ use App\Models\User;
 
 function makeMemberOf(Project $project, User $user, string $role = ProjectRole::MEMBER->value): Member
 {
-    return Member::create([
-        'user_id' => $user->id,
-        'project_id' => $project->id,
-        'role' => $role,
-    ]);
+    return Member::updateOrCreate(
+        ['user_id' => $user->id, 'project_id' => $project->id],
+        ['role' => $role],
+    );
 }
 
 test('a non-member cannot generate an invitation link', function () {
@@ -140,5 +139,5 @@ test('creates an invitation with a max_uses cap and an expiry', function () {
 
     $invitation = ProjectInvitation::first();
     expect($invitation->max_uses)->toBe(5)
-        ->and($invitation->expires_at->format('Y-m-d H:i'))->toBe($date . ' 14:30');
+        ->and($invitation->expires_at->format('Y-m-d H:i'))->toBe($date.' 14:30');
 });

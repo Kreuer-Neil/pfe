@@ -11,6 +11,7 @@ import {index as projectsIndex, myProjects} from "@/actions/App/Http/Controllers
 import {show as showProfile} from "@/actions/App/Http/Controllers/UserProfileController";
 import {cn} from "@/lib/utils";
 import {index} from "@/actions/App/Http/Controllers/Settings/ProfileController";
+import NotificationBell from "@/components/notifications/notification-bell";
 
 interface INavItemProps {
     icon?: LucideIcon;
@@ -51,11 +52,6 @@ export default function CustomSidebar(
             title: t('dashboard'),
             href: dashboard().url
         },
-        /*{
-            icon: Bell,
-            title: t('notifications'),
-            href: ''
-        },*/
         /*{
             icon: Calendar,
             title: t('my_tasks'),
@@ -108,10 +104,14 @@ export default function CustomSidebar(
                         <span className="nav-title">{auth.user.nickname}</span>
                     </Link>
                     <ul className="nav-item-container">
+                        <SidebarNavItem props={navItems[0]} key={0}/>
+                        <li>
+                            <NotificationBell variant="nav-item"/>
+                        </li>
                         {
-                            navItems.map((navItem, i) => {
+                            navItems.slice(1).map((navItem, i) => {
                                 return (
-                                    <SidebarNavItem props={navItem} key={i}/>
+                                    <SidebarNavItem props={navItem} key={i + 1}/>
                                 )
                             })
                         }

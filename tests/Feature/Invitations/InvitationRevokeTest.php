@@ -7,11 +7,10 @@ use App\Models\User;
 
 function memberOfProject(Project $project, User $user, string $role): Member
 {
-    return Member::create([
-        'user_id' => $user->id,
-        'project_id' => $project->id,
-        'role' => $role,
-    ]);
+    return Member::updateOrCreate(
+        ['user_id' => $user->id, 'project_id' => $project->id],
+        ['role' => $role],
+    );
 }
 
 test('a plain member cannot revoke an invitation', function () {

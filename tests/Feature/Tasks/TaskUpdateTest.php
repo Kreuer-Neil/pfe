@@ -11,10 +11,9 @@ beforeEach(function () {
     $this->adminUser = User::factory()->create();
     $this->memberUser = User::factory()->create();
     $this->project = Project::factory()->create(['owner_id' => $this->adminUser->id, 'is_private' => false]);
-    
+
     // Tests runs for owner ability to edit/delete, admins being able to delete only, and members being unable to edit/delete.
     Member::create(['user_id' => $this->owner->id, 'project_id' => $this->project->id, 'role' => ProjectRole::MEMBER]);
-    Member::create(['user_id' => $this->adminUser->id, 'project_id' => $this->project->id, 'role' => ProjectRole::ADMIN]);
     Member::create(['user_id' => $this->memberUser->id, 'project_id' => $this->project->id, 'role' => ProjectRole::MEMBER]);
 
     $this->task = Task::factory()->create([

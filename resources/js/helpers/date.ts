@@ -6,8 +6,8 @@ import {useTranslation} from "react-i18next";
  * date valid format: 'YYYY-MM-dd hh:mm:ss'.
  */
 export function laravelDateToJsDate(date: string): Date {
-    let dateContainer = date.split(' ');
-    let dateItem = [
+    const dateContainer = date.split(' ');
+    const dateItem = [
         dateContainer[0].split('-'),
         dateContainer[1].split(':')
     ]

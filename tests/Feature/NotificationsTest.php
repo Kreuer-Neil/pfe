@@ -1,20 +1,119 @@
 <?php
 
-
+use App\Enums\ProjectRole;
+use App\Models\Member;
+use App\Models\Participation;
+use App\Models\Project;
+use App\Models\Task;
 use App\Models\User;
+use App\Notifications\ProjectMemberBannedNotification;
+use App\Notifications\TaskDueSoonNotification;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Notification;
 
-beforeEach(function () {
-    $this->user = User::factory()
-//        ->hasNotifications(1)
-//        ->hasProjects(1)
-//        ->hasTasks(3)
-        ->create();
-    $this->actingAs($this->user);
+use function Pest\Laravel\actingAs;
+use function Pest\Laravel\post;
+
+test('user gets notified on their dashboard when a task is soon due and task notifications are active', function () {
+    Notification::fake();
+
+    $owner = User::factory()->create();
+    $project = Project::factory()->create(['owner_id' => $owner->id]);
+    $participant = User::factory()->create();
+    Member::create(['project_id' => $project->id, 'user_id' => $participant->id, 'role' => ProjectRole::MEMBER->value]);
+
+    $task = Task::factory()->create([
+        'project_id' => $project->id,
+        'user_id' => $owner->id,
+        'due_at' => now()->addHours(12),
+        'validated_at' => null,
+    ]);
+    Participation::create(['task_id' => $task->id, 'user_id' => $participant->id]);
+
+    Artisan::call('notifications:due-tasks');
+
+    Notification::assertSentTo(
+        $participant,
+        TaskDueSoonNotification::class,
+        fn ($notification) => $notification->toArray($participant)['task_id'] === $task->id,
+    );
 });
 
+test('a task due more than 24 hours away does not notify participants yet', function () {
+    Notification::fake();
 
-/*test('users gets notified on their dashboard when a task is soon due and task notifications are active', function () {
-});*/
+    $owner = User::factory()->create();
+    $project = Project::factory()->create(['owner_id' => $owner->id]);
+    $participant = User::factory()->create();
+    Member::create(['project_id' => $project->id, 'user_id' => $participant->id, 'role' => ProjectRole::MEMBER->value]);
 
-// user gets notified when kicked/banned of a project
-// user gets notified when task is due until 24h+ or when they check it out
+    $task = Task::factory()->create([
+        'project_id' => $project->id,
+        'user_id' => $owner->id,
+        'due_at' => now()->addDays(3),
+        'validated_at' => null,
+    ]);
+    Participation::create(['task_id' => $task->id, 'user_id' => $participant->id]);
+
+    Artisan::call('notifications:due-tasks');
+
+    Notification::assertNothingSent();
+});
+
+test('re-running the due-tasks command does not notify the same participant twice', function () {
+    $owner = User::factory()->create();
+    $project = Project::factory()->create(['owner_id' => $owner->id]);
+    $participant = User::factory()->create();
+    Member::create(['project_id' => $project->id, 'user_id' => $participant->id, 'role' => ProjectRole::MEMBER->value]);
+
+    $task = Task::factory()->create([
+        'project_id' => $project->id,
+        'user_id' => $owner->id,
+        'due_at' => now()->addHours(12),
+        'validated_at' => null,
+    ]);
+    Participation::create(['task_id' => $task->id, 'user_id' => $participant->id]);
+
+    Artisan::call('notifications:due-tasks');
+    Artisan::call('notifications:due-tasks');
+
+    expect($participant->notifications()->where('type', TaskDueSoonNotification::class)->count())->toBe(1);
+});
+
+test('user gets notified when kicked/banned from a project', function () {
+    Notification::fake();
+
+    $owner = User::factory()->create();
+    $project = Project::factory()->create(['owner_id' => $owner->id]);
+    $target = User::factory()->create();
+    Member::create(['project_id' => $project->id, 'user_id' => $target->id, 'role' => ProjectRole::MEMBER->value]);
+    actingAs($owner);
+
+    post(route('projects.update.member-role', $project->slug), [
+        'user_id' => $target->id,
+        'role' => ProjectRole::BANNED->value,
+    ])->assertRedirect();
+
+    Notification::assertSentTo(
+        $target,
+        ProjectMemberBannedNotification::class,
+        fn ($notification) => $notification->toArray($target)['project_id'] === $project->id,
+    );
+});
+
+test('changing a member role to something other than banned does not notify', function () {
+    Notification::fake();
+
+    $owner = User::factory()->create();
+    $project = Project::factory()->create(['owner_id' => $owner->id]);
+    $target = User::factory()->create();
+    Member::create(['project_id' => $project->id, 'user_id' => $target->id, 'role' => ProjectRole::MEMBER->value]);
+    actingAs($owner);
+
+    post(route('projects.update.member-role', $project->slug), [
+        'user_id' => $target->id,
+        'role' => ProjectRole::MODERATOR->value,
+    ])->assertRedirect();
+
+    Notification::assertNotSentTo($target, ProjectMemberBannedNotification::class);
+});

@@ -16,8 +16,7 @@ return new class extends Migration {
 
             $table->foreignId('owner_id')->unsigned()->constrained('users', 'id');
             $table->string('name');
-            // Turn project icon to ForeignID with use of in-app icons or images, user's choice.
-            // See for project banner too (if added).
+            // Turn project icon to ForeignID with use of in-app icons or images?
             $table->string('icon')->default('default_1');
             $table->text('description')->nullable();
             // Status is a collection of posts related to the project
@@ -26,7 +25,9 @@ return new class extends Migration {
             $table->foreignId('location_id')->nullable()->constrained()->nullOnDelete();
             $table->boolean('is_private')->default(true);
 
-            $table->fullText(['name', 'description']);
+            if (Schema::getConnection()->getDriverName() === 'mysql') {
+                $table->fullText(['name', 'description']);
+            }
 
             $table->softDeletes();
             $table->timestamps();
