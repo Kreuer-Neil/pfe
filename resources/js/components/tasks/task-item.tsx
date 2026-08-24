@@ -69,7 +69,8 @@ export default function TaskItem(
         onTap
     }: TaskItemProps) {
     const {t} = useTranslation(['tasks', 'date']);
-    const dueAt: string = task.due_at ? upcomingDateToString(laravelDateToJsDate(task.due_at)) : t('date:no_time_limit');
+    const {t: tDate} = useTranslation('date');
+    const dueAt: string = task.due_at ? upcomingDateToString(laravelDateToJsDate(task.due_at), tDate) : t('date:no_time_limit');
 
     // const dueAtYear: number = dueAt.getFullYear();
 

@@ -28,6 +28,7 @@ import NoteCreateModal from "@/components/tasks/note-create-modal";
 import PostedBy from "@/components/general-posts/posted-by";
 import TaskNoteController from "@/actions/App/Http/Controllers/TaskNoteController";
 import ConfirmModal from "@/components/modals/confirm-modal";
+import {laravelDateToJsDate, upcomingDateToString} from "@/helpers/date";
 
 
 function NoteItem({note, role, onClickDelete}: { note: INote, role: string, onClickDelete: (noteId: string) => void }) {
@@ -143,6 +144,7 @@ function Show({task, startEdit, onDelete, hasProjectContext, setShowNoteCreate, 
     onClickDelete: (noteId: any) => void
 }) {
     const {t} = useTranslation(['tasks', 'projects', 'date', 'errors']);
+    const {t: tDate} = useTranslation('date');
 
     return (
         <>
@@ -166,10 +168,12 @@ function Show({task, startEdit, onDelete, hasProjectContext, setShowNoteCreate, 
                     {task?.due_at &&
                         <p className="flex gap-1">
                             <CalendarClock/>
-                            <time dateTime={task.due_at}>{task.due_at}</time>
+                            <time dateTime={task.due_at}>
+                                {upcomingDateToString(laravelDateToJsDate(task.due_at), tDate)}
+                            </time>
                         </p>
                     }
-                    <p className="mt-1">{task?.description ?? null}</p>
+                    <p className="mt-1 text-left">{task?.description ?? null}</p>
                 </FieldGroup>
             </ModalHeader>
 

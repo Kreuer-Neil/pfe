@@ -46,6 +46,7 @@ export default function NotificationBell({className, variant = 'icon'}: {
     variant?: 'icon' | 'nav-item',
 }): ReactNode {
     const {t} = useTranslation('common');
+    const {t: tDate} = useTranslation('date');
     const {auth, unreadNotificationsCount} = usePage<SharedData>().props;
 
     const [notifications, setNotifications] = useState<INotification[]>([]);
@@ -142,7 +143,7 @@ export default function NotificationBell({className, variant = 'icon'}: {
                                 <NotificationLabel notification={notification}/>
                             </span>
                             <span className="text-xs text-muted-foreground">
-                                {upcomingDateToString(laravelDateToJsDate(notification.created_at))}
+                                {upcomingDateToString(laravelDateToJsDate(notification.created_at), tDate)}
                             </span>
                         </DropdownMenuItem>
                     ))

@@ -35,6 +35,7 @@ type EditPageProps = {
 
 export default function ProjectsEdit({}) {
     const {t} = useTranslation(['projects', 'tags', 'common']);
+    const {t: tDate} = useTranslation('date');
     const {project, tagsList} = usePage<EditPageProps>().props;
 
     const [localFilePath, setLocalFilePath] = useState<string | undefined>(undefined);
@@ -322,7 +323,7 @@ export default function ProjectsEdit({}) {
                                                     </ItemTitle>
                                                     <ItemDescription>
                                                         {invitation.expires_at
-                                                            ? upcomingDateToString(laravelDateToJsDate(invitation.expires_at))
+                                                            ? upcomingDateToString(laravelDateToJsDate(invitation.expires_at), tDate)
                                                             : t('invitation_no_expiry')}
                                                         {' · '}
                                                         {t('invitation_uses_display', {

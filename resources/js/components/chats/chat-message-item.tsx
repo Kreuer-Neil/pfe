@@ -18,11 +18,12 @@ export default function ChatMessageItem({message, canModerate, onReply}: {
     onReply: (message: IChatMessage) => void;
 }): ReactNode {
     const {t} = useTranslation(['chats', 'date']);
+    const {t: tDate} = useTranslation('date');
     const [isEditing, setIsEditing] = useState(false);
 
     const canDelete = message.is_owner || canModerate;
     const formId = `update-message-${message.id}-form`;
-    const createdAt = upcomingDateToString(laravelDateToJsDate(message.created_at));
+    const createdAt = upcomingDateToString(laravelDateToJsDate(message.created_at), tDate);
 
     return (
         <Item size="sm" id={`message-${message.id}`} className="chat-item">
