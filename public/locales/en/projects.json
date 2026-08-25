@@ -68,5 +68,15 @@
     "project_settings_permissions_title": "Permissions",
     "project_permissions_invitations_title": "Invitations",
     "project_permissions_allow_invitations": "Allow all members to create invitations",
-    "project_permissions_allow_invitations_description": "When enabled, any non-banned member can generate an invite link for this project. When disabled, only admins and moderators can."
+    "project_permissions_allow_invitations_description": "When enabled, any non-banned member can generate an invite link for this project. When disabled, only admins and moderators can.",
+    "follow": "Follow",
+    "following": "Following",
+    "news_create_title": "Post an update",
+    "news_form_title": "Title",
+    "news_form_content": "Content",
+    "news_form_submit": "Post",
+    "news_delete_title": "Delete this update",
+    "news_delete_warning": "This will permanently delete this update. This can't be undone.",
+    "more_news": "View all updates",
+    "news_none": "No updates yet."
 }

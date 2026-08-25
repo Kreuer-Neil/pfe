@@ -29,6 +29,7 @@ export interface SharedData {
     auth: Auth;
     sidebarOpen: boolean;
     unreadNotificationsCount: number;
+    hasUnreadFeedItems: boolean;
 
     [key: string]: unknown;
 }
@@ -126,6 +127,7 @@ export interface IUserPreferences {
     languages: string[];
     tags: string[];
     place: string | null;
+    dashboard_feed_hidden: boolean;
 }
 
 // Not the same thing as lib/notifications-enum.ts
@@ -157,16 +159,30 @@ export interface IDashboardProject extends IProjectContext {
     // featured_members: IUser[];
 }
 
+export interface IProjectNews {
+    id: number;
+    title: string;
+    text_content: string;
+    created_at: string;
+    author: IProfile | null;
+}
+
+export interface IProjectNewsFeedItem extends IProjectNews {
+    project: IProjectContext;
+}
+
 export interface IProjectMiniature extends IProjectContext {
     description: string;
     // featured_members: IUser[];
     // TODO fix with clean ProjectRole type/enum later.
     is_member: boolean;
+    is_following: boolean;
     members_count: number;
     location: ILocation | null;
     place: string | null;
     distance: number | null;
     tags: Array<string>;
+    news: IProjectNews | null;
 
     slug: string;
 }

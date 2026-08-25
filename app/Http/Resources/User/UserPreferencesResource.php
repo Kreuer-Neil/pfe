@@ -13,6 +13,7 @@ class UserPreferencesResource extends JsonResource
             'languages' => $this->resource->languages->pluck('name'),
             'tags' => $this->resource->tags->pluck('name'),
             'place' => $this->resource->location?->display_name,
+            'dashboard_feed_hidden' => (bool) $this->resource->dashboard_feed_hidden,
         ];
     }
 }

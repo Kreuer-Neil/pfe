@@ -68,5 +68,15 @@
     "project_settings_permissions_title": "Permissions",
     "project_permissions_invitations_title": "Invitations",
     "project_permissions_allow_invitations": "Autoriser tous les membres à créer des invitations",
-    "project_permissions_allow_invitations_description": "Si activé, tout membre non banni peut générer un lien d'invitation pour ce projet. Si désactivé, seuls les admins et modérateurs le peuvent."
+    "project_permissions_allow_invitations_description": "Si activé, tout membre non banni peut générer un lien d'invitation pour ce projet. Si désactivé, seuls les admins et modérateurs le peuvent.",
+    "follow": "Suivre",
+    "following": "Suivi",
+    "news_create_title": "Publier une actualité",
+    "news_form_title": "Titre",
+    "news_form_content": "Contenu",
+    "news_form_submit": "Publier",
+    "news_delete_title": "Supprimer cette actualité",
+    "news_delete_warning": "Cette actualité sera définitivement supprimée. Cette action est irréversible.",
+    "more_news": "Voir toutes les actualités",
+    "news_none": "Aucune actualité pour le moment."
 }

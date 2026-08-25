@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Enums\ProjectRole;
+use App\Models\ProjectNews;
 use App\Models\User;
 use App\Models\Project;
 
@@ -119,5 +120,22 @@ class ProjectPolicy
         return $allowAnyMember
             ? $project->userIsMember($user)
             : $this->manageInvitations($user, $project);
+    }
+
+    public function createNews(User $user, Project $project): bool
+    {
+        return in_array($project->userRole($user), [ProjectRole::ADMIN->value, ProjectRole::MODERATOR->value]);
+    }
+
+    /**
+     * Mirrors ChatMessagePolicy::delete()'s own-author-OR-admin/moderator shape.
+     */
+    public function deleteNews(User $user, Project $project, ProjectNews $news): bool
+    {
+        if ($news->user_id === $user->id) {
+            return true;
+        }
+
+        return in_array($project->userRole($user), [ProjectRole::MODERATOR->value, ProjectRole::ADMIN->value]);
     }
 }

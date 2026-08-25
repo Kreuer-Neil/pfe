@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
 class User extends Authenticatable
@@ -123,6 +124,50 @@ class User extends Authenticatable
     public function follows(): BelongsToMany
     {
         return $this->belongsToMany(User::class, UserFollow::class);
+    }
+
+    /**
+     * Projects this user explicitly follows (without necessarily being a member).
+     */
+    public function followedProjects(): BelongsToMany
+    {
+        return $this->belongsToMany(Project::class, ProjectFollow::class);
+    }
+
+    /**
+     * Project ids relevant to this user's feed: memberships plus explicitly followed projects
+     * (membership alone already implies following, per product decision).
+     */
+    public function feedProjectIds(): Collection
+    {
+        return $this->projects()->pluck('projects.id')
+            ->merge($this->followedProjects()->pluck('projects.id'))
+            ->unique()
+            ->values();
+    }
+
+    /**
+     * Mirrors ChatRoom::lastVisitedAt()/markVisited()/hasUnreadMessages(), but user-level
+     * since there's only one feed per user (not one per project).
+     */
+    public function feedLastVisitedAt(): ?string
+    {
+        return UserFeedVisit::where('user_id', $this->id)->first()?->updated_at;
+    }
+
+    public function markFeedVisited(): void
+    {
+        UserFeedVisit::updateOrCreate(['user_id' => $this->id]);
+    }
+
+    public function hasUnreadFeedItems(): bool
+    {
+        $query = ProjectNews::whereIn('project_id', $this->feedProjectIds());
+        $lastVisitedAt = $this->feedLastVisitedAt();
+
+        return $lastVisitedAt
+            ? $query->where('created_at', '>', $lastVisitedAt)->exists()
+            : $query->exists();
     }
 
     /**

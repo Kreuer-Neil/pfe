@@ -81,4 +81,17 @@ class UserPreferencesController extends Controller
 
         return redirect(route('preferences.edit'));
     }
+
+    public function updateDashboardFeedVisibility(Request $request)
+    {
+        $validated = $request->validate([
+            'dashboard_feed_hidden' => 'required|boolean',
+        ]);
+
+        $preferences = $request->user()->preferences;
+        $preferences->dashboard_feed_hidden = $validated['dashboard_feed_hidden'];
+        $preferences->save();
+
+        return redirect()->back();
+    }
 }

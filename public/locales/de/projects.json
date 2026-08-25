@@ -68,5 +68,15 @@
     "project_settings_permissions_title": "Berechtigungen",
     "project_permissions_invitations_title": "Einladungen",
     "project_permissions_allow_invitations": "Allen Mitgliedern erlauben, Einladungen zu erstellen",
-    "project_permissions_allow_invitations_description": "Wenn aktiviert, kann jedes nicht gesperrte Mitglied einen Einladungslink für dieses Projekt erstellen. Wenn deaktiviert, können dies nur Admins und Moderatoren."
+    "project_permissions_allow_invitations_description": "Wenn aktiviert, kann jedes nicht gesperrte Mitglied einen Einladungslink für dieses Projekt erstellen. Wenn deaktiviert, können dies nur Admins und Moderatoren.",
+    "follow": "Folgen",
+    "following": "Gefolgt",
+    "news_create_title": "Neuigkeit veröffentlichen",
+    "news_form_title": "Titel",
+    "news_form_content": "Inhalt",
+    "news_form_submit": "Veröffentlichen",
+    "news_delete_title": "Diese Neuigkeit löschen",
+    "news_delete_warning": "Diese Neuigkeit wird dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.",
+    "more_news": "Alle Neuigkeiten anzeigen",
+    "news_none": "Noch keine Neuigkeiten."
 }

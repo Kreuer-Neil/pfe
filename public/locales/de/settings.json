@@ -16,5 +16,8 @@
     "preferences_notifications_title": "Benachrichtigungen",
     "preferences_notifications_description": "Wählen Sie, welche Benachrichtigungen Sie zusätzlich per E-Mail erhalten möchten.",
     "notification_type_task_due_soon": "Aufgabe bald fällig",
-    "notification_type_project_member_banned": "Aus einem Projekt entfernt"
+    "notification_type_project_member_banned": "Aus einem Projekt entfernt",
+    "preferences_dashboard_feed_title": "Dashboard-Feed",
+    "preferences_dashboard_feed_description": "Zeigen Sie auf Ihrem Dashboard eine Vorschau der Neuigkeiten aus Ihren Projekten und den Projekten, denen Sie folgen.",
+    "preferences_dashboard_feed_label": "Neuigkeiten im Dashboard anzeigen"
 }

@@ -13,6 +13,7 @@ import {edit} from '@/routes/preferences';
 import {Button} from '@/components/ui/button';
 import {Field} from '@/components/ui/field';
 import {Label} from '@/components/ui/label';
+import {Switch} from '@/components/ui/switch';
 import {
     Combobox, ComboboxChip, ComboboxChips, ComboboxChipsInput,
     ComboboxContent, ComboboxEmpty, ComboboxItem, ComboboxList,
@@ -42,6 +43,8 @@ export default function Preferences() {
 
     const [selectedTags, setSelectedTags] = useState<string[]>(preferences.tags);
     const tagsAnchor = useComboboxAnchor();
+
+    const [dashboardFeedHidden, setDashboardFeedHidden] = useState(preferences.dashboard_feed_hidden);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -206,6 +209,49 @@ export default function Preferences() {
                                     initialPlace={preferences.place}
                                     errors={errors}
                                 />
+
+                                <div className="flex items-center gap-4">
+                                    <Button disabled={processing}>{t('common:save_changes')}</Button>
+
+                                    <Transition
+                                        show={recentlySuccessful}
+                                        enter="transition ease-in-out"
+                                        enterFrom="opacity-0"
+                                        leave="transition ease-in-out"
+                                        leaveTo="opacity-0"
+                                    >
+                                        <p className="text-sm text-green-700">{t('common:changes_saved')}</p>
+                                    </Transition>
+                                </div>
+                            </>
+                        )}
+                    </Form>
+                </div>
+
+                <Separator/>
+
+                <div className="space-y-6">
+                    <HeadingSmall
+                        title={t('preferences_dashboard_feed_title')}
+                        description={t('preferences_dashboard_feed_description')}
+                    />
+
+                    <Form
+                        {...UserPreferencesController.updateDashboardFeedVisibility.form()}
+                        options={{preserveScroll: true}}
+                        className="space-y-6"
+                    >
+                        {({processing, recentlySuccessful}) => (
+                            <>
+                                <Field orientation="horizontal">
+                                    <Label>{t('preferences_dashboard_feed_label')}</Label>
+                                    <Switch
+                                        checked={!dashboardFeedHidden}
+                                        onCheckedChange={(checked) => setDashboardFeedHidden(!checked)}
+                                    />
+                                    <input type="hidden" name="dashboard_feed_hidden"
+                                           value={dashboardFeedHidden ? '1' : '0'}/>
+                                </Field>
 
                                 <div className="flex items-center gap-4">
                                     <Button disabled={processing}>{t('common:save_changes')}</Button>

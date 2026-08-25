@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\Project\ProjectDashboardResource;
 use App\Http\Resources\Project\ProjectMiniatureResource;
+use App\Http\Resources\ProjectNewsFeedResource;
 use App\Http\Resources\TaskResource;
 use App\Models\Project;
+use App\Models\ProjectNews;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -36,9 +38,19 @@ class DashboardController extends Controller
 
         $now = str(now()->toDateTimeString())->beforeLast(':');
 
+        $feedNews = ProjectNewsFeedResource::collection(
+            ProjectNews::whereIn('project_id', $currentUser->feedProjectIds())
+                ->with(['project', 'author'])
+                ->latest()
+                ->limit(5)
+                ->get()
+        )->toArray(request());
+
+        $dashboardFeedHidden = $currentUser->preferences?->dashboard_feed_hidden ?? false;
+
         return Inertia::render(
             'dashboard',
-            compact('projects', 'suggestedProjects', 'tasks', 'now')
+            compact('projects', 'suggestedProjects', 'tasks', 'now', 'feedNews', 'dashboardFeedHidden')
         );
     }
 }

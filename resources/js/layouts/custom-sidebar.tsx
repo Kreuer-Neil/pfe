@@ -1,6 +1,6 @@
 import {ReactNode} from "react";
 import {useTranslation} from "react-i18next";
-import {ChartGantt, Home, LucideIcon, Search, Settings2} from "lucide-react";
+import {ChartGantt, HashIcon, Home, LucideIcon, Search, Settings2} from "lucide-react";
 import ProjectIcon from "@/components/icons/project-icon";
 import {dashboard} from "@/routes";
 import {Link, usePage} from "@inertiajs/react";
@@ -9,15 +9,18 @@ import {useImageAsset} from "@/hooks/use-image-asset";
 import {show as projectsShow} from "@/routes/projects";
 import {index as projectsIndex, myProjects} from "@/actions/App/Http/Controllers/ProjectController";
 import {show as showProfile} from "@/actions/App/Http/Controllers/UserProfileController";
+import {index as feedIndex} from "@/actions/App/Http/Controllers/FeedController";
 import {cn} from "@/lib/utils";
 import {index} from "@/actions/App/Http/Controllers/Settings/ProfileController";
 import NotificationBell from "@/components/notifications/notification-bell";
+import {Badge} from "@/components/ui/badge";
 
 interface INavItemProps {
     icon?: LucideIcon;
     title: string;
     href: string;
     project?: IProjectContext;
+    badge?: boolean;
 }
 
 function SidebarNavItem({props, className = ''}: { props: INavItemProps, className?: string; }) {
@@ -32,6 +35,9 @@ function SidebarNavItem({props, className = ''}: { props: INavItemProps, classNa
                     && <ProjectIcon project={props.project} className="border border-secondary-border"/>
                 }
                 <span>{props.title}</span>
+                {props.badge &&
+                    <Badge variant="destructive" className="ml-auto size-2 justify-center rounded-full p-0"/>
+                }
             </Link>
         </li>
     );
@@ -44,13 +50,19 @@ export default function CustomSidebar(
     }): ReactNode {
     const {t} = useTranslation('common');
 
-    const {auth} = usePage<SharedData>().props;
+    const {auth, hasUnreadFeedItems} = usePage<SharedData>().props;
 
     const navItems: INavItemProps[] = [
         {
             icon: Home,
             title: t('dashboard'),
             href: dashboard().url
+        },
+        {
+            icon: HashIcon,
+            title: t('feed'),
+            href: feedIndex().url,
+            badge: hasUnreadFeedItems,
         },
         /*{
             icon: Calendar,

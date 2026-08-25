@@ -11,17 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_preferences', function (Blueprint $table) {
+        Schema::create('user_feed_visits', function (Blueprint $table) {
             $table->id();
 
             $table->foreignId('user_id')->unique()->constrained()->cascadeOnDelete();
 
-            $table->foreignId('location_id')->nullable()->constrained()->nullOnDelete();
-            $table->timestamp('onboarding_completed_at')->nullable();
-            $table->boolean('dashboard_feed_hidden')->default(false);
-
-            $table->softDeletes();
-            $table->timestamps();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 
@@ -30,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_preferences');
+        Schema::dropIfExists('user_feed_visits');
     }
 };

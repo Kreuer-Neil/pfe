@@ -144,15 +144,57 @@ class Project extends Model
             ->where('due_at', '>=', Carbon::now());
     }
 
+    public function news(): HasMany
+    {
+        return $this
+            ->hasMany(ProjectNews::class)
+            ->orderBy('created_at', 'desc');
+    }
+
     /**
-     * Shows the project's latest news
+     * Users explicitly following this project's news without being a member. Membership
+     * itself already implies following for feed purposes - see followAs()/followedBy().
      */
-    //    public function news(): HasMany
-    //    {
-    //        return $this
-    //            ->hasMany(ProjectNews::class)
-    //            ->orderBy('created_at','desc');
-    //    }
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, ProjectFollow::class);
+    }
+
+    public function followedBy(User $user): bool
+    {
+        return ProjectFollow::where('user_id', $user->id)->where('project_id', $this->id)->exists();
+    }
+
+    /**
+     * Mirrors User::followAs()'s shape (the target model owns the action, the follower is the
+     * argument). Guards against a redundant row since membership already implies following.
+     */
+    public function followAs(User $user): bool
+    {
+        if ($this->userIsMember($user) || $this->followedBy($user)) {
+            return false;
+        }
+
+        ProjectFollow::create([
+            'user_id' => $user->id,
+            'project_id' => $this->id,
+        ]);
+
+        return true;
+    }
+
+    public function unfollowAs(User $user): bool
+    {
+        $follow = ProjectFollow::where('user_id', $user->id)->where('project_id', $this->id)->first();
+
+        if (! $follow) {
+            return false;
+        }
+
+        $follow->delete();
+
+        return true;
+    }
 
     public function userIsMember(User $user): bool
     {

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectInvitationController;
+use App\Http\Controllers\ProjectNewsController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -37,6 +38,14 @@ Route::get('projects/{project}/join', [ProjectController::class, 'join'])
     ->name('projects.join')
     ->missing(fn () => redirect()->back()->withErrors(['join' => __('validation.project_not_found')]));
 
+Route::get('projects/{project}/follow', [ProjectController::class, 'follow'])
+    ->name('projects.follow');
+Route::get('projects/{project}/unfollow', [ProjectController::class, 'unfollow'])
+    ->name('projects.unfollow');
+
+Route::get('projects/{project}/news', [ProjectNewsController::class, 'index'])
+    ->name('projects.news.index');
+
 Route::prefix('projects/{project}')->group(function () {
     // Settings pages: redirect back to the project on denial
     Route::middleware('project.settings:updateAppearance')->group(function () {
@@ -56,6 +65,11 @@ Route::prefix('projects/{project}')->group(function () {
             ->name('projects.update.appearance');
     });
 
+    Route::middleware('can:createNews,project')->group(function () {
+        Route::post('news/store', [ProjectNewsController::class, 'store'])
+            ->name('projects.news.store');
+    });
+
     Route::middleware('can:update,project')->group(function () {
         Route::post('update/visibility', [ProjectController::class, 'updateVisibility'])
             ->name('projects.update.visibility');
@@ -72,6 +86,8 @@ Route::prefix('projects/{project}')->group(function () {
         ->name('projects.update.member-role');
     Route::post('update/member-ban', [ProjectController::class, 'banMember'])
         ->name('projects.update.member-ban');
+    Route::post('news/{news}/destroy', [ProjectNewsController::class, 'destroy'])
+        ->name('projects.news.destroy');
 });
 
 Route::post('projects/{project}/invitations/{invitation}/revoke', [ProjectInvitationController::class, 'revoke'])

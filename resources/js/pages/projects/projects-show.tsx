@@ -3,16 +3,13 @@ import {Form, Head, Link, router, usePage} from "@inertiajs/react";
 import TaskDisplay from "@/components/tasks/task-display";
 import {instanceOfProject, instanceOfProjectShow} from "@/helpers/type-check";
 import {
-    Bookmark,
-    BookmarkCheck,
     Camera,
     Copy,
-    Flag,
     LogIn,
     MessageCircle,
+    Newspaper,
     PencilLine,
     Settings,
-    Share2,
     UserRoundPlus
 } from "lucide-react";
 import {Button} from "@/components/ui/button";
@@ -27,6 +24,7 @@ import {
     editGeneral as projectsEdit,
     show as projectsShow
 } from "@/actions/App/Http/Controllers/ProjectController";
+import {index as newsIndex} from "@/actions/App/Http/Controllers/ProjectNewsController";
 import {index as chatsIndex} from "@/actions/App/Http/Controllers/ChatRoomController";
 import CustomModal, {ModalContent, ModalHeader, ModalTitle} from "@/components/modals/custom-modal";
 import ProjectInvitationController from "@/actions/App/Http/Controllers/ProjectInvitationController";
@@ -36,7 +34,10 @@ import InputError from "@/components/input-error";
 import {Field, FieldGroup} from "@/components/ui/field";
 import {Label} from "@/components/ui/label";
 import {Textarea} from "@/components/ui/textarea";
-import {IAppHeaderContext, IProject, IProjectShow} from "@/types";
+import {IAppHeaderContext, IProject, IProjectShow, SharedData} from "@/types";
+import FollowButton from "@/components/projects/follow-button";
+import NewsCreateModal from "@/components/projects/news-create-modal";
+import NewsArticle from "@/components/projects/news-article";
 
 type pageProps = {
     project: IProject | IProjectShow | null,
@@ -258,10 +259,15 @@ function ProjectHeader({project}: {
     project: IProject | IProjectShow
 }): ReactNode | ReactNode[] {
     const {t} = useTranslation(['projects', 'common']);
+    const {auth} = usePage<SharedData>().props;
     const [isEditing, setIsEditing] = useState(false);
 
     const [projectName, setProjectName] = useState(project.name);
     const [projectDesc, setProjectDesc] = useState(project.description);
+
+    const [showNewsCreateModal, setShowNewsCreateModal] = useState(false);
+
+    const canCreateNews = project.user_role === 'admin' || project.user_role === 'moderator';
 
     const [showInvitationModal, setShowInvitationModal] = useState<boolean>(false);
 
@@ -375,14 +381,10 @@ function ProjectHeader({project}: {
                                             <UserRoundPlus/>
                                         </Button>
                                     }
-                                    {/*{project.user_following ?
-                                        <Button size="icon-sm" variant="outline">
-                                            <span className="sr-only">{t('following')}</span><BookmarkCheck/>
-                                        </Button> :
-                                        <Button size="icon-sm" variant="outline">
-                                            <span className="sr-only">{t('follow')}</span><Bookmark/>
-                                        </Button>}
-                                    <Button size="icon-sm" variant="outline">
+                                    {project.user_role === 'viewer' &&
+                                        <FollowButton slug={project.slug} isFollowing={project.is_following}/>
+                                    }
+                                    {/*<Button size="icon-sm" variant="outline">
                                         <span className="sr-only">{t('common:button_share')}</span><Share2/>
                                     </Button>
                                     <Button size="icon-sm" variant="outline">
@@ -424,19 +426,30 @@ function ProjectHeader({project}: {
                                     <InputError message={errors.update}/>
                                 </Field>
                             }
-                            {/*project.news &&
-                                <div>
-                                    <article>
-                                        <h2 className="section-title">
-                                            {{project.news.first.title}}
-                                        </h2>
-                                        <p>{{project.news.first.text_content}}</p>
-                                    </article>
-                                    <Button variant="ghost_accent">
-                                        {t('more_news')}
-                                    </Button>
+                            {(project.news || canCreateNews) &&
+                                <div className="w-full flex flex-col gap-1">
+                                    {project.news &&
+                                        <NewsArticle news={project.news} projectSlug={project.slug}
+                                                     canManage={canCreateNews} currentUserId={auth.user.id}/>
+                                    }
+                                    <div className="flex gap-1 flex-wrap">
+                                        {canCreateNews &&
+                                            <Button variant="ghost_accent" size="sm" className="w-fit"
+                                                    onClick={() => setShowNewsCreateModal(true)}>
+                                                <Newspaper/>
+                                                {t('news_create_title')}
+                                            </Button>
+                                        }
+                                        {project.news &&
+                                            <Button asChild variant="ghost_accent" size="sm" className="w-fit">
+                                                <Link href={newsIndex(project.slug).url}>
+                                                    {t('more_news')}
+                                                </Link>
+                                            </Button>
+                                        }
+                                    </div>
                                 </div>
-                            */}
+                            }
 
                         </div>
                     </>
@@ -446,6 +459,10 @@ function ProjectHeader({project}: {
                              slug={project.slug} isPrivate={instanceOfProject(project) ? project.is_private : false}/>
             <MembersModal showModal={showMembersModal} setShowModal={setShowMembersModal}
                           onCloseModal={() => setShowMembersModal(false)} project={project}/>
+            {canCreateNews &&
+                <NewsCreateModal showModal={showNewsCreateModal} setShowModal={setShowNewsCreateModal}
+                                 slug={project.slug}/>
+            }
         </>
     );
 }
@@ -464,9 +481,6 @@ function VisitorPage() {
         <AppLayout appHeaderContext={appHeaderContext} className="pt-0">
             <Head title={project.name}/>
             <ProjectHeader project={project}/>
-
-            <section>
-            </section>
         </AppLayout>
     );
 }

@@ -6,6 +6,8 @@ use App\Enums\ProjectRole;
 use App\Models\Location;
 use App\Models\Member;
 use App\Models\Project;
+use App\Models\ProjectNews;
+use App\Models\Tag;
 use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
@@ -190,6 +192,8 @@ class FillDataSeeder extends Seeder
                     $task->participate($user);
                 }
             }
+
+            $this->seedTagsAndNews($project, [$owner, ...$users]);
         }
 
 
@@ -207,6 +211,25 @@ class FillDataSeeder extends Seeder
                     ]);
                 }
             }
+
+            $this->seedTagsAndNews($project, $project->members->all());
+        }
+    }
+
+    /**
+     * Syncs a few random tags and creates a handful of fake news posts on a seeded project,
+     * so tag-based features (search, suggestions) and the news/feed UI have real data to show
+     * against locally, instead of every seeded project starting out empty on both fronts.
+     */
+    private function seedTagsAndNews(Project $project, array $possibleAuthors): void
+    {
+        $project->tags()->sync(Tag::inRandomOrder()->limit(random_int(2, 4))->pluck('id'));
+
+        for ($i = 0; $i < random_int(1, 4); $i++) {
+            ProjectNews::factory()->create([
+                'project_id' => $project->id,
+                'user_id' => collect($possibleAuthors)->random()->id,
+            ]);
         }
     }
 }

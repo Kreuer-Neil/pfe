@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class UserPreferences extends Model
 {
-    protected $fillable = ['user_id', 'location_id', 'onboarding_completed_at'];
+    protected $fillable = ['user_id', 'location_id', 'onboarding_completed_at', 'dashboard_feed_hidden'];
+
+    protected $casts = [
+        'dashboard_feed_hidden' => 'boolean',
+    ];
 
     public function user(): BelongsTo
     {

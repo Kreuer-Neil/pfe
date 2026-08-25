@@ -31,6 +31,7 @@ Route::middleware(['auth', 'verified', 'onboarded'])->group(function () {
     require __DIR__ . '/chat.php';
     require __DIR__ . '/userProfile.php';
     require __DIR__ . '/notifications.php';
+    require __DIR__ . '/feed.php';
 
 //    Route::get('users/{id}', );
 });

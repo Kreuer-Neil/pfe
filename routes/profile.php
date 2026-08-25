@@ -36,6 +36,8 @@ Route::get('settings/preferences', [UserPreferencesController::class, 'edit'])
     ->name('preferences.edit');
 Route::post('settings/preferences/location', [UserPreferencesController::class, 'updateLocation'])
     ->name('preferences.update.location');
+Route::post('settings/preferences/dashboard-feed', [UserPreferencesController::class, 'updateDashboardFeedVisibility'])
+    ->name('preferences.update.dashboard-feed');
 
 Route::get('settings/notifications', [NotificationPreferencesController::class, 'edit'])
     ->name('notification-preferences.edit');

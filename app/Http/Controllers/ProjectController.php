@@ -210,6 +210,24 @@ class ProjectController extends Controller
         return redirect(route('projects.show', $project));
     }
 
+    public function follow(Project $project)
+    {
+        Gate::authorize('view', $project);
+
+        $project->followAs(auth()->user());
+
+        return redirect(route('projects.show', $project->slug));
+    }
+
+    public function unfollow(Project $project)
+    {
+        Gate::authorize('view', $project);
+
+        $project->unfollowAs(auth()->user());
+
+        return redirect(route('projects.show', $project->slug));
+    }
+
     /**
      * Shared prop-building for the projects/settings/* pages.
      */

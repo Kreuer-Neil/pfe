@@ -14,6 +14,8 @@
     "my_projects": "Mes projets",
     "projects_not_found": "Nous n'avons pas pu trouver vos projets. Si vous avez déjà rejoint des projets, rechargez la page, vérifiez vos notifications pour voir si vous avez été exclu, ou essayez de contacter le support. Si vous n'avez pas encore rejoint de projet, cherchez-en un ici :",
     "search_project": "Rechercher un projet",
+    "feed": "Fil d'actualité",
+    "feed_empty": "Pas encore d'actualités de vos projets ou de ceux que vous suivez.",
     "button_share": "Partager",
     "button_report": "Signaler",
     "save_changes": "Enregistrer les modifications",
