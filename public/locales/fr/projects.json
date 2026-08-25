@@ -94,5 +94,7 @@
     "poll_skipped_label": "Ignoré",
     "poll_closed_label": "Terminé",
     "poll_no_participation_label": "Ce sondage est terminé. Vous n'y avez pas participé.",
-    "poll_total_voters": "Votes : {{count}}"
+    "poll_total_voters": "Votes : {{count}}",
+    "poll_delete_title": "Supprimer ce sondage",
+    "poll_delete_warning": "Ce sondage et tous les votes associés seront définitivement supprimés. Cette action est irréversible."
 }

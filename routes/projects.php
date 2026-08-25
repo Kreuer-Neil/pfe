@@ -96,6 +96,8 @@ Route::prefix('projects/{project}')->group(function () {
         ->name('projects.update.member-ban');
     Route::post('news/{news}/destroy', [ProjectNewsController::class, 'destroy'])
         ->name('projects.news.destroy');
+    Route::post('polls/{poll}/destroy', [ProjectPollController::class, 'destroy'])
+        ->name('projects.polls.destroy');
 });
 
 Route::post('projects/{project}/invitations/{invitation}/revoke', [ProjectInvitationController::class, 'revoke'])

@@ -94,5 +94,7 @@
     "poll_skipped_label": "Übersprungen",
     "poll_closed_label": "Beendet",
     "poll_no_participation_label": "Diese Umfrage ist beendet. Du hast nicht teilgenommen.",
-    "poll_total_voters": "Stimmen: {{count}}"
+    "poll_total_voters": "Stimmen: {{count}}",
+    "poll_delete_title": "Diese Umfrage löschen",
+    "poll_delete_warning": "Diese Umfrage und alle abgegebenen Stimmen werden dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden."
 }

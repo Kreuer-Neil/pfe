@@ -62,4 +62,15 @@ class ProjectPollController extends Controller
 
         return redirect()->back();
     }
+
+    public function destroy(Project $project, int $poll)
+    {
+        $poll = $project->polls()->findOrFail($poll);
+
+        Gate::authorize('deletePoll', [$project, $poll]);
+
+        $poll->delete();
+
+        return redirect()->back();
+    }
 }

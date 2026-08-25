@@ -467,7 +467,8 @@ function ProjectHeader({project}: {
                                         </Button>
                                     }
                                     {project.polls.map((poll) => (
-                                        <PollCard key={poll.id} poll={poll} projectSlug={project.slug}/>
+                                        <PollCard key={poll.id} poll={poll} projectSlug={project.slug}
+                                                  canManage={canCreateNews} currentUserId={auth.user.id}/>
                                     ))}
                                 </div>
                             }

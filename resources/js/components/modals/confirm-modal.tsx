@@ -51,7 +51,7 @@ export default function ConfirmModal(
                             {fields && Object.entries(fields).map(([name, value]) => (
                                 <input key={name} type="hidden" name={name} value={value}/>
                             ))}
-                            <div className="grid grid-cols-2 gap-1">
+                            <div className="grid grid-cols-2 gap-1 mt-2">
                                 <Button
                                     variant="destructive"
                                     type="submit"

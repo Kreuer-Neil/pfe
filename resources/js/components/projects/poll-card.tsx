@@ -5,23 +5,30 @@ import {Item, ItemContent, ItemHeader, ItemMedia, ItemTitle} from "@/components/
 import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
 import {Checkbox} from "@/components/ui/checkbox";
 import {Button} from "@/components/ui/button";
+import {Trash2} from "lucide-react";
 import ProjectIcon from "@/components/icons/project-icon";
+import ConfirmModal from "@/components/modals/confirm-modal";
 import {laravelDateToJsDate, upcomingDateToString} from "@/helpers/date";
 import {show as projectsShow} from "@/actions/App/Http/Controllers/ProjectController";
-import {vote as votePoll} from "@/actions/App/Http/Controllers/ProjectPollController";
+import ProjectPollController, {vote as votePoll} from "@/actions/App/Http/Controllers/ProjectPollController";
 import {IProjectPoll, IProjectPollFeedItem} from "@/types";
 import {cn} from "@/lib/utils";
 
-export default function PollCard({poll, projectSlug, showProject = false}: {
+export default function PollCard({poll, projectSlug, showProject = false, canManage = false, currentUserId}: {
     poll: IProjectPoll | IProjectPollFeedItem,
     projectSlug: string,
     showProject?: boolean,
+    canManage?: boolean,
+    currentUserId?: number,
 }) {
     const {t} = useTranslation('projects');
     const {t: tDate} = useTranslation('date');
 
     const [selectedIds, setSelectedIds] = useState<number[]>(poll.user_choice_ids);
     const [submitting, setSubmitting] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    const canDelete = canManage || (currentUserId !== undefined && poll.user?.id === String(currentUserId));
 
     useEffect(() => {
         setSelectedIds(poll.user_choice_ids);
@@ -104,6 +111,12 @@ export default function PollCard({poll, projectSlug, showProject = false}: {
                     {poll.is_expired &&
                         <span className="text-xs text-muted-foreground shrink-0">{t('poll_closed_label')}</span>
                     }
+                    {canDelete &&
+                        <Button size="icon-sm" variant="ghost" onClick={() => setShowDeleteModal(true)}>
+                            <span className="sr-only">{t('poll_delete_title')}</span>
+                            <Trash2/>
+                        </Button>
+                    }
                 </div>
 
                 {poll.multi || !canInteract ?
@@ -142,6 +155,17 @@ export default function PollCard({poll, projectSlug, showProject = false}: {
                     </div>
                 }
             </ItemContent>
+            {canDelete &&
+                <ConfirmModal
+                    id={`poll-confirm-delete-${poll.id}`}
+                    showModal={showDeleteModal}
+                    onClose={() => setShowDeleteModal(false)}
+                    onSuccess={() => setShowDeleteModal(false)}
+                    formAction={ProjectPollController.destroy.form([projectSlug, poll.id])}
+                    title={t('poll_delete_title')}
+                    message={t('poll_delete_warning')}
+                />
+            }
         </Item>
     );
 }

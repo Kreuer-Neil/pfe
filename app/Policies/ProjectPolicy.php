@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Enums\ProjectRole;
 use App\Models\Project;
 use App\Models\ProjectNews;
+use App\Models\ProjectPoll;
 use App\Models\User;
 
 class ProjectPolicy
@@ -152,5 +153,18 @@ class ProjectPolicy
     public function votePoll(User $user, Project $project): bool
     {
         return $project->userIsMember($user);
+    }
+
+    /**
+     * Mirrors deleteNews's own-author-OR-admin/moderator shape (task managers can create polls
+     * but, like plain members, can only delete their own).
+     */
+    public function deletePoll(User $user, Project $project, ProjectPoll $poll): bool
+    {
+        if ($poll->user_id === $user->id) {
+            return true;
+        }
+
+        return in_array($project->userRole($user), [ProjectRole::MODERATOR->value, ProjectRole::ADMIN->value]);
     }
 }

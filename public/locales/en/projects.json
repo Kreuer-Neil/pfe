@@ -94,5 +94,7 @@
     "poll_skipped_label": "Skipped",
     "poll_closed_label": "Closed",
     "poll_no_participation_label": "This poll is closed. You didn't take part in it.",
-    "poll_total_voters": "{{count}} voted"
+    "poll_total_voters": "{{count}} voted",
+    "poll_delete_title": "Delete this poll",
+    "poll_delete_warning": "This will permanently delete this poll and every vote cast on it. This can't be undone."
 }
