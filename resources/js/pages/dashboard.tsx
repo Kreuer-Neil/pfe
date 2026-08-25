@@ -1,8 +1,9 @@
 import AppLayout from '@/layouts/app-layout';
 import {dashboard} from '@/routes';
-import {type BreadcrumbItem, IDashboardProject, ITask, SharedData} from '@/types';
+import {type BreadcrumbItem, IDashboardProject, IProjectMiniature, ITask, SharedData} from '@/types';
 import {Head, usePage} from '@inertiajs/react';
 import MyProjects from "@/components/dashboard/my-projects";
+import ProjectsSection from "@/components/dashboard/projects-section";
 import TaskDisplay from "@/components/tasks/task-display";
 import {useTranslation} from "react-i18next";
 
@@ -17,10 +18,11 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 type PageProps = {
     projects: IDashboardProject[],
+    suggestedProjects: IProjectMiniature[],
     tasks: ITask[],
 };
 export default function Dashboard() {
-    const {projects, tasks} = usePage<PageProps>().props;
+    const {projects, suggestedProjects, tasks} = usePage<PageProps>().props;
     const {auth} = usePage<SharedData>().props;
     const currentUser = auth.user;
     const {t} = useTranslation('dashboard');
@@ -53,7 +55,7 @@ export default function Dashboard() {
                 <Button as={"a"} textContent={t('project.get_absent')} type="warning" className="-mt-4"/>*/}
 
             <MyProjects projects={projects}/>
-
+            <ProjectsSection title={t('suggested_projects')} projects={suggestedProjects}/>
 
             {/*<div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4 ">
                 <div className="grid auto-rows-min gap-4 md:grid-cols-3 ">

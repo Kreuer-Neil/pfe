@@ -5,5 +5,6 @@
     "upcoming_tasks": "Upcoming tasks",
 
     "project_filter" : "Filter my projects",
-    "more_projects" : "Find a project"
+    "more_projects" : "Find a project",
+    "suggested_projects" : "Suggested for you"
 }

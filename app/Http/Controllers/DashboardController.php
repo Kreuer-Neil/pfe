@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Project\ProjectDashboardResource;
+use App\Http\Resources\Project\ProjectMiniatureResource;
 use App\Http\Resources\TaskResource;
+use App\Models\Project;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -19,10 +21,9 @@ class DashboardController extends Controller
             $projectsQuery = $projectsQuery->withDistanceFrom($userLocation->latitude, $userLocation->longitude);
         }
 
-        $projects = [];
-        foreach ($projectsQuery->get() as $project) {
-            $projects[] = (new ProjectDashboardResource($project))->toArray(request());
-        }
+        $projects = ProjectDashboardResource::collection($projectsQuery->get())->toArray(request());
+
+        $suggestedProjects = ProjectMiniatureResource::collection(Project::suggestedFor($currentUser))->toArray(request());
 
         $tasks = TaskResource::collection(
             $currentUser
@@ -34,9 +35,10 @@ class DashboardController extends Controller
         )->toArray(request());
 
         $now = str(now()->toDateTimeString())->beforeLast(':');
+
         return Inertia::render(
             'dashboard',
-            compact('projects', 'tasks', 'now')
+            compact('projects', 'suggestedProjects', 'tasks', 'now')
         );
     }
 }
