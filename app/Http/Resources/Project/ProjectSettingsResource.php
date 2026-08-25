@@ -25,6 +25,9 @@ class ProjectSettingsResource extends ProjectResource
                     $this->resource->invitations()->orderByDesc('created_at')->get()
                 )->toArray($request)
                 : [],
+            'permissions' => [
+                'allow_members_invitations' => $this->resource->permissions?->allow_members_invitations ?? true,
+            ],
         ]);
     }
 }

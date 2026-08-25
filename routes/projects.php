@@ -29,35 +29,51 @@ Route::get('projects/invitations/show', [ProjectInvitationController::class, 'sh
 Route::post('projects/invitations/', [ProjectInvitationController::class, 'use'])
     ->name('projects.invitations.use');
 
-Route::get('projects/{slug}', [ProjectController::class, 'show'])
-    ->name('projects.show');
+Route::get('projects/{project}', [ProjectController::class, 'show'])
+    ->name('projects.show')
+    ->missing(fn () => abort(404, __('project_not_found')));
 
-Route::get('projects/{slug}/join', [ProjectController::class, 'join'])
-    ->name('projects.join');
+Route::get('projects/{project}/join', [ProjectController::class, 'join'])
+    ->name('projects.join')
+    ->missing(fn () => redirect()->back()->withErrors(['join' => __('validation.project_not_found')]));
 
-Route::get('projects/{slug}/edit', [ProjectController::class, 'edit'])
-    ->name('projects.edit');
+Route::prefix('projects/{project}')->group(function () {
+    // Settings pages: redirect back to the project on denial
+    Route::middleware('project.settings:updateAppearance')->group(function () {
+        Route::get('edit', [ProjectController::class, 'editGeneral'])
+            ->name('projects.edit');
+        Route::get('edit/members', [ProjectController::class, 'editMembers'])
+            ->name('projects.edit.members');
+    });
 
-//Route::get('projects/{slug}/update', [ProjectController::class, 'update'])
-//    ->name('projects.update');
+    Route::middleware('project.settings:update')->group(function () {
+        Route::get('edit/permissions', [ProjectController::class, 'editPermissions'])
+            ->name('projects.edit.permissions');
+    });
 
-Route::post('projects/{slug}/update/appearance', [ProjectController::class, 'updateAppearance'])
-    ->name('projects.update.appearance');
-Route::post('projects/{slug}/update/visibility', [ProjectController::class, 'updateVisibility'])
-    ->name('projects.update.visibility');
+    Route::middleware('can:updateAppearance,project')->group(function () {
+        Route::post('update/appearance', [ProjectController::class, 'updateAppearance'])
+            ->name('projects.update.appearance');
+    });
 
-Route::post('projects/{slug}/update/tags', [ProjectController::class, 'updateTags'])
-    ->name('projects.update.tags');
+    Route::middleware('can:update,project')->group(function () {
+        Route::post('update/visibility', [ProjectController::class, 'updateVisibility'])
+            ->name('projects.update.visibility');
+        Route::post('update/tags', [ProjectController::class, 'updateTags'])
+            ->name('projects.update.tags');
+        Route::post('update/location', [ProjectController::class, 'updateLocation'])
+            ->name('projects.update.location');
+        Route::post('update/permissions', [ProjectController::class, 'updatePermissions'])
+            ->name('projects.update.permissions');
+    });
 
-Route::post('projects/{slug}/update/location', [ProjectController::class, 'updateLocation'])
-    ->name('projects.update.location');
+    // Per-target dynamic authorizations.
+    Route::post('update/member-role', [ProjectController::class, 'updateMemberRole'])
+        ->name('projects.update.member-role');
+    Route::post('update/member-ban', [ProjectController::class, 'banMember'])
+        ->name('projects.update.member-ban');
+});
 
-Route::post('projects/{slug}/update/member-role', [ProjectController::class, 'updateMemberRole'])
-    ->name('projects.update.member-role');
-
-Route::post('projects/{slug}/update/member-ban', [ProjectController::class, 'banMember'])
-    ->name('projects.update.member-ban');
-
-Route::post('projects/{slug}/invitations/{invitation}/revoke', [ProjectInvitationController::class, 'revoke'])
+Route::post('projects/{project}/invitations/{invitation}/revoke', [ProjectInvitationController::class, 'revoke'])
     ->name('projects.invitations.revoke');
 

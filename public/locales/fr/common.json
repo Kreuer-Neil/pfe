@@ -16,5 +16,6 @@
     "search_project": "Rechercher un projet",
     "button_share": "Partager",
     "button_report": "Signaler",
-    "save_changes": "Enregistrer les modifications"
+    "save_changes": "Enregistrer les modifications",
+    "changes_saved": "Modifications enregistrées"
 }

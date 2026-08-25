@@ -123,6 +123,34 @@ test('rejects an expiry time given without a date', function () {
     ]))->assertSessionHasErrors('expires_at_date');
 });
 
+test('a plain member cannot generate an invitation when allow_members_invitations is off', function () {
+    $owner = User::factory()->create();
+    $project = Project::factory()->create(['owner_id' => $owner->id, 'is_private' => true]);
+    $project->permissions()->update(['allow_members_invitations' => false]);
+    $member = User::factory()->create();
+    makeMemberOf($project, $member, ProjectRole::MEMBER->value);
+    $this->actingAs($member);
+
+    $this->get(route('projects.invitations.show', ['project_slug' => $project->slug]))
+        ->assertForbidden();
+
+    expect(ProjectInvitation::count())->toBe(0);
+});
+
+test('a moderator can still generate an invitation when allow_members_invitations is off', function () {
+    $owner = User::factory()->create();
+    $project = Project::factory()->create(['owner_id' => $owner->id, 'is_private' => true]);
+    $project->permissions()->update(['allow_members_invitations' => false]);
+    $moderator = User::factory()->create();
+    makeMemberOf($project, $moderator, ProjectRole::MODERATOR->value);
+    $this->actingAs($moderator);
+
+    $this->get(route('projects.invitations.show', ['project_slug' => $project->slug]))
+        ->assertRedirect(route('projects.show', $project->slug));
+
+    expect(ProjectInvitation::count())->toBe(1);
+});
+
 test('creates an invitation with a max_uses cap and an expiry', function () {
     $owner = User::factory()->create();
     $project = Project::factory()->create(['owner_id' => $owner->id, 'is_private' => true]);

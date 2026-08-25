@@ -21,6 +21,7 @@
     "project_form_description": "Description du projet",
     "project_form_private": "Projet privé",
     "project_form_private_warning": "Par défaut, votre projet est défini comme « privé ». Si votre projet est privé, les gens ne pourront pas le trouver dans la recherche de projets. Cette option est recommandée si vous souhaitez expérimenter avec votre projet avant de l'ouvrir au public, ou si vous ne voulez pas que des personnes extérieures le rejoignent. Vous pouvez toujours modifier ce paramètre ultérieurement, mais sachez que les projets privés nécessitent une invitation pour les rejoindre.",
+    "project_form_visibility_title": "Visibilité",
     "project_form_location_title": "Localisation",
     "project_form_place": "Lieu",
     "project_form_location_pending": "Aucune localisation définie pour le moment",
@@ -55,5 +56,17 @@
     "role_moderator": "Modérateur",
     "role_task_manager": "Gestionnaire de tâches",
     "role_member": "Membre",
-    "role_banned": "Banni"
+    "role_banned": "Banni",
+    "field_icon": "Icône",
+    "field_tags": "Tags",
+    "project_form_appearance_title": "Apparence",
+    "project_settings_nav_general": "Général",
+    "project_settings_nav_members": "Membres",
+    "project_settings_nav_permissions": "Permissions",
+    "project_settings_general_title": "Paramètres généraux",
+    "project_settings_members_title": "Membres",
+    "project_settings_permissions_title": "Permissions",
+    "project_permissions_invitations_title": "Invitations",
+    "project_permissions_allow_invitations": "Autoriser tous les membres à créer des invitations",
+    "project_permissions_allow_invitations_description": "Si activé, tout membre non banni peut générer un lien d'invitation pour ce projet. Si désactivé, seuls les admins et modérateurs le peuvent."
 }

@@ -11,20 +11,17 @@ use Inertia\Inertia;
 
 class ChatRoomController extends Controller
 {
-    public function index(string $slug)
+    public function index(Project $project)
     {
-        $project = Project::where('slug', $slug)->firstOrFail();
-
         // Projects created before the chat feature don't have a default room yet.
         $chatRoom = $project->defaultChatRoom()
             ?? ChatRoom::create(['project_id' => $project->id]);
 
-        return redirect()->route('projects.chats.show', [$project->slug, $chatRoom->id]);
+        return redirect()->route('projects.chats.show', [$project, $chatRoom->id]);
     }
 
-    public function show(string $slug, int $room)
+    public function show(Project $project, int $room)
     {
-        $project = Project::where('slug', $slug)->firstOrFail();
         $chatRoom = $project->chatRooms()->findOrFail($room);
 
         Gate::authorize('view', $chatRoom);

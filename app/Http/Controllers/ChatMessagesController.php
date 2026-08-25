@@ -12,14 +12,13 @@ use Illuminate\Http\Request;
 
 class ChatMessagesController extends Controller
 {
-    public function store(Request $request, string $slug, int $room)
+    public function store(Request $request, Project $project, int $room)
     {
         $validated = $request->validate([
             'content' => 'required|string|min:1|max:4000',
             'chat_message_id' => 'nullable|integer|exists:chat_messages,id',
         ]);
 
-        $project = Project::where('slug', $slug)->firstOrFail();
         $chatRoom = $project->chatRooms()->findOrFail($room);
 
         Gate::authorize('sendMessage', $chatRoom);

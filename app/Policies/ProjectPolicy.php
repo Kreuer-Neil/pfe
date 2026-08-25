@@ -107,4 +107,17 @@ class ProjectPolicy
     {
         return in_array($project->userRole($user), [ProjectRole::ADMIN->value, ProjectRole::MODERATOR->value]);
     }
+
+    /**
+     * Whether $user may generate a new invitation link. Defaults to any member when the
+     * project's permissions row allows it (or doesn't exist yet); otherwise admin/moderator only.
+     */
+    public function createInvitation(User $user, Project $project): bool
+    {
+        $allowAnyMember = $project->permissions?->allow_members_invitations ?? true;
+
+        return $allowAnyMember
+            ? $project->userIsMember($user)
+            : $this->manageInvitations($user, $project);
+    }
 }

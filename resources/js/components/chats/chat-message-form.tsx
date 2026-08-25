@@ -18,7 +18,7 @@ export default function ChatMessageForm({slug, room, replyTo, onCancelReply}: {
 
     return (
         <Form
-            {...ChatMessagesController.store.form({slug, room})}
+            {...ChatMessagesController.store.form({project: slug, room})}
             resetOnSuccess
             onSuccess={onCancelReply}
             className="flex flex-col gap-1 border-t border-border px-3 pt-2"

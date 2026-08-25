@@ -24,7 +24,7 @@ import {useImageAsset} from "@/hooks/use-image-asset";
 import ProjectController from "@/actions/App/Http/Controllers/ProjectController";
 import {
     join as projectsJoin,
-    edit as projectsEdit,
+    editGeneral as projectsEdit,
     show as projectsShow
 } from "@/actions/App/Http/Controllers/ProjectController";
 import {index as chatsIndex} from "@/actions/App/Http/Controllers/ChatRoomController";
@@ -350,8 +350,10 @@ function ProjectHeader({project}: {
                                             &nbsp;{t('members_count')}
                                         </Button>
                                     </p>
-                                    {/* Any non-banned member can invite by default (enforced server-side by ProjectInvitationController::show()'s viewData gate). 
-                                    TODO: add a per-project admin setting to restrict invites to admin/moderator instead of all members. */}
+                                    {/* Who may invite is governed by ProjectPolicy::createInvitation(), driven by the
+                                    project's permissions row (see projects/settings/permissions) - defaults to any
+                                    non-banned member, restrictable to admin/moderator only. Enforced server-side by
+                                    ProjectInvitationController::show(); can_invite here just controls the button. */}
                                     {project.user_role === 'viewer' ?
                                         // Add more conditions on project
                                         <Button size="sm" variant="outline" asChild>
@@ -362,6 +364,7 @@ function ProjectHeader({project}: {
                                                 <LogIn/>
                                             </Link>
                                         </Button> :
+                                        project.can_invite &&
                                         <Button size="sm"
                                                 variant="outline"
                                                 onClick={() => openInvitationModal()}

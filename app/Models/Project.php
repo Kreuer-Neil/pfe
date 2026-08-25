@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
@@ -23,6 +24,16 @@ class Project extends Model
     use SoftDeletes;
 
     protected $fillable = ['owner_id', 'name', 'icon', 'description', 'language_id', 'location_id', 'is_private'];
+
+    /**
+     * Every project route/redirect uses the slug, not the id - route model binding
+     * ({project:slug} or a bare {project}) and route()/redirect() calls that pass a Project
+     * instance both resolve through this.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     protected static function boot(): void
     {
@@ -42,7 +53,16 @@ class Project extends Model
             ChatRoom::create([
                 'project_id' => $project->id,
             ]);
+
+            ProjectPermission::create([
+                'project_id' => $project->id,
+            ]);
         });
+    }
+
+    public function permissions(): HasOne
+    {
+        return $this->hasOne(ProjectPermission::class);
     }
 
     /**
@@ -137,7 +157,8 @@ class Project extends Model
 
     private function permission(User $user, ProjectAction $action): bool
     {
-        // TODO make it dynamic with project settings separate "project_permission" table later
+        // The project_permissions table (see permissions()) now covers invitations only,
+        // via ProjectPolicy::createInvitation() - MANAGE_TASK/EDIT_SETTINGS below are still hardcoded.
         if (($member = $this->members->find($user->id))) {
             $memberRole = $member->pivot->role;
             $returnValue = false;

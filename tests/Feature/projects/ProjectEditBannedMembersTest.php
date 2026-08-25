@@ -18,7 +18,7 @@ test('the settings page splits banned members out of the regular members list', 
     Member::create(['project_id' => $project->id, 'user_id' => $bannedMember->id, 'role' => ProjectRole::BANNED->value]);
     actingAs($owner);
 
-    get(route('projects.edit', $project->slug))
+    get(route('projects.edit.members', $project->slug))
         ->assertInertia(fn(Assert $page) => $page
             // owner + active member, banned member excluded
             ->has('project.members', 2)

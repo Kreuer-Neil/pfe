@@ -30,7 +30,7 @@ class ProjectInvitationController extends Controller
 
         $project = Project::where('slug', $validated['project_slug'])->firstOrFail();
 
-        Gate::authorize('viewData', $project);
+        Gate::authorize('createInvitation', $project);
 
         $maxUses = $validated['max_uses'] ?? null;
         $expiresAt = !empty($validated['expires_at_date'])
@@ -94,9 +94,8 @@ class ProjectInvitationController extends Controller
         return redirect(route('projects.show', $invitation->project->slug));
     }
 
-    function revoke(string $slug, string $invitationId)
+    function revoke(Project $project, string $invitationId)
     {
-        $project = Project::where('slug', $slug)->firstOrFail();
         Gate::authorize('manageInvitations', $project);
 
         $invitation = $project->invitations()->findOrFail($invitationId);

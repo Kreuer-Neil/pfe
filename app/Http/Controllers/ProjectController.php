@@ -104,11 +104,9 @@ class ProjectController extends Controller
         return $queriedProjects->orderBy($orderColumn, $direction)->paginate(20);
     }
 
-    public function show(string $slug)
+    public function show(Project $project)
     {
-        $project = Project::where('slug', $slug)->first();
-
-        if (!$project || !Gate::allows('view', $project)) {
+        if (!Gate::allows('view', $project)) {
             abort(404, __('project_not_found'));
         }
         if ($project->userRole(auth()->user()) === ProjectRole::VIEWER) {
@@ -169,14 +167,8 @@ class ProjectController extends Controller
     }
 
 
-    public function updateAppearance(string $slug, Request $request)
+    public function updateAppearance(Project $project, Request $request)
     {
-        $project = Project::where('slug', $slug)->firstOrFail();
-
-        if (!Gate::check('updateAppearance', $project)) {
-            abort(403);
-        }
-
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -195,7 +187,7 @@ class ProjectController extends Controller
         $project->description = $validated['description'];
         $project->save();
 
-        return redirect(route('projects.edit', $slug));
+        return redirect(route('projects.edit', $project));
     }
 
     public function myProjects(Request $request)
@@ -207,31 +199,22 @@ class ProjectController extends Controller
         return Inertia::render('projects/my-projects', compact(['projects']));
     }
 
-    public function join(string $slug)
+    public function join(Project $project)
     {
-        $project = Project::where('slug', $slug)->first();
-        if (!$project) {
-            return redirect()->back()->withErrors(['join' => __('validation.project_not_found')]);
-        }
-
         if ($project->is_private) {
             return redirect(route('projects'));
         }
 
-
         $project->joinAsMember(auth()->user());
 
-        return redirect(route('projects.show', $slug));
+        return redirect(route('projects.show', $project));
     }
 
-    public function edit(Request $request, string $slug)
+    /**
+     * Shared prop-building for the projects/settings/* pages.
+     */
+    private function settingsProps(Request $request, Project $project): array
     {
-        $project = Project::where('slug', $slug)->firstOrFail();
-
-        if(!Gate::allows('updateAppearance', $project)) {
-            return redirect(route('projects.show', $slug));
-        }
-
         $tagsList = Tag::all()->pluck('name');
 
         $actingUser = auth()->user();
@@ -258,17 +241,37 @@ class ProjectController extends Controller
         $project['members'] = $members->reject(fn(array $member) => $member['role'] === ProjectRole::BANNED->value)->values()->all();
         $project['banned_members'] = $members->filter(fn(array $member) => $member['role'] === ProjectRole::BANNED->value)->values()->all();
 
-        return Inertia::render('projects/edit', compact(['project', 'tagsList']));
+        return compact(['project', 'tagsList']);
+    }
+
+    public function editGeneral(Request $request, Project $project)
+    {
+        return Inertia::render('projects/settings/general', $this->settingsProps($request, $project));
+    }
+
+    public function editMembers(Request $request, Project $project)
+    {
+        return Inertia::render('projects/settings/members', $this->settingsProps($request, $project));
+    }
+
+    public function editPermissions(Request $request, Project $project)
+    {
+        return Inertia::render('projects/settings/permissions', $this->settingsProps($request, $project));
+    }
+
+    public function updatePermissions(Project $project, Request $request)
+    {
+        $project->permissions()->updateOrCreate([], [
+            'allow_members_invitations' => $request->has('allow_members_invitations'),
+        ]);
+
+        return redirect(route('projects.edit.permissions', $project));
     }
 
 
-    public function updateVisibility(string $slug, Request $request)
+    public function updateVisibility(Project $project, Request $request)
     {
         // TODO check if at least 1 tag before getting public
-        $project = Project::where('slug', $slug)->firstOrFail();
-
-        Gate::authorize('update', $project);
-
         $isPrivate = $request->has('is_private');
 
         if (!$isPrivate && !$project->location_id) {
@@ -278,17 +281,11 @@ class ProjectController extends Controller
         $project->is_private = $isPrivate;
         $project->save();
 
-        return redirect(route('projects.edit', $slug));
+        return redirect(route('projects.edit', $project));
     }
 
-    public function updateTags(string $slug, Request $request)
+    public function updateTags(Project $project, Request $request)
     {
-        $project = Project::where('slug', $slug)->firstOrFail();
-
-        if (!Gate::check('update', $project)) {
-            abort(403);
-        }
-
         $validated = $request->validate([
             'tags' => [Rule::requiredIf(!$project->is_private), 'array', 'max:7'],
             'tags.*' => 'string|exists:tags,name',
@@ -302,13 +299,11 @@ class ProjectController extends Controller
 
         $project->tags()->sync($tagIds);
 
-        return redirect(route('projects.edit', $slug));
+        return redirect(route('projects.edit', $project));
     }
 
-    public function updateMemberRole(string $slug, Request $request)
+    public function updateMemberRole(Project $project, Request $request)
     {
-        $project = Project::where('slug', $slug)->firstOrFail();
-
         // BANNED is deliberately excluded here - banning is its own action/endpoint (banMember).
         $assignableRoles = collect(ProjectRole::cases())
             ->reject(fn($r) => $r === ProjectRole::BANNED)
@@ -332,10 +327,8 @@ class ProjectController extends Controller
         return redirect()->back();
     }
 
-    public function banMember(string $slug, Request $request)
+    public function banMember(Project $project, Request $request)
     {
-        $project = Project::where('slug', $slug)->firstOrFail();
-
         $validated = $request->validate([
             'user_id' => 'required|integer|exists:users,id',
         ]);
@@ -353,14 +346,8 @@ class ProjectController extends Controller
         return redirect()->back();
     }
 
-    public function updateLocation(string $slug, Request $request)
+    public function updateLocation(Project $project, Request $request)
     {
-        $project = Project::where('slug', $slug)->firstOrFail();
-
-        if (!Gate::check('update', $project)) {
-            abort(403);
-        }
-
         $validated = $request->validate([
             'q' => [Rule::requiredIf(!$project->is_private), 'required_with:osm_id,osm_type', 'string', 'max:255'],
             'osm_id' => [Rule::requiredIf(!$project->is_private), 'required_with:q', 'string', 'max:255'],
@@ -389,6 +376,6 @@ class ProjectController extends Controller
             $oldLocation->removeIfUnused();
         }
 
-        return redirect(route('projects.edit', $slug));
+        return redirect(route('projects.edit', $project));
     }
 }

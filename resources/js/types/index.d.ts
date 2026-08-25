@@ -175,6 +175,9 @@ export interface IProjectShow extends IProjectMiniature {
 
     // is_private: boolean;
     // user_role: 'viewer';
+    // ProjectShowResource is only ever used for viewers, who can never invite - so unlike
+    // IProject, can_invite is never actually sent here.
+    can_invite?: false;
     members: IProfile[];
 }
 
@@ -183,6 +186,7 @@ export interface IProject extends IProjectShow {
     icon: string;
     description: string;
     is_private: boolean;
+    can_invite: boolean;
     owner: IUser;
     members: IMember[];
     members_count: number;
@@ -214,6 +218,9 @@ export interface IProjectSettings extends IProject {
     invitations: IProjectInvitation[];
     // banned members are split out here for their own view.
     banned_members: IMember[];
+    permissions: {
+        allow_members_invitations: boolean;
+    };
 }
 
 export interface ITask {

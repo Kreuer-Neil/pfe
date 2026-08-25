@@ -21,6 +21,7 @@
     "project_form_description": "Projektbeschreibung",
     "project_form_private": "Privates Projekt",
     "project_form_private_warning": "Standardmäßig ist Ihr Projekt als 'privat' eingestellt. Wenn Ihr Projekt privat ist, können andere es nicht in der Projektsuche finden. Diese Option wird empfohlen, wenn Sie mit Ihrem Projekt experimentieren möchten, bevor Sie es der Öffentlichkeit zugänglich machen, oder wenn Sie nicht möchten, dass Außenstehende beitreten. Sie können diese Einstellung jederzeit ändern, aber beachten Sie, dass private Projekte eine Einladung zum Beitreten erfordern.",
+    "project_form_visibility_title": "Sichtbarkeit",
     "project_form_location_title": "Standort",
     "project_form_place": "Ort",
     "project_form_location_pending": "Noch kein Standort festgelegt",
@@ -55,5 +56,17 @@
     "role_moderator": "Moderator",
     "role_task_manager": "Aufgabenverwalter",
     "role_member": "Mitglied",
-    "role_banned": "Verbannt"
+    "role_banned": "Verbannt",
+    "field_icon": "Symbol",
+    "field_tags": "Tags",
+    "project_form_appearance_title": "Erscheinungsbild",
+    "project_settings_nav_general": "Allgemein",
+    "project_settings_nav_members": "Mitglieder",
+    "project_settings_nav_permissions": "Berechtigungen",
+    "project_settings_general_title": "Allgemeine Einstellungen",
+    "project_settings_members_title": "Mitglieder",
+    "project_settings_permissions_title": "Berechtigungen",
+    "project_permissions_invitations_title": "Einladungen",
+    "project_permissions_allow_invitations": "Allen Mitgliedern erlauben, Einladungen zu erstellen",
+    "project_permissions_allow_invitations_description": "Wenn aktiviert, kann jedes nicht gesperrte Mitglied einen Einladungslink für dieses Projekt erstellen. Wenn deaktiviert, können dies nur Admins und Moderatoren."
 }
