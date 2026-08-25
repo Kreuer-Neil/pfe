@@ -2,8 +2,8 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\Project\ProjectContextResource;
 use App\Http\Resources\User\ProfileResource;
+use App\Models\ProjectPoll;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,20 +16,33 @@ class ProjectPollResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        /** @var ProjectPoll $poll */
+        $poll = $this->resource;
+        $user = $request->user();
+
+        $canSeeResults = $user && $poll->canSeeResults($user);
+        $totalVoters = $canSeeResults ? $poll->totalVoters() : 0;
+
         return [
-            'id' => $this->resource->id,
-            'title' => $this->resource->title,
-            'multi' => $this->resource->multi,
-            'project' => (new ProjectContextResource($this->resource->project))->toArray($request),
-            'user' => (new ProfileResource($this->resource->user))->toArray($request),
-            'choices' => $this->resource->choices->map(fn ($choice) => [
+            'id' => $poll->id,
+            'title' => $poll->title,
+            'multi' => $poll->multi,
+            'end_date' => $poll->end_date,
+            'created_at' => $poll->created_at,
+            'user' => $poll->user ? (new ProfileResource($poll->user))->toArray($request) : null,
+            'choices' => $poll->choices->map(fn ($choice) => [
                 'id' => $choice->id,
                 'label' => $choice->label,
-                'count' => $this->resource->participationsCount($choice->id),
+                'count' => $canSeeResults ? $poll->participationsCount($choice->id) : 0,
+                'percentage' => $canSeeResults && $totalVoters > 0
+                    ? (int) round($poll->participationsCount($choice->id) / $totalVoters * 100)
+                    : 0,
             ]),
-            // TODO bind participants' profile + which choice(s) they picked, for a nice poll design.
-            'participations' => [],
-            'end_date' => $this->resource->end_date,
+            'total_voters' => $totalVoters,
+            'is_expired' => $poll->isExpired(),
+            'can_see_results' => $canSeeResults,
+            'user_choice_ids' => $user ? $poll->userChoiceIds($user) : [],
+            'user_skipped' => $user && $poll->userSkipped($user),
         ];
     }
 }

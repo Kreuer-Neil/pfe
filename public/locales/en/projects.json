@@ -78,5 +78,21 @@
     "news_delete_title": "Delete this update",
     "news_delete_warning": "This will permanently delete this update. This can't be undone.",
     "more_news": "View all updates",
-    "news_none": "No updates yet."
+    "news_none": "No updates yet.",
+    "poll_create_title": "Create a poll",
+    "poll_form_title": "Question",
+    "poll_form_multi": "Allow multiple choices",
+    "poll_form_end_date": "Voting ends",
+    "poll_form_choices": "Choices",
+    "poll_form_choice_placeholder": "Choice {{n}}",
+    "poll_form_add_choice": "Add a choice",
+    "poll_form_remove_choice": "Remove this choice",
+    "poll_form_submit": "Create poll",
+    "poll_vote_button": "Vote",
+    "poll_change_vote_button": "Change vote",
+    "poll_skip_button": "Skip",
+    "poll_skipped_label": "Skipped",
+    "poll_closed_label": "Closed",
+    "poll_no_participation_label": "This poll is closed. You didn't take part in it.",
+    "poll_total_voters": "{{count}} voted"
 }

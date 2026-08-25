@@ -7,6 +7,7 @@ use App\Models\Location;
 use App\Models\Member;
 use App\Models\Project;
 use App\Models\ProjectNews;
+use App\Models\ProjectPoll;
 use App\Models\Tag;
 use App\Models\Task;
 use App\Models\User;
@@ -113,5 +114,32 @@ class TestUserSeeder extends Seeder
             'title' => 'First seeds are in the ground',
             'text_content' => 'Tomatoes, carrots and a row of beans are planted, thanks to everyone who showed up to help this morning! Watering will need to happen every couple of days now, I\'ve put a schedule up on the door of the building so we can take turns. Once things start growing, let\'s talk about organizing that shared meal we keep mentioning.',
         ]);
+
+        $plantingPoll = ProjectPoll::create([
+            'project_id' => $sharedGardenProject->id,
+            'user_id' => $testUser->id,
+            'title' => 'What should we plant next?',
+            'multi' => true,
+            'end_date' => now()->addWeek(),
+        ]);
+        foreach (['Zucchini', 'Peppers', 'Strawberries', 'Herbs (basil, mint...)'] as $position => $label) {
+            $plantingPoll->choices()->create(['label' => $label, 'position' => $position]);
+        }
+
+        $meetingPoll = ProjectPoll::create([
+            'project_id' => $sharedGardenProject->id,
+            'user_id' => $projectUsers->random(1)->first()->id,
+            'title' => 'When should we hold the shared meal?',
+            'multi' => false,
+            'end_date' => now()->subDays(2),
+        ]);
+        [$saturday, $sunday] = $meetingPoll->choices()->createMany([
+            ['label' => 'Saturday afternoon', 'position' => 0],
+            ['label' => 'Sunday evening', 'position' => 1],
+        ]);
+        $meetingPoll->vote($testUser, [$saturday->id]);
+        foreach ($projectUsers->take(3) as $user) {
+            $meetingPoll->vote($user, [$sunday->id]);
+        }
     }
 }

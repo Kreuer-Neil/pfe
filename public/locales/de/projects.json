@@ -78,5 +78,21 @@
     "news_delete_title": "Diese Neuigkeit löschen",
     "news_delete_warning": "Diese Neuigkeit wird dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.",
     "more_news": "Alle Neuigkeiten anzeigen",
-    "news_none": "Noch keine Neuigkeiten."
+    "news_none": "Noch keine Neuigkeiten.",
+    "poll_create_title": "Umfrage erstellen",
+    "poll_form_title": "Frage",
+    "poll_form_multi": "Mehrfachauswahl erlauben",
+    "poll_form_end_date": "Abstimmung endet",
+    "poll_form_choices": "Antwortmöglichkeiten",
+    "poll_form_choice_placeholder": "Antwort {{n}}",
+    "poll_form_add_choice": "Antwort hinzufügen",
+    "poll_form_remove_choice": "Diese Antwort entfernen",
+    "poll_form_submit": "Umfrage erstellen",
+    "poll_vote_button": "Abstimmen",
+    "poll_change_vote_button": "Stimme ändern",
+    "poll_skip_button": "Überspringen",
+    "poll_skipped_label": "Übersprungen",
+    "poll_closed_label": "Beendet",
+    "poll_no_participation_label": "Diese Umfrage ist beendet. Du hast nicht teilgenommen.",
+    "poll_total_voters": "Stimmen: {{count}}"
 }

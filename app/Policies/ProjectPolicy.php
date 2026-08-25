@@ -3,24 +3,21 @@
 namespace App\Policies;
 
 use App\Enums\ProjectRole;
+use App\Models\Project;
 use App\Models\ProjectNews;
 use App\Models\User;
-use App\Models\Project;
 
 class ProjectPolicy
 {
     /**
      * Create a new policy instance.
      */
-    public function __construct()
-    {
-
-    }
+    public function __construct() {}
 
     public function view(User $user, Project $project): bool
     {
         return $project->userIsMember($user)
-            || ((!$project->is_private) && $project->userRole($user) !== ProjectRole::BANNED->value);
+            || ((! $project->is_private) && $project->userRole($user) !== ProjectRole::BANNED->value);
     }
 
     public function updateAppearance(User $user, Project $project): bool
@@ -137,5 +134,23 @@ class ProjectPolicy
         }
 
         return in_array($project->userRole($user), [ProjectRole::MODERATOR->value, ProjectRole::ADMIN->value]);
+    }
+
+    /**
+     * Task managers are included here (unlike createNews) since polls are a task/activity
+     * coordination tool, not a project-wide announcement.
+     */
+    public function createPoll(User $user, Project $project): bool
+    {
+        return in_array($project->userRole($user), [
+            ProjectRole::ADMIN->value,
+            ProjectRole::MODERATOR->value,
+            ProjectRole::TASK_MANAGER->value,
+        ]);
+    }
+
+    public function votePoll(User $user, Project $project): bool
+    {
+        return $project->userIsMember($user);
     }
 }

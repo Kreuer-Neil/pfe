@@ -151,6 +151,13 @@ class Project extends Model
             ->orderBy('created_at', 'desc');
     }
 
+    public function polls(): HasMany
+    {
+        return $this
+            ->hasMany(ProjectPoll::class)
+            ->orderBy('created_at', 'desc');
+    }
+
     /**
      * Users explicitly following this project's news without being a member. Membership
      * itself already implies following for feed purposes - see followAs()/followedBy().

@@ -5,6 +5,7 @@ import {instanceOfProject, instanceOfProjectShow} from "@/helpers/type-check";
 import {
     Camera,
     Copy,
+    ListChecks,
     LogIn,
     MessageCircle,
     Newspaper,
@@ -38,6 +39,8 @@ import {IAppHeaderContext, IProject, IProjectShow, SharedData} from "@/types";
 import FollowButton from "@/components/projects/follow-button";
 import NewsCreateModal from "@/components/projects/news-create-modal";
 import NewsArticle from "@/components/projects/news-article";
+import PollCreateModal from "@/components/projects/poll-create-modal";
+import PollCard from "@/components/projects/poll-card";
 
 type pageProps = {
     project: IProject | IProjectShow | null,
@@ -269,6 +272,9 @@ function ProjectHeader({project}: {
 
     const canCreateNews = project.user_role === 'admin' || project.user_role === 'moderator';
 
+    const [showPollCreateModal, setShowPollCreateModal] = useState(false);
+    const canCreatePoll = instanceOfProject(project) && project.can_create_poll;
+
     const [showInvitationModal, setShowInvitationModal] = useState<boolean>(false);
 
     function openInvitationModal() {
@@ -451,6 +457,21 @@ function ProjectHeader({project}: {
                                 </div>
                             }
 
+                            {instanceOfProject(project) && (project.polls.length > 0 || canCreatePoll) &&
+                                <div className="w-full flex flex-col gap-2">
+                                    {canCreatePoll &&
+                                        <Button variant="ghost_accent" size="sm" className="w-fit"
+                                                onClick={() => setShowPollCreateModal(true)}>
+                                            <ListChecks/>
+                                            {t('poll_create_title')}
+                                        </Button>
+                                    }
+                                    {project.polls.map((poll) => (
+                                        <PollCard key={poll.id} poll={poll} projectSlug={project.slug}/>
+                                    ))}
+                                </div>
+                            }
+
                         </div>
                     </>
                 )}
@@ -461,6 +482,10 @@ function ProjectHeader({project}: {
                           onCloseModal={() => setShowMembersModal(false)} project={project}/>
             {canCreateNews &&
                 <NewsCreateModal showModal={showNewsCreateModal} setShowModal={setShowNewsCreateModal}
+                                 slug={project.slug}/>
+            }
+            {canCreatePoll &&
+                <PollCreateModal showModal={showPollCreateModal} setShowModal={setShowPollCreateModal}
                                  slug={project.slug}/>
             }
         </>

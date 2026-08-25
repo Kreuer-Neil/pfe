@@ -78,5 +78,21 @@
     "news_delete_title": "Supprimer cette actualité",
     "news_delete_warning": "Cette actualité sera définitivement supprimée. Cette action est irréversible.",
     "more_news": "Voir toutes les actualités",
-    "news_none": "Aucune actualité pour le moment."
+    "news_none": "Aucune actualité pour le moment.",
+    "poll_create_title": "Créer un sondage",
+    "poll_form_title": "Question",
+    "poll_form_multi": "Autoriser plusieurs choix",
+    "poll_form_end_date": "Fin du vote",
+    "poll_form_choices": "Choix",
+    "poll_form_choice_placeholder": "Choix {{n}}",
+    "poll_form_add_choice": "Ajouter un choix",
+    "poll_form_remove_choice": "Supprimer ce choix",
+    "poll_form_submit": "Créer le sondage",
+    "poll_vote_button": "Voter",
+    "poll_change_vote_button": "Changer mon vote",
+    "poll_skip_button": "Ignorer",
+    "poll_skipped_label": "Ignoré",
+    "poll_closed_label": "Terminé",
+    "poll_no_participation_label": "Ce sondage est terminé. Vous n'y avez pas participé.",
+    "poll_total_voters": "Votes : {{count}}"
 }

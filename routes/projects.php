@@ -3,13 +3,13 @@
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectInvitationController;
 use App\Http\Controllers\ProjectNewsController;
+use App\Http\Controllers\ProjectPollController;
 use Illuminate\Support\Facades\Route;
-
 
 Route::get('projects', [ProjectController::class, 'index'])
     ->name('projects');
 
-//Route::get('projects/search', [ProjectController::class, 'indexSearch'])
+// Route::get('projects/search', [ProjectController::class, 'indexSearch'])
 //    ->name('projects.search');
 
 Route::get('projects/my-projects', [ProjectController::class, 'myProjects'])
@@ -70,6 +70,14 @@ Route::prefix('projects/{project}')->group(function () {
             ->name('projects.news.store');
     });
 
+    Route::middleware('can:createPoll,project')->group(function () {
+        Route::post('polls/store', [ProjectPollController::class, 'store'])
+            ->name('projects.polls.store');
+    });
+
+    Route::post('polls/{poll}/vote', [ProjectPollController::class, 'vote'])
+        ->name('projects.polls.vote');
+
     Route::middleware('can:update,project')->group(function () {
         Route::post('update/visibility', [ProjectController::class, 'updateVisibility'])
             ->name('projects.update.visibility');
@@ -92,4 +100,3 @@ Route::prefix('projects/{project}')->group(function () {
 
 Route::post('projects/{project}/invitations/{invitation}/revoke', [ProjectInvitationController::class, 'revoke'])
     ->name('projects.invitations.revoke');
-

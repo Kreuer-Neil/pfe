@@ -1,10 +1,10 @@
 import AppLayout from '@/layouts/app-layout';
 import {dashboard} from '@/routes';
-import {type BreadcrumbItem, IDashboardProject, IProjectMiniature, IProjectNewsFeedItem, ITask} from '@/types';
+import {type BreadcrumbItem, IDashboardFeedItem, IDashboardProject, IProjectMiniature, ITask} from '@/types';
 import {Head, usePage} from '@inertiajs/react';
 import MyProjects from "@/components/dashboard/my-projects";
 import ProjectsSection from "@/components/dashboard/projects-section";
-import NewsSection from "@/components/dashboard/news-section";
+import FeedSection from "@/components/dashboard/feed-section";
 import TaskDisplay from "@/components/tasks/task-display";
 import {useTranslation} from "react-i18next";
 import {useState} from "react";
@@ -24,11 +24,11 @@ type PageProps = {
     projects: IDashboardProject[],
     suggestedProjects: IProjectMiniature[],
     tasks: ITask[],
-    feedNews: IProjectNewsFeedItem[],
+    feedItems: IDashboardFeedItem[],
     dashboardFeedHidden: boolean,
 };
 export default function Dashboard() {
-    const {projects, suggestedProjects, tasks, feedNews, dashboardFeedHidden} = usePage<PageProps>().props;
+    const {projects, suggestedProjects, tasks, feedItems, dashboardFeedHidden} = usePage<PageProps>().props;
     const {t} = useTranslation('dashboard');
 
     const [feedHidden, setFeedHidden] = useState(dashboardFeedHidden);
@@ -40,7 +40,7 @@ export default function Dashboard() {
             <h1 className="sr-only">{t('title')}</h1>
             {/* TODO if first connection (passed from the onboarding->with()), use simple welcome text? */}
             {!feedHidden &&
-                <NewsSection news={feedNews} onDismiss={() => setShowDismissModal(true)}/>
+                <FeedSection items={feedItems} onDismiss={() => setShowDismissModal(true)}/>
             }
 
             {/*Tasks section*/}

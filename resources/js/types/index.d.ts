@@ -171,6 +171,36 @@ export interface IProjectNewsFeedItem extends IProjectNews {
     project: IProjectContext;
 }
 
+export interface IPollChoice {
+    id: number;
+    label: string;
+    count: number;
+    percentage: number;
+}
+
+export interface IProjectPoll {
+    id: number;
+    title: string;
+    multi: boolean;
+    end_date: string;
+    created_at: string;
+    user: IProfile | null;
+    choices: IPollChoice[];
+    total_voters: number;
+    is_expired: boolean;
+    can_see_results: boolean;
+    user_choice_ids: number[];
+    user_skipped: boolean;
+}
+
+export interface IProjectPollFeedItem extends IProjectPoll {
+    project: IProjectContext;
+}
+
+export type IDashboardFeedItem =
+    | { type: 'news'; created_at: string; data: IProjectNewsFeedItem }
+    | { type: 'poll'; created_at: string; data: IProjectPollFeedItem };
+
 export interface IProjectMiniature extends IProjectContext {
     description: string;
     // featured_members: IUser[];
@@ -214,6 +244,8 @@ export interface IProject extends IProjectShow {
     // user_role: 'member' | 'task_manager' | 'moderator' | 'admin' | 'banned';
 
     upcoming_tasks: ITask[];
+    polls: IProjectPoll[];
+    can_create_poll: boolean;
 }
 
 // Raw invitation row, as shaped by ProjectInvitationResource - only ever delivered inside

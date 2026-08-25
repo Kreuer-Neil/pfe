@@ -1,18 +1,19 @@
-import {IProjectNewsFeedItem} from "@/types";
+import {IDashboardFeedItem} from "@/types";
 import {ReactNode} from "react";
 import {useTranslation} from "react-i18next";
 import {Link} from "@inertiajs/react";
 import {Button} from "@/components/ui/button";
 import {index as feedIndex} from "@/actions/App/Http/Controllers/FeedController";
 import NewsItem from "@/components/general-posts/news-item";
+import PollCard from "@/components/projects/poll-card";
 
-export default function NewsSection({news, onDismiss}: {
-    news: IProjectNewsFeedItem[],
+export default function FeedSection({items, onDismiss}: {
+    items: IDashboardFeedItem[],
     onDismiss: () => void,
 }): ReactNode {
     const {t} = useTranslation('dashboard');
 
-    if (news.length <= 0) return null;
+    if (items.length <= 0) return null;
 
     return (
         <section className="items-section max-w-xl w-full">
@@ -25,9 +26,12 @@ export default function NewsSection({news, onDismiss}: {
                 </Button>
             </div>
             <ol className="thumbnails-list-container">
-                {news.map((item) => (
-                    <li key={item.id} className="w-full">
-                        <NewsItem news={item}/>
+                {items.map((item) => (
+                    <li key={`${item.type}-${item.data.id}`} className="w-full">
+                        {item.type === 'news' ?
+                            <NewsItem news={item.data}/> :
+                            <PollCard poll={item.data} projectSlug={item.data.project.slug} showProject/>
+                        }
                     </li>
                 ))}
             </ol>
