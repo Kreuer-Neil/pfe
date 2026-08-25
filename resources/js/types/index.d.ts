@@ -85,8 +85,13 @@ export interface IProfile {
     [key: string]: unknown; // This allows for additional properties...
 }
 
+export type IProjectRole = 'member' | 'task_manager' | 'moderator' | 'admin' | 'banned';
+
 export interface IMember extends IProfile {
-    role: 'member' | 'taskmaster' | 'moderator' | 'admin';
+    role: IProjectRole;
+    // For projects members management
+    manageable: boolean;
+    assignable_roles: IProjectRole[];
 }
 
 export interface ILocation {
@@ -204,11 +209,11 @@ export interface IProjectInvitation {
     created_at: string;
 }
 
-// Shape delivered by ProjectSettingsResource (ProjectController::edit() only) - IProject plus
-// settings-only fields. Don't add these fields to IProject itself; other pages using IProject
-// (e.g. projects-show.tsx) never receive them.
+// Shape delivered by ProjectSettingsResource (ProjectController::edit() only)
 export interface IProjectSettings extends IProject {
     invitations: IProjectInvitation[];
+    // banned members are split out here for their own view.
+    banned_members: IMember[];
 }
 
 export interface ITask {

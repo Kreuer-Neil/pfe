@@ -42,9 +42,65 @@ class ProjectPolicy
         return in_array($project->userRole($user), [ProjectRole::ADMIN->value, ProjectRole::MODERATOR->value, ProjectRole::TASK_MANAGER->value]);
     }
 
-    public function updateMemberRole(User $user, Project $project): bool
+    /**
+     * Whether $user may manage (change the role of, or ban) $target within $project at all,
+     * ignoring what the new role would be. Encodes the hierarchy:
+     * - nobody manages themselves
+     * - nobody but the owner manages the owner
+     * - the owner manages anyone else regardless of role
+     * - otherwise, admin/moderator manage strictly lower-ranked members only (peers can't
+     *   manage each other, and a role can never manage or outrank itself)
+     */
+    private function canManageMember(User $user, Project $project, User $target): bool
     {
-        return $project->userRole($user) === ProjectRole::ADMIN->value;
+        $targetRole = ProjectRole::tryFrom($project->userRole($target));
+        if ($targetRole === null) {
+            return false;
+        }
+
+        if ($user->id === $target->id) {
+            return false;
+        }
+
+        if ($target->id === $project->owner_id) {
+            return false;
+        }
+
+        if ($user->id === $project->owner_id) {
+            return true;
+        }
+
+        $actorRole = ProjectRole::tryFrom($project->userRole($user));
+        if (! in_array($actorRole, [ProjectRole::ADMIN, ProjectRole::MODERATOR], true)) {
+            return false;
+        }
+
+        return $actorRole->rank() > $targetRole->rank();
+    }
+
+    public function updateMemberRole(User $user, Project $project, User $target, ProjectRole $newRole): bool
+    {
+        // Banning has its own dedicated action/policy method.
+        if ($newRole === ProjectRole::BANNED) {
+            return false;
+        }
+
+        if (! $this->canManageMember($user, $project, $target)) {
+            return false;
+        }
+
+        if ($user->id === $project->owner_id) {
+            return true;
+        }
+
+        $actorRole = ProjectRole::from($project->userRole($user));
+
+        return $newRole->rank() < $actorRole->rank();
+    }
+
+    public function banMember(User $user, Project $project, User $target): bool
+    {
+        return $this->canManageMember($user, $project, $target);
     }
 
     public function manageInvitations(User $user, Project $project): bool

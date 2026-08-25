@@ -43,5 +43,17 @@
     "invitation_status_revoked": "Revoked",
     "invitation_revoke_title": "Revoke invitation",
     "invitation_revoke_warning": "This will immediately invalidate invitation {{code}}. This can't be undone.",
-    "invitation_revoke_action": "Revoke"
+    "invitation_revoke_action": "Revoke",
+    "project_handle_members": "Members",
+    "project_handle_banned_members": "Banned members",
+    "manage_user": "Manage {{user}}",
+    "member_change_role": "Change role",
+    "member_ban_action": "Ban from project",
+    "member_ban_title": "Ban member",
+    "member_ban_warning": "{{user}} will be banned from the project and won't be able to rejoin unless a moderator or admin changes their role again.",
+    "role_admin": "Admin",
+    "role_moderator": "Moderator",
+    "role_task_manager": "Task manager",
+    "role_member": "Member",
+    "role_banned": "Banned"
 }

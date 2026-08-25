@@ -7,11 +7,18 @@ use App\Models\User;
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\post;
 
+function makeMember(Project $project, ProjectRole $role): User
+{
+    $user = User::factory()->create();
+    Member::create(['project_id' => $project->id, 'user_id' => $user->id, 'role' => $role->value]);
+
+    return $user;
+}
+
 test('an admin can change another member\'s role', function () {
     $owner = User::factory()->create();
     $project = Project::factory()->create(['owner_id' => $owner->id]);
-    $target = User::factory()->create();
-    Member::create(['project_id' => $project->id, 'user_id' => $target->id, 'role' => ProjectRole::MEMBER->value]);
+    $target = makeMember($project, ProjectRole::MEMBER);
     actingAs($owner);
 
     post(route('projects.update.member-role', $project->slug), [
@@ -26,26 +33,140 @@ test('an admin can change another member\'s role', function () {
     ]);
 });
 
-test('a moderator cannot change member roles (admin-only)', function () {
+test('a moderator can change a lower-ranked member\'s role', function () {
     $owner = User::factory()->create();
     $project = Project::factory()->create(['owner_id' => $owner->id]);
-    $moderator = User::factory()->create();
-    Member::create(['project_id' => $project->id, 'user_id' => $moderator->id, 'role' => ProjectRole::MODERATOR->value]);
-    $target = User::factory()->create();
-    Member::create(['project_id' => $project->id, 'user_id' => $target->id, 'role' => ProjectRole::MEMBER->value]);
+    $moderator = makeMember($project, ProjectRole::MODERATOR);
+    $target = makeMember($project, ProjectRole::MEMBER);
     actingAs($moderator);
 
     post(route('projects.update.member-role', $project->slug), [
         'user_id' => $target->id,
         'role' => ProjectRole::TASK_MANAGER->value,
+    ])->assertRedirect();
+
+    $this->assertDatabaseHas('members', [
+        'project_id' => $project->id,
+        'user_id' => $target->id,
+        'role' => ProjectRole::TASK_MANAGER->value,
+    ]);
+});
+
+test('a moderator cannot change another moderator\'s role', function () {
+    $owner = User::factory()->create();
+    $project = Project::factory()->create(['owner_id' => $owner->id]);
+    $moderator = makeMember($project, ProjectRole::MODERATOR);
+    $target = makeMember($project, ProjectRole::MODERATOR);
+    actingAs($moderator);
+
+    post(route('projects.update.member-role', $project->slug), [
+        'user_id' => $target->id,
+        'role' => ProjectRole::MEMBER->value,
+    ])->assertForbidden();
+});
+
+test('a moderator cannot change an admin\'s role', function () {
+    $owner = User::factory()->create();
+    $project = Project::factory()->create(['owner_id' => $owner->id]);
+    $moderator = makeMember($project, ProjectRole::MODERATOR);
+    $admin = makeMember($project, ProjectRole::ADMIN);
+    actingAs($moderator);
+
+    post(route('projects.update.member-role', $project->slug), [
+        'user_id' => $admin->id,
+        'role' => ProjectRole::MEMBER->value,
+    ])->assertForbidden();
+});
+
+test('a moderator cannot elevate a member to moderator or admin', function () {
+    $owner = User::factory()->create();
+    $project = Project::factory()->create(['owner_id' => $owner->id]);
+    $moderator = makeMember($project, ProjectRole::MODERATOR);
+    $target = makeMember($project, ProjectRole::MEMBER);
+    actingAs($moderator);
+
+    post(route('projects.update.member-role', $project->slug), [
+        'user_id' => $target->id,
+        'role' => ProjectRole::MODERATOR->value,
+    ])->assertForbidden();
+
+    post(route('projects.update.member-role', $project->slug), [
+        'user_id' => $target->id,
+        'role' => ProjectRole::ADMIN->value,
+    ])->assertForbidden();
+});
+
+test('an admin cannot change another admin\'s role or elevate to admin', function () {
+    $owner = User::factory()->create();
+    $project = Project::factory()->create(['owner_id' => $owner->id]);
+    $admin = makeMember($project, ProjectRole::ADMIN);
+    $otherAdmin = makeMember($project, ProjectRole::ADMIN);
+    $target = makeMember($project, ProjectRole::MEMBER);
+    actingAs($admin);
+
+    post(route('projects.update.member-role', $project->slug), [
+        'user_id' => $otherAdmin->id,
+        'role' => ProjectRole::MEMBER->value,
+    ])->assertForbidden();
+
+    post(route('projects.update.member-role', $project->slug), [
+        'user_id' => $target->id,
+        'role' => ProjectRole::ADMIN->value,
+    ])->assertForbidden();
+});
+
+test('the owner can change any non-owner member\'s role, including elevating to admin', function () {
+    $owner = User::factory()->create();
+    $project = Project::factory()->create(['owner_id' => $owner->id]);
+    $admin = makeMember($project, ProjectRole::ADMIN);
+    actingAs($owner);
+
+    post(route('projects.update.member-role', $project->slug), [
+        'user_id' => $admin->id,
+        'role' => ProjectRole::MEMBER->value,
+    ])->assertRedirect();
+
+    $this->assertDatabaseHas('members', [
+        'project_id' => $project->id,
+        'user_id' => $admin->id,
+        'role' => ProjectRole::MEMBER->value,
+    ]);
+});
+
+test('nobody can change the owner\'s role, including the owner themselves', function () {
+    $owner = User::factory()->create();
+    $project = Project::factory()->create(['owner_id' => $owner->id]);
+    $admin = makeMember($project, ProjectRole::ADMIN);
+
+    actingAs($owner);
+    post(route('projects.update.member-role', $project->slug), [
+        'user_id' => $owner->id,
+        'role' => ProjectRole::MEMBER->value,
+    ])->assertForbidden();
+
+    actingAs($admin);
+    post(route('projects.update.member-role', $project->slug), [
+        'user_id' => $owner->id,
+        'role' => ProjectRole::MEMBER->value,
+    ])->assertForbidden();
+});
+
+test('nobody can change their own role', function () {
+    $owner = User::factory()->create();
+    $project = Project::factory()->create(['owner_id' => $owner->id]);
+    $admin = makeMember($project, ProjectRole::ADMIN);
+    actingAs($admin);
+
+    post(route('projects.update.member-role', $project->slug), [
+        'user_id' => $admin->id,
+        'role' => ProjectRole::MEMBER->value,
     ])->assertForbidden();
 });
 
 test('role cannot be set to viewer (not an assignable role)', function () {
     $owner = User::factory()->create();
     $project = Project::factory()->create(['owner_id' => $owner->id]);
-    $target = User::factory()->create();
-    Member::create(['project_id' => $project->id, 'user_id' => $target->id, 'role' => ProjectRole::MEMBER->value]);
+    $target = makeMember($project, ProjectRole::MEMBER);
     actingAs($owner);
 
     post(route('projects.update.member-role', $project->slug), [
@@ -54,7 +175,19 @@ test('role cannot be set to viewer (not an assignable role)', function () {
     ])->assertSessionHasErrors('role');
 });
 
-test('changing the role of a non-member fails', function () {
+test('role cannot be set to banned via this endpoint (banning has its own action)', function () {
+    $owner = User::factory()->create();
+    $project = Project::factory()->create(['owner_id' => $owner->id]);
+    $target = makeMember($project, ProjectRole::MEMBER);
+    actingAs($owner);
+
+    post(route('projects.update.member-role', $project->slug), [
+        'user_id' => $target->id,
+        'role' => ProjectRole::BANNED->value,
+    ])->assertSessionHasErrors('role');
+});
+
+test('changing the role of a non-member is forbidden', function () {
     $owner = User::factory()->create();
     $project = Project::factory()->create(['owner_id' => $owner->id]);
     $notAMember = User::factory()->create();
@@ -63,5 +196,5 @@ test('changing the role of a non-member fails', function () {
     post(route('projects.update.member-role', $project->slug), [
         'user_id' => $notAMember->id,
         'role' => ProjectRole::MODERATOR->value,
-    ])->assertSessionHasErrors('role');
+    ])->assertForbidden();
 });

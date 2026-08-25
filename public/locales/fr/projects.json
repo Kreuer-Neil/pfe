@@ -43,5 +43,17 @@
     "invitation_status_revoked": "Révoquée",
     "invitation_revoke_title": "Révoquer l'invitation",
     "invitation_revoke_warning": "Ceci invalidera immédiatement l'invitation {{code}}. Cette action est irréversible.",
-    "invitation_revoke_action": "Révoquer"
+    "invitation_revoke_action": "Révoquer",
+    "project_handle_members": "Membres",
+    "project_handle_banned_members": "Membres bannis",
+    "manage_user": "Gérer {{user}}",
+    "member_change_role": "Changer le rôle",
+    "member_ban_action": "Bannir du projet",
+    "member_ban_title": "Bannir le membre",
+    "member_ban_warning": "{{user}} sera banni du projet et ne pourra pas le rejoindre à nouveau, sauf si un modérateur ou un administrateur change à nouveau son rôle.",
+    "role_admin": "Administrateur",
+    "role_moderator": "Modérateur",
+    "role_task_manager": "Gestionnaire de tâches",
+    "role_member": "Membre",
+    "role_banned": "Banni"
 }

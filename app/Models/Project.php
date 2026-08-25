@@ -4,9 +4,7 @@ namespace App\Models;
 
 use App\Enums\ProjectAction;
 use App\Enums\ProjectInvitationResponse;
-use App\Enums\ProjectPermissionResponse;
 use App\Enums\ProjectRole;
-use App\Notifications\ProjectMemberBannedNotification;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -77,14 +75,31 @@ class Project extends Model
     }
 
     /**
-     * Returns member users
+     * Returns member users, regardless of role - including banned ones. Needed for role/ban
+     * lookups (userRole(), the ban/role-change policies) to work correctly; use activeMembers()
+     * or bannedMembers() when displaying a member list that should split the two.
      */
     public function members(): BelongsToMany
     {
         return $this
             ->belongsToMany(User::class, Member::class)
-            ->withPivot('role')
-            ->where('banned', false);
+            ->withPivot('role');
+    }
+
+    /**
+     * Members with a non-banned role, for display purposes.
+     */
+    public function activeMembers(): BelongsToMany
+    {
+        return $this->members()->wherePivot('role', '!=', ProjectRole::BANNED->value);
+    }
+
+    /**
+     * Members currently banned from the project, for display purposes.
+     */
+    public function bannedMembers(): BelongsToMany
+    {
+        return $this->members()->wherePivot('role', ProjectRole::BANNED->value);
     }
 
     public function owner(): BelongsTo
@@ -113,12 +128,12 @@ class Project extends Model
     /**
      * Shows the project's latest news
      */
-//    public function news(): HasMany
-//    {
-//        return $this
-//            ->hasMany(ProjectNews::class)
-//            ->orderBy('created_at','desc');
-//    }
+    //    public function news(): HasMany
+    //    {
+    //        return $this
+    //            ->hasMany(ProjectNews::class)
+    //            ->orderBy('created_at','desc');
+    //    }
 
     private function permission(User $user, ProjectAction $action): bool
     {
@@ -127,21 +142,24 @@ class Project extends Model
             $memberRole = $member->pivot->role;
             $returnValue = false;
             switch ($action) {
-                case ProjectAction::BELONGS;
+                case ProjectAction::BELONGS:
                     $returnValue = true;
                     break;
-                case ProjectAction::MANAGE_TASK;
+                case ProjectAction::MANAGE_TASK:
                     if (in_array($memberRole, [ProjectRole::TASK_MANAGER->value, ProjectRole::MODERATOR->value, ProjectRole::ADMIN->value,
                         // TODO remove later
-//                        ProjectRole::MEMBER->value
-                    ]))
+                        //                        ProjectRole::MEMBER->value
+                    ])) {
                         $returnValue = true;
+                    }
                     break;
-                case ProjectAction::EDIT_SETTINGS;
-                    if (in_array($memberRole, [ProjectRole::ADMIN->value,]))
+                case ProjectAction::EDIT_SETTINGS:
+                    if (in_array($memberRole, [ProjectRole::ADMIN->value])) {
                         $returnValue = true;
+                    }
                     break;
             }
+
             return $returnValue;
         }
 
@@ -150,32 +168,15 @@ class Project extends Model
 
     public function userIsMember(User $user): bool
     {
-        return !in_array($this->userRole($user), [ProjectRole::VIEWER, ProjectRole::BANNED]);
+        return ! in_array($this->userRole($user), [ProjectRole::VIEWER, ProjectRole::BANNED]);
     }
 
-    // Shouldn't this be in a controller? And there, we could make a separate ban method? (this 2nd part not mandatory)
-    public function updateMemberRole(User $target, ProjectRole $newRole): bool
+    public function addTask(Task $task, User $user): ?Task
     {
-        if ($newRole === ProjectRole::VIEWER) return false;
-
-        $membership = $this->memberships()->where('user_id', $target->id)->first();
-        if (!$membership) return false;
-
-        $membership->role = $newRole->value;
-        $saved = $membership->save();
-
-        if ($saved && $newRole === ProjectRole::BANNED) {
-            $target->notify(new ProjectMemberBannedNotification($this));
+        if (! $this->permission($user, ProjectAction::MANAGE_TASK)) {
+            return null;
         }
 
-        return $saved;
-    }
-
-    // TODO remove and use the policies
-    public function addTask(Task $task, User $user): Task|null
-    {
-        if (!$this->permission($user, ProjectAction::MANAGE_TASK))
-            return null;
         return Task::create([
             'user_id' => $user->id,
             'project_id' => $this->id,
@@ -191,19 +192,21 @@ class Project extends Model
     {
         // TODO use enum for "responses"
         // Check if user is already member
-        if (!($membership = $this->memberships->where('user_id', '==', $user->id))->isEmpty()) {
-            if ($membership->banned) {
+        if (! ($membership = $this->memberships->where('user_id', '==', $user->id))->isEmpty()) {
+            if ($membership->first()->role === ProjectRole::BANNED->value) {
                 return ProjectInvitationResponse::BANNED;
             }
+
             return ProjectInvitationResponse::ALREADY_JOINED_PROJECT;
         }
 
         // check if project is private and if person uses an invitation
         if ($this->is_private && $invitationCode === '') {
             // Use invitation to join project
-            if (!$this->getInvitedByCode($invitationCode, $this->id)) {
+            if (! $this->getInvitedByCode($invitationCode, $this->id)) {
                 return ProjectInvitationResponse::INVALID_INVITATION;
             }
+
             return ProjectInvitationResponse::REQUIRE_INVITATION;
         }
 
@@ -223,9 +226,10 @@ class Project extends Model
         return true;
     }
 
-    public function generateInvitation(string|null $expires_at, int|null $max_uses): ProjectInvitation
+    public function generateInvitation(?string $expires_at, ?int $max_uses): ProjectInvitation
     {
         $code = $this->generateInvitationCode();
+
         return ProjectInvitation::create([
             'project_id' => $this->id,
             'code' => $code,
@@ -234,11 +238,13 @@ class Project extends Model
         ]);
     }
 
-    function generateInvitationCode(): string
+    public function generateInvitationCode(): string
     {
         $code = Str::random();
-        if (ProjectInvitation::where('code', $code)->exists())
+        if (ProjectInvitation::where('code', $code)->exists()) {
             return $this->generateInvitationCode();
+        }
+
         return $code;
     }
 
@@ -248,7 +254,9 @@ class Project extends Model
     public function userRole(User $user): string
     {
         $member = $this->members->find($user->id);
-        if (!$member) return ProjectRole::VIEWER;
+        if (! $member) {
+            return ProjectRole::VIEWER;
+        }
         return $member->pivot->role;
     }
 
@@ -260,6 +268,45 @@ class Project extends Model
     public function tags(): MorphToMany
     {
         return $this->morphToMany(Tag::class, 'taggable');
+    }
+
+    /**
+     * Suggests public projects the user hasn't joined, ranked by a simple additive score:
+     * shared tags + matching spoken language + closer distance (capped at 50km), computed in PHP
+     * (rather than raw SQL) to stay portable between the mysql and sqlite test suite.
+     */
+    public static function suggestedFor(User $user, int $limit = 6): Collection
+    {
+        $preferences = $user->preferences;
+        $tagIds = $preferences?->tags->pluck('id') ?? collect();
+        $languageIds = $preferences?->languages->pluck('id') ?? collect();
+        $userLocation = $preferences?->location;
+
+        $query = self::where('is_private', false)
+            ->whereNotIn('projects.id', $user->projects()->pluck('projects.id'))
+            ->with('tags')
+            ->orderByDesc('projects.created_at')
+            ->limit(200);
+
+        if ($userLocation) {
+            $query->withDistanceFrom($userLocation->latitude, $userLocation->longitude);
+        }
+
+        return $query->get()
+            ->map(function (Project $project) use ($tagIds, $languageIds) {
+                $sharedTags = $project->tags->pluck('id')->intersect($tagIds)->count();
+                $languageMatch = $languageIds->contains($project->language_id);
+                $distanceScore = $project->distance !== null
+                    ? max(0, 5 - min($project->distance, 50) / 10)
+                    : 0;
+
+                $project->suggestion_score = $sharedTags * 2 + ($languageMatch ? 3 : 0) + $distanceScore;
+
+                return $project;
+            })
+            ->sortByDesc('suggestion_score')
+            ->take($limit)
+            ->values();
     }
 
     public function lang(): BelongsTo

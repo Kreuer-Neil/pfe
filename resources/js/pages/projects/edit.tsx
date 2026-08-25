@@ -1,8 +1,8 @@
 import Layout from '@/layouts/app-layout'
-import {Form, Head, Link, usePage} from '@inertiajs/react'
+import {Form, Head, usePage} from '@inertiajs/react'
 import ProjectController from "@/actions/App/Http/Controllers/ProjectController";
 import ProjectInvitationController from "@/actions/App/Http/Controllers/ProjectInvitationController";
-import {IProjectInvitation, IProjectSettings} from "@/types";
+import {IMember, IProjectInvitation, IProjectSettings} from "@/types";
 import {Field, FieldDescription, FieldGroup, FieldLegend, FieldSet} from "@/components/ui/field";
 import {useTranslation} from "react-i18next";
 import {Button} from "@/components/ui/button";
@@ -18,14 +18,13 @@ import InputError from "@/components/input-error";
 import {Textarea} from "@/components/ui/textarea";
 import {Switch} from "@/components/ui/switch";
 import {Separator} from "@/components/ui/separator";
-import {Camera, EllipsisVertical, SquareArrowOutUpRight, Trash2} from "lucide-react";
-import {Avatar, AvatarImage} from "@/components/ui/avatar";
+import {Camera, Trash2} from "lucide-react";
 import {Item, ItemContent, ItemDescription, ItemTitle, ItemFooter, ItemActions} from "@/components/ui/item";
 import {Badge} from "@/components/ui/badge";
 import {useImageAsset} from "@/hooks/use-image-asset";
-import {show as showProfile} from '@/actions/App/Http/Controllers/UserProfileController'
 import LocationSearch from "@/components/location-search";
 import ConfirmModal from "@/components/modals/confirm-modal";
+import MemberItem from "@/components/projects/member-item";
 import {laravelDateToJsDate, upcomingDateToString} from "@/helpers/date";
 
 type EditPageProps = {
@@ -47,6 +46,7 @@ export default function ProjectsEdit({}) {
     const anchor = useComboboxAnchor();
 
     const [revokeTarget, setRevokeTarget] = useState<IProjectInvitation | null>(null);
+    const [banTarget, setBanTarget] = useState<IMember | null>(null);
     const canManageInvitations = project.user_role === 'admin' || project.user_role === 'moderator';
 
     return (
@@ -253,54 +253,39 @@ export default function ProjectsEdit({}) {
                     <ul className="flex flex-col gap-2">
                         {project.members.map((member) => (
                             <li key={member.id}>
-                                <Item variant="outline" size="sm">
-                                    <Avatar>
-                                        <AvatarImage
-                                            src={useImageAsset('users/' + member.avatar + '/small')}
-                                            alt={member.nickname}
-                                        />
-                                    </Avatar>
-                                    <ItemContent>
-                                        <ItemTitle>
-                                            {member.nickname}
-                                        </ItemTitle>
-                                        <ItemDescription>
-                                            {member.first_name} {member.last_name}
-                                        </ItemDescription>
-                                    </ItemContent>
-                                    <ItemActions>
-                                        <Button asChild
-                                                size="icon"
-                                                variant="ghost"
-                                        >
-                                            <Link href={showProfile(member.id).url}>
-                                             <span className="sr-only">
-                                                 {t('common:to_user_profile',{user:member.nickname})}
-                                             </span>
-                                                <SquareArrowOutUpRight/>
-                                            </Link>
-                                        </Button>
-                                        <Button
-                                                size="icon"
-                                                variant="ghost"
-                                        >
-                                             <span className="sr-only">
-                                                 {t('project:manage_user',{user:member.nickname})}
-                                             </span>
-                                            <EllipsisVertical/>
-                                        </Button>
-                                    </ItemActions>
-                                    <ItemFooter>
-                                        {/* TODO add colors for roles? */}
-                                        <Badge>
-                                            {t('role_' + member.role)}
-                                        </Badge>
-                                    </ItemFooter>
-                                </Item>
+                                <MemberItem
+                                    projectSlug={project.slug}
+                                    member={member}
+                                    onBan={setBanTarget}
+                                />
                             </li>
                         ))}
                     </ul>
                 </section>
+
+                {project.banned_members.length > 0 && (
+                    <>
+                        <Separator/>
+
+                        <section>
+                            <h2 className="section-title">
+                                {t('project_handle_banned_members')}
+                            </h2>
+                            <ul className="flex flex-col gap-2">
+                                {project.banned_members.map((member) => (
+                                    <li key={member.id}>
+                                        <MemberItem
+                                            projectSlug={project.slug}
+                                            member={member}
+                                            onBan={setBanTarget}
+                                            showBanAction={false}
+                                        />
+                                    </li>
+                                ))}
+                            </ul>
+                        </section>
+                    </>
+                )}
 
                 {canManageInvitations && (
                     <>
@@ -368,6 +353,17 @@ export default function ProjectsEdit({}) {
                 formAction={revokeTarget ? ProjectInvitationController.revoke.form([project.slug, revokeTarget.id]) : undefined}
                 title={t('invitation_revoke_title')}
                 message={revokeTarget ? t('invitation_revoke_warning', {code: revokeTarget.code}) : null}
+            />
+
+            <ConfirmModal
+                id="member-confirm-ban"
+                showModal={banTarget !== null}
+                onClose={() => setBanTarget(null)}
+                onSuccess={() => setBanTarget(null)}
+                formAction={banTarget ? ProjectController.banMember.form(project.slug) : undefined}
+                fields={banTarget ? {user_id: banTarget.id} : undefined}
+                title={t('member_ban_title')}
+                message={banTarget ? t('member_ban_warning', {user: banTarget.nickname}) : null}
             />
         </Layout>
     );

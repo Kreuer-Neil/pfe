@@ -13,6 +13,7 @@ use App\Jobs\HandleProfileImageUploads;
 use App\Models\Project;
 use App\Models\Tag;
 use App\Models\User;
+use App\Notifications\ProjectMemberBannedNotification;
 use Illuminate\Validation\Rule;
 use Gate;
 use Illuminate\Http\Request;
@@ -226,8 +227,36 @@ class ProjectController extends Controller
     public function edit(Request $request, string $slug)
     {
         $project = Project::where('slug', $slug)->firstOrFail();
+
+        if(!Gate::allows('updateAppearance', $project)) {
+            return redirect(route('projects.show', $slug));
+        }
+
         $tagsList = Tag::all()->pluck('name');
+
+        $actingUser = auth()->user();
+        $memberManagement = $project->members->mapWithKeys(function (User $member) use ($project, $actingUser) {
+            $manageable = Gate::forUser($actingUser)->allows('banMember', [$project, $member]);
+            $assignableRoles = $manageable
+                ? collect(ProjectRole::cases())
+                    ->filter(fn(ProjectRole $role) => $role->value !== $member->pivot->role
+                        && Gate::forUser($actingUser)->allows('updateMemberRole', [$project, $member, $role]))
+                    ->map(fn(ProjectRole $role) => $role->value)
+                    ->values()
+                    ->all()
+                : [];
+
+            return [$member->id => ['manageable' => $manageable, 'assignable_roles' => $assignableRoles]];
+        });
+
         $project = (new ProjectSettingsResource($project))->toArray($request);
+        $members = collect($project['members'])
+            ->map(fn(array $member) => array_merge(
+                $member,
+                $memberManagement->get($member['id'], ['manageable' => false, 'assignable_roles' => []])
+            ));
+        $project['members'] = $members->reject(fn(array $member) => $member['role'] === ProjectRole::BANNED->value)->values()->all();
+        $project['banned_members'] = $members->filter(fn(array $member) => $member['role'] === ProjectRole::BANNED->value)->values()->all();
 
         return Inertia::render('projects/edit', compact(['project', 'tagsList']));
     }
@@ -279,10 +308,10 @@ class ProjectController extends Controller
     public function updateMemberRole(string $slug, Request $request)
     {
         $project = Project::where('slug', $slug)->firstOrFail();
-        Gate::authorize('updateMemberRole', $project);
 
+        // BANNED is deliberately excluded here - banning is its own action/endpoint (banMember).
         $assignableRoles = collect(ProjectRole::cases())
-            ->reject(fn($r) => $r === ProjectRole::VIEWER)
+            ->reject(fn($r) => $r === ProjectRole::BANNED)
             ->map(fn($r) => $r->value)
             ->all();
 
@@ -294,9 +323,32 @@ class ProjectController extends Controller
         $target = User::findOrFail($validated['user_id']);
         $role = ProjectRole::from($validated['role']);
 
-        if (!$project->updateMemberRole($target, $role)) {
-            return redirect()->back()->withErrors(['role' => __('validation.member_not_found')]);
-        }
+        Gate::authorize('updateMemberRole', [$project, $target, $role]);
+
+        $membership = $project->memberships()->where('user_id', $target->id)->firstOrFail();
+        $membership->role = $role->value;
+        $membership->save();
+
+        return redirect()->back();
+    }
+
+    public function banMember(string $slug, Request $request)
+    {
+        $project = Project::where('slug', $slug)->firstOrFail();
+
+        $validated = $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+        ]);
+
+        $target = User::findOrFail($validated['user_id']);
+
+        Gate::authorize('banMember', [$project, $target]);
+
+        $membership = $project->memberships()->where('user_id', $target->id)->firstOrFail();
+        $membership->role = ProjectRole::BANNED->value;
+        $membership->save();
+
+        $target->notify(new ProjectMemberBannedNotification($project));
 
         return redirect()->back();
     }

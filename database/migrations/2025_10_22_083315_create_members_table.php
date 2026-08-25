@@ -22,8 +22,6 @@ return new class extends Migration
 
             $table->enum('role', ProjectRole::cases())->nullable()->default(ProjectRole::MEMBER);
 
-            $table->boolean('banned')->default(false);
-
 //            $table->softDeletes();
             $table->timestamps();
 

@@ -14,6 +14,8 @@ type ConfirmModalProps = {
     title: string;
     id?: string;
     message?: string | null;
+    // Extra data the formAction's route doesn't carry as a URL param (e.g. a target user id).
+    fields?: Record<string, string | number>;
 }
 
 export default function ConfirmModal(
@@ -25,7 +27,8 @@ export default function ConfirmModal(
         onSuccess,
         title,
         id,
-        message = null
+        message = null,
+        fields
     }: ConfirmModalProps): ReactNode {
     const {t} = useTranslation('modals');
     return (
@@ -45,6 +48,9 @@ export default function ConfirmModal(
                             </ModalDescription>
                         </ModalHeader>
                         <ModalContent>
+                            {fields && Object.entries(fields).map(([name, value]) => (
+                                <input key={name} type="hidden" name={name} value={value}/>
+                            ))}
                             <div className="grid grid-cols-2 gap-1">
                                 <Button
                                     variant="destructive"
