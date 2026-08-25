@@ -40,12 +40,12 @@ class TestUserSeeder extends Seeder
 
                 'nickname' => 'Test User',
                 'avatar' => 'test_user',
-                'bio' => 'Hi! My name is John Doe, I’m literally a user reference for anyone using an app made by a dev with a minimum of culture. I’m the “John Smith” of the internet. This is basically an example profile, so there’s nothing to see here :>'
+                'bio' => 'Hi! My name is John Doe, I’m literally a user reference for anyone using an app made by a dev with a minimum of culture. I’m the “John Smith” of the internet. This is basically an example profile, so there’s nothing to see here :>',
             ]
         );
 
         $projectUsers = User::factory(5)->create(
-            ['email_verified_at' => now(),]
+            ['email_verified_at' => now()]
         );
 
         $sharedGardenProject = Project::create(
@@ -64,17 +64,18 @@ class TestUserSeeder extends Seeder
             Member::create([
                 'project_id' => $sharedGardenProject->id,
                 'user_id' => $user->id,
-                'role' => (!random_int(0, 1)) ? ProjectRole::MEMBER : ProjectRole::TASK_MANAGER,
+                'role' => (! random_int(0, 1)) ? ProjectRole::MEMBER : ProjectRole::TASK_MANAGER,
             ]);
         }
 
-        $sharedGardenProject->addTask(new Task([
+        Task::create([
             'title' => 'Water the plants',
             'user_id' => $testUser->id,
+            'project_id' => $sharedGardenProject->id,
             'description' => 'The plants in our appartment\'s shared garden need constant watering and care, especially if it didn\'t rain.',
             'min_participations' => 8,
-            'due_at' => Carbon::createFromDate('2026', '06', '23')
-        ]), $testUser)->participate($testUser);
+            'due_at' => Carbon::createFromDate('2026', '06', '23'),
+        ])->participate($testUser);
 
         foreach (Task::factory(5)->create([
             'user_id' => $testUser->id,

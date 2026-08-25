@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\ProjectAction;
 use App\Enums\ProjectInvitationResponse;
 use App\Enums\ProjectRole;
 use Carbon\Carbon;
@@ -155,63 +154,13 @@ class Project extends Model
     //            ->orderBy('created_at','desc');
     //    }
 
-    private function permission(User $user, ProjectAction $action): bool
-    {
-        // The project_permissions table (see permissions()) now covers invitations only,
-        // via ProjectPolicy::createInvitation() - MANAGE_TASK/EDIT_SETTINGS below are still hardcoded.
-        if (($member = $this->members->find($user->id))) {
-            $memberRole = $member->pivot->role;
-            $returnValue = false;
-            switch ($action) {
-                case ProjectAction::BELONGS:
-                    $returnValue = true;
-                    break;
-                case ProjectAction::MANAGE_TASK:
-                    if (in_array($memberRole, [ProjectRole::TASK_MANAGER->value, ProjectRole::MODERATOR->value, ProjectRole::ADMIN->value,
-                        // TODO remove later
-                        //                        ProjectRole::MEMBER->value
-                    ])) {
-                        $returnValue = true;
-                    }
-                    break;
-                case ProjectAction::EDIT_SETTINGS:
-                    if (in_array($memberRole, [ProjectRole::ADMIN->value])) {
-                        $returnValue = true;
-                    }
-                    break;
-            }
-
-            return $returnValue;
-        }
-
-        return false;
-    }
-
     public function userIsMember(User $user): bool
     {
         return ! in_array($this->userRole($user), [ProjectRole::VIEWER, ProjectRole::BANNED]);
     }
 
-    public function addTask(Task $task, User $user): ?Task
+    public function joinAsMember(User $user): ProjectInvitationResponse
     {
-        if (! $this->permission($user, ProjectAction::MANAGE_TASK)) {
-            return null;
-        }
-
-        return Task::create([
-            'user_id' => $user->id,
-            'project_id' => $this->id,
-            'title' => $task->title,
-            'description' => $task->description,
-            'min_participations' => $task->min_participations,
-            'due_at' => $task->due_at,
-            'starting_at' => $task->starting_at,
-        ]);
-    }
-
-    public function joinAsMember(User $user, string $invitationCode = ''): ProjectInvitationResponse
-    {
-        // TODO use enum for "responses"
         // Check if user is already member
         if (! ($membership = $this->memberships->where('user_id', '==', $user->id))->isEmpty()) {
             if ($membership->first()->role === ProjectRole::BANNED->value) {
@@ -221,14 +170,9 @@ class Project extends Model
             return ProjectInvitationResponse::ALREADY_JOINED_PROJECT;
         }
 
-        // check if project is private and if person uses an invitation
-        if ($this->is_private && $invitationCode === '') {
-            // Use invitation to join project
-            if (! $this->getInvitedByCode($invitationCode, $this->id)) {
-                return ProjectInvitationResponse::INVALID_INVITATION;
-            }
-
-            return ProjectInvitationResponse::REQUIRE_INVITATION;
+        // ProjectController handles invitations on private projects via itself.
+        if ($this->is_private) {
+            return ProjectInvitationResponse::INVALID_INVITATION;
         }
 
         Member::create([
@@ -238,13 +182,6 @@ class Project extends Model
         ]);
 
         return ProjectInvitationResponse::WELCOME;
-    }
-
-    public function getInvitedByCode(string $invitationCode, string $projectId): bool
-    {
-        // TODO implement invitation creation later
-        // TODO decrement invitations when doing so
-        return true;
     }
 
     public function generateInvitation(?string $expires_at, ?int $max_uses): ProjectInvitation
@@ -278,6 +215,7 @@ class Project extends Model
         if (! $member) {
             return ProjectRole::VIEWER;
         }
+
         return $member->pivot->role;
     }
 
