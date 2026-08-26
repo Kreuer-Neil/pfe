@@ -39,7 +39,7 @@ class Project extends Model
         parent::boot();
 
         static::creating(function (Project $project) {
-            $project->slug = Str::slug($project->name);
+            $project->slug = static::generateSlug($project->name);
         });
 
         static::created(function (Project $project) {
@@ -194,7 +194,7 @@ class Project extends Model
     {
         $follow = ProjectFollow::where('user_id', $user->id)->where('project_id', $this->id)->first();
 
-        if (! $follow) {
+        if (!$follow) {
             return false;
         }
 
@@ -205,13 +205,13 @@ class Project extends Model
 
     public function userIsMember(User $user): bool
     {
-        return ! in_array($this->userRole($user), [ProjectRole::VIEWER->value, ProjectRole::BANNED->value]);
+        return !in_array($this->userRole($user), [ProjectRole::VIEWER->value, ProjectRole::BANNED->value]);
     }
 
     public function joinAsMember(User $user): ProjectInvitationResponse
     {
         // Check if user is already member
-        if (! ($membership = $this->memberships->where('user_id', '==', $user->id))->isEmpty()) {
+        if (!($membership = $this->memberships->where('user_id', '==', $user->id))->isEmpty()) {
             if ($membership->first()->role === ProjectRole::BANNED->value) {
                 return ProjectInvitationResponse::BANNED;
             }
@@ -261,7 +261,7 @@ class Project extends Model
     public function userRole(User $user): string
     {
         $member = $this->members->find($user->id);
-        if (! $member) {
+        if (!$member) {
             return ProjectRole::VIEWER->value;
         }
 
@@ -333,5 +333,18 @@ class Project extends Model
     public function defaultChatRoom(): ?ChatRoom
     {
         return $this->chatRooms()->where('type', 'default')->first();
+    }
+
+    private static function generateSlug(string $projectName): string
+    {
+        $baseSlug = Str::slug($projectName);
+        $slug = $baseSlug;
+        $suffix = 1;
+
+        while (Project::where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . ++$suffix;
+        }
+
+        return $slug;
     }
 }

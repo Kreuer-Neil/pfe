@@ -104,3 +104,14 @@ test('tags are not required for private projects', function () {
 
     $this->assertDatabaseHas('projects', ['name' => 'Private No Tags Project']);
 });
+
+test('projects with colliding slugs each get a unique slug', function () {
+    $owner = User::factory()->create();
+    $first = Project::factory()->create(['name' => 'Same Slug Project', 'owner_id' => $owner->id]);
+    $second = Project::factory()->create(['name' => 'Same Slug Project', 'owner_id' => $owner->id]);
+    $third = Project::factory()->create(['name' => 'Same Slug Project', 'owner_id' => $owner->id]);
+
+    expect($first->slug)->toBe('same-slug-project')
+        ->and($second->slug)->toBe('same-slug-project-2')
+        ->and($third->slug)->toBe('same-slug-project-3');
+});
