@@ -12,7 +12,7 @@ function LinkContainer({profile, isWithLinks, children}: {
 }) {
     if (isWithLinks) {
         return (
-            <Link href={showProfile(profile.id)}>
+            <Link href={showProfile(profile.uuid)}>
                 {children}
             </Link>
         );

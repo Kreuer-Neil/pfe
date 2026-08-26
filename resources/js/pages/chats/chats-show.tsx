@@ -61,7 +61,7 @@ export default function ChatsShow(): ReactNode {
     // Broadcast payloads can't check auth(), so is_owner always comes back false - recompute it here.
     const getMessageWithOwnership = (message: IChatMessage): IChatMessage => ({
         ...message,
-        is_owner: message.owner?.id.toString() === auth.user.id.toString(),
+        is_owner: message.owner?.uuid === auth.user.uuid,
     });
 
     useEcho<{ message: IChatMessage }>(

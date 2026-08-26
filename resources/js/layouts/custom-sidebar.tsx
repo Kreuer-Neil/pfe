@@ -102,7 +102,7 @@ export default function CustomSidebar(
             <div className="sidebar-content">
 
                 <div>
-                    <Link as="a" href={showProfile(auth.user.id).url}
+                    <Link as="a" href={showProfile(auth.user.uuid).url}
                           className="nav-profile">
                         {/* TODO replace with userIcon fn please */}
                         <img src={useImageAsset(`users/${auth.user.avatar}/small`)}

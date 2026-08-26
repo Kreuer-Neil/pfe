@@ -23,7 +23,7 @@ test('the settings page splits banned members out of the regular members list', 
             // owner + active member, banned member excluded
             ->has('project.members', 2)
             ->has('project.banned_members', 1)
-            ->where('project.banned_members.0.id', $bannedMember->id)
+            ->where('project.banned_members.0.uuid', $bannedMember->uuid)
             ->where('project.banned_members.0.role', ProjectRole::BANNED->value)
         );
 });
@@ -36,7 +36,7 @@ test('an admin can unban a member by changing their role away from banned', func
     actingAs($owner);
 
     patch(route('projects.update.member-role', $project->slug), [
-        'user_id' => $bannedMember->id,
+        'user_uuid' => $bannedMember->uuid,
         'role' => ProjectRole::MEMBER->value,
     ])->assertRedirect();
 

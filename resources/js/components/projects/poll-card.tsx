@@ -19,7 +19,7 @@ export default function PollCard({poll, projectSlug, showProject = false, canMan
     projectSlug: string,
     showProject?: boolean,
     canManage?: boolean,
-    currentUserId?: number,
+    currentUserId?: string,
 }) {
     const {t} = useTranslation('projects');
     const {t: tDate} = useTranslation('date');
@@ -28,7 +28,7 @@ export default function PollCard({poll, projectSlug, showProject = false, canMan
     const [submitting, setSubmitting] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-    const canDelete = canManage || (currentUserId !== undefined && poll.user?.id === String(currentUserId));
+    const canDelete = canManage || (currentUserId !== undefined && poll.user?.uuid === currentUserId);
 
     useEffect(() => {
         setSelectedIds(poll.user_choice_ids);

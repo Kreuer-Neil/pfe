@@ -110,7 +110,7 @@ export default function TaskDisplay({
                             : t('upcoming_title')
                     )}
                 </h2>
-                {project?.owner.id === auth.user.id &&
+                {project?.owner.uuid === auth.user.uuid &&
                     <Button size="icon" variant="outline" onClick={() => setShowCreateModal(true)}>
                         <span className="sr-only">{t('add')}</span>
                         <ClipboardPlus/>

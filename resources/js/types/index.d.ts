@@ -50,6 +50,7 @@ export interface User {
 // Custom types
 export interface IUser extends IProfile {
     id: number;
+    uuid: string;
     first_name: string;
     last_name: string;
     email: string;
@@ -63,7 +64,7 @@ export interface IUser extends IProfile {
 }
 
 export interface IProfileMiniature {
-    id: string;
+    uuid: string;
     first_name: string;
     last_name: string;
     nickname: string;
@@ -74,7 +75,7 @@ export interface IProfileMiniature {
 }
 
 export interface IProfile {
-    id: string;
+    uuid: string;
     first_name: string;
     last_name: string;
     nickname: string;
@@ -233,7 +234,7 @@ export interface IProject extends IProjectShow {
     description: string;
     is_private: boolean;
     can_invite: boolean;
-    owner: IUser;
+    owner: IProfile;
     members: IMember[];
     members_count: number;
 

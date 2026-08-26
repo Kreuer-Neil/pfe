@@ -49,7 +49,7 @@ export default function MemberItem({projectSlug, member, onBan, showBanAction = 
                         size="icon"
                         variant="ghost"
                 >
-                    <Link href={showProfile(member.id).url}>
+                    <Link href={showProfile(member.uuid).url}>
                      <span className="sr-only">
                          {t('common:to_user_profile', {user: member.nickname})}
                      </span>
@@ -76,7 +76,7 @@ export default function MemberItem({projectSlug, member, onBan, showBanAction = 
                                     key={role}
                                     onClick={() => router.patch(
                                         ProjectController.updateMemberRole.url(projectSlug),
-                                        {user_id: member.id, role},
+                                        {user_uuid: member.uuid, role},
                                         {preserveScroll: true}
                                     )}
                                 >

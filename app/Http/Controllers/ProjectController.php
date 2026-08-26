@@ -252,14 +252,14 @@ class ProjectController extends Controller
                     ->all()
                 : [];
 
-            return [$member->id => ['manageable' => $manageable, 'assignable_roles' => $assignableRoles]];
+            return [$member->uuid => ['manageable' => $manageable, 'assignable_roles' => $assignableRoles]];
         });
 
         $project = (new ProjectSettingsResource($project))->toArray($request);
         $members = collect($project['members'])
             ->map(fn(array $member) => array_merge(
                 $member,
-                $memberManagement->get($member['id'], ['manageable' => false, 'assignable_roles' => []])
+                $memberManagement->get($member['uuid'], ['manageable' => false, 'assignable_roles' => []])
             ));
         $project['members'] = $members->reject(fn(array $member) => $member['role'] === ProjectRole::BANNED->value)->values()->all();
         $project['banned_members'] = $members->filter(fn(array $member) => $member['role'] === ProjectRole::BANNED->value)->values()->all();
@@ -335,11 +335,11 @@ class ProjectController extends Controller
             ->all();
 
         $validated = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
+            'user_uuid' => 'required|uuid|exists:users,uuid',
             'role' => ['required', 'string', Rule::in($assignableRoles)],
         ]);
 
-        $target = User::findOrFail($validated['user_id']);
+        $target = User::where('uuid', $validated['user_uuid'])->firstOrFail();
         $role = ProjectRole::from($validated['role']);
 
         Gate::authorize('updateMemberRole', [$project, $target, $role]);
@@ -354,10 +354,10 @@ class ProjectController extends Controller
     public function banMember(Project $project, Request $request)
     {
         $validated = $request->validate([
-            'user_id' => 'required|integer|exists:users,id',
+            'user_uuid' => 'required|uuid|exists:users,uuid',
         ]);
 
-        $target = User::findOrFail($validated['user_id']);
+        $target = User::where('uuid', $validated['user_uuid'])->firstOrFail();
 
         Gate::authorize('banMember', [$project, $target]);
 

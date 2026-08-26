@@ -11,26 +11,22 @@ use Inertia\Inertia;
 
 class UserProfileController extends Controller
 {
-    public function show($id)
+    public function show(User $user)
     {
-        return $this->renderProfile($id, false);
+        return $this->renderProfile($user, false);
     }
 
-    public function edit($id)
+    public function edit(User $user)
     {
-        return $this->renderProfile($id, true);
+        return $this->renderProfile($user, true);
     }
 
-    private function renderProfile($id, bool $editing)
+    private function renderProfile(User $user, bool $editing)
     {
-        $user = User::find($id);
-
         // TODO add check if not contact or project in common + if account private
-        if (!($user
-            /*&& ((!$user->is_private) || $user->hasProjectsInCommonWith(auth()->user()))*/
-        )) {
+        /*if (!(($user->is_private) || $user->hasProjectsInCommonWith(auth()->user()))) {
             abort(404);
-        }
+        }*/
 
         $canEdit = auth()->user()->id === $user->id;
 
@@ -45,14 +41,12 @@ class UserProfileController extends Controller
         ));
     }
 
-    public function update(int $id, Request $request)
+    public function update(User $user, Request $request)
     {
-        if (auth()->user()->id !== $id) {
+        if (auth()->user()->id !== $user->id) {
             // TODO 404 if profile private?
             abort(403);
         }
-
-        $user = User::find($id);
 
         $validated = $request->validate([
             'nickname' => 'nullable|string|min:3|max:32',
@@ -84,36 +78,28 @@ class UserProfileController extends Controller
 
         $user->save();
 
-        return redirect(route('user-profile.show', $id));
+        return redirect(route('user-profile.show', $user));
     }
 
 
     // Other methods
-    public function follow(int $id)
+    public function follow(User $user)
     {
-        if (!User::find($id)) {
-            abort(404);
-        }
-
         $currentUser = auth()->user();
-        if ($id !== $currentUser->id) {
-            User::find($id)->followAs($currentUser);
+        if ($user->id !== $currentUser->id) {
+            $user->followAs($currentUser);
         }
 
-        return redirect(route('user-profile.show', $id));
+        return redirect(route('user-profile.show', $user));
     }
 
-    public function unfollow(int $id)
+    public function unfollow(User $user)
     {
-        if (!User::find($id)) {
-            abort(404);
-        }
-
         $currentUser = auth()->user();
-        if ($id !== $currentUser->id) {
-            User::find($id)->unfollowAs($currentUser);
+        if ($user->id !== $currentUser->id) {
+            $user->unfollowAs($currentUser);
         }
 
-        return redirect(route('user-profile.show', $id));
+        return redirect(route('user-profile.show', $user));
     }
 }

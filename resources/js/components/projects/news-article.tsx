@@ -12,13 +12,13 @@ export default function NewsArticle({news, projectSlug, canManage, currentUserId
     news: IProjectNews,
     projectSlug: string,
     canManage: boolean,
-    currentUserId: number,
+    currentUserId: string,
 }) {
     const {t} = useTranslation('projects');
     const {t: tDate} = useTranslation('date');
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-    const canDelete = canManage || news.author?.id === String(currentUserId);
+    const canDelete = canManage || news.author?.uuid === currentUserId;
 
     return (
         <article className="flex flex-col gap-1">

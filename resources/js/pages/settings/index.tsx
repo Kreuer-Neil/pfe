@@ -53,7 +53,7 @@ export default function SettingsIndex({}) {
     const settingsLinks: Array<ISettingsLink> = [
         {
             title: t('profile'),
-            href: editProfile(auth.user.id).url,
+            href: editProfile(auth.user.uuid).url,
             icon: UserPen
         },
         {
