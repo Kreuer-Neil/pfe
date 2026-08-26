@@ -118,13 +118,13 @@
     --foreground-main: oklch(0.145 0 0);
     --foreground-light: oklch(0.981 0 0);
 
-    --background: oklch(0.9856 0 0);
+    --background: oklch(1 0 0);
     --foreground: var(--foreground-main);
     --modal-behind: oklch(0.576 0.053 159.319 / 0.5);
     /*--card: oklch(1 0 0);*/
 
 
-    --card: oklch(1 0 0);
+    --card: oklch(0.9856 0 0);
     --card-foreground: var(--foreground-main);
 
     --button: var(--tea-green);
@@ -254,21 +254,6 @@
     }
 
     /** Generic style shared between frontpage and app **/
-    .btn, .btn-alt {
-        @apply flex justify-center p-2 px-4 rounded-sm bg-primary text-primary-foreground max-w-xs w-full mx-auto font-semibold text-[1.125rem];
-    }
-
-    .btn-alt {
-        @apply bg-tertiary text-shadow-tertiary-foreground;
-    }
-
-    .icon-btn {
-        @apply bg-card text-link p-1 px-2 rounded-xs border border-border cursor-pointer flex gap-1;
-    }
-    .icon-btn-alt {
-        @apply bg-tertiary text-tertiary-foreground p-1 px-2 rounded-xs cursor-pointer flex gap-1;
-    }
-
     /** Frontpage specific style **/
     .frontpage {
         main > * {
@@ -286,9 +271,10 @@
         & > nav {
             @apply sticky top-0 bg-sidebar text-sidebar-foreground w-screen z-10 flex;
 
-            &>a {
+            & > a {
                 @apply border-r-2 border-tertiary p-2 bg-secondary;
             }
+
             img {
                 @apply h-10 overflow-hidden border-2 border-primary rounded-md box-border;
             }
@@ -376,7 +362,8 @@
             }
 
             img {
-                @apply m-auto aspect-video w-full max-w-lg /*bg-gray-200*/ rounded-xl;
+                @apply m-auto aspect-video w-full max-w-lg /*bg-gray-200*/
+                rounded-xl;
             }
 
         }
@@ -385,8 +372,40 @@
             @apply md:-order-1;
         }
 
+        /* Matches the "secondary" variant of components/ui/button.tsx */
+        .btn {
+            @apply cursor-pointer inline-flex shrink-0 items-center justify-center gap-2
+            rounded-md h-9 px-4 py-2 text-sm font-medium whitespace-nowrap transition-all
+            outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50
+            bg-tertiary text-tertiary-foreground hover:bg-secondary/80;
+        }
+
         .large-section {
             @apply flex flex-col justify-center gap-12;
+        }
+
+        .policy-section {
+            @apply grid gap-6 sm:grid-cols-3 max-w-5xl w-full mx-auto;
+        }
+
+        .policy-item {
+            @apply flex flex-col gap-2 p-6 rounded-xl bg-card border border-border;
+        }
+
+        .contact-form {
+            @apply flex flex-col gap-4 max-w-xl w-full mx-auto;
+        }
+
+        .contact-field {
+            @apply flex flex-col gap-1 text-left;
+
+            label {
+                @apply text-sm font-medium;
+            }
+        }
+
+        .contact-success {
+            @apply max-w-xl w-full mx-auto text-center p-3 rounded-md bg-valid/20 border border-valid;
         }
 
         article.bottom-section, section.bottom-section {
@@ -402,16 +421,20 @@
 
     /** Generic app style **/
     .main-page {
-        @apply w-full max-w-7xl flex flex-col items-center gap-8 py-8 min-h-[100vh-1rem] bg-background sm:rounded-md sm:m-2 sm:ml-0 overflow-hidden;
+        @apply w-full max-w-[96rem] flex flex-col items-center gap-8 py-8 sm:min-h-[calc(100vh-1rem)] min-h-[calc(100vh-4rem)] bg-background sm:rounded-md sm:m-2 sm:ml-0 overflow-clip;
+
+        &.h-fixed {
+            height: calc(100vh - 4rem);
+        }
     }
 
     .page-title {
-        @apply font-medium text-[2rem] w-full text-left;
+        @apply font-medium text-[2rem] w-full text-left mb-2;
         line-height: 2rem;
     }
 
     .section-title {
-        @apply font-medium text-2xl w-full text-left;
+        @apply font-medium text-2xl w-full text-left mb-1;
     }
 
     .item-title {
@@ -423,8 +446,7 @@
     }
 
     .items-section {
-        @apply w-full max-w-xl
-        flex flex-col gap-4;
+        @apply w-full max-w-xl flex flex-col gap-4;
     }
 
     .thumbnails-list-container {
@@ -432,7 +454,7 @@
     }
 
     .main-container {
-        @apply max-w-[var(--number-container-max-width)] w-full;
+        @apply max-w-[var(--number-container-max-w)] w-full;
     }
 
     .thumbnail-item {
@@ -446,7 +468,11 @@
     }
 
     .modal {
-        @apply m-auto p-2 py-3 bg-background text-foreground rounded-lg w-full max-w-3xl;
+        @apply m-auto w-full max-w-[calc(100%-2rem)] sm:max-w-lg bg-background rounded-lg border p-6 shadow-lg;
+
+        &[open] {
+            @apply grid gap-4;
+        }
 
         &::backdrop {
             @apply bg-modal-behind;
@@ -486,17 +512,17 @@
         @apply text-xs text-green-700;
     }
 
-    /* Overwrites default Lucide icons style*/
+    /* Overwrites default Lucide icons style */
     .lucide {
-        @apply size-6 box-content;
+        @apply size-5 shrink-0 box-content;
     }
 
     .item-tag {
-        @apply bg-tag-neutral border border-tag-neutral-border flex gap-1 p-1 px-1.5 rounded-xs items-center;
+        @apply bg-tag-neutral border border-tag-neutral-border flex gap-0.5 p-0.5 px-1 rounded-xs items-center;
     }
 
     .item-tag-warning {
-        @apply bg-tag-warning border border-tag-warning-border flex gap-1 p-1 px-1.5 rounded-xs items-center;
+        @apply bg-tag-warning border border-tag-warning-border flex gap-0.5 p-0.5 px-1 rounded-xs items-center;
     }
 
     .text-with-icon {
@@ -510,7 +536,7 @@
             flex-grow: 1;
             content: '';
             height: 0.0625rem;
-            background: var(--color-muted-foreground);
+            @apply bg-border;
         }
     }
 
@@ -561,7 +587,7 @@
     }
 
     .nav-pfp {
-        @apply bg-loading rounded-full size-12 border border-secondary-border;
+        @apply bg-loading rounded-full size-12 shrink-0 border border-secondary-border object-cover;
     }
 
     .closed .nav-pfp {
@@ -573,7 +599,11 @@
     }
 
     .nav-item {
-        @apply p-2 flex gap-2 items-center cursor-pointer hover:bg-secondary rounded-sm;
+        @apply p-2 flex gap-2 items-center cursor-pointer hover:bg-secondary rounded-sm text-sm font-medium leading-tight;
+    }
+
+    .nav-title {
+        @apply font-medium text-lg w-full text-left;
     }
 
     .closed .nav-item {
@@ -608,6 +638,18 @@
 
     .button-text {
         @apply text-link hover:bg-primary focus:bg-primary flex gap-2 p-1.5 justify-center items-center w-full max-w-md rounded-sm cursor-pointer font-medium;
+    }
+
+    .chat-actions {
+        @apply invisible flex absolute bg-card rounded-md right-0 -top-4;
+    }
+
+    .chat-item {
+        @apply relative;
+
+        &:hover .chat-actions {
+            @apply visible;
+        }
     }
 
     /* Generic Widgets style */

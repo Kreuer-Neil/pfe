@@ -155,6 +155,17 @@ return [
     'ulid' => 'Le champ :attribute doit être un ULID valide.',
     'uuid' => 'Le champ :attribute doit être un UUID valide.',
 
+    'member_not_found' => 'Ce membre est introuvable.',
+    'location_selection_expired' => 'Cette sélection de localisation a expiré, veuillez rechercher à nouveau.',
+    'location_required_for_public' => 'Les projets publics doivent avoir une localisation définie avant de pouvoir être rendus publics.',
+    'invitation_invalid_code' => "Ce code d'invitation est invalide ou a expiré.",
+    'invitation_already_member' => 'Vous êtes déjà membre de ce projet.',
+    'task_not_found' => 'Cette tâche est introuvable.',
+    'project_not_found' => 'Ce projet est introuvable.',
+    'task_participation_cancel_failed' => "Votre participation n'a pas pu être annulée. Veuillez réessayer.",
+    'chat_message_not_found' => "Le message auquel vous répondez est introuvable dans ce salon.",
+    'internal_error' => 'Une erreur interne est survenue. Veuillez réessayer plus tard.',
+
     'custom' => [
         'attribute-name' => [
             'rule-name' => 'custom-message',

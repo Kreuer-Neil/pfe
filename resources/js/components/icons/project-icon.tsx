@@ -24,13 +24,13 @@ export default function ProjectIcon({project, size = 'small', className = ''}: p
                 useImageAsset(`projects/${project.icon}/large`) + ' 2x, ';
             break;
         case 'large':
-            sizeStyle = 'size-[7rem]';
+            sizeStyle = 'size-28';
             break;
     }
 
 
 
     return <img src={useImageAsset(`projects/${project.icon}/${size}`)} alt={t('icon_alt', {project: project.name})}
-                className={cn("rounded-full bg-loading", sizeStyle, className)}
+                className={cn("rounded-full bg-loading shrink-0 object-cover", sizeStyle, className)}
     srcSet={srcset}/>;
 }

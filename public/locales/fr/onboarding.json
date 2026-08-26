@@ -1,0 +1,12 @@
+{
+    "title": "Bienvenue",
+    "tags_title": "Qu'est-ce qui vous intéresse ?",
+    "tags_description": "Choisissez quelques thèmes qui vous intéressent - vous pourrez toujours les modifier plus tard.",
+    "languages_title": "Quelles langues parlez-vous ?",
+    "languages_description": "Cela nous aide à vous montrer des projets auxquels vous pouvez réellement participer.",
+    "location_title": "Où êtes-vous situé ?",
+    "location_description": "Nous utiliserons cette information pour vous montrer des projets près de chez vous.",
+    "skip": "Passer",
+    "next": "Suivant",
+    "finish": "Terminer"
+}

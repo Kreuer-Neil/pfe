@@ -1,10 +1,8 @@
 <?php
 
-use App\Http\Controllers\AuthPageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LanguageController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 Route::get('/', function () {
@@ -17,6 +15,12 @@ Route::get('/', function () {
 //    ->name('login');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    require __DIR__ . '/onboarding.php';
+    require __DIR__ . '/location.php';
+    require __DIR__ . '/preferences.php';
+});
+
+Route::middleware(['auth', 'verified', 'onboarded'])->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
@@ -24,7 +28,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     require __DIR__ . '/profile.php';
     require __DIR__ . '/projects.php';
     require __DIR__ . '/tasks.php';
+    require __DIR__ . '/chat.php';
     require __DIR__ . '/userProfile.php';
+    require __DIR__ . '/notifications.php';
+    require __DIR__ . '/feed.php';
 
 //    Route::get('users/{id}', );
 });

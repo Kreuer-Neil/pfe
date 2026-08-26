@@ -1,21 +1,18 @@
-import {NavFooter} from '@/components/nav-footer';
-import {NavMain} from '@/components/nav-main';
 import {NavUser} from '@/components/nav-user';
 import {
     Sidebar,
     SidebarContent,
-    SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
+    SidebarFooter, SidebarGroup, SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
-    SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem,
+    SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import {dashboard} from '@/routes';
 import {type NavItem, type SharedData} from '@/types';
 import {Link, usePage} from '@inertiajs/react';
-import {BookOpen, Folder, LayoutGrid, SettingsIcon} from 'lucide-react';
+import {BookOpen, LayoutGrid, SettingsIcon} from 'lucide-react';
 import AppLogo from './app-logo';
-import {Collapsible, CollapsibleContent, CollapsibleTrigger} from "@/components/ui/collapsible";
 
 const mainNavItems: NavItem[] = [
     {
@@ -30,19 +27,6 @@ const mainNavItems: NavItem[] = [
     }
 ];
 // const { auth } = usePage<SharedData>().props;
-
-// TODO access Auth::user()->projects to insert here
-// https://ui.shadcn.com/docs/components/sidebar#sidebargroup
-// let projectNavItems:NavItem[] = [];
-//
-// for (const project of auth.user.projects) {
-//     projectNavItems.push({
-//         title: project.name,
-//         href: 'projects/' + project.id,
-//         icon: BookmarkIcon,
-//     });
-// }
-
 
 const footerNavItems: NavItem[] = [
     /*{

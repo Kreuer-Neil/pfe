@@ -1,9 +1,10 @@
 import {ReactNode} from "react";
-import {BellDot, LucideIcon, Menu} from "lucide-react";
+import {LucideIcon, Menu} from "lucide-react";
 import {IAppHeaderContext} from "@/types";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import CustomSidebar from "@/layouts/custom-sidebar";
 import {useTranslation} from "react-i18next";
+import NotificationBell from "@/components/notifications/notification-bell";
 
 type CustomSidebarProps = {
     isMobile: boolean,
@@ -26,7 +27,7 @@ function MobileHeader({appHeaderContext, switchModalState}: {
                 {/* TODO replace with <Icon/> type param instead of image asset */}
                 <img src={appHeaderContext?.contextImageSrc ?? useImageAsset('app/logo')}
                      alt={appHeaderContext?.contextImageAlt ?? 'ComeUnite app logo'}
-                     className="rounded-sm bg-loading border border-secondary-border size-8"/>
+                     className="rounded-sm bg-loading border border-secondary-border size-8 shrink-0 object-cover"/>
                 <div className="flex flex-col">
                     <span className="section-title">{appHeaderContext?.context ?? defaultTitle}</span>
                     {appHeaderContext?.contextSecondary ?
@@ -36,10 +37,9 @@ function MobileHeader({appHeaderContext, switchModalState}: {
             </div>
 
             <div className="flex ml-auto">
-                {/*<BellDot className="p-2 cursor-pointer hover:bg-secondary focus:bg-secondary rounded-sm"
-                         onClick={() => {
-                         }}/>*/}
+                <NotificationBell/>
                 {/* TODO fix key reacting to onKeyDown */}
+
                 <button className="p-2 cursor-pointer hover:bg-secondary focus:bg-secondary rounded-sm"
                      onClick={switchModalState} onKeyDown={(e)=> {
                     if (e.key === 'Enter' || e.key === ' ') switchModalState();
@@ -55,7 +55,7 @@ function MobileHeader({appHeaderContext, switchModalState}: {
 
 export default function CustomSidebarCast(
     {
-        isMobile,
+        // isMobile,
         appHeaderContext,
         switchModalState,
         sidebarSwitchIcon,

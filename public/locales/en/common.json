@@ -4,12 +4,22 @@
     "user_profile_picture": "{{user}}'s profile picture",
     "dashboard": "Dashboard",
     "notifications": "Notifications",
+    "notifications_mark_all_read": "Mark all as read",
+    "notifications_empty": "You're all caught up",
+    "notification_task_due_soon": "\"{{title}}\" is due soon",
+    "notification_project_member_banned": "You were banned from {{project}}",
     "my_tasks": "My tasks",
     "settings": "Settings",
     "manage_projects": "Manage my projects",
     "my_projects": "My projects",
     "projects_not_found": "We couldn't find your projects. If you already joined projects, reload the page, check your notifications to see if you got kicked out, or try contacting support. If you didn't join a project yet, you can do it here:",
     "search_project": "Search project",
+    "feed": "Feed",
+    "feed_empty": "No news yet from your projects or the ones you follow.",
     "button_share": "Share",
-    "button_report": "Report"
+    "button_report": "Report",
+    "save_changes": "Save changes",
+    "changes_saved": "Changes saved",
+    "multiselect_no_items": "No results found.",
+    "to_user_profile": "Go to {{user}}'s profile"
 }

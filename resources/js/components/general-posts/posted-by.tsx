@@ -4,7 +4,7 @@ import {IProfile} from "@/types";
 import {useTranslation} from "react-i18next";
 
 export default function PostedBy({owner, className = ''}: { owner: IProfile | null, className?: string }): ReactNode {
-    const {t} = useTranslation('projects');
+    const {t} = useTranslation('tasks');
     if (!owner) return null;
     return (
         <p className={cn('posted-by', className)}>

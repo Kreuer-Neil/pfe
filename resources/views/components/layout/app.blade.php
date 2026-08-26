@@ -1,3 +1,4 @@
+@props(['title' => null])
 <!DOCTYPE html>
 <html
     lang="{{ str_replace('_', '-', app()->getLocale()) }}" {{--@class(['dark' => ($appearance ?? 'system') == 'dark'])--}}>
@@ -31,7 +32,7 @@
         }
     </style>--}}
 
-    <title>{{ config('app.name', 'Les pattes heureuses') . ' – ' . ucfirst(__('frontpage.home.title')) }}</title>
+    <title>{{ config('app.name', 'ComeUnite') . ' – ' . ucfirst($title ?? __('frontpage.home.title')) }}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin/>

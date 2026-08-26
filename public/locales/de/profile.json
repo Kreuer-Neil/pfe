@@ -1,7 +1,9 @@
 {
+    "profile_show": "Profil",
+    "profile_edit": "Profil bearbeiten",
     "user_edit": "Profil bearbeiten",
     "user_add": "Kontakt hinzufügen",
-    "user_remobe": "Kontakt löschen",
+    "user_remove": "Kontakt löschen",
     "user_context_profile": "Profil von {{user}}",
     "pronouns": "Pronomen",
     "field_nickname": "Spitznamen ändern",

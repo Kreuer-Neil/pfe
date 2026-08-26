@@ -1,154 +1,168 @@
-import {IProject, ITask, ITaskMiniature, SharedData} from "@/types";
-// import {agenda} from '@/routes';
+import {IProject, ITask, SharedData} from "@/types";
 import TaskItem from "@/components/tasks/task-item";
 import {ReactNode, useState} from "react";
 import {cn} from "@/lib/utils";
-import {
-    ClipboardPlus,
-} from "lucide-react";
-import {laravelDateToJsDate,} from "@/helpers/date";
-import ShowMore from "@/components/buttons/show-more";
-import IconButton from "@/components/buttons/icon-button";
+import {ClipboardPlus} from "lucide-react";
+import {laravelDateToJsDate} from "@/helpers/date";
+import ShowMore from "@/components/general-posts/show-more";
 import {useTranslation} from "react-i18next";
-import {show as tasksShow} from "@/actions/App/Http/Controllers/TaskController";
 import TaskCreateModal from "@/components/tasks/task-create";
 import TaskShowModal from "@/components/tasks/task-show";
-import {RouteQueryOptions} from "@/wayfinder";
-import auth from "@/actions/App/Http/Controllers/Auth";
+import ConfirmModal from "@/components/modals/confirm-modal";
 import {usePage} from "@inertiajs/react";
-
+import {Button} from "@/components/ui/button";
+import TaskController from "@/actions/App/Http/Controllers/TaskController";
 
 type TaskDisplayProps = {
-    tasks: ITaskMiniature[];
+    tasks: ITask[];
     title?: string | null;
     className?: string;
-    action?: (() => void) | null;
     isInProjectPage?: boolean;
     project?: IProject | null;
     minLength?: number;
-    maxLength?: number
+    maxLength?: number;
 }
 
 function TasksList({tasks, isInProjectPage, maxLength, onTapTask}: {
-    tasks: ITaskMiniature[];
+    tasks: ITask[];
     isInProjectPage: boolean;
     maxLength: number;
-    onTapTask: (id: string) => void;
+    onTapTask: (i: number) => void;
 }): ReactNode {
-    const {t} = useTranslation(['date', 'projects']);
-    const length = tasks.length;
+    const {t} = useTranslation(['tasks', 'date']);
 
-    if (length <= 0) {
-        return <div className="thumbnails-list-container"><p>{t('projects:task_empty_message')}</p></div>
+    if (tasks.length <= 0) {
+        return (
+            <div className="thumbnails-list-container">
+                <p>{t('empty_message')}</p>
+            </div>
+        );
     }
 
-    return <ul className="thumbnails-list-container">
-        {tasks.slice(0, maxLength).map((task: ITaskMiniature, i: number) => {
-            let month: number = laravelDateToJsDate(task.due_at ?? task.created_at).getMonth();
-            const precedentMonthCondition: boolean = i + 1 < length
-                && tasks[i - 1]
-                && (month > laravelDateToJsDate(tasks[i - 1].due_at ?? tasks[i - 1].created_at).getMonth());
-            return (
-                <li className="w-full flex flex-col gap-4" key={task.id}>
-                    {precedentMonthCondition ? <span className="month-divider">{t('month_' + month)}</span> : ''}
-                    <TaskItem task={task} isInProjectPage={isInProjectPage}
-                              onTap={onTapTask}
-                    />
-                </li>
-            );
-        })}
-    </ul>
 
+    return (
+        <ul className="thumbnails-list-container">
+            {tasks.slice(0, maxLength).map((task: ITask, i: number) => {
+                const month = laravelDateToJsDate(task.due_at ?? task.created_at).getMonth();
+                const showMonthDivider = i > 0
+                    && month !== laravelDateToJsDate(tasks[i - 1].due_at ?? tasks[i - 1].created_at).getMonth();
+
+                return (
+                    <li key={task.id} className="w-full flex flex-col gap-4">
+                        {showMonthDivider &&
+                            <span className="month-divider">{t('date:month_' + month)}</span>
+                        }
+                        <TaskItem
+                            task={task}
+                            isNotInProjectPage={isInProjectPage}
+                            onTap={() => onTapTask(i)}
+                        />
+                    </li>
+                );
+            })}
+        </ul>
+    );
 }
 
-
-export default function TaskDisplay(
-    {
-        tasks,
-        title = null,
-        className = '',
-        project = null,
-        minLength = 3,
-        maxLength = 12
-    }: TaskDisplayProps): ReactNode {
+export default function TaskDisplay({
+                                        tasks,
+                                        title = null,
+                                        className = '',
+                                        project = null,
+                                        minLength = 3,
+                                        maxLength = 12,
+                                    }: TaskDisplayProps): ReactNode {
     const {auth} = usePage<SharedData>().props;
-    const currentUser = auth.user;
+    const {t} = useTranslation(['tasks', 'date']);
 
-    {/* TODO use flash data for tasks? Needs auto-update */}
-
-    const {t} = useTranslation(['projects', 'date']);
     const [maxItemsLength, setMaxItemsLength] = useState<number>(minLength);
-    const [showMoreState, setShowMoreState] = useState<boolean>(true);
+    const [showMore, setShowMore] = useState<boolean>(true);
 
-    const onShowMore = (): void => {
-        if (maxItemsLength != minLength) {
-            setMaxItemsLength(minLength);
-            setShowMoreState(true);
-        } else {
-            setMaxItemsLength(maxLength);
-            setShowMoreState(false);
-        }
-    }
-
-    const [modalTask, setModalTask] = useState<ITask>();
     const [showTaskModal, setShowTaskModal] = useState<boolean>(false);
     const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
-    const [savedTasks, setSavedTasks] = useState<ITask[]>([]);
+    const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
+    const [deleteSuccess, setDeleteSuccess] = useState<string | undefined>(undefined);
 
-    function onTaskTap(id: string, force:boolean = false) {
-        const idNumber = Number(id);
-        if (force || !savedTasks[idNumber]) {
-            const fetchTask = async (): Promise<ITask | undefined> => {
-                try {
-                    const params: RouteQueryOptions = {query: {'task_id': id}};
-
-                    const response = await fetch(tasksShow(id, params).url);
-
-                    const data: { task: ITask } = await response.json();
-                    return (data.task);
-                } catch (error) {
-                    // TODO handle errors with error modal
-                    console.error(error);
-                }
-            }
-            fetchTask().then((modalTask: ITask | undefined) => {
-                if (!modalTask) {
-                    //     setShowErrorModal(true);
-                    return;
-                }
-                savedTasks[idNumber] = modalTask;
-                setSavedTasks(savedTasks);
-
-                setModalTask(modalTask);
-                setShowTaskModal(true);
-            });
+    const onShowMore = () => {
+        if (maxItemsLength !== minLength) {
+            setMaxItemsLength(minLength);
+            setShowMore(true);
         } else {
-            setModalTask(savedTasks[idNumber])
-            setShowTaskModal(true);
+            setMaxItemsLength(maxLength);
+            setShowMore(false);
         }
-    }
+    };
+    const [modalTaskIndex, setModalTaskIndex] = useState<number | undefined>(undefined);
+    const modalTask = modalTaskIndex !== undefined ? tasks[modalTaskIndex] : undefined;
 
-    const pageId = 'tasks';
+    const onTaskTap = (index: number) => {
+        setModalTaskIndex(index);
+        setShowTaskModal(true);
+    };
+
+
     return (
-        <section className={cn('items-section max-w-xl', className)} id={pageId}>
+        <section className={cn('items-section max-w-xl', className)} id="tasks">
             <div className="flex items-center mx-3">
-                <h2 className="section-title w-full">{title ?? (project ? t('tasks_container_title', {project: project.name}) : t('task_upcoming_title'))}</h2>
-                {project?.owner.id === currentUser.id && // TODO fix if user
-                    <IconButton icon={ClipboardPlus} textContent={t('task_add')}
-                                onClick={() => setShowCreateModal(true)}/>}
-            </div>
-            <TasksList tasks={tasks} isInProjectPage={(project === null)} maxLength={maxItemsLength!}
-                       onTapTask={onTaskTap}/>
-            <div className="flex flex-col gap-4 px-3 items-center">
-
-                {tasks.length > Number(minLength) && <ShowMore showMore={showMoreState} onClick={onShowMore}/>}
-                {/*<ButtonText href={agenda().url} textContent={actionText ?? t('task.show_agenda')} icon={LucideCalendarDays}/>*/}
-            </div>
-            <TaskShowModal task={modalTask} showModal={showTaskModal} setShowModal={setShowTaskModal} isInProjectPage={(project === null)} onTaskTap={onTaskTap}/>
-            {project &&
-                <TaskCreateModal showModal={showCreateModal} setShowModal={setShowCreateModal}
-                                 project={project}/>
+                <h2 className="section-title w-full">
+                    {title ?? (project
+                            ? t('container_title', {project: project.name})
+                            : t('upcoming_title')
+                    )}
+                </h2>
+                {project?.owner.id === auth.user.id &&
+                    <Button size="icon" variant="outline" onClick={() => setShowCreateModal(true)}>
+                        <span className="sr-only">{t('add')}</span>
+                        <ClipboardPlus/>
+                    </Button>
                 }
+            </div>
+
+            <TasksList
+                tasks={tasks}
+                isInProjectPage={project === null}
+                maxLength={maxItemsLength}
+                onTapTask={onTaskTap}
+            />
+
+            <div className="flex flex-col gap-4 px-3 items-center">
+                {deleteSuccess && <p className="text-sm text-muted-foreground">{deleteSuccess}</p>}
+                {tasks.length > minLength &&
+                    <ShowMore showMore={showMore} onClick={onShowMore}/>
+                }
+            </div>
+
+            <TaskShowModal
+                task={modalTask}
+                showModal={showTaskModal}
+                setShowModal={setShowTaskModal}
+                isInProjectPage={project === null}
+                onDelete={() => setShowConfirmModal(true)}
+            />
+
+            {modalTask &&
+                <ConfirmModal
+                    id="task-confirm-delete"
+                    showModal={showConfirmModal}
+                    onClose={() => setShowConfirmModal(false)}
+                    onSuccess={() => {
+                        setShowTaskModal(false);
+                        setShowConfirmModal(false);
+                        setDeleteSuccess(t('delete_success', {task: modalTask.title}));
+                    }}
+                    formAction={TaskController.destroy.form(modalTask.id)}
+                    title={t('delete_warning')}
+                    message={t('delete_warning_message', {task: modalTask.title})}
+                />
+            }
+
+            {project &&
+                <TaskCreateModal
+                    showModal={showCreateModal}
+                    setShowModal={setShowCreateModal}
+                    project={project}
+                />
+            }
         </section>
     );
 }

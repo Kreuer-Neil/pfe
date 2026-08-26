@@ -1,6 +1,5 @@
 import {IProfile} from "@/types";
 import {ReactNode} from "react";
-import {useImageAsset} from "@/hooks/use-image-asset";
 import {Link} from "@inertiajs/react";
 import {show as showProfile} from "@/actions/App/Http/Controllers/UserProfileController"
 import UserAvatar from "@/components/users/user-avatar";

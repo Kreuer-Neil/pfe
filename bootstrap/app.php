@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\EnsureOnboardingComplete;
+use App\Http\Middleware\EnsureProjectSettingsAccess;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\SetLocale;
@@ -12,16 +14,22 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
+        channels: __DIR__.'/../routes/channels.php',
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
+        $middleware->encryptCookies(except: ['appearance', 'sidebar']);
 
         $middleware->web(append: [
 //            HandleAppearance::class,
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
             SetLocale::class
+        ]);
+
+        $middleware->alias([
+            'onboarded' => EnsureOnboardingComplete::class,
+            'project.settings' => EnsureProjectSettingsAccess::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Collection;
 
 class Task extends Model
 {
@@ -77,7 +76,11 @@ class Task extends Model
         // Checks if user belongs to the project
         $canParticipate = !$this->project->members->where('id', $user->id)->isEmpty();
 
-        if ($canParticipate && Participation::where('user_id', $user->id)->where('task_id', $this->id)->exists()) {
+        if (!$canParticipate) {
+            return false;
+        }
+
+        if (Participation::where('user_id', $user->id)->where('task_id', $this->id)->exists()) {
             return false;
         }
         try {
@@ -91,19 +94,22 @@ class Task extends Model
         return true;
     }
 
+    public function cancelParticipation(User $user): bool
+    {
+        $participation = Participation::where('user_id', $user->id)
+            ->where('task_id', $this->id)
+            ->first();
+
+        if (!$participation) return false;
+
+        return (bool) $participation->delete();
+    }
+
     public function isParticipating(User|int $user): bool
     {
         $userId = is_int($user) ? $user : $user->id;
         return !$this->participations->where('user_id', '==', $userId)->isEmpty();
     }
-
-    public function canSee(User $user): bool
-    {
-        // TODO check if user can see task
-        $this->project;
-        return true;
-    }
-
 
     /**
      * See related users

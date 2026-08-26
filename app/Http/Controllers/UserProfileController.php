@@ -2,21 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\FormatedModels\FormatedProfile;
-use App\FormatedModels\FormatedUser;
+use App\Http\Resources\User\ProfileResource;
 use App\Jobs\HandleProfileImageUploads;
 use App\Models\User;
-use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\Format;
-use Intervention\Image\ImageManager;
 
 class UserProfileController extends Controller
 {
     public function show($id)
+    {
+        return $this->renderProfile($id, false);
+    }
+
+    public function edit($id)
+    {
+        return $this->renderProfile($id, true);
+    }
+
+    private function renderProfile($id, bool $editing)
     {
         $user = User::find($id);
 
@@ -27,9 +32,17 @@ class UserProfileController extends Controller
             abort(404);
         }
 
-        $user = $user->toFormatedProfile(auth()->user());
-        auth()->user()->projects;
-        return Inertia::render('profile/profile-show', compact('user'));
+        $canEdit = auth()->user()->id === $user->id;
+
+        if ($editing && !$canEdit) {
+            abort(403);
+        }
+
+        $user = (new ProfileResource($user))->toArray(request());
+
+        return Inertia::render('profile/profile-show', compact(
+            'user', 'canEdit', 'editing'
+        ));
     }
 
     public function update(int $id, Request $request)
@@ -42,7 +55,7 @@ class UserProfileController extends Controller
         $user = User::find($id);
 
         $validated = $request->validate([
-            'nickname' => 'required|string|min:3|max:32',
+            'nickname' => 'nullable|string|min:3|max:32',
             'pronouns' => 'nullable|string|max:24',
             'bio' => 'nullable|min:3|max:255',
             'avatar' => 'nullable|image|extensions:jpg,jpeg,png,gif,webp|max:2048|dimensions:max_width=2000,max_height=2000'
@@ -65,13 +78,12 @@ class UserProfileController extends Controller
             $user->avatar = $imageName;
         }
 
-        $user->nickname = $validated['nickname'];
+        $user->nickname = $validated['nickname'] ?? "$user->first_name $user->last_name";
         $user->pronouns = $validated['pronouns'] ?? null;
         $user->bio = $validated['bio'] ?? null;
 
         $user->save();
 
-        Inertia::flash(['success' => true]);
         return redirect(route('user-profile.show', $id));
     }
 
@@ -84,12 +96,8 @@ class UserProfileController extends Controller
         }
 
         $currentUser = auth()->user();
-        if ($id === $currentUser->id) {
-            Inertia::flash(['follow_success' => false]);
-        } else {
-            $user = User::find($id);
-
-            Inertia::flash(['follow_success' => $user->followAs($currentUser)]);
+        if ($id !== $currentUser->id) {
+            User::find($id)->followAs($currentUser);
         }
 
         return redirect(route('user-profile.show', $id));
@@ -102,12 +110,8 @@ class UserProfileController extends Controller
         }
 
         $currentUser = auth()->user();
-        if ($id === $currentUser->id) {
-            Inertia::flash(['follow_success' => false]);
-        } else {
-            $user = User::find($id);
-
-            Inertia::flash(['follow_success' => $user->unfollowAs($currentUser)]);
+        if ($id !== $currentUser->id) {
+            User::find($id)->unfollowAs($currentUser);
         }
 
         return redirect(route('user-profile.show', $id));

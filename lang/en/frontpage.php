@@ -3,7 +3,7 @@ return [
     'nav' => [
         'title' => 'Main navigation',
         'index' => 'Home',
-        'policy' => 'Policy',
+        'policy' => 'Our policy',
         'contact' => 'Contact us',
         'register' => 'Register',
         'login' => 'Login',
@@ -64,11 +64,46 @@ return [
             'about' => 'About us',
             'team' => 'Meet the team',
             'contact' => 'Contact us',
-            'policy' => 'Privacy policy',
+            'policy' => 'Our policy',
             //
             'support-title' => 'Support',
             'faq' => 'App FAQs',
             'support' => 'Contact support',
         ],
+    ],
+    //
+    'policy' => [
+        'title' => 'Our policy',
+        'subtitle' => 'A few simple rules to keep ComeUnite welcoming for everyone.',
+        'items' => [
+            'names' => [
+                'title' => 'Keep names respectful',
+                'text' => 'Usernames, project names, and task titles should never be offensive, hateful, or discriminatory. Pick something that welcomes people in, not something that pushes them away.',
+            ],
+            'purpose' => [
+                'title' => 'Projects help, they don\'t harm',
+                'text' => 'Every project on ComeUnite should aim to help people, animals, or the community around it. Projects meant to harm, exploit, or endanger others have no place here.',
+            ],
+            'kindness' => [
+                'title' => 'Be nice to each other',
+                'text' => 'Disagreements happen, but treat other members with respect and kindness. We\'re all here to build something good together.',
+            ],
+        ],
+    ],
+    //
+    'contact' => [
+        'title' => 'Contact us',
+        'subtitle' => 'Got a question, or need a hand? We\'d love to hear from you.',
+        'bug_note' => 'Reporting a bug? Use your account\'s email address (auto-filled if you\'re signed in) so we can look into it directly on your account. In line with our policy, we\'ll only access your data if it\'s necessary to fix the issue.',
+        'field_name' => 'Name',
+        'field_email' => 'Email',
+        'field_subject' => 'What is this about?',
+        'field_message' => 'Message',
+        'subjects' => [
+            'question' => 'Ask something',
+            'support' => 'Signal a problem',
+        ],
+        'submit' => 'Send message',
+        'success' => 'Thanks! Your message has been sent, we\'ll get back to you soon.',
     ],
 ];

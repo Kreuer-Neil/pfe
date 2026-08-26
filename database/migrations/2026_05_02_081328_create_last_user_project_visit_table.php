@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('last_user_project_visit', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('user_id');
-            $table->foreignId('project_id');
+            $table->foreignId('user_id')->constrained();
+            $table->foreignId('project_id')->constrained();
+
             $table->timestamp('created_at')->useCurrent();
         });
     }

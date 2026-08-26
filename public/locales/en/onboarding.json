@@ -1,0 +1,12 @@
+{
+    "title": "Welcome",
+    "tags_title": "What are you into?",
+    "tags_description": "Pick a few themes you're interested in - you can always change these later.",
+    "languages_title": "What languages do you speak?",
+    "languages_description": "This helps us show you projects you can actually take part in.",
+    "location_title": "Where are you based?",
+    "location_description": "We'll use this to show you projects close to you.",
+    "skip": "Skip",
+    "next": "Next",
+    "finish": "Finish"
+}

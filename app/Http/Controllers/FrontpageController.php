@@ -6,57 +6,55 @@ use Illuminate\Http\Request;
 
 class FrontpageController extends Controller
 {
-    /*public array $navbarItems = [
+    public array $navbarItems = [
         'index',
-        'policy', // Or support, TODO see what tu put here
-        'contact',
+        'policy',
+        'contact', // With support in contact
     ];
     public array $footerItems = [
         [
             'name' => 'app',
             'items' => [
                 'home',
-                'features',
-                'app',
+//                'features',
+//                'app',
             ]
         ],
         [
             'name' => 'about',
             'items' => [
-                'team',
-                'contact',
+//                'team',
+//                'contact',
                 'policy',
             ]
         ],
-        [
+        /*[
             'name' => 'support',
             'items' => [
                 'support',
                 'FAQ',
             ]
-        ],
-    ];*/
+        ],*/
+    ];
 
     function index()
     {
-        return view('home'/*, compact('navbarItems', 'footerItems')*/);
+        return view('home');
     }
 
-    // TODO re-set to default
     public function policy()
     {
-        return redirect(route('frontpage.index'));
-        return view('policy'/*, compact('navbarItems', 'footerItems')*/);
+        return view('policy');
     }
 
     public function contact()
     {
-        return redirect(route('frontpage.index'));
-        return view('policy'/*, compact('navbarItems', 'footerItems')*/);
+        return view('contact');
     }
-    public function team()
-    {
-        return redirect(route('frontpage.index'));
-        return view('policy'/*, compact('navbarItems', 'footerItems')*/);
-    }
+
+//    public function team()
+//    {
+//        return redirect(route('frontpage.index'));
+//        return view('policy', compact('navbarItems', 'footerItems'));
+//    }
 }

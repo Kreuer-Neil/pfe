@@ -1,0 +1,23 @@
+{
+    "title": "Settings",
+    "description": "Manage your profile and account settings",
+    "profile": "Profile",
+    "password": "Password",
+    "two_factor": "Two-Factor Auth",
+    "account": "Account",
+    "account_page_details": "Change email, password, two-factor authentication...",
+    "preferences": "Preferences",
+    "preferences_page_details": "Languages, interests, and location",
+    "preferences_languages_title": "Preferred languages",
+    "preferences_languages_description": "Languages you're comfortable communicating in. Used to help match you with relevant projects.",
+    "preferences_tags_title": "Interests",
+    "preferences_tags_description": "Topics you're interested in. Used to help match you with relevant projects.",
+    "preferences_location_title": "Location",
+    "preferences_notifications_title": "Notifications",
+    "preferences_notifications_description": "Choose which notifications you also want to receive by email.",
+    "notification_type_task_due_soon": "Task due soon",
+    "notification_type_project_member_banned": "Removed from a project",
+    "preferences_dashboard_feed_title": "Dashboard feed",
+    "preferences_dashboard_feed_description": "Show a preview of news from your projects and the ones you follow on your dashboard.",
+    "preferences_dashboard_feed_label": "Show news on dashboard"
+}

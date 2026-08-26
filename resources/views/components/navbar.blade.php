@@ -1,8 +1,7 @@
-{{--@props(['navbarItems'])--}}
 @php($navbarItems = [
         'index',
-//        'policy', // Or support, TODO see what to put here
-//        'contact',
+        'policy',
+        'contact',
     ])
 
 <nav class="frontpage-nav">

@@ -1,8 +1,11 @@
 import ProjectIcon from "@/components/icons/project-icon";
-import {MapPin, UserRoundCheck, UsersRound} from "lucide-react";
+import {CornerUpRight, MapPin, UserRoundCheck, UsersRound} from "lucide-react";
 import {IDashboardProject, IProjectMiniature} from "@/types";
 import {Link} from "@inertiajs/react";
 import {show as projectsShow} from '@/actions/App/Http/Controllers/ProjectController';
+import {Item, ItemContent, ItemDescription, ItemFooter, ItemMedia, ItemTitle} from "@/components/ui/item";
+import {useTranslation} from "react-i18next";
+import {instanceOfProjectMiniature} from "@/helpers/type-check";
 
 
 interface ProjectItemsProps {
@@ -10,30 +13,48 @@ interface ProjectItemsProps {
 }
 
 export default function ProjectItem({project}: ProjectItemsProps) {
+    const {t} = useTranslation(['projects','tags']);
     const place: string | null = project.place;
-    const coordinates: string | null = project.coordinates;
+    const distance: number | null = project.distance;
     return (
-        <Link as={'a'} tabIndex={0} href={projectsShow(project.slug)}>
-            <article className="thumbnail-item">
-                <div className={'flex gap-1 items-center'}>
+        <Item
+            variant="outline"
+            asChild
+            size="sm"
+        >
+            <Link href={projectsShow(project.slug)}>
+                <ItemMedia variant="icon">
                     <ProjectIcon project={project}/>
-                    <h3 className="item-title w-full">{project.name}</h3>
-                </div>
-                <p>{project.description}</p>
-                {
-                    place && coordinates ?
-                        // Google maps link
-                        // TODO fix link not clickable because of link nav
-                        // <a href={'https://www.google.com/maps/@' + coordinates.replace(' ', '') + ',14z?entry=ttu&g_ep=EgoyMDI2MDUwMi4wIKXMDSoASAFQAw%3D%3D'}
+                </ItemMedia>
+                <ItemContent>
+
+                    <ItemTitle className="items-center">
+                        {project.name}
+                    </ItemTitle>
+                    <ItemDescription>
+                        {project.description}
+                    </ItemDescription>
+                    {(instanceOfProjectMiniature(project) && project.tags.length > 0) &&
+                        <div className="flex gap-1 flex-wrap items-center">
+                            <span>{t('related_tags')}</span>
+                            {project.tags.map((tag) => {
+                                return <span className="item-tag" key={tag}>{t('tags:' + tag)}</span>
+                            })}
+                        </div>
+                    }
+                </ItemContent>
+                <ItemFooter>
+                    {place &&
                         <div
-                            className="flex gap-1">
+                            className="item-tag">
                             <MapPin/>
                             <p>{place}</p>
                         </div>
-                        // </a>
-                    : ''
-                }
-                <div className="flex flex-wrap gap-1 gap-y-0.5">
+                    }
+                    {(place && distance) &&
+                        <span
+                            className="item-tag"><CornerUpRight/>{t('distance_km', {distance: distance.toFixed(1)})}</span>
+                    }
                     {/* TODO what's new since last passage on project */}
                     <div className="flex gap-1 ml-auto">
                         {/*Related users*/}
@@ -41,11 +62,11 @@ export default function ProjectItem({project}: ProjectItemsProps) {
                             {project.members_count}
                             <UsersRound/>
                         </div>
-                        {project.is_member ? <UserRoundCheck className="item-tag bg-tag-valid"/> : ''}
+                        {project.is_member ? <UserRoundCheck className="item-tag size-5"/> : ''}
                         {/*Other infos*/}
                     </div>
-                </div>
-            </article>
-        </Link>
+                </ItemFooter>
+            </Link>
+        </Item>
     );
 }

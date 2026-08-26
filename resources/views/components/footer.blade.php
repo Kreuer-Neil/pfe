@@ -16,13 +16,13 @@
                 'policy',
             ]
         ],
-        [
+        /*[
             'name' => 'support-title',
             'items' => [
                 'faq',
                 'support',
             ]
-        ],
+        ],*/
     ])
 
 <footer>

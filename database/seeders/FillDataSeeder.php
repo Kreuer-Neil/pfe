@@ -2,33 +2,61 @@
 
 namespace Database\Seeders;
 
-use App\Enums\Language;
 use App\Enums\ProjectRole;
+use App\Models\Location;
 use App\Models\Member;
 use App\Models\Project;
+use App\Models\ProjectNews;
+use App\Models\Tag;
 use App\Models\Task;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Str;
 
 class FillDataSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
-    public static function run(): void
+    public function run(): void
     {
-        info('Seeding fill data...');
+        $liege = Location::firstOrCreate(
+            ['osm_id' => '1407192', 'osm_type' => 'relation'],
+            [
+                'latitude' => '50.61126712133781',
+                'longitude' => '5.510050323190294',
+                'display_name' => 'Liège, Wallonie, Belgique',
+                'name' => 'Liège',
+                'type' => 'city',
+            ]
+        );
+        $outremeuse = Location::firstOrCreate(
+            ['osm_id' => '1407194', 'osm_type' => 'node'],
+            [
+                'latitude' => '50.6417',
+                'longitude' => '5.5807',
+                'display_name' => 'Outremeuse, Liège, Wallonie, Belgique',
+                'name' => 'Outremeuse',
+                'type' => 'suburb',
+            ]
+        );
+        $seraing = Location::firstOrCreate(
+            ['osm_id' => '1407193', 'osm_type' => 'relation'],
+            [
+                'latitude' => '50.5885',
+                'longitude' => '5.5064',
+                'display_name' => 'Seraing, Liège, Wallonie, Belgique',
+                'name' => 'Seraing',
+                'type' => 'city',
+            ]
+        );
 
         $projectsData = [
             [
                 'name' => 'Luigi\'s Garden',
                 'is_private' => false,
                 'description' => 'Luigi’s Garden is about maintaining sir Luigi’s mansion garden, an unofficial park in this choking city, open to anyone respectful enough.',
-                'coordinates' => '50.61126712133781, 5.510050323190294',
-                'lang' => Language::ENGLISH,
+                'location_id' => $liege->id,
                 'owner' => [
                     'first_name' => 'Luigi',
                     'last_name' => 'Mario',
@@ -40,7 +68,7 @@ class FillDataSeeder extends Seeder
                 'name' => 'Silk Song Band',
                 'is_private' => false,
                 'description' => 'Eh Guarana Adida SHAW',
-                'lang' => Language::JAPANESE,
+                'location_id' => $outremeuse->id,
                 'owner' => [
                     'first_name' => 'Hornet',
                     'last_name' => 'Silk',
@@ -68,9 +96,8 @@ class FillDataSeeder extends Seeder
                 'name' => 'Planter des arbres à Seraing',
                 'is_private' => false,
                 'icon' => 'project_default',
+                'location_id' => $seraing->id,
                 'description' => 'Rejoignez-nous pour reverdir Seraing ! Ce projet citoyen a pour but de replanter des arbres dans les espaces inutilisés et délaissés de la ville, afin d\'améliorer la qualité de l\'air, de lutter contre les îlots de chaleur urbains et de rendre notre ville plus agréable à vivre. Tout le monde peut participer, aucune expérience n\'est nécessaire — juste de la bonne volonté et l\'envie de faire quelque chose de concret pour notre environnement !',
-                'lang' => Language::FRENCH,
-
                 'tasks' => [
                     [
                         'title' => 'Planter sur le terrain vague',
@@ -127,19 +154,13 @@ class FillDataSeeder extends Seeder
             $projectArray = [
                 'owner_id' => $owner->id,
                 'name' => $projectData['name'],
-                'slug' => Str::slug($projectData['name']),
                 'is_private' => $projectData['is_private'],
                 'description' => $projectData['description'],
                 'icon' => $projectData['icon'] ?? 'default_'.random_int(1,2),
+                'location_id' => $projectData['location_id'],
             ];
 
             $project = Project::create($projectArray);
-
-            Member::create([
-                'user_id' => $owner->id,
-                'project_id' => $project->id,
-                'role' => ProjectRole::ADMIN,
-            ]);
 
             $users = [];
             if (array_key_exists('users', $projectData)) {
@@ -171,6 +192,8 @@ class FillDataSeeder extends Seeder
                     $task->participate($user);
                 }
             }
+
+            $this->seedTagsAndNews($project, [$owner, ...$users]);
         }
 
 
@@ -180,13 +203,6 @@ class FillDataSeeder extends Seeder
             $projects[] = Project::factory()->create(['is_private' => false, 'owner_id' => $user->id]);
         }
         foreach ($projects as $project) {
-            // Link owners to their projects
-            Member::create([
-                'user_id' => $project->owner->id,
-                'project_id' => $project->id,
-                'role' => ProjectRole::ADMIN,
-            ]);
-
             foreach ($users->random(random_int(2, 10)) as $user) {
                 if (!$project->members()->where('user_id', $user->id)->exists()) {
                     Member::create([
@@ -195,8 +211,25 @@ class FillDataSeeder extends Seeder
                     ]);
                 }
             }
-        }
 
-        info('Fill data seeded.');
+            $this->seedTagsAndNews($project, $project->members->all());
+        }
+    }
+
+    /**
+     * Syncs a few random tags and creates a handful of fake news posts on a seeded project,
+     * so tag-based features (search, suggestions) and the news/feed UI have real data to show
+     * against locally, instead of every seeded project starting out empty on both fronts.
+     */
+    private function seedTagsAndNews(Project $project, array $possibleAuthors): void
+    {
+        $project->tags()->sync(Tag::inRandomOrder()->limit(random_int(2, 4))->pluck('id'));
+
+        for ($i = 0; $i < random_int(1, 4); $i++) {
+            ProjectNews::factory()->create([
+                'project_id' => $project->id,
+                'user_id' => collect($possibleAuthors)->random()->id,
+            ]);
+        }
     }
 }

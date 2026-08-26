@@ -19,13 +19,15 @@ return new class extends Migration
             // ALWAYS add owner id there w/role owner
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 
-            // TODO switch default value back to "Member" when in production.
-            $table->enum('role', ProjectRole::cases())->nullable()->default(ProjectRole::TASK_MANAGER);
 
-            $table->boolean('banned')->default(false);
+            // VIEWER is a synthetic non-member marker, never a real persisted membership role.
+            $persistableRoles = array_filter(ProjectRole::cases(), fn ($role) => $role !== ProjectRole::VIEWER);
+            $table->enum('role', $persistableRoles)->nullable()->default(ProjectRole::MEMBER);
 
 //            $table->softDeletes();
             $table->timestamps();
+
+            $table->unique(['project_id', 'user_id']);
         });
     }
 

@@ -1,5 +1,12 @@
 <?php
 
+pest()->extend(Tests\DuskTestCase::class)
+//  ->use(Illuminate\Foundation\Testing\DatabaseMigrations::class)
+    ->in('Browser');
+
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -13,6 +20,10 @@
 
 pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->beforeEach(function () {
+        (new Database\Seeders\TagsSeeder())->run();
+        (new Database\Seeders\LanguagesSeeder())->run();
+    })
     ->in('Feature');
 
 /*
@@ -41,7 +52,25 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
-{
-    // ..
+/**
+ * Populates the Nominatim cache LocationController::resolveFromSearchCache() reads from,
+ * so tests can resolve a location without hitting the real Nominatim API.
+ */
+function seedNominatimCache(
+    string $query,
+    string $osmId,
+    string $osmType,
+    string $displayName = 'Liège, Wallonie, Belgique'
+): void {
+    Cache::put('nominatim_' . md5($query), [
+        [
+            'osm_id' => $osmId,
+            'osm_type' => $osmType,
+            'lat' => '50.6326',
+            'lon' => '5.5797',
+            'display_name' => $displayName,
+            'namedetails' => ['name' => Str::before($displayName, ',')],
+            'type' => 'city',
+        ],
+    ], now()->addDay());
 }

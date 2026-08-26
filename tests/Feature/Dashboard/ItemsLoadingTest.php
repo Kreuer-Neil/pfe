@@ -2,12 +2,10 @@
 
 use App\Enums\ProjectRole;
 use App\Models\Member;
-use App\Models\Participation;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\TaskNote;
 use App\Models\User;
-use Carbon\Carbon;
 use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {
@@ -23,11 +21,13 @@ beforeEach(function () {
     ]);
 
     foreach (User::all() as $user) {
-        // Add all users to the projects
-        Member::create([
-            'user_id' => $user->id,
-            'project_id' => $this->project->id,
-        ]);
+        // Add all users to the project (owner_id=1 and $this->user already have a membership).
+        if (! in_array($user->id, [$this->project->owner_id, $this->user->id])) {
+            Member::create([
+                'user_id' => $user->id,
+                'project_id' => $this->project->id,
+            ]);
+        }
 
         if ($user['id'] != $this->user->id) {
             foreach (Task::all()->random(4) as $task) {
@@ -47,10 +47,10 @@ beforeEach(function () {
 
 test('upcoming tasks load correctly', function () {
 
-//        $this->response->assertSeeText($userTask->title);
+    //        $this->response->assertSeeText($userTask->title);
     $this->response
-        ->assertInertia(fn(Assert $page) => $page
-            ->has('tasks', 3, fn(Assert $page) => $page
+        ->assertInertia(fn (Assert $page) => $page
+            ->has('tasks', 3, fn (Assert $page) => $page
                 ->has('title')
 //                ->has('description')
                 ->has('participations_count')
@@ -72,8 +72,8 @@ test('non-taken tasks doesn’t appear', function () {
     // React is a BIG LOAD OF $#17 so the whole data from the app is loaded in a div and there's nothing to do against it.
     foreach (Task::all()->whereNotIn('id', $userTasksIds) as $task) {
         $this->response
-            ->assertInertia(fn(Assert $page) => $page
-                ->has('tasks', 3, fn(Assert $page) => $page
+            ->assertInertia(fn (Assert $page) => $page
+                ->has('tasks', 3, fn (Assert $page) => $page
                     ->has('title')
                     ->whereNot('title', $task->title)
                     ->etc()
@@ -82,12 +82,10 @@ test('non-taken tasks doesn’t appear', function () {
     }
 });
 
-
 test('projects load correctly', function () {
     $this->response
-        ->assertInertia(fn(Assert $page) => $page
-            // Should be 1, can't find out why it considers it as 2 even after dumping data
-            ->has('projects', 2, fn(Assert $page) => $page
+        ->assertInertia(fn (Assert $page) => $page
+            ->has('projects', 1, fn (Assert $page) => $page
                 ->has('name')
                 ->has('icon')
                 ->has('slug')
@@ -97,6 +95,6 @@ test('projects load correctly', function () {
         );
 });
 
-//test('users can open a project from the project thumbnail', function () {
+// test('users can open a project from the project thumbnail', function () {
 //    // Test with laravel Dusk
-//});
+// });

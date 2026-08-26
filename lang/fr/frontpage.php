@@ -3,7 +3,7 @@ return [
     'nav' => [
         'title' => 'Navigation principale',
         'index' => 'Accueil',
-        'policy' => 'Politique de confidentialité',
+        'policy' => 'Notre politique',
         'contact' => 'Nous contacter',
         'register' => 'S’inscrire',
         'login' => 'Se connecter',
@@ -59,10 +59,43 @@ return [
             'about' => 'À propos de nous',
             'team' => 'L’équipe',
             'contact' => 'Nous contacter',
-            'policy' => 'Politique de confidentialité',
+            'policy' => 'Notre politique',
             'support-title' => 'Support',
             'faq' => 'FAQ de l’application',
             'support' => 'Contacter le support',
         ],
+    ],
+    'policy' => [
+        'title' => 'Notre politique',
+        'subtitle' => 'Quelques règles simples pour que ComeUnite reste accueillant pour toutes et tous.',
+        'items' => [
+            'names' => [
+                'title' => 'Des noms respectueux',
+                'text' => 'Pseudos, noms de projets et titres de tâches ne doivent jamais être offensants, haineux ou discriminatoires. Choisissez quelque chose qui donne envie de rejoindre, pas l’inverse.',
+            ],
+            'purpose' => [
+                'title' => 'Des projets qui aident, jamais qui nuisent',
+                'text' => 'Chaque projet sur ComeUnite doit viser à aider des personnes, des animaux ou la communauté environnante. Les projets destinés à nuire, exploiter ou mettre en danger autrui n’ont pas leur place ici.',
+            ],
+            'kindness' => [
+                'title' => 'Soyez bienveillants les uns envers les autres',
+                'text' => 'Les désaccords arrivent, mais traitez les autres membres avec respect et gentillesse. Nous sommes toutes et tous là pour construire quelque chose de bien, ensemble.',
+            ],
+        ],
+    ],
+    'contact' => [
+        'title' => 'Nous contacter',
+        'subtitle' => 'Une question, ou besoin d’aide&nbsp;? Nous serions ravis de vous lire.',
+        'bug_note' => 'Vous signalez un bug&nbsp;? Utilisez l’adresse e-mail liée à votre compte (elle est pré-remplie automatiquement si vous êtes connecté·e) afin que nous puissions examiner le problème directement sur votre compte. Conformément à notre politique, nous ne consulterons vos données que si cela s’avère nécessaire pour corriger le bug.',
+        'field_name' => 'Nom',
+        'field_email' => 'E-mail',
+        'field_subject' => 'De quoi s’agit-il&nbsp;?',
+        'field_message' => 'Message',
+        'subjects' => [
+            'question' => 'Poser une question',
+            'support' => 'Signaler un problème',
+        ],
+        'submit' => 'Envoyer le message',
+        'success' => 'Merci&nbsp;! Votre message a bien été envoyé, nous vous répondrons rapidement.',
     ],
 ];

@@ -1,37 +1,75 @@
-import ModalCast from "@/components/modals/modal-cast";
-import Button from "@/components/buttons/button";
-import CustomModal from "@/components/modals/custom-modal";
+import CustomModal, {ModalContent, ModalDescription, ModalHeader, ModalTitle} from "@/components/modals/custom-modal";
 import {ReactNode} from "react";
 import {useTranslation} from "react-i18next";
+import {Button} from "@/components/ui/button";
+import {Form} from "@inertiajs/react";
+import {RouteFormDefinition} from "@/wayfinder";
 
 type ConfirmModalProps = {
     showModal: boolean;
     onClose: () => void;
-    onConfirm: () => void;
+    formAction?: RouteFormDefinition<"post">;
+    onConfirm?: () => void;
+    onSuccess?: () => void;
     title: string;
+    id?: string;
     message?: string | null;
+    // Extra data the formAction's route doesn't carry as a URL param (e.g. a target user id).
+    fields?: Record<string, string | number>;
 }
 
 export default function ConfirmModal(
     {
         showModal,
         onClose,
+        formAction,
         onConfirm,
+        onSuccess,
         title,
-        message = null
+        id,
+        message = null,
+        fields
     }: ConfirmModalProps): ReactNode {
     const {t} = useTranslation('modals');
     return (
-        <CustomModal showModal={showModal} onClose={onClose} id="confirm">
-            <ModalCast closeModal={onClose} title={title}>
-                {message ?
-                    <p>{message}</p>
-                    : null}
-                <div className="grid grid-cols-2 gap-1">
-                    <Button textContent={t('confirm')} onClick={onConfirm} color="destructive"/>
-                    <Button textContent={t('cancel')} onClick={onClose}/>
-                </div>
-            </ModalCast>
+        <CustomModal showModal={showModal} onClose={onClose} id={id ?? 'confirm'}>
+            <Form
+                {...formAction}
+                onSuccess={onSuccess}
+            >
+                {() => (
+                    <>
+                        <ModalHeader>
+                            <ModalTitle>
+                                {title}
+                            </ModalTitle>
+                            <ModalDescription>
+                                {message}
+                            </ModalDescription>
+                        </ModalHeader>
+                        <ModalContent>
+                            {fields && Object.entries(fields).map(([name, value]) => (
+                                <input key={name} type="hidden" name={name} value={value}/>
+                            ))}
+                            <div className="grid grid-cols-2 gap-1 mt-2">
+                                <Button
+                                    variant="destructive"
+                                    type="submit"
+                                    onClick={onConfirm}
+                                >
+                                    {t('confirm')}
+                                </Button>
+                                <Button
+                                    onClick={onClose}
+                                    type="reset"
+                                >
+                                    {t('cancel')}
+                                </Button>
+                            </div>
+                        </ModalContent>
+                    </>
+                )}
+            </Form>
         </CustomModal>
     );
 }

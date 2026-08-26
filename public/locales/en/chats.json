@@ -1,0 +1,16 @@
+{
+    "empty_message": "No messages here yet. Be the first to say something!",
+    "form_placeholder": "Write a message…",
+    "send": "Send",
+    "reply": "Reply",
+    "reply_cancel": "Cancel reply",
+    "replying_to": "Replying to {{name}}",
+    "edit": "Edit message",
+    "edit_cancel": "Cancel edition",
+    "edited": "(edited)",
+    "delete": "Delete message",
+    "delete_warning_message": "Are you sure you want to delete this message?",
+    "deleted_user": "Deleted user",
+    "load_older": "Load older messages",
+    "project_chat": "{{project}}'s chat"
+}

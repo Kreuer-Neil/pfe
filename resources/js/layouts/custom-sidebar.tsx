@@ -1,38 +1,43 @@
 import {ReactNode} from "react";
 import {useTranslation} from "react-i18next";
-import {Bell, Calendar, ChartGantt, Home, LucideIcon, Search, Settings2} from "lucide-react";
+import {ChartGantt, HashIcon, Home, LucideIcon, Search, Settings2} from "lucide-react";
 import ProjectIcon from "@/components/icons/project-icon";
 import {dashboard} from "@/routes";
-import {index as tasksIndex} from "@/actions/App/Http/Controllers/TaskController";
 import {Link, usePage} from "@inertiajs/react";
 import {IProjectContext, type SharedData} from "@/types";
 import {useImageAsset} from "@/hooks/use-image-asset";
 import {show as projectsShow} from "@/routes/projects";
 import {index as projectsIndex, myProjects} from "@/actions/App/Http/Controllers/ProjectController";
 import {show as showProfile} from "@/actions/App/Http/Controllers/UserProfileController";
+import {index as feedIndex} from "@/actions/App/Http/Controllers/FeedController";
 import {cn} from "@/lib/utils";
-import {edit as profileEdit} from "@/actions/App/Http/Controllers/Settings/ProfileController";
+import {index} from "@/actions/App/Http/Controllers/Settings/ProfileController";
+import NotificationBell from "@/components/notifications/notification-bell";
+import {Badge} from "@/components/ui/badge";
 
 interface INavItemProps {
     icon?: LucideIcon;
     title: string;
     href: string;
     project?: IProjectContext;
+    badge?: boolean;
 }
 
 function SidebarNavItem({props, className = ''}: { props: INavItemProps, className?: string; }) {
     const Icon = props.icon;
     return (
         <li>
-            <Link as="a" href={props.href}
-                  className={cn('nav-item section-title', className)}>
+            <Link href={props.href}
+                  className={cn('nav-item', className)}>
                 {Icon ?
                     <Icon className="p-1"/>
-                    /* @ts-ignore */
                     : props.project
                     && <ProjectIcon project={props.project} className="border border-secondary-border"/>
                 }
                 <span>{props.title}</span>
+                {props.badge &&
+                    <Badge variant="destructive" className="ml-auto size-2 justify-center rounded-full p-0"/>
+                }
             </Link>
         </li>
     );
@@ -45,7 +50,7 @@ export default function CustomSidebar(
     }): ReactNode {
     const {t} = useTranslation('common');
 
-    const {auth} = usePage<SharedData>().props;
+    const {auth, hasUnreadFeedItems} = usePage<SharedData>().props;
 
     const navItems: INavItemProps[] = [
         {
@@ -53,11 +58,12 @@ export default function CustomSidebar(
             title: t('dashboard'),
             href: dashboard().url
         },
-        /*{
-            icon: Bell,
-            title: t('notifications'),
-            href: ''
-        },*/
+        {
+            icon: HashIcon,
+            title: t('feed'),
+            href: feedIndex().url,
+            badge: hasUnreadFeedItems,
+        },
         /*{
             icon: Calendar,
             title: t('my_tasks'),
@@ -66,7 +72,7 @@ export default function CustomSidebar(
         {
             icon: Settings2,
             title: t('settings'),
-            href: profileEdit().url
+            href: index().url
         },
         {
             icon: ChartGantt,
@@ -107,13 +113,17 @@ export default function CustomSidebar(
                         }
                              alt={t('user_profile_picture', {user: auth.user.nickname})}
                              className="nav-pfp"/>
-                        <span className="page-title">{auth.user.nickname}</span>
+                        <span className="nav-title">{auth.user.nickname}</span>
                     </Link>
                     <ul className="nav-item-container">
+                        <SidebarNavItem props={navItems[0]} key={0}/>
+                        <li>
+                            <NotificationBell variant="nav-item"/>
+                        </li>
                         {
-                            navItems.map((navItem, i) => {
+                            navItems.slice(1).map((navItem, i) => {
                                 return (
-                                    <SidebarNavItem props={navItem} key={i}/>
+                                    <SidebarNavItem props={navItem} key={i + 1}/>
                                 )
                             })
                         }
@@ -121,7 +131,7 @@ export default function CustomSidebar(
                 </div>
                 <div>
                     <div className="nav-closed-separator"/>
-                    <span className="page-title flex items-center min-h-16 px-2">
+                    <span className="nav-title flex items-center py-2 px-2">
                         {t('my_projects')}
                     </span>
                     <ul className="nav-item-container">

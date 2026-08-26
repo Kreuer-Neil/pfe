@@ -1,0 +1,12 @@
+{
+    "search_placeholder": "Nach einem Ort suchen...",
+    "searching": "Suche läuft...",
+    "change": "Ändern",
+    "no_results": "Keine Ergebnisse gefunden",
+    "mode_search": "Suche",
+    "mode_precise": "Genaue Adresse",
+    "street_label": "Straße",
+    "number_label": "Hausnummer",
+    "city_label": "Stadt",
+    "postal_code_label": "Postleitzahl"
+}

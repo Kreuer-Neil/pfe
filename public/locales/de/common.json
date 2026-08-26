@@ -4,12 +4,22 @@
     "user_profile_picture": "{{user}}",
     "dashboard": "Dashboard",
     "notifications": "Benachrichtigungen",
+    "notifications_mark_all_read": "Alle als gelesen markieren",
+    "notifications_empty": "Du bist auf dem neuesten Stand",
+    "notification_task_due_soon": "„{{title}}“ ist bald fällig",
+    "notification_project_member_banned": "Du wurdest aus {{project}} gebannt",
     "my_tasks": "Meine Aufgaben",
     "settings": "Einstellungen",
     "manage_projects": "Meine Projekte verwalten",
     "my_projects": "Meine Projekte",
     "projects_not_found": "Wir konnten Ihre Projekte nicht finden. Wenn Sie bereits Projekten beigetreten sind, laden Sie die Seite neu, überprüfen Sie Ihre Benachrichtigungen, um zu sehen, ob Sie ausgeschlossen wurden, oder wenden Sie sich an den Support. Wenn Sie noch keinem Projekt beigetreten sind, können Sie das hier tun :",
     "search_project": "Projekt suchen",
+    "feed": "Feed",
+    "feed_empty": "Noch keine Neuigkeiten von Ihren Projekten oder denen, denen Sie folgen.",
     "button_share": "Teilen",
-    "button_report": "Melden"
+    "button_report": "Melden",
+    "save_changes": "Änderungen speichern",
+    "changes_saved": "Änderungen gespeichert",
+    "multiselect_no_items": "Keine Ergebnisse gefunden.",
+    "to_user_profile": "Profil von {{user}} ansehen"
 }
