@@ -470,6 +470,10 @@
     .modal {
         @apply m-auto w-full max-w-[calc(100%-2rem)] sm:max-w-lg bg-background rounded-lg border p-6 shadow-lg;
 
+        &[open] {
+            @apply grid gap-4;
+        }
+
         &::backdrop {
             @apply bg-modal-behind;
         }
