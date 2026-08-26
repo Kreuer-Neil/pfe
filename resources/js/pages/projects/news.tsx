@@ -68,7 +68,7 @@ export default function ProjectNewsIndex() {
                         {news.map((item) => (
                             <li key={item.id}>
                                 <NewsArticle news={item} projectSlug={project.slug}
-                                             canManage={project.can_create_news} currentUserId={auth.user.id}/>
+                                             canManage={project.can_create_news} currentUserId={auth.user.uuid}/>
                             </li>
                         ))}
                     </ul>

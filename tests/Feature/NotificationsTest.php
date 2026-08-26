@@ -92,7 +92,7 @@ test('user gets notified when kicked/banned from a project', function () {
     actingAs($owner);
 
     patch(route('projects.update.member-ban', $project->slug), [
-        'user_id' => $target->id,
+        'user_uuid' => $target->uuid,
     ])->assertRedirect();
 
     Notification::assertSentTo(
@@ -112,7 +112,7 @@ test('changing a member role to something other than banned does not notify', fu
     actingAs($owner);
 
     patch(route('projects.update.member-role', $project->slug), [
-        'user_id' => $target->id,
+        'user_uuid' => $target->uuid,
         'role' => ProjectRole::MODERATOR->value,
     ])->assertRedirect();
 
@@ -189,7 +189,7 @@ test('project member banned notification skips the mail channel when the user di
     actingAs($owner);
 
     patch(route('projects.update.member-ban', $project->slug), [
-        'user_id' => $target->id,
+        'user_uuid' => $target->uuid,
     ])->assertRedirect();
 
     Notification::assertSentTo(

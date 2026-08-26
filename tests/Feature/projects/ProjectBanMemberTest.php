@@ -27,7 +27,7 @@ test('an admin can ban a lower-ranked member and it notifies them', function () 
     actingAs($admin);
 
     patch(route('projects.update.member-ban', $project->slug), [
-        'user_id' => $target->id,
+        'user_uuid' => $target->uuid,
     ])->assertRedirect();
 
     $this->assertDatabaseHas('members', [
@@ -47,7 +47,7 @@ test('a moderator can ban a lower-ranked member', function () {
     actingAs($moderator);
 
     patch(route('projects.update.member-ban', $project->slug), [
-        'user_id' => $target->id,
+        'user_uuid' => $target->uuid,
     ])->assertRedirect();
 
     $this->assertDatabaseHas('members', [
@@ -66,11 +66,11 @@ test('a moderator cannot ban another moderator or an admin', function () {
     actingAs($moderator);
 
     patch(route('projects.update.member-ban', $project->slug), [
-        'user_id' => $otherModerator->id,
+        'user_uuid' => $otherModerator->uuid,
     ])->assertForbidden();
 
     patch(route('projects.update.member-ban', $project->slug), [
-        'user_id' => $admin->id,
+        'user_uuid' => $admin->uuid,
     ])->assertForbidden();
 });
 
@@ -82,7 +82,7 @@ test('an admin cannot ban another admin', function () {
     actingAs($admin);
 
     patch(route('projects.update.member-ban', $project->slug), [
-        'user_id' => $otherAdmin->id,
+        'user_uuid' => $otherAdmin->uuid,
     ])->assertForbidden();
 });
 
@@ -93,7 +93,7 @@ test('the owner can ban any non-owner member, admins included', function () {
     actingAs($owner);
 
     patch(route('projects.update.member-ban', $project->slug), [
-        'user_id' => $admin->id,
+        'user_uuid' => $admin->uuid,
     ])->assertRedirect();
 
     $this->assertDatabaseHas('members', [
@@ -110,12 +110,12 @@ test('nobody can ban the owner, including the owner themselves', function () {
 
     actingAs($admin);
     patch(route('projects.update.member-ban', $project->slug), [
-        'user_id' => $owner->id,
+        'user_uuid' => $owner->uuid,
     ])->assertForbidden();
 
     actingAs($owner);
     patch(route('projects.update.member-ban', $project->slug), [
-        'user_id' => $owner->id,
+        'user_uuid' => $owner->uuid,
     ])->assertForbidden();
 });
 
@@ -126,7 +126,7 @@ test('nobody can ban themselves', function () {
     actingAs($admin);
 
     patch(route('projects.update.member-ban', $project->slug), [
-        'user_id' => $admin->id,
+        'user_uuid' => $admin->uuid,
     ])->assertForbidden();
 });
 
@@ -138,7 +138,7 @@ test('a plain member cannot ban anyone', function () {
     actingAs($member);
 
     patch(route('projects.update.member-ban', $project->slug), [
-        'user_id' => $target->id,
+        'user_uuid' => $target->uuid,
     ])->assertForbidden();
 });
 
@@ -151,6 +151,6 @@ test('banning a non-member is forbidden', function () {
     actingAs($admin);
 
     patch(route('projects.update.member-ban', $project->slug), [
-        'user_id' => $notAMember->id,
+        'user_uuid' => $notAMember->uuid,
     ])->assertForbidden();
 });

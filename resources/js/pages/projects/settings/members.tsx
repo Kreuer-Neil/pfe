@@ -38,7 +38,7 @@ export default function ProjectSettingsMembers({}) {
                     </h2>
                     <ul className="flex flex-col gap-2">
                         {project.members.map((member) => (
-                            <li key={member.id}>
+                            <li key={member.uuid}>
                                 <MemberItem
                                     projectSlug={project.slug}
                                     member={member}
@@ -59,7 +59,7 @@ export default function ProjectSettingsMembers({}) {
                             </h2>
                             <ul className="flex flex-col gap-2">
                                 {project.banned_members.map((member) => (
-                                    <li key={member.id}>
+                                    <li key={member.uuid}>
                                         <MemberItem
                                             projectSlug={project.slug}
                                             member={member}
@@ -147,7 +147,7 @@ export default function ProjectSettingsMembers({}) {
                     onClose={() => setBanTarget(null)}
                     onSuccess={() => setBanTarget(null)}
                     formAction={banTarget ? ProjectController.banMember.form(project.slug) : undefined}
-                    fields={banTarget ? {user_id: banTarget.id} : undefined}
+                    fields={banTarget ? {user_uuid: banTarget.uuid} : undefined}
                     title={t('member_ban_title')}
                     message={banTarget ? t('member_ban_warning', {user: banTarget.nickname}) : null}
                 />

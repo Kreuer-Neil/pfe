@@ -238,7 +238,7 @@ function MembersModal({showModal, setShowModal, onCloseModal, project}: {
                     {project.members.map((member, index) => {
                         return (
                             <li key={index}>
-                                <Link href={showProfile(member.id)} className="thumbnail-item flex-row items-center">
+                                <Link href={showProfile(member.uuid)} className="thumbnail-item flex-row items-center">
                                     <UserAvatar user={member}/>
                                     <div className="flex flex-col">
                                         <p>
@@ -438,7 +438,7 @@ function ProjectHeader({project}: {
                                 <div className="w-full flex flex-col gap-1">
                                     {project.news &&
                                         <NewsArticle news={project.news} projectSlug={project.slug}
-                                                     canManage={canCreateNews} currentUserId={auth.user.id}/>
+                                                     canManage={canCreateNews} currentUserId={auth.user.uuid}/>
                                     }
                                     <div className="flex gap-1 flex-wrap">
                                         {canCreateNews &&
@@ -470,7 +470,7 @@ function ProjectHeader({project}: {
                                     }
                                     {project.polls.map((poll) => (
                                         <PollCard key={poll.id} poll={poll} projectSlug={project.slug}
-                                                  canManage={canCreateNews} currentUserId={auth.user.id}/>
+                                                  canManage={canCreateNews} currentUserId={auth.user.uuid}/>
                                     ))}
                                 </div>
                             }

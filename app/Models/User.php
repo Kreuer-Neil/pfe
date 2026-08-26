@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Enums\NotificationType;
 use Carbon\Carbon;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -19,7 +20,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, Notifiable, TwoFactorAuthenticatable, HasUuids;
 
     /**
      * The attributes that are mass assignable.
@@ -48,6 +49,27 @@ class User extends Authenticatable
         'two_factor_recovery_codes',
         'remember_token',
     ];
+
+    /**
+     * Every user-profile route/redirect uses the uuid, not the id - route model binding
+     * ({user:uuid} or a bare {user}) and route()/redirect() calls that pass a User instance
+     * both resolve through this, mirroring Project::getRouteKeyName()'s slug.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
+
+    /**
+     * HasUuids defaults to generating a uuid for the primary key column - override so it
+     * targets the separate `uuid` column instead, since `id` stays an auto-increment PK.
+     *
+     * @return array<int, string>
+     */
+    public function uniqueIds(): array
+    {
+        return ['uuid'];
+    }
 
     /*
      * Checks if a user belongs to a chat room (more specifically a project for now)

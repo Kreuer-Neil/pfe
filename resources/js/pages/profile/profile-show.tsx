@@ -60,8 +60,8 @@ function ProfileIcon({isEditing, user, avatarError}: {
     );
 }
 
-function ProfileContainer({id, isEditing, setIsEditing, className, children}: {
-    id: string,
+function ProfileContainer({uuid, isEditing, setIsEditing, className, children}: {
+    uuid: string,
     isEditing: boolean,
     setIsEditing: Dispatch<SetStateAction<boolean>>
     className: string,
@@ -70,7 +70,7 @@ function ProfileContainer({id, isEditing, setIsEditing, className, children}: {
     if (isEditing) {
         return (
             <Form
-                {...UserProfileController.update.form(id)}
+                {...UserProfileController.update.form(uuid)}
                 disableWhileProcessing
                 encType="multipart/form-data"
                 className={className}
@@ -109,7 +109,7 @@ export default function profileShow({}) {
     return (
         <AppLayout appHeaderContext={appHeaderContext} className="py-0">
             <Head title={t(isEditing ? 'profile_edit' : 'profile_show')}/>
-            <ProfileContainer id={user.id} isEditing={isEditing}
+            <ProfileContainer uuid={user.uuid} isEditing={isEditing}
                                   className="w-full flex flex-col gap-3 max-w-xl pb-4 -mb-4 border-b border-border"
                                   setIsEditing={setIsEditing}
                 >
@@ -132,14 +132,14 @@ export default function profileShow({}) {
                                             :
                                             user?.is_following ?
                                                 <Form
-                                                    {...UserProfileController.unfollow.form(user.id)}
+                                                    {...UserProfileController.unfollow.form(user.uuid)}
                                                 >
                                                     <Button size="sm" variant="outline">
                                                         {t('user_remove')}<UserMinus/>
                                                     </Button>
                                                 </Form> :
                                                 <Form
-                                                    {...UserProfileController.follow.form(user.id)}
+                                                    {...UserProfileController.follow.form(user.uuid)}
                                                 >
                                                     <Button size="sm" variant="outline">
                                                         {t('user_add')}<UserPlus/>

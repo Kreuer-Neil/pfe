@@ -22,7 +22,7 @@ test('an admin can change another member\'s role', function () {
     actingAs($owner);
 
     patch(route('projects.update.member-role', $project->slug), [
-        'user_id' => $target->id,
+        'user_uuid' => $target->uuid,
         'role' => ProjectRole::MODERATOR->value,
     ])->assertRedirect();
 
@@ -41,7 +41,7 @@ test('a moderator can change a lower-ranked member\'s role', function () {
     actingAs($moderator);
 
     patch(route('projects.update.member-role', $project->slug), [
-        'user_id' => $target->id,
+        'user_uuid' => $target->uuid,
         'role' => ProjectRole::TASK_MANAGER->value,
     ])->assertRedirect();
 
@@ -60,7 +60,7 @@ test('a moderator cannot change another moderator\'s role', function () {
     actingAs($moderator);
 
     patch(route('projects.update.member-role', $project->slug), [
-        'user_id' => $target->id,
+        'user_uuid' => $target->uuid,
         'role' => ProjectRole::MEMBER->value,
     ])->assertForbidden();
 });
@@ -73,7 +73,7 @@ test('a moderator cannot change an admin\'s role', function () {
     actingAs($moderator);
 
     patch(route('projects.update.member-role', $project->slug), [
-        'user_id' => $admin->id,
+        'user_uuid' => $admin->uuid,
         'role' => ProjectRole::MEMBER->value,
     ])->assertForbidden();
 });
@@ -86,12 +86,12 @@ test('a moderator cannot elevate a member to moderator or admin', function () {
     actingAs($moderator);
 
     patch(route('projects.update.member-role', $project->slug), [
-        'user_id' => $target->id,
+        'user_uuid' => $target->uuid,
         'role' => ProjectRole::MODERATOR->value,
     ])->assertForbidden();
 
     patch(route('projects.update.member-role', $project->slug), [
-        'user_id' => $target->id,
+        'user_uuid' => $target->uuid,
         'role' => ProjectRole::ADMIN->value,
     ])->assertForbidden();
 });
@@ -105,12 +105,12 @@ test('an admin cannot change another admin\'s role or elevate to admin', functio
     actingAs($admin);
 
     patch(route('projects.update.member-role', $project->slug), [
-        'user_id' => $otherAdmin->id,
+        'user_uuid' => $otherAdmin->uuid,
         'role' => ProjectRole::MEMBER->value,
     ])->assertForbidden();
 
     patch(route('projects.update.member-role', $project->slug), [
-        'user_id' => $target->id,
+        'user_uuid' => $target->uuid,
         'role' => ProjectRole::ADMIN->value,
     ])->assertForbidden();
 });
@@ -122,7 +122,7 @@ test('the owner can change any non-owner member\'s role, including elevating to 
     actingAs($owner);
 
     patch(route('projects.update.member-role', $project->slug), [
-        'user_id' => $admin->id,
+        'user_uuid' => $admin->uuid,
         'role' => ProjectRole::MEMBER->value,
     ])->assertRedirect();
 
@@ -140,13 +140,13 @@ test('nobody can change the owner\'s role, including the owner themselves', func
 
     actingAs($owner);
     patch(route('projects.update.member-role', $project->slug), [
-        'user_id' => $owner->id,
+        'user_uuid' => $owner->uuid,
         'role' => ProjectRole::MEMBER->value,
     ])->assertForbidden();
 
     actingAs($admin);
     patch(route('projects.update.member-role', $project->slug), [
-        'user_id' => $owner->id,
+        'user_uuid' => $owner->uuid,
         'role' => ProjectRole::MEMBER->value,
     ])->assertForbidden();
 });
@@ -158,7 +158,7 @@ test('nobody can change their own role', function () {
     actingAs($admin);
 
     patch(route('projects.update.member-role', $project->slug), [
-        'user_id' => $admin->id,
+        'user_uuid' => $admin->uuid,
         'role' => ProjectRole::MEMBER->value,
     ])->assertForbidden();
 });
@@ -170,7 +170,7 @@ test('role cannot be set to viewer (not an assignable role)', function () {
     actingAs($owner);
 
     patch(route('projects.update.member-role', $project->slug), [
-        'user_id' => $target->id,
+        'user_uuid' => $target->uuid,
         'role' => 'viewer',
     ])->assertSessionHasErrors('role');
 });
@@ -182,7 +182,7 @@ test('role cannot be set to banned via this endpoint (banning has its own action
     actingAs($owner);
 
     patch(route('projects.update.member-role', $project->slug), [
-        'user_id' => $target->id,
+        'user_uuid' => $target->uuid,
         'role' => ProjectRole::BANNED->value,
     ])->assertSessionHasErrors('role');
 });
@@ -194,7 +194,7 @@ test('changing the role of a non-member is forbidden', function () {
     actingAs($owner);
 
     patch(route('projects.update.member-role', $project->slug), [
-        'user_id' => $notAMember->id,
+        'user_uuid' => $notAMember->uuid,
         'role' => ProjectRole::MODERATOR->value,
     ])->assertForbidden();
 });
