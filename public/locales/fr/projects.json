@@ -96,5 +96,9 @@
     "poll_no_participation_label": "Ce sondage est terminé. Vous n'y avez pas participé.",
     "poll_total_voters": "Votes : {{count}}",
     "poll_delete_title": "Supprimer ce sondage",
-    "poll_delete_warning": "Ce sondage et tous les votes associés seront définitivement supprimés. Cette action est irréversible."
+    "poll_delete_warning": "Ce sondage et tous les votes associés seront définitivement supprimés. Cette action est irréversible.",
+    "join": "Rejoindre",
+    "create_text_title": "Informations principales",
+    "create_text_description": "Donnez un nom à votre projet et une courte description pour aider les gens à comprendre son objectif.",
+    "related_tags": "Tags associés :"
 }

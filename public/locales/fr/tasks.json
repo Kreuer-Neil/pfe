@@ -41,6 +41,8 @@
     "note_add": "Ajouter une note",
     "note_delete": "Supprimer la note",
     "note_delete_label": "Supprimer cette note",
+    "note_edit": "Modifier la note",
+    "note_edit_cancel": "Annuler la modification",
     "note_field": "Note",
     "note_placeholder": "Écrivez votre note ici…",
     "posted_by": "Publié par :"

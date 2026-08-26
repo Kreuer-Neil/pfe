@@ -96,5 +96,9 @@
     "poll_no_participation_label": "This poll is closed. You didn't take part in it.",
     "poll_total_voters": "{{count}} voted",
     "poll_delete_title": "Delete this poll",
-    "poll_delete_warning": "This will permanently delete this poll and every vote cast on it. This can't be undone."
+    "poll_delete_warning": "This will permanently delete this poll and every vote cast on it. This can't be undone.",
+    "join": "Join",
+    "create_text_title": "Main information",
+    "create_text_description": "Give your project a name and a short description to help people understand what it's about.",
+    "related_tags": "Related tags:"
 }

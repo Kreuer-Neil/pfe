@@ -33,7 +33,7 @@
     "invitation_use": "Einladung benutzen",
     "invitation_index": "Einladungen",
     "invitation_code": "Einladung code",
-    "invitation_confirm": "Join the project",
+    "invitation_confirm": "Dem Projekt beitreten",
     "invitation_max_uses_label": "Maximale Nutzungen",
     "invitation_max_uses_placeholder": "Unbegrenzt",
     "invitation_manage_title": "Einladungsverlauf",
@@ -96,5 +96,9 @@
     "poll_no_participation_label": "Diese Umfrage ist beendet. Du hast nicht teilgenommen.",
     "poll_total_voters": "Stimmen: {{count}}",
     "poll_delete_title": "Diese Umfrage löschen",
-    "poll_delete_warning": "Diese Umfrage und alle abgegebenen Stimmen werden dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden."
+    "poll_delete_warning": "Diese Umfrage und alle abgegebenen Stimmen werden dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.",
+    "join": "Beitreten",
+    "create_text_title": "Grundlegende Informationen",
+    "create_text_description": "Geben Sie Ihrem Projekt einen Namen und eine kurze Beschreibung, damit andere verstehen, worum es geht.",
+    "related_tags": "Zugehörige Tags:"
 }

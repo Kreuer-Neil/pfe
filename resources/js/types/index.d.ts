@@ -143,7 +143,7 @@ export interface IProjectContext {
     name: string;
     icon: string;
     slug: string;
-    user_role: 'viewer' | 'member' | 'taskmaster' | 'moderator' | 'admin';
+    user_role: 'viewer' | 'member' | 'task_manager' | 'moderator' | 'admin' | 'banned';
 
     [key: string]: unknown;
 }

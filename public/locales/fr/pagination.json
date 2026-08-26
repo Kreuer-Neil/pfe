@@ -2,5 +2,7 @@
     "previous": "&laquo; Précédent",
     "next": "Suivant &raquo;",
     "show_more": "Afficher plus",
-    "show_less": "Afficher moins"
+    "show_less": "Afficher moins",
+    "asc": "Trier par ordre croissant",
+    "desc": "Trier par ordre décroissant"
 }

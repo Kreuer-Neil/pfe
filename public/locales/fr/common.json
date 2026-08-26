@@ -19,5 +19,7 @@
     "button_share": "Partager",
     "button_report": "Signaler",
     "save_changes": "Enregistrer les modifications",
-    "changes_saved": "Modifications enregistrées"
+    "changes_saved": "Modifications enregistrées",
+    "multiselect_no_items": "Aucun résultat trouvé.",
+    "to_user_profile": "Voir le profil de {{user}}"
 }

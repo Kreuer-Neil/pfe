@@ -11,5 +11,6 @@
     "delete": "Delete message",
     "delete_warning_message": "Are you sure you want to delete this message?",
     "deleted_user": "Deleted user",
-    "load_older": "Load older messages"
+    "load_older": "Load older messages",
+    "project_chat": "{{project}}'s chat"
 }

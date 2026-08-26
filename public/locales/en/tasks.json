@@ -41,6 +41,8 @@
     "note_add": "Add note",
     "note_delete": "Delete note",
     "note_delete_label": "Delete this note",
+    "note_edit": "Edit note",
+    "note_edit_cancel": "Cancel note edition",
     "note_field": "Note",
     "note_placeholder": "Write your note here…",
     "posted_by": "Posted by:"

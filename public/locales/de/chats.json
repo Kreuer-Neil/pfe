@@ -11,5 +11,6 @@
     "delete": "Nachricht löschen",
     "delete_warning_message": "Möchten Sie diese Nachricht wirklich löschen?",
     "deleted_user": "Gelöschter Benutzer",
-    "load_older": "Ältere Nachrichten laden"
+    "load_older": "Ältere Nachrichten laden",
+    "project_chat": "Chat von {{project}}"
 }

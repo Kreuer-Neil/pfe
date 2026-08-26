@@ -41,6 +41,8 @@
     "note_add": "Notiz hinzufügen",
     "note_delete": "Notiz löschen",
     "note_delete_label": "Diese Notiz löschen",
+    "note_edit": "Notiz bearbeiten",
+    "note_edit_cancel": "Bearbeitung abbrechen",
     "note_field": "Notiz",
     "note_placeholder": "Schreiben Sie hier Ihre Notiz…",
     "posted_by": "Gepostet von :"

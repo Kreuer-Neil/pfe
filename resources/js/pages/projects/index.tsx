@@ -319,7 +319,7 @@ export default function ProjectsIndex() {
                         <Button variant="outline" size="icon"
                                 onClick={() => setShowFiltering(true)}>
                                         <span className="sr-only">
-                                        {t('filter')}
+                                        {t('filters_title')}
                                         </span>
                             <ListFilter/>
                         </Button>

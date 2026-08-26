@@ -112,7 +112,7 @@ export default function TaskDisplay({
                 </h2>
                 {project?.owner.id === auth.user.id &&
                     <Button size="icon" variant="outline" onClick={() => setShowCreateModal(true)}>
-                        <span className="sr-only">{t('task_add')}</span>
+                        <span className="sr-only">{t('add')}</span>
                         <ClipboardPlus/>
                     </Button>
                 }
@@ -151,8 +151,8 @@ export default function TaskDisplay({
                         setDeleteSuccess(t('delete_success', {task: modalTask.title}));
                     }}
                     formAction={TaskController.destroy.form(modalTask.id)}
-                    title={t('task_delete_warning')}
-                    message={t('task_delete_warning_message', {task: modalTask.title})}
+                    title={t('delete_warning')}
+                    message={t('delete_warning_message', {task: modalTask.title})}
                 />
             }
 

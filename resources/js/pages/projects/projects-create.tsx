@@ -37,7 +37,7 @@ export default function projectsCreate({}) {
     return (
         <Layout>
             <Head title="create"/>
-            <h1 className="page-title w-full px-3">{t('Create a project')}</h1>
+            <h1 className="page-title w-full px-3">{t('create_project')}</h1>
 
                 <Form
                     {...ProjectController.store.form()}

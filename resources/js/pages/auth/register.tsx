@@ -99,7 +99,7 @@ export default function Register() {
                                     required
                                     autoComplete="new-password"
                                     name="password_confirmation"
-                                    placeholder={t('field_confirm_password_placeholder')}
+                                    placeholder={t('field_password_confirmation_placeholder')}
                                 />
                                 <InputError
                                     message={errors.password_confirmation}

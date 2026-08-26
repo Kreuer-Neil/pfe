@@ -19,5 +19,7 @@
     "button_share": "Teilen",
     "button_report": "Melden",
     "save_changes": "Änderungen speichern",
-    "changes_saved": "Änderungen gespeichert"
+    "changes_saved": "Änderungen gespeichert",
+    "multiselect_no_items": "Keine Ergebnisse gefunden.",
+    "to_user_profile": "Profil von {{user}} ansehen"
 }

@@ -2,5 +2,7 @@
     "previous": "&laquo; Zurück",
     "next": "Weiter &raquo;",
     "show_more": "Mehr anzeigen",
-    "show_less": "Weniger anzeigen"
+    "show_less": "Weniger anzeigen",
+    "asc": "Aufsteigend sortieren",
+    "desc": "Absteigend sortieren"
 }

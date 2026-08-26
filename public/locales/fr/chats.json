@@ -11,5 +11,6 @@
     "delete": "Supprimer le message",
     "delete_warning_message": "Êtes-vous sûr de vouloir supprimer ce message ?",
     "deleted_user": "Utilisateur supprimé",
-    "load_older": "Charger les messages plus anciens"
+    "load_older": "Charger les messages plus anciens",
+    "project_chat": "Discussion de {{project}}"
 }
