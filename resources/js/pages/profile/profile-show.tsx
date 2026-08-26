@@ -32,14 +32,14 @@ function ProfileIcon({isEditing, user, avatarError}: {
     if (!isEditing) {
         return <img
             alt={user.nickname} src={useImageAsset(`users/${user.avatar}/large`)}
-            className="-my-14 ml-3 mr-auto size-28 bg-secondary rounded-full"
+            className="-mt-14 size-28 bg-secondary rounded-full"
         />
     }
 
     return (
         <>
             <label htmlFor="avatar"
-                   className="-mt-14 block ml-3 mr-auto w-fit cursor-pointer bg-secondary rounded-full -mb-6">
+                   className="-mt-14 block w-fit cursor-pointer bg-secondary rounded-full">
                 <span className="sr-only">{t('field_avatar')}</span>
 
                 <img src={iconPath} alt={user.nickname}
@@ -110,18 +110,18 @@ export default function profileShow({}) {
         <AppLayout appHeaderContext={appHeaderContext} className="py-0">
             <Head title={t(isEditing ? 'profile_edit' : 'profile_show')}/>
             <ProfileContainer id={user.id} isEditing={isEditing}
-                                  className="w-full flex flex-col gap-3 max-w-xl bg-card pb-4 -mb-4 border-b border-border"
+                                  className="w-full flex flex-col gap-3 max-w-xl pb-4 -mb-4 border-b border-border"
                                   setIsEditing={setIsEditing}
                 >
                     {(errors) => (
                         <>
                             <div className="w-full">
                                 <div className="aspect-[2.8] w-full bg-container"/>
-                                <ProfileIcon isEditing={isEditing} user={user} avatarError={errors?.avatar}/>
                             </div>
                             <div className="px-3 flex flex-col gap-3">
                                 {!isEditing &&
                                     <div className="flex gap-1 justify-end -mb-3">
+
                                         {/* TODO add user as contact & other features */}
                                         {canEdit ?
                                             <Button size="sm" variant="outline" type="button"
@@ -154,9 +154,11 @@ export default function profileShow({}) {
                                             <span className="sr-only">{t('common:button_report')}</span><Flag/>
                                         </Button>}*/}
                                     </div>}
-                                <div className="mt-4">
+                                <div className="flex items-center gap-3">
+                                    <ProfileIcon isEditing={isEditing} user={user} avatarError={errors?.avatar}/>
+
                                     {isEditing ? (
-                                        <Field className="mb-3">
+                                        <Field className="mb-3 flex-1">
                                             <Label htmlFor="nickname">{t('field_nickname')}</Label>
                                             <Input name="nickname" id="nickname" required value={nickname}
                                                    onChange={(e) => setNickname(e.target.value)}
@@ -164,8 +166,11 @@ export default function profileShow({}) {
                                             <InputError message={errors.nickname}/>
                                         </Field>
                                     ) : (
-                                        <h1 className="page-title">{user.nickname}</h1>
+                                        <h1 className="page-title mb-0 flex-1">{user.nickname}</h1>
                                     )}
+                                </div>
+
+                                <div>
                                     {!isEditing && <p className="flex w-full">
                                         <span>{user.first_name + ' ' + user.last_name}</span>
                                         {user?.pronouns &&

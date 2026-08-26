@@ -29,7 +29,7 @@ export default function ProjectSettingsLayout({ project, children }: Props) {
         <>
             <Heading title={t('project_settings')} description={project.name} />
 
-            <div className="flex w-full flex-col lg:flex-row lg:space-x-12">
+            <div className="flex w-full flex-col lg:flex-row lg:max-w-4xl lg:mx-auto lg:space-x-12">
                 <aside className="w-full max-w-xl lg:sticky lg:top-8 lg:w-48 lg:self-start">
                     <nav className="flex flex-col space-y-1 space-x-0">
                         {navItems.map((item) => (
@@ -51,7 +51,7 @@ export default function ProjectSettingsLayout({ project, children }: Props) {
                 <Separator className="my-6 lg:hidden" />
 
                 <div className="flex-1 md:max-w-2xl">
-                    <section className="max-w-xl space-y-12">{children}</section>
+                    <section className="space-y-12">{children}</section>
                 </div>
             </div>
         </>

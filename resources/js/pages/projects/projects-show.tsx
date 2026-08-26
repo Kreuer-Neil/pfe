@@ -100,13 +100,13 @@ function ProjectHeaderIcon({isEditing, project, iconError}: {
 
     if (!isEditing) {
         return (
-            <ProjectIcon project={project} size="large" className="bg-secondary -mt-14 mx-auto"/>
+            <ProjectIcon project={project} size="large" className="bg-secondary -mt-14"/>
         );
     }
     return (
         <>
             <label htmlFor="icon"
-                   className="-mt-14 mx-auto block w-fit ml-auto cursor-pointer rounded-full">
+                   className="-mt-14 block w-fit cursor-pointer rounded-full">
                 <span className="sr-only">{t('field_icon')}</span>
 
                 <img src={iconPath} alt={t('icon_alt', {project: project.name})}
@@ -292,7 +292,7 @@ function ProjectHeader({project}: {
     return (
         <>
             <HeaderContainer slug={project.slug} isEditing={isEditing} onSuccess={() => setIsEditing(false)}
-                             className="w-full flex flex-col gap-2 max-w-xl bg-card border-b border-border pb-4 -mb-4">
+                             className="w-full flex flex-col gap-2 max-w-xl border-b border-border pb-4 -mb-4">
                 {(errors) => (
                     <>
                         <div className="w-full">
@@ -327,26 +327,28 @@ function ProjectHeader({project}: {
                                          className="aspect-[2.8] w-full bg-container"/>
                                 }
                             </div>
-
-                            <ProjectHeaderIcon isEditing={isEditing} project={project} iconError={errors?.icon}/>
                         </div>
 
-                        <div className="flex flex-col items-center gap-3 px-3">
-                            <h1 className="page-title text-center">
-                                {isEditing ?
-                                    <Field>
-                                        <Label>
-                                            {t('project_form_name')}
-                                        </Label>
-                                        <Input name="name"
-                                               value={projectName}
-                                               onChange={(e) => setProjectName(e.target.value)}
-                                               className="w-full text-center"
-                                        />
-                                        <InputError message={errors.name}/>
-                                    </Field>
-                                    : projectName}
-                            </h1>
+                        <div className="flex flex-col gap-3 px-3">
+                            <div className="flex items-center gap-3">
+                                <ProjectHeaderIcon isEditing={isEditing} project={project} iconError={errors?.icon}/>
+
+                                <h1 className="page-title mb-0 flex-1">
+                                    {isEditing ?
+                                        <Field>
+                                            <Label>
+                                                {t('project_form_name')}
+                                            </Label>
+                                            <Input name="name"
+                                                   value={projectName}
+                                                   onChange={(e) => setProjectName(e.target.value)}
+                                                   className="w-full"
+                                            />
+                                            <InputError message={errors.name}/>
+                                        </Field>
+                                        : projectName}
+                                </h1>
+                            </div>
 
                             <div className="w-full flex flex-col gap-3">
                                 <div className="flex gap-1 w-full">
