@@ -139,9 +139,14 @@ class ProjectController extends Controller
             // Public projects need tags for discoverability
             'tags' => 'required_unless:is_private,1|array|max:7',
             'tags.*' => 'string|exists:tags,name',
-            'q' => 'required_unless:is_private,1|string|max:255',
-            'osm_id' => 'required_unless:is_private,1|string|max:255',
-            'osm_type' => 'required_unless:is_private,1|string|max:255',
+            // LocationSearch always renders these three hidden inputs, even when empty - an
+            // untouched location submits them as empty strings, which ConvertEmptyStringsToNull
+            // turns into null before validation runs. Without `nullable`, `required_unless` only
+            // waives requiredness, not the `string` type check, so a private project (location
+            // optional) would fail validation on a location nobody was ever asked to fill in.
+            'q' => 'nullable|required_unless:is_private,1|string|max:255',
+            'osm_id' => 'nullable|required_unless:is_private,1|string|max:255',
+            'osm_type' => 'nullable|required_unless:is_private,1|string|max:255',
         ]);
         // , ['name.unique' => 'project_name_exists']
 

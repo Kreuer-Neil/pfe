@@ -9,13 +9,13 @@ export default function FollowButton({slug, isFollowing}: { slug: string, isFoll
 
     return isFollowing ? (
         <Form {...unfollow.form(slug)}>
-            <Button size="icon-sm" variant="outline">
+            <Button size="icon-sm" variant="outline" data-test="unfollow-button">
                 <span className="sr-only">{t('following')}</span><BookmarkCheck/>
             </Button>
         </Form>
     ) : (
         <Form {...follow.form(slug)}>
-            <Button size="icon-sm" variant="outline">
+            <Button size="icon-sm" variant="outline" data-test="follow-button">
                 <span className="sr-only">{t('follow')}</span><Bookmark/>
             </Button>
         </Form>

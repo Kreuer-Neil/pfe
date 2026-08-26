@@ -1,5 +1,9 @@
 <?php
 
+pest()->extend(Tests\DuskTestCase::class)
+//  ->use(Illuminate\Foundation\Testing\DatabaseMigrations::class)
+    ->in('Browser');
+
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
