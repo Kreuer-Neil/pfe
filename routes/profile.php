@@ -34,9 +34,9 @@ Route::get('settings/two-factor', [TwoFactorAuthenticationController::class, 'sh
 
 Route::get('settings/preferences', [UserPreferencesController::class, 'edit'])
     ->name('preferences.edit');
-Route::post('settings/preferences/location', [UserPreferencesController::class, 'updateLocation'])
+Route::patch('settings/preferences/location', [UserPreferencesController::class, 'updateLocation'])
     ->name('preferences.update.location');
-Route::post('settings/preferences/dashboard-feed', [UserPreferencesController::class, 'updateDashboardFeedVisibility'])
+Route::patch('settings/preferences/dashboard-feed', [UserPreferencesController::class, 'updateDashboardFeedVisibility'])
     ->name('preferences.update.dashboard-feed');
 
 Route::get('settings/notifications', [NotificationPreferencesController::class, 'edit'])

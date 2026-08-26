@@ -33,7 +33,7 @@ beforeEach(function () {
 test('task owner can update their task', function () {
     $this->actingAs($this->owner);
 
-    $this->post(route('tasks.update', $this->task->id), $this->validPayload)->assertRedirect();
+    $this->patch(route('tasks.update', $this->task->id), $this->validPayload)->assertRedirect();
 
     $this->assertDatabaseHas('tasks', [
         'id' => $this->task->id,
@@ -45,7 +45,7 @@ test('task owner can update their task', function () {
 test('a project admin who is not the task owner cannot update the task', function () {
     $this->actingAs($this->adminUser);
 
-    $this->post(route('tasks.update', $this->task->id), $this->validPayload)->assertForbidden();
+    $this->patch(route('tasks.update', $this->task->id), $this->validPayload)->assertForbidden();
 
     $this->assertDatabaseHas('tasks', ['id' => $this->task->id, 'title' => 'Original title']);
 });
@@ -53,7 +53,7 @@ test('a project admin who is not the task owner cannot update the task', functio
 test('a due date in the past is rejected', function () {
     $this->actingAs($this->owner);
 
-    $this->post(route('tasks.update', $this->task->id), [
+    $this->patch(route('tasks.update', $this->task->id), [
         ...$this->validPayload,
         'due_at_date' => now()->subDay()->format('Y-m-d'),
     ])->assertSessionHasErrors('due_at_date');
@@ -67,5 +67,5 @@ test('updating a non-existent task just redirects back without throwing', functi
     // Inertia::flash() stores under its own session key, not the validation
     // errors bag - asserting that flash's content is an Inertia-view concern,
     // out of scope here. Just confirm the request is handled gracefully.
-    $this->post(route('tasks.update', 999999), $this->validPayload)->assertRedirect();
+    $this->patch(route('tasks.update', 999999), $this->validPayload)->assertRedirect();
 });

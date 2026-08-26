@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use function Pest\Laravel\actingAs;
-use function Pest\Laravel\post;
+use function Pest\Laravel\patch;
 
 test('an admin can set a location on a private project', function () {
     $owner = User::factory()->create();
@@ -16,7 +16,7 @@ test('an admin can set a location on a private project', function () {
     actingAs($owner);
     seedNominatimCache('Namur', '333', 'relation', 'Namur, Belgium');
 
-    post(route('projects.update.location', $project->slug), [
+    patch(route('projects.update.location', $project->slug), [
         'q' => 'Namur',
         'osm_id' => '333',
         'osm_type' => 'relation',
@@ -34,7 +34,7 @@ test('an admin can clear the location on a private project', function () {
     ]);
     actingAs($owner);
 
-    post(route('projects.update.location', $project->slug), [])
+    patch(route('projects.update.location', $project->slug), [])
         ->assertRedirect(route('projects.edit', $project->slug));
 
     expect($project->fresh()->location_id)->toBeNull();
@@ -50,7 +50,7 @@ test('a public project cannot have its location cleared', function () {
     ]);
     actingAs($owner);
 
-    post(route('projects.update.location', $project->slug), [])
+    patch(route('projects.update.location', $project->slug), [])
         ->assertSessionHasErrors(['q', 'osm_id', 'osm_type']);
 
     expect($project->fresh()->location_id)->toBe($location->id);
@@ -66,7 +66,7 @@ test('an unresolvable location fails validation', function () {
     Cache::put('nominatim_' . md5('Nowhere'), [], now()->addDay());
     Http::fake(['nominatim.openstreetmap.org/*' => Http::response([])]);
 
-    post(route('projects.update.location', $project->slug), [
+    patch(route('projects.update.location', $project->slug), [
         'q' => 'Nowhere',
         'osm_id' => 'does-not-exist',
         'osm_type' => 'relation',
@@ -80,6 +80,6 @@ test('a moderator cannot update project location (admin-only)', function () {
     Member::create(['project_id' => $project->id, 'user_id' => $moderator->id, 'role' => ProjectRole::MODERATOR->value]);
     actingAs($moderator);
 
-    post(route('projects.update.location', $project->slug), [])
+    patch(route('projects.update.location', $project->slug), [])
         ->assertForbidden();
 });

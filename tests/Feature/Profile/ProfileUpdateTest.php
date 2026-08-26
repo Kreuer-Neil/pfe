@@ -8,7 +8,7 @@ use App\Jobs\HandleProfileImageUploads;
 test('a user can update their own profile', function () {
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)->post(route('user-profile.update', $user->id), [
+    $response = $this->actingAs($user)->patch(route('user-profile.update', $user->id), [
         'nickname' => 'newnickname',
         'pronouns' => 'they/them',
         'bio' => 'Updated bio',
@@ -25,7 +25,7 @@ test('a user can update their own profile', function () {
 test('pronouns and bio are cleared when emptied (nullable)', function () {
     $user = User::factory()->create(['pronouns' => 'she/her', 'bio' => 'Old bio']);
 
-    $response = $this->actingAs($user)->post(route('user-profile.update', $user->id), [
+    $response = $this->actingAs($user)->patch(route('user-profile.update', $user->id), [
         'nickname' => 'somenickname',
     ]);
 
@@ -40,7 +40,7 @@ test('nickname is not required', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->post(route('user-profile.update', $user->id), ['nickname' => ''])
+        ->patch(route('user-profile.update', $user->id), ['nickname' => ''])
         ->assertSessionHasNoErrors();
 });
 
@@ -48,7 +48,7 @@ test('nickname must be at least 3 characters', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->post(route('user-profile.update', $user->id), ['nickname' => 'ab'])
+        ->patch(route('user-profile.update', $user->id), ['nickname' => 'ab'])
         ->assertSessionHasErrors('nickname');
 });
 
@@ -56,7 +56,7 @@ test('nickname must be at most 32 characters', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->post(route('user-profile.update', $user->id), ['nickname' => str_repeat('a', 33)])
+        ->patch(route('user-profile.update', $user->id), ['nickname' => str_repeat('a', 33)])
         ->assertSessionHasErrors('nickname');
 });
 
@@ -64,7 +64,7 @@ test('bio must be at most 255 characters', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->post(route('user-profile.update', $user->id), [
+        ->patch(route('user-profile.update', $user->id), [
             'nickname' => 'validnick',
             'bio' => str_repeat('a', 256),
         ])
@@ -76,7 +76,7 @@ test('a user cannot update another users profile', function () {
     $other = User::factory()->create(['nickname' => 'original']);
 
     $this->actingAs($user)
-        ->post(route('user-profile.update', $other->id), ['nickname' => 'hacked'])
+        ->patch(route('user-profile.update', $other->id), ['nickname' => 'hacked'])
         ->assertForbidden();
 
     expect($other->fresh()->nickname)->toBe('original');
@@ -86,7 +86,7 @@ test('uploading an avatar dispatches the image processing job and saves the file
     Queue::fake();
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)->post(route('user-profile.update', $user->id), [
+    $response = $this->actingAs($user)->patch(route('user-profile.update', $user->id), [
         'nickname' => 'withavatar',
         'avatar' => UploadedFile::fake()->image('avatar.jpg'),
     ]);
@@ -100,7 +100,7 @@ test('avatar must be an image', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->post(route('user-profile.update', $user->id), [
+        ->patch(route('user-profile.update', $user->id), [
             'nickname' => 'test',
             'avatar' => UploadedFile::fake()->create('not-an-image.pdf', 100),
         ])
@@ -111,7 +111,7 @@ test('avatar must respect the max file size', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->post(route('user-profile.update', $user->id), [
+        ->patch(route('user-profile.update', $user->id), [
             'nickname' => 'test',
             // max:2048 is in KB - 3000 KB exceeds it.
             'avatar' => UploadedFile::fake()->image('too-big.jpg')->size(3000),

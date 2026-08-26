@@ -9,7 +9,7 @@ test('user can set their location from a cached search result', function () {
     $this->actingAs($user);
     seedNominatimCache('Liège', '1407192', 'relation');
 
-    $this->post(route('preferences.update.location'), [
+    $this->patch(route('preferences.update.location'), [
         'q' => 'Liège',
         'osm_id' => '1407192',
         'osm_type' => 'relation',
@@ -23,12 +23,12 @@ test('submitting no location clears a previously set location', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
     seedNominatimCache('Liège', '1407192', 'relation');
-    $this->post(route('preferences.update.location'), [
+    $this->patch(route('preferences.update.location'), [
         'q' => 'Liège', 'osm_id' => '1407192', 'osm_type' => 'relation',
     ]);
     expect($user->preferences->fresh()->location_id)->not->toBeNull();
 
-    $this->post(route('preferences.update.location'), [])
+    $this->patch(route('preferences.update.location'), [])
         ->assertRedirect(route('preferences.edit'));
 
     expect($user->preferences->fresh()->location_id)->toBeNull();
@@ -39,7 +39,7 @@ test('an osm_id not present in the cached results fails with an expired-selectio
     $this->actingAs($user);
     seedNominatimCache('Liège', '1407192', 'relation');
 
-    $this->post(route('preferences.update.location'), [
+    $this->patch(route('preferences.update.location'), [
         'q' => 'Liège',
         'osm_id' => '999999',
         'osm_type' => 'relation',

@@ -6,7 +6,7 @@ use App\Models\Member;
 use App\Models\Project;
 use App\Models\User;
 use function Pest\Laravel\actingAs;
-use function Pest\Laravel\post;
+use function Pest\Laravel\patch;
 
 // Controller uses $request->has('is_private'), native-checkbox semantics: the key must be
 // entirely absent to mean "not private", not present-with-falsy-value. Sending is_private=0
@@ -21,7 +21,7 @@ test('an admin can make a located project public', function () {
     ]);
     actingAs($owner);
 
-    post(route('projects.update.visibility', $project->slug), [])
+    patch(route('projects.update.visibility', $project->slug), [])
         ->assertRedirect(route('projects.edit', $project->slug));
 
     $this->assertDatabaseHas('projects', ['id' => $project->id, 'is_private' => false]);
@@ -36,7 +36,7 @@ test('a project cannot be made public without a location', function () {
     ]);
     actingAs($owner);
 
-    post(route('projects.update.visibility', $project->slug), [])
+    patch(route('projects.update.visibility', $project->slug), [])
         ->assertSessionHasErrors('is_private');
 
     $this->assertDatabaseHas('projects', ['id' => $project->id, 'is_private' => true]);
@@ -51,7 +51,7 @@ test('an admin can make a project private regardless of location', function () {
     ]);
     actingAs($owner);
 
-    post(route('projects.update.visibility', $project->slug), [
+    patch(route('projects.update.visibility', $project->slug), [
         'is_private' => '1',
     ])->assertRedirect();
 
@@ -65,6 +65,6 @@ test('a moderator cannot update visibility (admin-only, unlike appearance)', fun
     Member::create(['project_id' => $project->id, 'user_id' => $moderator->id, 'role' => ProjectRole::MODERATOR->value]);
     actingAs($moderator);
 
-    post(route('projects.update.visibility', $project->slug), [])
+    patch(route('projects.update.visibility', $project->slug), [])
         ->assertForbidden();
 });

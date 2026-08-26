@@ -25,7 +25,7 @@ test('a participating user can validate the task', function () {
     Participation::create(['task_id' => $this->task->id, 'user_id' => $this->memberUser->id]);
     $this->actingAs($this->memberUser);
 
-    $this->post(route('tasks.validate', $this->task->id))->assertRedirect();
+    $this->patch(route('tasks.validate', $this->task->id))->assertRedirect();
 
     $this->assertNotNull($this->task->fresh()->validated_at);
 });
@@ -33,7 +33,7 @@ test('a participating user can validate the task', function () {
 test('a non-participating user cannot validate the task', function () {
     $this->actingAs($this->memberUser);
 
-    $this->post(route('tasks.validate', $this->task->id))->assertForbidden();
+    $this->patch(route('tasks.validate', $this->task->id))->assertForbidden();
 
     $this->assertNull($this->task->fresh()->validated_at);
 });
@@ -41,5 +41,5 @@ test('a non-participating user cannot validate the task', function () {
 test('validating a non-existent task redirects with an error instead of a hard failure', function () {
     $this->actingAs($this->memberUser);
 
-    $this->post(route('tasks.validate', 999999))->assertRedirect();
+    $this->patch(route('tasks.validate', 999999))->assertRedirect();
 });

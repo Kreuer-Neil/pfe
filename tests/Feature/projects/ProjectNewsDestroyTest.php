@@ -7,7 +7,7 @@ use App\Models\ProjectNews;
 use App\Models\User;
 
 use function Pest\Laravel\actingAs;
-use function Pest\Laravel\post;
+use function Pest\Laravel\delete;
 
 test('an admin can delete any news item in their project', function () {
     $owner = User::factory()->create();
@@ -18,7 +18,7 @@ test('an admin can delete any news item in their project', function () {
 
     actingAs($owner);
 
-    post(route('projects.news.destroy', [$project->slug, $news->id]))->assertRedirect();
+    delete(route('projects.news.destroy', [$project->slug, $news->id]))->assertRedirect();
 
     $this->assertDatabaseMissing('project_news', ['id' => $news->id]);
 });
@@ -32,7 +32,7 @@ test('a moderator can delete any news item in their project', function () {
 
     actingAs($moderator);
 
-    post(route('projects.news.destroy', [$project->slug, $news->id]))->assertRedirect();
+    delete(route('projects.news.destroy', [$project->slug, $news->id]))->assertRedirect();
 
     $this->assertDatabaseMissing('project_news', ['id' => $news->id]);
 });
@@ -46,7 +46,7 @@ test('a news item author can delete their own item even as a plain member', func
 
     actingAs($author);
 
-    post(route('projects.news.destroy', [$project->slug, $news->id]))->assertRedirect();
+    delete(route('projects.news.destroy', [$project->slug, $news->id]))->assertRedirect();
 
     $this->assertDatabaseMissing('project_news', ['id' => $news->id]);
 });
@@ -62,7 +62,7 @@ test('a different plain member cannot delete someone else\'s news item', functio
 
     actingAs($otherMember);
 
-    post(route('projects.news.destroy', [$project->slug, $news->id]))->assertForbidden();
+    delete(route('projects.news.destroy', [$project->slug, $news->id]))->assertForbidden();
 
     $this->assertDatabaseHas('project_news', ['id' => $news->id]);
 });
@@ -75,5 +75,5 @@ test('deleting via a project that does not own the news item 404s', function () 
 
     actingAs($owner);
 
-    post(route('projects.news.destroy', [$otherProject->slug, $news->id]))->assertNotFound();
+    delete(route('projects.news.destroy', [$otherProject->slug, $news->id]))->assertNotFound();
 });

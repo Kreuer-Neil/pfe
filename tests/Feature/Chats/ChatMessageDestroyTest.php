@@ -39,7 +39,7 @@ test('the author can delete their own message and it is broadcast', function () 
 
     $this->actingAs($this->authorUser);
 
-    $this->post(route('chats.messages.destroy', $this->message->id))->assertRedirect();
+    $this->delete(route('chats.messages.destroy', $this->message->id))->assertRedirect();
 
     $this->assertSoftDeleted('chat_messages', ['id' => $this->message->id]);
 
@@ -55,7 +55,7 @@ test('a moderator can delete another member\'s message', function () {
 
     $this->actingAs($this->moderatorUser);
 
-    $this->post(route('chats.messages.destroy', $this->message->id))->assertRedirect();
+    $this->delete(route('chats.messages.destroy', $this->message->id))->assertRedirect();
 
     $this->assertSoftDeleted('chat_messages', ['id' => $this->message->id]);
 });
@@ -65,7 +65,7 @@ test('a plain member cannot delete someone else\'s message', function () {
 
     $this->actingAs($this->otherMember);
 
-    $this->post(route('chats.messages.destroy', $this->message->id))->assertForbidden();
+    $this->delete(route('chats.messages.destroy', $this->message->id))->assertForbidden();
 
     $this->assertDatabaseHas('chat_messages', ['id' => $this->message->id, 'deleted_at' => null]);
     Event::assertNotDispatched(MessageDeletedEvent::class);

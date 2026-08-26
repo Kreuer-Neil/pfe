@@ -42,7 +42,7 @@ test('a non-onboarded user can skip the tags step with no tags selected', functi
     $user->preferences->update(['onboarding_completed_at' => null]);
     $this->actingAs($user);
 
-    $response = $this->post(route('preferences.update.tags'), []);
+    $response = $this->patch(route('preferences.update.tags'), []);
 
     $response->assertStatus(302);
     expect($response->headers->get('Location'))->not->toBe(route('onboarding.edit'))
@@ -54,7 +54,7 @@ test('a non-onboarded user can skip the languages step with no languages selecte
     $user->preferences->update(['onboarding_completed_at' => null]);
     $this->actingAs($user);
 
-    $response = $this->post(route('preferences.update.languages'), []);
+    $response = $this->patch(route('preferences.update.languages'), []);
 
     $response->assertStatus(302);
     expect($response->headers->get('Location'))->not->toBe(route('onboarding.edit'))
@@ -66,8 +66,8 @@ test('a non-onboarded user can pick tags and languages before finishing onboardi
     $user->preferences->update(['onboarding_completed_at' => null]);
     $this->actingAs($user);
 
-    $this->post(route('preferences.update.tags'), ['tags' => ['nature']]);
-    $this->post(route('preferences.update.languages'), ['languages' => ['EN']]);
+    $this->patch(route('preferences.update.tags'), ['tags' => ['nature']]);
+    $this->patch(route('preferences.update.languages'), ['languages' => ['EN']]);
 
     expect($user->preferences->fresh()->tags()->pluck('name')->all())->toBe(['nature'])
         ->and($user->preferences->fresh()->languages()->pluck('name')->all())->toBe(['EN']);

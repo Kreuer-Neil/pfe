@@ -11,7 +11,7 @@ Route::get('projects/{project}/chats/{room}', [ChatRoomController::class, 'show'
 Route::post('projects/{project}/chats/{room}/messages/store', [ChatMessagesController::class, 'store'])
     ->name('projects.chats.messages.store');
 
-Route::post('chats/messages/{message}/update', [ChatMessagesController::class, 'update'])
+Route::patch('chats/messages/{message}/update', [ChatMessagesController::class, 'update'])
     ->name('chats.messages.update');
-Route::post('chats/messages/{message}/destroy', [ChatMessagesController::class, 'destroy'])
+Route::delete('chats/messages/{message}/destroy', [ChatMessagesController::class, 'destroy'])
     ->name('chats.messages.destroy');

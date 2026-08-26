@@ -8,7 +8,7 @@ use App\Models\ProjectPoll;
 use App\Models\User;
 
 use function Pest\Laravel\actingAs;
-use function Pest\Laravel\post;
+use function Pest\Laravel\delete;
 
 function makePollForDestroy(User $author, Project $project): ProjectPoll
 {
@@ -27,7 +27,7 @@ test('an admin can delete any poll in their project', function () {
 
     actingAs($owner);
 
-    post(route('projects.polls.destroy', [$project->slug, $poll->id]))->assertRedirect();
+    delete(route('projects.polls.destroy', [$project->slug, $poll->id]))->assertRedirect();
 
     $this->assertDatabaseMissing('project_polls', ['id' => $poll->id]);
 });
@@ -41,7 +41,7 @@ test('a moderator can delete any poll in their project', function () {
 
     actingAs($moderator);
 
-    post(route('projects.polls.destroy', [$project->slug, $poll->id]))->assertRedirect();
+    delete(route('projects.polls.destroy', [$project->slug, $poll->id]))->assertRedirect();
 
     $this->assertDatabaseMissing('project_polls', ['id' => $poll->id]);
 });
@@ -55,7 +55,7 @@ test('a poll author can delete their own poll even as a task manager', function 
 
     actingAs($author);
 
-    post(route('projects.polls.destroy', [$project->slug, $poll->id]))->assertRedirect();
+    delete(route('projects.polls.destroy', [$project->slug, $poll->id]))->assertRedirect();
 
     $this->assertDatabaseMissing('project_polls', ['id' => $poll->id]);
 });
@@ -71,7 +71,7 @@ test('a different task manager cannot delete someone else\'s poll', function () 
 
     actingAs($otherTaskManager);
 
-    post(route('projects.polls.destroy', [$project->slug, $poll->id]))->assertForbidden();
+    delete(route('projects.polls.destroy', [$project->slug, $poll->id]))->assertForbidden();
 
     $this->assertDatabaseHas('project_polls', ['id' => $poll->id]);
 });
@@ -87,7 +87,7 @@ test('deleting a poll cascades to its choices and participations', function () {
 
     actingAs($owner);
 
-    post(route('projects.polls.destroy', [$project->slug, $poll->id]))->assertRedirect();
+    delete(route('projects.polls.destroy', [$project->slug, $poll->id]))->assertRedirect();
 
     $this->assertDatabaseMissing('poll_choices', ['project_poll_id' => $poll->id]);
     $this->assertDatabaseMissing('poll_participations', ['project_poll_id' => $poll->id]);
@@ -101,5 +101,5 @@ test('deleting via a project that does not own the poll 404s', function () {
 
     actingAs($owner);
 
-    post(route('projects.polls.destroy', [$otherProject->slug, $poll->id]))->assertNotFound();
+    delete(route('projects.polls.destroy', [$otherProject->slug, $poll->id]))->assertNotFound();
 });

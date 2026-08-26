@@ -24,7 +24,7 @@ test('a participating user can cancel their participation', function () {
     Participation::create(['task_id' => $this->task->id, 'user_id' => $this->memberUser->id]);
     $this->actingAs($this->memberUser);
 
-    $this->post(route('tasks.participate.destroy', $this->task->id))->assertRedirect();
+    $this->delete(route('tasks.participate.destroy', $this->task->id))->assertRedirect();
 
     $this->assertDatabaseMissing('participations', [
         'task_id' => $this->task->id,
@@ -35,7 +35,7 @@ test('a participating user can cancel their participation', function () {
 test('a non-participating user gets no-op redirect when trying to cancel', function () {
     $this->actingAs($this->memberUser);
 
-    $this->post(route('tasks.participate.destroy', $this->task->id))->assertRedirect();
+    $this->delete(route('tasks.participate.destroy', $this->task->id))->assertRedirect();
 
     $this->assertDatabaseCount('participations', 0);
 });

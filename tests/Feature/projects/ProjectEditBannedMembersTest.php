@@ -7,7 +7,7 @@ use App\Models\User;
 use Inertia\Testing\AssertableInertia as Assert;
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
-use function Pest\Laravel\post;
+use function Pest\Laravel\patch;
 
 test('the settings page splits banned members out of the regular members list', function () {
     $owner = User::factory()->create();
@@ -35,7 +35,7 @@ test('an admin can unban a member by changing their role away from banned', func
     Member::create(['project_id' => $project->id, 'user_id' => $bannedMember->id, 'role' => ProjectRole::BANNED->value]);
     actingAs($owner);
 
-    post(route('projects.update.member-role', $project->slug), [
+    patch(route('projects.update.member-role', $project->slug), [
         'user_id' => $bannedMember->id,
         'role' => ProjectRole::MEMBER->value,
     ])->assertRedirect();

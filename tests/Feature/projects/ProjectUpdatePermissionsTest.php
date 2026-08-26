@@ -6,7 +6,7 @@ use App\Models\Project;
 use App\Models\User;
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
-use function Pest\Laravel\post;
+use function Pest\Laravel\patch;
 
 // Controller uses $request->has('allow_members_invitations'), native-checkbox semantics: the
 // key must be entirely absent to mean "off", not present-with-falsy-value.
@@ -26,7 +26,7 @@ test('an admin can turn off allow_members_invitations', function () {
     $project = Project::factory()->create(['owner_id' => $owner->id]);
     actingAs($owner);
 
-    post(route('projects.update.permissions', $project->slug), [])
+    patch(route('projects.update.permissions', $project->slug), [])
         ->assertRedirect(route('projects.edit.permissions', $project->slug));
 
     $this->assertDatabaseHas('project_permissions', [
@@ -42,7 +42,7 @@ test('a moderator cannot update permissions (admin-only)', function () {
     Member::create(['project_id' => $project->id, 'user_id' => $moderator->id, 'role' => ProjectRole::MODERATOR->value]);
     actingAs($moderator);
 
-    post(route('projects.update.permissions', $project->slug), [])
+    patch(route('projects.update.permissions', $project->slug), [])
         ->assertForbidden();
 });
 

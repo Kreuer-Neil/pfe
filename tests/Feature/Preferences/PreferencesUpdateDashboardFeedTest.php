@@ -6,7 +6,7 @@ test('a user can hide the dashboard feed section', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    $this->post(route('preferences.update.dashboard-feed'), [
+    $this->patch(route('preferences.update.dashboard-feed'), [
         'dashboard_feed_hidden' => '1',
     ])->assertRedirect();
 
@@ -18,7 +18,7 @@ test('a user can re-enable the dashboard feed section', function () {
     $user->preferences->update(['dashboard_feed_hidden' => true]);
     $this->actingAs($user);
 
-    $this->post(route('preferences.update.dashboard-feed'), [
+    $this->patch(route('preferences.update.dashboard-feed'), [
         'dashboard_feed_hidden' => '0',
     ])->assertRedirect();
 

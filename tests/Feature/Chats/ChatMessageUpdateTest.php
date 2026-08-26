@@ -37,7 +37,7 @@ test('the author can update their own message and it is broadcast', function () 
 
     $this->actingAs($this->authorUser);
 
-    $this->post(route('chats.messages.update', $this->message->id), [
+    $this->patch(route('chats.messages.update', $this->message->id), [
         'content' => 'Updated content',
     ])->assertRedirect();
 
@@ -59,7 +59,7 @@ test('another member cannot update someone else\'s message', function () {
 
     $this->actingAs($this->otherMember);
 
-    $this->post(route('chats.messages.update', $this->message->id), [
+    $this->patch(route('chats.messages.update', $this->message->id), [
         'content' => 'Hijacked content',
     ])->assertForbidden();
 
@@ -70,7 +70,7 @@ test('another member cannot update someone else\'s message', function () {
 test('message content is required on update', function () {
     $this->actingAs($this->authorUser);
 
-    $this->post(route('chats.messages.update', $this->message->id), [
+    $this->patch(route('chats.messages.update', $this->message->id), [
         'content' => '',
     ])->assertSessionHasErrors('content');
 });

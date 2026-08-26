@@ -22,7 +22,7 @@ test('a plain member cannot revoke an invitation', function () {
     memberOfProject($project, $member, ProjectRole::MEMBER->value);
     $this->actingAs($member);
 
-    $this->post(route('projects.invitations.revoke', [$project->slug, $invitation->id]))
+    $this->delete(route('projects.invitations.revoke', [$project->slug, $invitation->id]))
         ->assertForbidden();
 
     expect($invitation->fresh()->isValid())->toBeTrue();
@@ -37,7 +37,7 @@ test('a task manager cannot revoke an invitation', function () {
     memberOfProject($project, $taskManager, ProjectRole::TASK_MANAGER->value);
     $this->actingAs($taskManager);
 
-    $this->post(route('projects.invitations.revoke', [$project->slug, $invitation->id]))
+    $this->delete(route('projects.invitations.revoke', [$project->slug, $invitation->id]))
         ->assertForbidden();
 });
 
@@ -48,7 +48,7 @@ test('an admin can revoke an invitation', function () {
     $invitation = $project->generateInvitation(null, null);
     $this->actingAs($admin);
 
-    $this->post(route('projects.invitations.revoke', [$project->slug, $invitation->id]))
+    $this->delete(route('projects.invitations.revoke', [$project->slug, $invitation->id]))
         ->assertRedirect();
 
     expect($invitation->fresh()->isValid())->toBeFalse();
@@ -63,7 +63,7 @@ test('a moderator can revoke an invitation', function () {
     memberOfProject($project, $moderator, ProjectRole::MODERATOR->value);
     $this->actingAs($moderator);
 
-    $this->post(route('projects.invitations.revoke', [$project->slug, $invitation->id]))
+    $this->delete(route('projects.invitations.revoke', [$project->slug, $invitation->id]))
         ->assertRedirect();
 
     expect($invitation->fresh()->isValid())->toBeFalse();
@@ -80,7 +80,7 @@ test('an admin of one project cannot revoke an invitation belonging to another p
 
     $this->actingAs($adminA);
 
-    $this->post(route('projects.invitations.revoke', [$projectA->slug, $invitationB->id]))
+    $this->delete(route('projects.invitations.revoke', [$projectA->slug, $invitationB->id]))
         ->assertNotFound();
 
     expect($invitationB->fresh()->isValid())->toBeTrue();

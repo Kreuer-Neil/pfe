@@ -38,9 +38,9 @@ Route::get('projects/{project}/join', [ProjectController::class, 'join'])
     ->name('projects.join')
     ->missing(fn () => redirect()->back()->withErrors(['join' => __('validation.project_not_found')]));
 
-Route::get('projects/{project}/follow', [ProjectController::class, 'follow'])
+Route::post('projects/{project}/follow', [ProjectController::class, 'follow'])
     ->name('projects.follow');
-Route::get('projects/{project}/unfollow', [ProjectController::class, 'unfollow'])
+Route::delete('projects/{project}/unfollow', [ProjectController::class, 'unfollow'])
     ->name('projects.unfollow');
 
 Route::get('projects/{project}/news', [ProjectNewsController::class, 'index'])
@@ -61,7 +61,7 @@ Route::prefix('projects/{project}')->group(function () {
     });
 
     Route::middleware('can:updateAppearance,project')->group(function () {
-        Route::post('update/appearance', [ProjectController::class, 'updateAppearance'])
+        Route::patch('update/appearance', [ProjectController::class, 'updateAppearance'])
             ->name('projects.update.appearance');
     });
 
@@ -79,26 +79,26 @@ Route::prefix('projects/{project}')->group(function () {
         ->name('projects.polls.vote');
 
     Route::middleware('can:update,project')->group(function () {
-        Route::post('update/visibility', [ProjectController::class, 'updateVisibility'])
+        Route::patch('update/visibility', [ProjectController::class, 'updateVisibility'])
             ->name('projects.update.visibility');
-        Route::post('update/tags', [ProjectController::class, 'updateTags'])
+        Route::patch('update/tags', [ProjectController::class, 'updateTags'])
             ->name('projects.update.tags');
-        Route::post('update/location', [ProjectController::class, 'updateLocation'])
+        Route::patch('update/location', [ProjectController::class, 'updateLocation'])
             ->name('projects.update.location');
-        Route::post('update/permissions', [ProjectController::class, 'updatePermissions'])
+        Route::patch('update/permissions', [ProjectController::class, 'updatePermissions'])
             ->name('projects.update.permissions');
     });
 
     // Per-target dynamic authorizations.
-    Route::post('update/member-role', [ProjectController::class, 'updateMemberRole'])
+    Route::patch('update/member-role', [ProjectController::class, 'updateMemberRole'])
         ->name('projects.update.member-role');
-    Route::post('update/member-ban', [ProjectController::class, 'banMember'])
+    Route::patch('update/member-ban', [ProjectController::class, 'banMember'])
         ->name('projects.update.member-ban');
-    Route::post('news/{news}/destroy', [ProjectNewsController::class, 'destroy'])
+    Route::delete('news/{news}/destroy', [ProjectNewsController::class, 'destroy'])
         ->name('projects.news.destroy');
-    Route::post('polls/{poll}/destroy', [ProjectPollController::class, 'destroy'])
+    Route::delete('polls/{poll}/destroy', [ProjectPollController::class, 'destroy'])
         ->name('projects.polls.destroy');
 });
 
-Route::post('projects/{project}/invitations/{invitation}/revoke', [ProjectInvitationController::class, 'revoke'])
+Route::delete('projects/{project}/invitations/{invitation}/revoke', [ProjectInvitationController::class, 'revoke'])
     ->name('projects.invitations.revoke');

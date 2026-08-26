@@ -76,7 +76,7 @@ export default function NotificationBell({className, variant = 'icon'}: {
 
         if (notification.read_at) return;
 
-        router.post(readNotification.url(notification.id), {}, {
+        router.patch(readNotification.url(notification.id), {}, {
             async: true,
             preserveScroll: true,
             preserveState: true,
@@ -86,7 +86,7 @@ export default function NotificationBell({className, variant = 'icon'}: {
     };
 
     const markAllRead = () => {
-        router.post(readAllNotifications.url(), {}, {
+        router.patch(readAllNotifications.url(), {}, {
             async: true,
             preserveScroll: true,
             preserveState: true,

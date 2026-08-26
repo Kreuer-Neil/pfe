@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Notifications\ProjectMemberBannedNotification;
 use Illuminate\Support\Facades\Notification;
 use function Pest\Laravel\actingAs;
-use function Pest\Laravel\post;
+use function Pest\Laravel\patch;
 
 function makeBanMember(Project $project, ProjectRole $role): User
 {
@@ -26,7 +26,7 @@ test('an admin can ban a lower-ranked member and it notifies them', function () 
     $target = makeBanMember($project, ProjectRole::MEMBER);
     actingAs($admin);
 
-    post(route('projects.update.member-ban', $project->slug), [
+    patch(route('projects.update.member-ban', $project->slug), [
         'user_id' => $target->id,
     ])->assertRedirect();
 
@@ -46,7 +46,7 @@ test('a moderator can ban a lower-ranked member', function () {
     $target = makeBanMember($project, ProjectRole::MEMBER);
     actingAs($moderator);
 
-    post(route('projects.update.member-ban', $project->slug), [
+    patch(route('projects.update.member-ban', $project->slug), [
         'user_id' => $target->id,
     ])->assertRedirect();
 
@@ -65,11 +65,11 @@ test('a moderator cannot ban another moderator or an admin', function () {
     $admin = makeBanMember($project, ProjectRole::ADMIN);
     actingAs($moderator);
 
-    post(route('projects.update.member-ban', $project->slug), [
+    patch(route('projects.update.member-ban', $project->slug), [
         'user_id' => $otherModerator->id,
     ])->assertForbidden();
 
-    post(route('projects.update.member-ban', $project->slug), [
+    patch(route('projects.update.member-ban', $project->slug), [
         'user_id' => $admin->id,
     ])->assertForbidden();
 });
@@ -81,7 +81,7 @@ test('an admin cannot ban another admin', function () {
     $otherAdmin = makeBanMember($project, ProjectRole::ADMIN);
     actingAs($admin);
 
-    post(route('projects.update.member-ban', $project->slug), [
+    patch(route('projects.update.member-ban', $project->slug), [
         'user_id' => $otherAdmin->id,
     ])->assertForbidden();
 });
@@ -92,7 +92,7 @@ test('the owner can ban any non-owner member, admins included', function () {
     $admin = makeBanMember($project, ProjectRole::ADMIN);
     actingAs($owner);
 
-    post(route('projects.update.member-ban', $project->slug), [
+    patch(route('projects.update.member-ban', $project->slug), [
         'user_id' => $admin->id,
     ])->assertRedirect();
 
@@ -109,12 +109,12 @@ test('nobody can ban the owner, including the owner themselves', function () {
     $admin = makeBanMember($project, ProjectRole::ADMIN);
 
     actingAs($admin);
-    post(route('projects.update.member-ban', $project->slug), [
+    patch(route('projects.update.member-ban', $project->slug), [
         'user_id' => $owner->id,
     ])->assertForbidden();
 
     actingAs($owner);
-    post(route('projects.update.member-ban', $project->slug), [
+    patch(route('projects.update.member-ban', $project->slug), [
         'user_id' => $owner->id,
     ])->assertForbidden();
 });
@@ -125,7 +125,7 @@ test('nobody can ban themselves', function () {
     $admin = makeBanMember($project, ProjectRole::ADMIN);
     actingAs($admin);
 
-    post(route('projects.update.member-ban', $project->slug), [
+    patch(route('projects.update.member-ban', $project->slug), [
         'user_id' => $admin->id,
     ])->assertForbidden();
 });
@@ -137,7 +137,7 @@ test('a plain member cannot ban anyone', function () {
     $target = makeBanMember($project, ProjectRole::TASK_MANAGER);
     actingAs($member);
 
-    post(route('projects.update.member-ban', $project->slug), [
+    patch(route('projects.update.member-ban', $project->slug), [
         'user_id' => $target->id,
     ])->assertForbidden();
 });
@@ -150,7 +150,7 @@ test('banning a non-member is forbidden', function () {
     $notAMember = User::factory()->create();
     actingAs($admin);
 
-    post(route('projects.update.member-ban', $project->slug), [
+    patch(route('projects.update.member-ban', $project->slug), [
         'user_id' => $notAMember->id,
     ])->assertForbidden();
 });

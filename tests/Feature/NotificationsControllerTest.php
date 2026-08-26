@@ -6,7 +6,7 @@ use App\Notifications\ProjectMemberBannedNotification;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
-use function Pest\Laravel\post;
+use function Pest\Laravel\patch;
 
 test('index returns only the current user\'s notifications, most recent first', function () {
     $user = User::factory()->create();
@@ -35,7 +35,7 @@ test('read marks a single notification as read and does not affect others', func
     actingAs($user);
     $notification = $user->notifications()->first();
 
-    post(route('notifications.read', $notification->id))->assertRedirect();
+    patch(route('notifications.read', $notification->id))->assertRedirect();
 
     expect($user->unreadNotifications()->count())->toBe(1)
         ->and($notification->fresh()->read_at)->not->toBeNull();
@@ -51,7 +51,7 @@ test('a user cannot mark another user\'s notification as read', function () {
 
     actingAs($user);
 
-    post(route('notifications.read', $notification->id))->assertNotFound();
+    patch(route('notifications.read', $notification->id))->assertNotFound();
 
     expect($notification->fresh()->read_at)->toBeNull();
 });
@@ -66,7 +66,7 @@ test('read-all marks every unread notification as read', function () {
 
     actingAs($user);
 
-    post(route('notifications.read-all'))->assertRedirect();
+    patch(route('notifications.read-all'))->assertRedirect();
 
     expect($user->unreadNotifications()->count())->toBe(0);
 });

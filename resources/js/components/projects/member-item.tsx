@@ -74,7 +74,7 @@ export default function MemberItem({projectSlug, member, onBan, showBanAction = 
                             {member.assignable_roles.map((role) => (
                                 <DropdownMenuItem
                                     key={role}
-                                    onClick={() => router.post(
+                                    onClick={() => router.patch(
                                         ProjectController.updateMemberRole.url(projectSlug),
                                         {user_id: member.id, role},
                                         {preserveScroll: true}

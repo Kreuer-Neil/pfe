@@ -11,7 +11,7 @@ test('a user can follow a public project they are not a member of', function () 
     $project = Project::factory()->create(['owner_id' => $owner->id, 'is_private' => false]);
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)->get(route('projects.follow', $project->slug));
+    $response = $this->actingAs($user)->post(route('projects.follow', $project->slug));
 
     $response->assertRedirect(route('projects.show', $project->slug));
     $this->assertDatabaseHas('project_follows', [
@@ -25,8 +25,8 @@ test('following the same project twice does not create a duplicate row', functio
     $project = Project::factory()->create(['owner_id' => $owner->id, 'is_private' => false]);
     $user = User::factory()->create();
 
-    $this->actingAs($user)->get(route('projects.follow', $project->slug));
-    $this->actingAs($user)->get(route('projects.follow', $project->slug));
+    $this->actingAs($user)->post(route('projects.follow', $project->slug));
+    $this->actingAs($user)->post(route('projects.follow', $project->slug));
 
     expect(ProjectFollow::where('user_id', $user->id)->where('project_id', $project->id)->count())->toBe(1);
 });
@@ -37,7 +37,7 @@ test('a project member following their own project is a no-op', function () {
     $member = User::factory()->create();
     Member::create(['project_id' => $project->id, 'user_id' => $member->id, 'role' => ProjectRole::MEMBER->value]);
 
-    $this->actingAs($member)->get(route('projects.follow', $project->slug));
+    $this->actingAs($member)->post(route('projects.follow', $project->slug));
 
     $this->assertDatabaseMissing('project_follows', [
         'user_id' => $member->id,
@@ -51,7 +51,7 @@ test('a user can unfollow a project they follow', function () {
     $user = User::factory()->create();
     ProjectFollow::create(['user_id' => $user->id, 'project_id' => $project->id]);
 
-    $response = $this->actingAs($user)->get(route('projects.unfollow', $project->slug));
+    $response = $this->actingAs($user)->delete(route('projects.unfollow', $project->slug));
 
     $response->assertRedirect(route('projects.show', $project->slug));
     $this->assertDatabaseMissing('project_follows', [
@@ -65,7 +65,7 @@ test('unfollowing a project not followed is a no-op', function () {
     $project = Project::factory()->create(['owner_id' => $owner->id, 'is_private' => false]);
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)->get(route('projects.unfollow', $project->slug));
+    $response = $this->actingAs($user)->delete(route('projects.unfollow', $project->slug));
 
     $response->assertRedirect(route('projects.show', $project->slug));
     $this->assertDatabaseMissing('project_follows', [

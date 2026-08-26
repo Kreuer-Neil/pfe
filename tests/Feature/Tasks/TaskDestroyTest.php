@@ -29,7 +29,7 @@ beforeEach(function () {
 test('the task owner can delete their task', function () {
     $this->actingAs($this->owner);
 
-    $this->post(route('tasks.destroy', $this->task->id))->assertRedirect();
+    $this->delete(route('tasks.destroy', $this->task->id))->assertRedirect();
 
     $this->assertSoftDeleted('tasks', ['id' => $this->task->id]);
 });
@@ -37,7 +37,7 @@ test('the task owner can delete their task', function () {
 test('a project moderator can delete a task they do not own', function () {
     $this->actingAs($this->moderatorUser);
 
-    $this->post(route('tasks.destroy', $this->task->id))->assertRedirect();
+    $this->delete(route('tasks.destroy', $this->task->id))->assertRedirect();
 
     $this->assertSoftDeleted('tasks', ['id' => $this->task->id]);
 });
@@ -45,7 +45,7 @@ test('a project moderator can delete a task they do not own', function () {
 test('a plain member who is neither owner nor moderator/admin cannot delete the task', function () {
     $this->actingAs($this->memberUser);
 
-    $this->post(route('tasks.destroy', $this->task->id))->assertForbidden();
+    $this->delete(route('tasks.destroy', $this->task->id))->assertForbidden();
 
     $this->assertDatabaseHas('tasks', ['id' => $this->task->id, 'deleted_at' => null]);
 });
@@ -53,5 +53,5 @@ test('a plain member who is neither owner nor moderator/admin cannot delete the 
 test('deleting a non-existent task 404s', function () {
     $this->actingAs($this->owner);
 
-    $this->post(route('tasks.destroy', 999999))->assertNotFound();
+    $this->delete(route('tasks.destroy', 999999))->assertNotFound();
 });

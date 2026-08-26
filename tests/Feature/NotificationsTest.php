@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Notification;
 
 use function Pest\Laravel\actingAs;
-use function Pest\Laravel\post;
+use function Pest\Laravel\patch;
 
 test('user gets notified on their dashboard when a task is soon due and task notifications are active', function () {
     Notification::fake();
@@ -91,7 +91,7 @@ test('user gets notified when kicked/banned from a project', function () {
     Member::create(['project_id' => $project->id, 'user_id' => $target->id, 'role' => ProjectRole::MEMBER->value]);
     actingAs($owner);
 
-    post(route('projects.update.member-ban', $project->slug), [
+    patch(route('projects.update.member-ban', $project->slug), [
         'user_id' => $target->id,
     ])->assertRedirect();
 
@@ -111,7 +111,7 @@ test('changing a member role to something other than banned does not notify', fu
     Member::create(['project_id' => $project->id, 'user_id' => $target->id, 'role' => ProjectRole::MEMBER->value]);
     actingAs($owner);
 
-    post(route('projects.update.member-role', $project->slug), [
+    patch(route('projects.update.member-role', $project->slug), [
         'user_id' => $target->id,
         'role' => ProjectRole::MODERATOR->value,
     ])->assertRedirect();
@@ -188,7 +188,7 @@ test('project member banned notification skips the mail channel when the user di
     ]);
     actingAs($owner);
 
-    post(route('projects.update.member-ban', $project->slug), [
+    patch(route('projects.update.member-ban', $project->slug), [
         'user_id' => $target->id,
     ])->assertRedirect();
 
