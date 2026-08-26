@@ -53,3 +53,17 @@ test('a non-member cannot participate in a task', function () {
         'user_id' => $this->externalUser->id,
     ]);
 });
+
+test('a member banned from the project cannot participate in its tasks', function () {
+    $banned = User::factory()->create();
+    Member::create(['user_id' => $banned->id, 'project_id' => $this->project->id, 'role' => ProjectRole::BANNED]);
+
+    $this->actingAs($banned);
+
+    $this->post(route('tasks.participate', $this->task->id))->assertForbidden();
+
+    $this->assertDatabaseMissing('participations', [
+        'task_id' => $this->task->id,
+        'user_id' => $banned->id,
+    ]);
+});

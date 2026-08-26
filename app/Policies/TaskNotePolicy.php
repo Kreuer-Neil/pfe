@@ -21,6 +21,6 @@ class TaskNotePolicy
 
         $role = $note->task()->first()->project()->first()->userRole($user);
 
-        return in_array($role, [ProjectRole::MODERATOR, ProjectRole::ADMIN]);
+        return in_array($role, [ProjectRole::MODERATOR->value, ProjectRole::ADMIN->value]);
     }
 }

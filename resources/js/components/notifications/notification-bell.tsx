@@ -17,11 +17,15 @@ import {NotificationType} from "@/lib/notifications-enum";
 import {
     IProjectMemberBannedNotificationData,
     INotification,
+    ITask,
     ITaskDueSoonNotificationData,
     SharedData,
 } from "@/types";
 import {index as notificationsIndex, read as readNotification, readAll as readAllNotifications} from "@/actions/App/Http/Controllers/NotificationController";
 import {show as showTask} from "@/actions/App/Http/Controllers/TaskController";
+import TaskShowModal from "@/components/tasks/task-show";
+import ConfirmModal from "@/components/modals/confirm-modal";
+import TaskController from "@/actions/App/Http/Controllers/TaskController";
 import {laravelDateToJsDate, upcomingDateToString} from "@/helpers/date";
 
 function NotificationLabel({notification}: { notification: INotification }): ReactNode {
@@ -47,10 +51,15 @@ export default function NotificationBell({className, variant = 'icon'}: {
 }): ReactNode {
     const {t} = useTranslation('common');
     const {t: tDate} = useTranslation('date');
+    const {t: tTasks} = useTranslation('tasks');
     const {auth, unreadNotificationsCount} = usePage<SharedData>().props;
 
     const [notifications, setNotifications] = useState<INotification[]>([]);
     const [loaded, setLoaded] = useState(false);
+
+    const [modalTask, setModalTask] = useState<ITask | undefined>(undefined);
+    const [showTaskModal, setShowTaskModal] = useState(false);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
 
     useEchoNotification<INotification>(`App.Models.User.${auth.user.id}`, (notification) => {
         setNotifications((previous) => [notification, ...previous]);
@@ -71,7 +80,14 @@ export default function NotificationBell({className, variant = 'icon'}: {
 
     const markRead = (notification: INotification) => {
         if (notification.type === NotificationType.TaskDueSoon) {
-            router.visit(showTask((notification.data as ITaskDueSoonNotificationData).task_id).url);
+            const taskId = (notification.data as ITaskDueSoonNotificationData).task_id;
+            fetch(showTask(taskId).url)
+                .then((response) => response.ok ? response.json() : null)
+                .then((data: { task: ITask } | null) => {
+                    if (!data) return;
+                    setModalTask(data.task);
+                    setShowTaskModal(true);
+                });
         }
 
         if (notification.read_at) return;
@@ -149,6 +165,28 @@ export default function NotificationBell({className, variant = 'icon'}: {
                     ))
                 }
             </DropdownMenuContent>
+
+            <TaskShowModal
+                task={modalTask}
+                showModal={showTaskModal}
+                setShowModal={setShowTaskModal}
+                isInProjectPage={false}
+                onDelete={() => setShowConfirmModal(true)}
+            />
+            {modalTask &&
+                <ConfirmModal
+                    id="notification-task-confirm-delete"
+                    showModal={showConfirmModal}
+                    onClose={() => setShowConfirmModal(false)}
+                    onSuccess={() => {
+                        setShowTaskModal(false);
+                        setShowConfirmModal(false);
+                    }}
+                    formAction={TaskController.destroy.form(modalTask.id)}
+                    title={tTasks('delete_warning')}
+                    message={tTasks('delete_warning_message', {task: modalTask.title})}
+                />
+            }
         </DropdownMenu>
     );
 }

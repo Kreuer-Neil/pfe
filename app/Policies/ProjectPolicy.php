@@ -53,7 +53,8 @@ class ProjectPolicy
     private function canManageMember(User $user, Project $project, User $target): bool
     {
         $targetRole = ProjectRole::tryFrom($project->userRole($target));
-        if ($targetRole === null) {
+        // A non-member (VIEWER, synthetic) has no membership row to manage.
+        if ($targetRole === null || $targetRole === ProjectRole::VIEWER) {
             return false;
         }
 
@@ -79,8 +80,9 @@ class ProjectPolicy
 
     public function updateMemberRole(User $user, Project $project, User $target, ProjectRole $newRole): bool
     {
-        // Banning has its own dedicated action/policy method.
-        if ($newRole === ProjectRole::BANNED) {
+        // Banning has its own dedicated action/policy method. VIEWER is a synthetic
+        // non-member marker, never a real persisted membership role.
+        if (in_array($newRole, [ProjectRole::BANNED, ProjectRole::VIEWER], true)) {
             return false;
         }
 

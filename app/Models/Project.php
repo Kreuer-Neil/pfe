@@ -205,7 +205,7 @@ class Project extends Model
 
     public function userIsMember(User $user): bool
     {
-        return ! in_array($this->userRole($user), [ProjectRole::VIEWER, ProjectRole::BANNED]);
+        return ! in_array($this->userRole($user), [ProjectRole::VIEWER->value, ProjectRole::BANNED->value]);
     }
 
     public function joinAsMember(User $user): ProjectInvitationResponse
@@ -262,7 +262,7 @@ class Project extends Model
     {
         $member = $this->members->find($user->id);
         if (! $member) {
-            return ProjectRole::VIEWER;
+            return ProjectRole::VIEWER->value;
         }
 
         return $member->pivot->role;

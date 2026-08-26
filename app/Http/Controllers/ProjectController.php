@@ -109,7 +109,7 @@ class ProjectController extends Controller
         if (!Gate::allows('view', $project)) {
             abort(404, __('project_not_found'));
         }
-        if ($project->userRole(auth()->user()) === ProjectRole::VIEWER) {
+        if ($project->userRole(auth()->user()) === ProjectRole::VIEWER->value) {
             $project = (new ProjectShowResource($project))->toArray(request());
         } else {
             $project = (new ProjectResource($project))->toArray(request());
@@ -323,8 +323,9 @@ class ProjectController extends Controller
     public function updateMemberRole(Project $project, Request $request)
     {
         // BANNED is deliberately excluded here - banning is its own action/endpoint (banMember).
+        // VIEWER is a synthetic non-member marker, never a real persisted membership role.
         $assignableRoles = collect(ProjectRole::cases())
-            ->reject(fn($r) => $r === ProjectRole::BANNED)
+            ->reject(fn($r) => in_array($r, [ProjectRole::BANNED, ProjectRole::VIEWER], true))
             ->map(fn($r) => $r->value)
             ->all();
 

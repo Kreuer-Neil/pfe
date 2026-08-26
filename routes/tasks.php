@@ -10,8 +10,9 @@ Route::get('tasks', [TaskController::class, 'index'])
 Route::post('tasks/store', [TaskController::class, 'store'])
     ->name('tasks.store');
 
-Route::get('tasks/{id}', [TaskController::class, 'show'])
-    ->name('tasks.show');
+Route::get('tasks/{task}', [TaskController::class, 'show'])
+    ->name('tasks.show')
+    ->missing(fn () => abort(404, __('validation.task_not_found')));
 
 Route::post('tasks/{id}/participate', [TaskController::class, 'participate'])
     ->name('tasks.participate');

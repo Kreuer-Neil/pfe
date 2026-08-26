@@ -20,7 +20,9 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 
 
-            $table->enum('role', ProjectRole::cases())->nullable()->default(ProjectRole::MEMBER);
+            // VIEWER is a synthetic non-member marker, never a real persisted membership role.
+            $persistableRoles = array_filter(ProjectRole::cases(), fn ($role) => $role !== ProjectRole::VIEWER);
+            $table->enum('role', $persistableRoles)->nullable()->default(ProjectRole::MEMBER);
 
 //            $table->softDeletes();
             $table->timestamps();

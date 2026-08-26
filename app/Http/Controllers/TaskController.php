@@ -19,24 +19,18 @@ class TaskController extends Controller
         return Inertia::render('tasks/tasks-index');
     }
 
-    public function show(Request $request)
+    public function show(Task $task)
     {
-        if (!$request->has('task_id')) {
-            return redirect(route('tasks'));
+        // Hides "forbidden" behind "not found" so a private project's task IDs
+        // aren't distinguishable from ones that don't exist, same convention as
+        // ProjectController::show().
+        if (!Gate::allows('view', $task->project)) {
+            abort(404, __('validation.task_not_found'));
         }
-        $currentUser = auth()->user();
 
-        $task = Task::find($request->input('task_id'));
-        if (!$task || !$task->canSee($currentUser)) return [
-            'success' => false,
-            'error' => [
-                'key' => 'task_not_found',
-                'params' => [],
-            ]
-        ];
-        return [
-            'task' => (new TaskResource($task))->toArray(request())
-        ];
+        return response()->json([
+            'task' => (new TaskResource($task))->toArray(request()),
+        ]);
     }
 
     public function store(Request $request)
@@ -71,6 +65,9 @@ class TaskController extends Controller
         if (!$task) {
             return redirect()->back()->withErrors(['participation' => __('validation.task_not_found')]);
         }
+
+        Gate::authorize('joinTask', $task);
+
         if (!$task->participate(auth()->user())) {
             return redirect()->back()->withErrors(['participation' => __('validation.internal_error')]);
         }

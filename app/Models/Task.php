@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Collection;
 
 class Task extends Model
 {
@@ -111,14 +110,6 @@ class Task extends Model
         $userId = is_int($user) ? $user : $user->id;
         return !$this->participations->where('user_id', '==', $userId)->isEmpty();
     }
-
-    public function canSee(User $user): bool
-    {
-        // TODO check if user can see task
-        $this->project;
-        return true;
-    }
-
 
     /**
      * See related users
