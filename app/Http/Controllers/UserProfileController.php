@@ -78,7 +78,7 @@ class UserProfileController extends Controller
             $user->avatar = $imageName;
         }
 
-        $user->nickname = $validated['nickname'] ?? `$user->first_name $user->last_name`;
+        $user->nickname = $validated['nickname'] ?? "$user->first_name $user->last_name";
         $user->pronouns = $validated['pronouns'] ?? null;
         $user->bio = $validated['bio'] ?? null;
 
