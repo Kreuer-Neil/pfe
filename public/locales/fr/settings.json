@@ -19,5 +19,11 @@
     "notification_type_project_member_banned": "Retiré d'un projet",
     "preferences_dashboard_feed_title": "Fil d'actualité du tableau de bord",
     "preferences_dashboard_feed_description": "Afficher un aperçu des actualités de vos projets et de ceux que vous suivez sur votre tableau de bord.",
-    "preferences_dashboard_feed_label": "Afficher les actualités sur le tableau de bord"
+    "preferences_dashboard_feed_label": "Afficher les actualités sur le tableau de bord",
+    "delete_account_title": "Supprimer le compte",
+    "delete_account_description": "Supprimer votre compte et toutes ses ressources",
+    "delete_account_warning_title": "Attention",
+    "delete_account_warning_message": "Veuillez procéder avec prudence, cette action est irréversible.",
+    "delete_account_confirm_title": "Êtes-vous sûr de vouloir supprimer votre compte ?",
+    "delete_account_confirm_description": "Une fois votre compte supprimé, toutes ses ressources et données seront également définitivement supprimées. Veuillez saisir votre mot de passe pour confirmer que vous souhaitez supprimer définitivement votre compte."
 }

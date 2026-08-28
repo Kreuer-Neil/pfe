@@ -19,5 +19,11 @@
     "notification_type_project_member_banned": "Removed from a project",
     "preferences_dashboard_feed_title": "Dashboard feed",
     "preferences_dashboard_feed_description": "Show a preview of news from your projects and the ones you follow on your dashboard.",
-    "preferences_dashboard_feed_label": "Show news on dashboard"
+    "preferences_dashboard_feed_label": "Show news on dashboard",
+    "delete_account_title": "Delete account",
+    "delete_account_description": "Delete your account and all of its resources",
+    "delete_account_warning_title": "Warning",
+    "delete_account_warning_message": "Please proceed with caution, this cannot be undone.",
+    "delete_account_confirm_title": "Are you sure you want to delete your account?",
+    "delete_account_confirm_description": "Once your account is deleted, all of its resources and data will also be permanently deleted. Please enter your password to confirm you would like to permanently delete your account."
 }

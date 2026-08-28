@@ -19,5 +19,11 @@
     "notification_type_project_member_banned": "Aus einem Projekt entfernt",
     "preferences_dashboard_feed_title": "Dashboard-Feed",
     "preferences_dashboard_feed_description": "Zeigen Sie auf Ihrem Dashboard eine Vorschau der Neuigkeiten aus Ihren Projekten und den Projekten, denen Sie folgen.",
-    "preferences_dashboard_feed_label": "Neuigkeiten im Dashboard anzeigen"
+    "preferences_dashboard_feed_label": "Neuigkeiten im Dashboard anzeigen",
+    "delete_account_title": "Konto löschen",
+    "delete_account_description": "Löschen Sie Ihr Konto und alle zugehörigen Ressourcen",
+    "delete_account_warning_title": "Warnung",
+    "delete_account_warning_message": "Bitte gehen Sie vorsichtig vor, dies kann nicht rückgängig gemacht werden.",
+    "delete_account_confirm_title": "Sind Sie sicher, dass Sie Ihr Konto löschen möchten?",
+    "delete_account_confirm_description": "Sobald Ihr Konto gelöscht ist, werden auch alle zugehörigen Ressourcen und Daten dauerhaft gelöscht. Bitte geben Sie Ihr Passwort ein, um zu bestätigen, dass Sie Ihr Konto dauerhaft löschen möchten."
 }
