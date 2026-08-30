@@ -41,8 +41,6 @@ class ProjectPollController extends Controller
 
     public function vote(Request $request, Project $project, int $poll)
     {
-        Gate::authorize('votePoll', $project);
-
         $poll = $project->polls()->findOrFail($poll);
 
         if ($poll->isExpired()) {
