@@ -33,4 +33,9 @@ class UserPreferences extends Model
     {
         return $this->morphToMany(Tag::class, 'taggable');
     }
+
+    public function hasProjectPreferences()
+    {
+        return ($this->location()->count() > 0) || ($this->languages()->count() > 0) || ($this->tags()->count() > 0);
+    }
 }
