@@ -10,6 +10,7 @@ use Illuminate\Validation\Rule;
 
 class ProjectPollController extends Controller
 {
+    // TODO add index (per project) for long-ended polls or to show polls if more than X on dashboard
     public function store(Request $request, Project $project)
     {
         $validated = $request->validate([
