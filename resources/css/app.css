@@ -581,6 +581,10 @@
         @apply p-2 py-12 flex flex-col gap-8;
     }
 
+    .nav-active {
+        @apply size-2 justify-center rounded-full p-0 -ml-4 mt-auto;
+    }
+
     .closed .sidebar-content {
         @apply gap-0;
     }
@@ -618,7 +622,7 @@
 
     }
 
-    .closed span {
+    .closed .nav-item-title, .closed .nav-title {
         @apply sm:sr-only;
     }
 
