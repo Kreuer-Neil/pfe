@@ -34,6 +34,10 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+type PageProps = {
+    reload?: boolean;
+}
+
 
 export default function Profile({mustVerifyEmail, status, languages}: {
     mustVerifyEmail: boolean;
@@ -41,7 +45,13 @@ export default function Profile({mustVerifyEmail, status, languages}: {
     languages: ILangItem[];
 }) {
     const {auth} = usePage<SharedData>().props;
-    const {t} = useTranslation('auth');
+    const {t, i18n} = useTranslation('auth');
+
+    const {reload} = usePage<PageProps>().props;
+    if (reload) {
+        console.log('test')
+        router.reload();
+    }
 
     const cleanup = useMobileNavigation();
     const handleLogout = () => {
@@ -49,8 +59,11 @@ export default function Profile({mustVerifyEmail, status, languages}: {
         router.flushAll();
     };
 
-    const onLangSelect = (e: any) => {
-        router.visit(lang({query: {lang: e.value}}).url);
+    const onLangSelect = (locale: any) => {
+        document.querySelector('html')!.lang = locale;
+        i18n.changeLanguage(locale).then(() =>
+            router.visit(lang({query: {lang: locale}}).url, {})
+        );
     }
 
     return (

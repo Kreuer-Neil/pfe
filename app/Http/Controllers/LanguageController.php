@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Language;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class LanguageController extends Controller
 {
@@ -24,7 +25,6 @@ class LanguageController extends Controller
 
             return redirect()->back()->cookie($cookie);
         }
-
         return redirect()->back();
     }
 }
