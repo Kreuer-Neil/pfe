@@ -18,9 +18,18 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $languages = [];
+        foreach (config('app.locales') as $locale) {
+            $languages[] = [
+                'value' => $locale,
+                'title' => ucfirst(__('languages.'.$locale)),
+            ];
+        }
+
         return Inertia::render('settings/profile', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => $request->session()->get('status'),
+            'languages' => $languages,
         ]);
     }
 

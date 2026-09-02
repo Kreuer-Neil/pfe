@@ -1,6 +1,6 @@
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import {send} from '@/routes/verification';
-import {type BreadcrumbItem, type SharedData} from '@/types';
+import {type BreadcrumbItem, ILangItem, type SharedData} from '@/types';
 import {Transition} from '@headlessui/react';
 import {Form, Head, Link, router, usePage} from '@inertiajs/react';
 
@@ -17,6 +17,15 @@ import {useTranslation} from "react-i18next";
 import {LogOut} from "lucide-react";
 import {lang, logout} from '@/routes';
 import {useMobileNavigation} from "@/hooks/use-mobile-navigation";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue
+} from "@/components/ui/select";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -25,12 +34,11 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Profile({
-                                    mustVerifyEmail,
-                                    status,
-                                }: {
+
+export default function Profile({mustVerifyEmail, status, languages}: {
     mustVerifyEmail: boolean;
     status?: string;
+    languages: ILangItem[];
 }) {
     const {auth} = usePage<SharedData>().props;
     const {t} = useTranslation('auth');
@@ -40,6 +48,10 @@ export default function Profile({
         cleanup();
         router.flushAll();
     };
+
+    const onLangSelect = (e: any) => {
+        router.visit(lang({query: {lang: e.value}}).url);
+    }
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -163,12 +175,27 @@ export default function Profile({
                     </Form>
                 </div>
 
-                <div className="flex flex-col gap-0.5">
-                    Lang
-                    {/* TODO fix with config data later */}
-                    <Link className="text-link" href={lang({query:{lang:'en'}}).url}>English</Link>
-                    <Link className="text-link" href={lang({query:{lang:'fr'}}).url}>Français</Link>
-                    <Link className="text-link" href={lang({query:{lang:'de'}}).url}>Deutsch</Link>
+                <div>
+                    <span className="mb-0.5">{t('lang')}</span>
+                    {/* Lang string is not translated */}
+                    <Select defaultValue={document.querySelector('html')?.lang} onValueChange={onLangSelect}>
+                        <SelectTrigger className="w-full max-w-48">
+                            <SelectValue/>
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectLabel>Fruits</SelectLabel>
+                                {languages.map((language) => {
+                                    return (
+                                        <SelectItem value={language.value} key={language.value}>
+                                            {language.title}
+                                        </SelectItem>
+                                    );
+                                })}
+                            </SelectGroup>
+                        </SelectContent>
+
+                    </Select>
                 </div>
                 <Button variant="destructive" asChild onClick={handleLogout}>
                     <Link href={logout()}><LogOut/>{t('logout')}</Link>
