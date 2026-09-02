@@ -17,7 +17,7 @@ class ProjectPoll extends Model
         'project_id',
         'title',
         'multi',
-        'end_date',
+        'end_date', //Should have been named ends_at
     ];
 
     protected $casts = [
@@ -98,9 +98,11 @@ class ProjectPoll extends Model
      */
     public function vote(User $user, array $choiceIds): void
     {
+        // To avoid simply removing user's votes or not adding every of them in case of an error.
         DB::transaction(function () use ($user, $choiceIds) {
             $this->participations()->where('user_id', $user->id)->delete();
 
+            // "Skip"
             if (empty($choiceIds)) {
                 $this->participations()->create([
                     'user_id' => $user->id,

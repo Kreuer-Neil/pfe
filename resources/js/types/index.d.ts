@@ -48,6 +48,12 @@ export interface User {
 }
 
 // Custom types
+
+export interface ILangItem {
+    value: string;
+    title: string;
+}
+
 export interface IUser extends IProfile {
     id: number;
     uuid: string;

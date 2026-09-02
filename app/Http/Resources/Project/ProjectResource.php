@@ -26,7 +26,7 @@ class ProjectResource extends ProjectMiniatureResource
             'is_private' => $this->resource->is_private,
             'can_invite' => Gate::allows('createInvitation', $this->resource),
             'upcoming_tasks' => TaskResource::collection($this->resource->upcomingTasks)->toArray($request),
-            'polls' => ProjectPollResource::collection($this->resource->polls)->toArray($request),
+            'polls' => ProjectPollResource::collection($this->resource->polls()->where('end_date', '>=', now()->subMonth())->get())->toArray($request),
             'can_create_poll' => Gate::allows('createPoll', $this->resource),
         ]);
     }
