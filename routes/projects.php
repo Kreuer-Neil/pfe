@@ -30,18 +30,20 @@ Route::get('projects/invitations/show', [ProjectInvitationController::class, 'sh
 Route::post('projects/invitations/', [ProjectInvitationController::class, 'use'])
     ->name('projects.invitations.use');
 
-Route::get('projects/{project}', [ProjectController::class, 'show'])
-    ->name('projects.show')
-    ->missing(fn () => abort(404, __('project_not_found')));
+Route::middleware('can:view,project')->group(function () {
+    Route::get('projects/{project}', [ProjectController::class, 'show'])
+        ->name('projects.show')
+        ->missing(fn() => abort(404, __('project_not_found')));
 
-Route::get('projects/{project}/join', [ProjectController::class, 'join'])
-    ->name('projects.join')
-    ->missing(fn () => redirect()->back()->withErrors(['join' => __('validation.project_not_found')]));
+    Route::get('projects/{project}/join', [ProjectController::class, 'join'])
+        ->name('projects.join')
+        ->missing(fn() => redirect()->back()->withErrors(['join' => __('validation.project_not_found')]));
 
-Route::post('projects/{project}/follow', [ProjectController::class, 'follow'])
-    ->name('projects.follow');
-Route::delete('projects/{project}/unfollow', [ProjectController::class, 'unfollow'])
-    ->name('projects.unfollow');
+    Route::post('projects/{project}/follow', [ProjectController::class, 'follow'])
+        ->name('projects.follow');
+    Route::delete('projects/{project}/unfollow', [ProjectController::class, 'unfollow'])
+        ->name('projects.unfollow');
+});
 
 Route::get('projects/{project}/news', [ProjectNewsController::class, 'index'])
     ->name('projects.news.index');
@@ -75,8 +77,10 @@ Route::prefix('projects/{project}')->group(function () {
             ->name('projects.polls.store');
     });
 
-    Route::post('polls/{poll}/vote', [ProjectPollController::class, 'vote'])
-        ->name('projects.polls.vote');
+    Route::middleware('can:votePoll,project')->group(function () {
+        Route::post('polls/{poll}/vote', [ProjectPollController::class, 'vote'])
+            ->name('projects.polls.vote');
+    });
 
     Route::middleware('can:update,project')->group(function () {
         Route::patch('update/visibility', [ProjectController::class, 'updateVisibility'])
@@ -98,7 +102,7 @@ Route::prefix('projects/{project}')->group(function () {
         ->name('projects.news.destroy');
     Route::delete('polls/{poll}/destroy', [ProjectPollController::class, 'destroy'])
         ->name('projects.polls.destroy');
-});
 
-Route::delete('projects/{project}/invitations/{invitation}/revoke', [ProjectInvitationController::class, 'revoke'])
+Route::delete('invitations/{invitation}/revoke', [ProjectInvitationController::class, 'revoke'])
     ->name('projects.invitations.revoke');
+});

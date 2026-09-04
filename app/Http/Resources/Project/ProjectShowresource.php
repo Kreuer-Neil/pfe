@@ -17,6 +17,7 @@ class ProjectShowresource extends ProjectMiniatureResource
     public function toArray(Request $request): array
     {
         return array_merge(parent::toArray($request), [
+            'description' => $this->resource->description,
             'members' => ProfileResource::collection($this->resource->members)->toArray($request),
             'user_role' => ProjectRole::VIEWER->value,
         ]);

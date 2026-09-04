@@ -34,10 +34,10 @@ function SidebarNavItem({props, className = ''}: { props: INavItemProps, classNa
                     : props.project
                     && <ProjectIcon project={props.project} className="border border-secondary-border"/>
                 }
-                <span>{props.title}</span>
                 {props.badge &&
-                    <Badge variant="destructive" className="ml-auto size-2 justify-center rounded-full p-0"/>
+                    <Badge variant="destructive" className="nav-active w-2 p-0"/>
                 }
+                <span className="nav-item-title">{props.title}</span>
             </Link>
         </li>
     );

@@ -172,10 +172,6 @@ class Project extends Model
         return ProjectFollow::where('user_id', $user->id)->where('project_id', $this->id)->exists();
     }
 
-    /**
-     * Mirrors User::followAs()'s shape (the target model owns the action, the follower is the
-     * argument). Guards against a redundant row since membership already implies following.
-     */
     public function followAs(User $user): bool
     {
         if ($this->userIsMember($user) || $this->followedBy($user)) {

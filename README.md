@@ -4,6 +4,7 @@
 * [Application déployée en ligne](https://pfe-main-ugnwyn.laravel.cloud/)
 * [Site de documentation technique](https://github.com/Kreuer-Neil/neil-kreuer-doc-PFE/deployments/github-pages)
 * [Fichier Figma](https://www.figma.com/design/FKS2nRA0CgPv6EcUjuYYSG/PFE-%22Come-Unite%22?node-id=1839-27476&t=430owWGHzpv4bQ0c-1)
+* [Slides Figma](https://www.figma.com/deck/2a2k9ATgQdKBFDPHoMf9Pf)
 
 ## Comment l’installer
 1. Si ce n’est pas déjà fait, installez [Composer](https://getcomposer.org/) et [Node](https://nodejs.org/en/download) sur votre machine.
@@ -11,7 +12,8 @@
 3. Lancez la commande `composer install` dans votre invite de commande, à la racine du projet.
 4. Faites de même avec la commande `npm install`.
 5. Lancez la commande `php artisan migrate --seed` afin de peupler le projet de données.
-6. Lancez la commande `npm run dev` afin de lancer le projet en local
+6. Lancez la commande `npm run dev` afin de lancer le projet en local.
+7. Afin de profiter de toutes les fonctionnalités de l’application en local, il vous est recommandé de lancer les commandes `php artisan queue:work`, `php artisan reverb:start` et `php artisan schedule:work` dans des terminaux différents.
 
 ## Cahier des charges de ComeUnite
 Projets communautaires collaboratifs (et donc gestion de ceux-ci)

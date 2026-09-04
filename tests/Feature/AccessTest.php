@@ -51,6 +51,6 @@ test('authenticated users cannot visit private projects they aren\'t part of', f
             'is_private' => true
         ]);
 
-    $this->get(route('projects.show', $project->slug))->assertNotFound();
+    $this->get(route('projects.show', $project->slug))->assertForbidden();
 });
 

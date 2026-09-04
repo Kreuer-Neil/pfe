@@ -27,7 +27,10 @@ class DashboardController extends Controller
 
         $projects = ProjectDashboardResource::collection($projectsQuery->get())->toArray(request());
 
-        $suggestedProjects = ProjectMiniatureResource::collection(Project::suggestedFor($currentUser))->toArray(request());
+        // TODO add message "Set preferences if you want project suggestions" instead of the projects feed? With link to it.
+        $suggestedProjects = $currentUser->preferences->hasProjectPreferences()
+            ? ProjectMiniatureResource::collection(Project::suggestedFor($currentUser))->toArray(request())
+            : [];
 
         $tasks = TaskResource::collection(
             $currentUser
@@ -45,23 +48,21 @@ class DashboardController extends Controller
             ->latest()
             ->limit(5)
             ->get()
-            ->map(fn (ProjectNews $news) => [
+            ->map(fn(ProjectNews $news) => [
                 'type' => 'news',
                 'created_at' => $news->created_at,
                 'data' => (new ProjectNewsFeedResource($news))->toArray(request()),
             ]);
 
-        // Dashboard-feed polls are "pending action" items only - unlike news, a poll drops out
-        // once the user has voted or skipped it (or once it's closed, since there's nothing left
-        // to do). It still stays visible on the project's own page regardless of this filter.
+        // Dashboard-feed polls are "pending action" items only,
         $pollItems = ProjectPoll::whereIn('project_id', $currentUser->feedProjectIds())
             ->where('end_date', '>', now())
-            ->whereDoesntHave('participations', fn ($query) => $query->where('user_id', $currentUser->id))
+            ->whereDoesntHave('participations', fn($query) => $query->where('user_id', $currentUser->id))
             ->with(['project', 'choices', 'user'])
             ->latest()
             ->limit(5)
             ->get()
-            ->map(fn (ProjectPoll $poll) => [
+            ->map(fn(ProjectPoll $poll) => [
                 'type' => 'poll',
                 'created_at' => $poll->created_at,
                 'data' => (new ProjectPollFeedResource($poll))->toArray(request()),

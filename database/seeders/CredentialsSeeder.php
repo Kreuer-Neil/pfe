@@ -22,14 +22,14 @@ class CredentialsSeeder extends Seeder
                 'first_name' => 'Maud',
                 'email' => 'maud.wera@example.test',
                 'password' => '123password4',
-                'nickname' => 'Wera Maud'
+                'nickname' => 'Maud Wera'
             ]),
             'schreurs' => User::create([
                 'last_name' => 'Schreurs',
                 'first_name' => 'Daniel',
                 'email' => 'schreurs.daniel@example.test',
                 'password' => '123password4',
-                'nickname' => 'Schreurs Daniel'
+                'nickname' => 'Daniel Schreurs'
             ]),
         ];
 
@@ -58,7 +58,7 @@ class CredentialsSeeder extends Seeder
 
         foreach ($users as $key => $user) {
             $project = Project::create([
-                'name' => $name = 'Projet de ' . $user->last_name,
+                'name' => $name = 'Projet de ' . $user->first_name,
                 'description' => 'Projet créé afin que ' . $user->nickname . ' puisse tester l’application.',
 
                 'owner_id' => $user->id,
@@ -76,7 +76,7 @@ class CredentialsSeeder extends Seeder
             $task1 = Task::create([
                 'title' => 'Créer une nouvelle tâche',
                 'description' => 'Tentez donc de créer une tâche sur votre projet !',
-                'due_at' => Carbon::create(year: 2026, month: 06, day: 18, hour: 16),
+                'due_at' => Carbon::create(year: 2026, month: 9, day: 3, hour: 17),
                 'min_participations' => 1,
                 'user_id' => $user->id,
                 'project_id' => $project->id,

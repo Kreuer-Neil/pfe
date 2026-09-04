@@ -16,8 +16,8 @@ export default function Register() {
 
     return (
         <AuthLayout
-            title="Create an account"
-            description="Enter your details below to create your account"
+            title={t('create_account_title')}
+            description={t('create_account_description')}
         >
             <Head title="Register" />
             <Form

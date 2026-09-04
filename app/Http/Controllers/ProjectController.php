@@ -106,9 +106,7 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        if (!Gate::allows('view', $project)) {
-            abort(404, __('project_not_found'));
-        }
+        Gate::authorize('view', $project);
         if ($project->userRole(auth()->user()) === ProjectRole::VIEWER->value) {
             $project = (new ProjectShowResource($project))->toArray(request());
         } else {
@@ -139,11 +137,7 @@ class ProjectController extends Controller
             // Public projects need tags for discoverability
             'tags' => 'required_unless:is_private,1|array|max:7',
             'tags.*' => 'string|exists:tags,name',
-            // LocationSearch always renders these three hidden inputs, even when empty - an
-            // untouched location submits them as empty strings, which ConvertEmptyStringsToNull
-            // turns into null before validation runs. Without `nullable`, `required_unless` only
-            // waives requiredness, not the `string` type check, so a private project (location
-            // optional) would fail validation on a location nobody was ever asked to fill in.
+            // Location with Nominatim (OpenStreetMap)
             'q' => 'nullable|required_unless:is_private,1|string|max:255',
             'osm_id' => 'nullable|required_unless:is_private,1|string|max:255',
             'osm_type' => 'nullable|required_unless:is_private,1|string|max:255',
@@ -206,10 +200,6 @@ class ProjectController extends Controller
 
     public function join(Project $project)
     {
-        if ($project->is_private) {
-            return redirect(route('projects'));
-        }
-
         $project->joinAsMember(auth()->user());
 
         return redirect(route('projects.show', $project));
@@ -217,8 +207,6 @@ class ProjectController extends Controller
 
     public function follow(Project $project)
     {
-        Gate::authorize('view', $project);
-
         $project->followAs(auth()->user());
 
         return redirect(route('projects.show', $project->slug));
@@ -226,8 +214,6 @@ class ProjectController extends Controller
 
     public function unfollow(Project $project)
     {
-        Gate::authorize('view', $project);
-
         $project->unfollowAs(auth()->user());
 
         return redirect(route('projects.show', $project->slug));

@@ -27,7 +27,7 @@ test('a user cannot join a private project via the join route', function () {
     actingAs($user);
 
     get(route('projects.join', $project->slug))
-        ->assertRedirect(route('projects'));
+        ->assertForbidden();
 
     $this->assertDatabaseMissing('members', [
         'project_id' => $project->id,

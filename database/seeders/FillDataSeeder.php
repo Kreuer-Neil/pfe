@@ -7,6 +7,7 @@ use App\Models\Location;
 use App\Models\Member;
 use App\Models\Project;
 use App\Models\ProjectNews;
+use App\Models\ProjectPoll;
 use App\Models\Tag;
 use App\Models\Task;
 use App\Models\User;
@@ -51,6 +52,8 @@ class FillDataSeeder extends Seeder
             ]
         );
 
+        $projectSeraingName = 'Planter des arbres à Seraing';
+
         $projectsData = [
             [
                 'name' => 'Luigi\'s Garden',
@@ -88,12 +91,12 @@ class FillDataSeeder extends Seeder
                         'title' => 'The final concert',
                         'description' => 'Everyone, get ready for the concert! That\'s the day we ascend!',
                         'min_participations' => 6,
-                        'due_at' => Carbon::create(year: 2026, month: 07, day: 21, hour: 17),
+                        'due_at' => Carbon::create(year: 2026, month: 9, day: 21, hour: 17),
                     ]
                 ],
             ],
             [
-                'name' => 'Planter des arbres à Seraing',
+                'name' => $projectSeraingName,
                 'is_private' => false,
                 'icon' => 'project_default',
                 'location_id' => $seraing->id,
@@ -103,44 +106,47 @@ class FillDataSeeder extends Seeder
                         'title' => 'Planter sur le terrain vague',
                         'description' => 'Le terrain vague derrière la HEPL Seraing est un espace idéal pour accueillir de nouveaux arbres. Grand, peu fréquenté et sans usage prévu, il offre suffisamment de place pour planter une dizaine d\'arbres en toute tranquillité. Munissez-vous de gants et de bonnes chaussures, le matériel de plantation sera fourni sur place !',
                         'min_participations' => 5,
-                        'due_at' => Carbon::create(year: 2026, month: 07, day: 21, hour: 17),
+                        'due_at' => Carbon::create(year: 2026, month: 9, day: 21, hour: 17),
                     ],
                     [
                         'title' => 'Planter sur la place',
                         'description' => 'La place centrale de Seraing manque cruellement d\'ombre en été. Nous avons obtenu l\'accord de la commune pour y installer plusieurs arbres à feuilles caduques le long du côté nord de la place. Une action visible et durable qui profitera à tous les habitants et aux commerces alentour.',
                         'min_participations' => 4,
-                        'due_at' => Carbon::create(year: 2026, month: 06, day: 20, hour: 11),
+                        'due_at' => Carbon::create(year: 2026, month: 9, day: 20, hour: 11),
                     ],
                     [
                         'title' => 'Planter à la gare',
                         'description' => 'Les abords de la gare de Seraing sont minéraux et peu accueillants pour les voyageurs comme pour la faune locale. Nous allons planter des arbustes et de petits arbres le long du cheminement piéton principal. Un coup de vert bienvenu pour la première image que les visiteurs ont de notre ville !',
                         'min_participations' => 3,
-                        'due_at' => Carbon::create(year: 2026, month: 06, day: 21, hour: 9),
+                        'due_at' => Carbon::create(year: 2026, month: 9, day: 21, hour: 9),
                     ],
                     [
                         'title' => 'Planter dans l\'entrepôt abandonné',
                         'description' => 'L\'entrepôt sinistré au bord de la ville est une friche urbaine en attente de réaffectation. En attendant, nous allons y créer un petit espace boisé en bordure du terrain, en accord avec le propriétaire. Une manière de transformer un endroit triste en poumon vert temporaire pour le quartier.',
                         'min_participations' => 4,
-                        'due_at' => Carbon::create(year: 2026, month: 06, day: 23, hour: 9),
+                        'due_at' => Carbon::create(year: 2026, month: 9, day: 23, hour: 9),
                     ],
                     [
                         'title' => 'Préparer les trous de plantation au parc Léopold',
                         'description' => 'Avant la grande journée de plantation prévue fin juillet, nous devons préparer le terrain au parc Léopold : creuser les trous aux emplacements balisés, amender la terre avec du compost et installer les tuteurs. Un travail physique mais essentiel pour garantir la reprise des arbres !',
                         'min_participations' => 6,
-                        'due_at' => Carbon::create(year: 2026, month: 07, day: 10, hour: 9),
+                        'due_at' => Carbon::create(year: 2026, month: 9, day: 10, hour: 9),
                     ],
                     [
                         'title' => 'Distribution de jeunes pousses aux habitants',
                         'description' => 'Dans le cadre de notre action de sensibilisation, nous organisons une distribution gratuite de jeunes pousses (chêne, tilleul, érable) aux habitants de Seraing qui souhaitent planter un arbre dans leur jardin. Venez nous aider à accueillir les familles, expliquer les bons gestes de plantation et distribuer les plants avec leurs fiches conseils.',
                         'min_participations' => 3,
-                        'due_at' => Carbon::create(year: 2026, month: 07, day: 5, hour: 10),
+                        'due_at' => Carbon::create(year: 2026, month: 9, day: 5, hour: 10),
                     ],
                     [
                         'title' => 'Réunion de bilan et planification',
                         'description' => 'Point d\'étape pour faire le bilan des plantations réalisées, identifier les arbres qui ont besoin d\'un suivi, et planifier les prochaines actions du projet pour l\'automne. Tous les membres sont les bienvenus, c\'est aussi l\'occasion de partager vos retours et vos idées pour la suite !',
-                        'due_at' => Carbon::create(year: 2026, month: 06, day: 25, hour: 18),
+                        'due_at' => Carbon::create(year: 2026, month: 9, day: 25, hour: 18),
                     ],
                 ],
+                'news' => [
+
+                ]
             ],
         ];
 
@@ -156,7 +162,7 @@ class FillDataSeeder extends Seeder
                 'name' => $projectData['name'],
                 'is_private' => $projectData['is_private'],
                 'description' => $projectData['description'],
-                'icon' => $projectData['icon'] ?? 'default_'.random_int(1,2),
+                'icon' => $projectData['icon'] ?? 'default_' . random_int(1, 2),
                 'location_id' => $projectData['location_id'],
             ];
 
@@ -214,6 +220,24 @@ class FillDataSeeder extends Seeder
 
             $this->seedTagsAndNews($project, $project->members->all());
         }
+
+        // Adding choices for the Seraing project
+        $projectSeraing = Project::where('name', $projectSeraingName)->first();
+        $poll = ProjectPoll::create([
+            'project_id' => $projectSeraing->id,
+            'user_id' => $projectSeraing->members->random()->first()->id,
+            'title' => 'Planification de la prochaine réunion de groupe',
+            'multi' => true,
+            'end_date' => Carbon::create(year: 2026, month: 9, day: 12, hour: 12)
+        ]);
+        $pollChoices = ['Le lundi 14/09', 'Le mercredi 16/09', 'Le vendredi 18/09', 'Le samedi 19/09'];
+        foreach ($pollChoices as $position => $pollChoice) {
+            $poll->choices()->create([
+                'position' => $position,
+                'label' => $pollChoice,
+            ]);
+        }
+
     }
 
     /**

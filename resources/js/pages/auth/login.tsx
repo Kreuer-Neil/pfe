@@ -67,7 +67,7 @@ export default function Login({status, canResetPassword}: LoginProps) {
                                     name="password"
                                     required
                                     autoComplete="current-password"
-                                    placeholder="Password"
+                                    placeholder={t('field_password_placeholder')}
                                 />
                                 <InputError message={errors.password}/>
                             </div>

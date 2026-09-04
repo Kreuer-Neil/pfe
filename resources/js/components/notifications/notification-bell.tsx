@@ -117,12 +117,12 @@ export default function NotificationBell({className, variant = 'icon'}: {
                 {variant === 'nav-item' ?
                     <button className={cn("nav-item w-full", className)}>
                         <Bell className="p-1"/>
-                        <span>{t('notifications')}</span>
                         {unreadNotificationsCount > 0 &&
-                            <Badge variant="destructive" className="ml-auto min-w-4 justify-center px-1 py-0 text-[10px]">
+                            <Badge variant="destructive" className="nav-active min-w-4 h-auto justify-center px-1 py-0 text-[10px]">
                                 {unreadNotificationsCount}
                             </Badge>
                         }
+                        <span className="nav-item-title">{t('notifications')}</span>
                     </button>
                     :
                     <button className={cn("relative p-2 cursor-pointer hover:bg-secondary focus:bg-secondary rounded-sm", className)}>
